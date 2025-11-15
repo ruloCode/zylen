@@ -1,6 +1,7 @@
 import React from 'react';
 import { Heart, DollarSign, Palette, Users, Home, Briefcase } from 'lucide-react';
 import { ProgressBar } from '@/components/ui';
+import { useLocale } from '@/hooks/useLocale';
 interface LifeAreaCardProps {
   area: 'Health' | 'Finance' | 'Creativity' | 'Social' | 'Family' | 'Career';
   level: number;
@@ -23,22 +24,34 @@ const colorMap = {
   Family: 'text-orange-500',
   Career: 'text-indigo-500'
 };
+
+const translationKeyMap = {
+  Health: 'lifeAreas.health',
+  Finance: 'lifeAreas.finance',
+  Creativity: 'lifeAreas.creativity',
+  Social: 'lifeAreas.social',
+  Family: 'lifeAreas.family',
+  Career: 'lifeAreas.career'
+};
+
 export function LifeAreaCard({
   area,
   level,
   currentXP,
   maxXP
 }: LifeAreaCardProps) {
+  const { t } = useLocale();
   const Icon = iconMap[area];
   const colorClass = colorMap[area];
+  const translatedArea = t(translationKeyMap[area]);
   return <div className="glass-card rounded-2xl p-4 hover:scale-105 transition-transform duration-200">
       <div className="flex items-center gap-3 mb-3">
         <div className={`${colorClass} bg-white/50 p-2 rounded-xl`}>
           <Icon size={20} />
         </div>
         <div className="flex-1">
-          <h3 className="font-semibold text-sm text-gray-800">{area}</h3>
-          <p className="text-xs text-gray-500">Level {level}</p>
+          <h3 className="font-semibold text-sm text-gray-800">{translatedArea}</h3>
+          <p className="text-xs text-gray-500">{t('common.level')} {level}</p>
         </div>
       </div>
       <ProgressBar current={currentXP} max={maxXP} showLabel={false} size="sm" />

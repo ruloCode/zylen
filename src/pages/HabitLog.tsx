@@ -1,13 +1,17 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Dumbbell, Book, Apple, Bed, Droplets, Brain } from 'lucide-react';
 import { HabitItem } from '@/features/habits/components';
-import { useHabits, useUser, useStreaks } from '@/store';
+import { useAppStore } from '@/store';
 import type { Habit } from '@/types';
 
 export function HabitLog() {
-  const { habits, loadHabits, addHabit, toggleHabit } = useHabits();
-  const { updateXP } = useUser();
-  const { updateStreakForToday } = useStreaks();
+  // Select individual values instead of objects to avoid re-render loops
+  const habits = useAppStore((state) => state.habits);
+  const loadHabits = useAppStore((state) => state.loadHabits);
+  const addHabit = useAppStore((state) => state.addHabit);
+  const toggleHabit = useAppStore((state) => state.toggleHabit);
+  const updateXP = useAppStore((state) => state.updateXP);
+  const updateStreakForToday = useAppStore((state) => state.updateStreakForToday);
 
   // Load habits on mount or initialize with default habits if empty
   useEffect(() => {
@@ -15,59 +19,60 @@ export function HabitLog() {
   }, [loadHabits]);
 
   // Initialize with default habits if none exist (separate effect to avoid loops)
+  // Memoize default habits to prevent recreation on every render
+  const defaultHabits = useMemo<Habit[]>(() => [
+    {
+      id: '1',
+      name: 'Morning Workout',
+      iconName: 'Dumbbell',
+      xp: 50,
+      completed: false,
+    },
+    {
+      id: '2',
+      name: 'Read 30 Minutes',
+      iconName: 'Book',
+      xp: 30,
+      completed: false,
+    },
+    {
+      id: '3',
+      name: 'Eat Healthy Meal',
+      iconName: 'Apple',
+      xp: 25,
+      completed: false,
+    },
+    {
+      id: '4',
+      name: 'Sleep 8 Hours',
+      iconName: 'Bed',
+      xp: 40,
+      completed: false,
+    },
+    {
+      id: '5',
+      name: 'Drink 2L Water',
+      iconName: 'Droplets',
+      xp: 20,
+      completed: false,
+    },
+    {
+      id: '6',
+      name: 'Meditate 10 Min',
+      iconName: 'Brain',
+      xp: 35,
+      completed: false,
+    },
+  ], []);
+
   useEffect(() => {
     if (habits.length === 0) {
-      const defaultHabits: Habit[] = [
-        {
-          id: '1',
-          name: 'Morning Workout',
-          iconName: 'Dumbbell',
-          xp: 50,
-          completed: false,
-        },
-        {
-          id: '2',
-          name: 'Read 30 Minutes',
-          iconName: 'Book',
-          xp: 30,
-          completed: false,
-        },
-        {
-          id: '3',
-          name: 'Eat Healthy Meal',
-          iconName: 'Apple',
-          xp: 25,
-          completed: false,
-        },
-        {
-          id: '4',
-          name: 'Sleep 8 Hours',
-          iconName: 'Bed',
-          xp: 40,
-          completed: false,
-        },
-        {
-          id: '5',
-          name: 'Drink 2L Water',
-          iconName: 'Droplets',
-          xp: 20,
-          completed: false,
-        },
-        {
-          id: '6',
-          name: 'Meditate 10 Min',
-          iconName: 'Brain',
-          xp: 35,
-          completed: false,
-        },
-      ];
-
       // Add default habits to store
       defaultHabits.forEach(habit => {
         addHabit(habit);
       });
     }
-  }, [habits.length, addHabit]);
+  }, [habits.length, addHabit, defaultHabits]);
 
   const handleToggle = (id: string, completed: boolean) => {
     const xpEarned = toggleHabit(id, completed);

@@ -2,12 +2,15 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Send } from 'lucide-react';
 import { ChatBubble } from '@/features/chat/components';
 import { Button } from '@/components/ui';
-import { useChat } from '@/store';
+import { useAppStore } from '@/store';
 import { CHAT_CONFIG } from '@/constants';
 import ruloAvatar from '../assets/rulo_avatar.png';
 
 export function Chat() {
-  const { messages, isLoading, addMessage, setLoading } = useChat();
+  const messages = useAppStore((state) => state.messages);
+  const isLoading = useAppStore((state) => state.isLoading);
+  const addMessage = useAppStore((state) => state.addMessage);
+  const setLoading = useAppStore((state) => state.setLoading);
   const [input, setInput] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 

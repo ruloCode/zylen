@@ -1,0 +1,103 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "points": "Points",
+    "totalPoints": "Total Points",
+    "level": "Level",
+    "xp": "XP",
+    "days": "Days",
+    "day": "Day",
+    "skip": "Skip to main content"
+  },
+  "app": {
+    "name": "MyWay",
+    "tagline": "Build your best self"
+  },
+  "navigation": {
+    "home": "Home",
+    "habits": "Habits",
+    "streaks": "Streaks",
+    "shop": "Shop",
+    "chat": "Chat",
+    "navigateTo": "Navigate to {{label}}"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "lifeAreas": "Life Areas",
+    "logHabits": "Log Today's Habits",
+    "keepGoing": "Keep going, Champion! 💪"
+  },
+  "lifeAreas": {
+    "health": "Health",
+    "finance": "Finance",
+    "creativity": "Creativity",
+    "social": "Social",
+    "family": "Family",
+    "career": "Career"
+  },
+  "streaks": {
+    "title": "Your Streak",
+    "subtitle": "Don't break the chain!",
+    "current": "Current Streak",
+    "best": "Best Streak",
+    "achievements": "Achievements",
+    "onFire": "You're on fire! 🔥",
+    "motivation": "Success is the sum of small efforts repeated day in and day out.",
+    "badges": {
+      "weekWarrior": "Week Warrior",
+      "consistencyKing": "Consistency King",
+      "unstoppable": "Unstoppable"
+    }
+  },
+  "habits": {
+    "title": "Habit Log",
+    "daily": "Daily",
+    "weekly": "Weekly",
+    "noHabits": "No habits for today",
+    "addHabit": "Add Habit",
+    "complete": "Complete",
+    "completed": "Completed",
+    "skip": "Skip"
+  },
+  "rootHabit": {
+    "title": "30-Day Challenge",
+    "subtitle": "Your journey to mastery",
+    "progress": "Progress",
+    "daysCompleted": "days completed",
+    "keepGoing": "Keep it up!"
+  },
+  "shop": {
+    "title": "Shop",
+    "subtitle": "Rewards & Indulgences",
+    "balance": "Balance",
+    "buyNow": "Buy Now",
+    "purchased": "Purchased",
+    "notEnoughPoints": "Not enough points",
+    "confirmPurchase": "Confirm purchase?"
+  },
+  "chat": {
+    "title": "Chat with your Coach",
+    "subtitle": "Your personal AI guide",
+    "typeMessage": "Type a message...",
+    "send": "Send",
+    "thinking": "Thinking...",
+    "welcomeMessage": "Hi! I'm your AI coach. How can I help you today?"
+  },
+  "errors": {
+    "general": "Something went wrong. Please try again.",
+    "notFound": "Page not found",
+    "unauthorized": "Unauthorized",
+    "network": "Connection error. Check your internet."
+  },
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "close": "Close"
+  }
+}

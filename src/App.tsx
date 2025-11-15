@@ -2,6 +2,7 @@ import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Navigation } from '@/components/layout';
 import { AppProvider } from '@/app/AppProvider';
+import { I18nProvider } from '@/components/I18nProvider';
 import { ROUTES } from '@/constants';
 
 // Lazy load pages for code splitting
@@ -27,33 +28,35 @@ function PageLoader() {
 export function App() {
   return (
     <AppProvider>
-      <BrowserRouter>
-        <div className="w-full min-h-screen">
-          {/* Skip Navigation for screen readers (WCAG 2.4.1) */}
-          <a
-            href="#main-content"
-            className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-6 focus:py-3 focus:bg-gold-500 focus:text-navy-700 focus:rounded-xl focus:font-bold focus:shadow-glow-gold focus:outline-none focus:ring-4 focus:ring-gold-400"
-          >
-            Skip to main content
-          </a>
+      <I18nProvider>
+        <BrowserRouter>
+          <Suspense fallback={<PageLoader />}>
+            <div className="w-full min-h-screen">
+              {/* Skip Navigation for screen readers (WCAG 2.4.1) */}
+              <a
+                href="#main-content"
+                className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-6 focus:py-3 focus:bg-gold-500 focus:text-navy-700 focus:rounded-xl focus:font-bold focus:shadow-glow-gold focus:outline-none focus:ring-4 focus:ring-gold-400"
+              >
+                Skip to main content
+              </a>
 
-          {/* Main content with proper landmark */}
-          <main id="main-content" className="pb-24">
-            <Suspense fallback={<PageLoader />}>
-              <Routes>
-                <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
-                <Route path={ROUTES.HABITS} element={<HabitLog />} />
-                <Route path={ROUTES.STREAKS} element={<Streaks />} />
-                <Route path={ROUTES.ROOT_HABIT} element={<RootHabit />} />
-                <Route path={ROUTES.SHOP} element={<Shop />} />
-                <Route path={ROUTES.CHAT} element={<Chat />} />
-              </Routes>
-            </Suspense>
-          </main>
+              {/* Main content with proper landmark */}
+              <main id="main-content" className="pb-24">
+                <Routes>
+                  <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
+                  <Route path={ROUTES.HABITS} element={<HabitLog />} />
+                  <Route path={ROUTES.STREAKS} element={<Streaks />} />
+                  <Route path={ROUTES.ROOT_HABIT} element={<RootHabit />} />
+                  <Route path={ROUTES.SHOP} element={<Shop />} />
+                  <Route path={ROUTES.CHAT} element={<Chat />} />
+                </Routes>
+              </main>
 
-          <Navigation />
-        </div>
-      </BrowserRouter>
+              <Navigation />
+            </div>
+          </Suspense>
+        </BrowserRouter>
+      </I18nProvider>
     </AppProvider>
   );
 }

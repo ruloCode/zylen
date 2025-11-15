@@ -34,6 +34,7 @@ pnpm run preview
 - **Data Persistence**: localStorage via custom service layer
 - **Styling**: Tailwind CSS with custom design system
 - **Icons**: Lucide React
+- **Internationalization**: i18next + react-i18next (Spanish default, English alternative)
 
 ## Architecture
 
@@ -87,6 +88,7 @@ src/
 │
 ├── services/           # Data layer (localStorage)
 │   ├── storage.ts      # Generic localStorage wrapper
+│   ├── i18n.ts         # i18next configuration
 │   ├── user.service.ts
 │   ├── habits.service.ts
 │   ├── streaks.service.ts
@@ -99,6 +101,7 @@ src/
 │   ├── shop.ts
 │   ├── user.ts
 │   ├── chat.ts
+│   ├── i18n.d.ts       # i18next type augmentation
 │   └── index.ts        # Barrel export
 │
 ├── constants/          # App-wide constants
@@ -113,8 +116,21 @@ src/
 │   ├── date.ts        # Date utilities
 │   └── index.ts
 │
+├── hooks/              # Custom React hooks
+│   └── useLocale.ts    # i18n hook (translation, language switching)
+│
 └── assets/             # Static files
     └── rulo_avatar.png
+```
+
+Additionally, translation files are located in the public directory:
+```
+public/
+└── locales/            # Translation files
+    ├── es/             # Spanish (default)
+    │   └── translation.json
+    └── en/             # English
+        └── translation.json
 ```
 
 ### Route Structure
@@ -146,6 +162,7 @@ All routes are defined in `src/constants/routes.ts` and lazy-loaded in `App.tsx`
 - `useStreaks()` - Streak state and actions
 - `useShop()` - Shop state and actions
 - `useChat()` - Chat state and actions
+- `useLocale()` - i18n translation and language switching
 
 ### Data Persistence
 
@@ -158,6 +175,80 @@ All user data is persisted to **localStorage** via a service layer:
 - `ShopService` - Purchase history CRUD
 
 Data is automatically loaded on app initialization via `AppProvider`.
+
+### Internationalization (i18n)
+
+The app supports **Spanish** (default) and **English** via `react-i18next`:
+
+**Configuration:**
+- i18n setup: `src/services/i18n.ts`
+- Initialized in: `src/index.tsx` (before app renders)
+- Translation files: `public/locales/{lang}/translation.json`
+- TypeScript types: `src/types/i18n.d.ts`
+
+**Usage in Components:**
+
+```tsx
+import { useLocale } from '@/hooks/useLocale';
+
+function MyComponent() {
+  const { t, language, changeLanguage, toggleLanguage } = useLocale();
+
+  return (
+    <div>
+      <h1>{t('dashboard.title')}</h1>
+      <p>{t('common.points')}: {points}</p>
+      <button onClick={() => changeLanguage('en')}>English</button>
+      <button onClick={() => changeLanguage('es')}>Español</button>
+      {/* or */}
+      <button onClick={toggleLanguage}>Toggle Language</button>
+    </div>
+  );
+}
+```
+
+**Language Switcher Component:**
+
+The app includes a pre-built `LanguageSwitcher` component:
+
+```tsx
+import { LanguageSwitcher } from '@/features/settings/components';
+
+// Compact variant (icon + badge)
+<LanguageSwitcher variant="compact" />
+
+// Expanded variant (full buttons)
+<LanguageSwitcher variant="expanded" />
+```
+
+**Adding New Translations:**
+
+1. Add keys to both language files:
+   - `public/locales/es/translation.json`
+   - `public/locales/en/translation.json`
+
+2. Use in components via `t()` function:
+   ```tsx
+   {t('newSection.newKey')}
+   ```
+
+3. TypeScript will provide autocomplete for translation keys based on the Spanish translation file.
+
+**Translation File Structure:**
+
+Translations are organized by feature:
+- `common` - Shared terms (loading, points, days, etc.)
+- `app` - App name and tagline
+- `navigation` - Navigation labels
+- `dashboard` - Dashboard page
+- `lifeAreas` - Life area names
+- `streaks` - Streaks page and badges
+- `habits` - Habits page
+- `rootHabit` - 30-day challenge
+- `shop` - Shop page
+- `chat` - Chat interface
+- `errors` - Error messages
+- `actions` - Common action buttons
 
 ### Design System
 
@@ -212,6 +303,7 @@ Typical production build:
 - **State Management**: Zustand with typed hooks
 - **Code Splitting**: Pages are lazy-loaded for performance
 - **Type Safety**: Full TypeScript coverage with strict mode
+- **Internationalization**: Spanish (default) and English; language preference persisted to localStorage
 - **AI Chat**: The Chat page has simulated AI responses (not real AI integration)
 - **No Tests**: No testing framework is configured yet
 - **Life Areas**: Currently use mock data; future integration with habit tracking planned

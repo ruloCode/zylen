@@ -1,14 +1,15 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Candy, ShoppingCart, Moon, Coffee } from 'lucide-react';
 import { ShopItem } from '@/features/shop/components';
-import { useUser, useShop } from '@/store';
+import { useAppStore } from '@/store';
 import type { ShopItem as ShopItemType } from '@/types';
 
 export function Shop() {
-  const { user, updatePoints } = useUser();
-  const { purchaseItem } = useShop();
+  const user = useAppStore((state) => state.user);
+  const updatePoints = useAppStore((state) => state.updatePoints);
+  const purchaseItem = useAppStore((state) => state.purchaseItem);
 
-  const items: ShopItemType[] = [{
+  const items = useMemo<ShopItemType[]>(() => [{
     id: '1',
     name: 'Sweet Treat',
     iconName: 'Candy',
@@ -32,7 +33,7 @@ export function Shop() {
     iconName: 'Coffee',
     cost: 30,
     description: 'Third cup of the day'
-  }];
+  }], []);
 
   const handlePurchase = (id: string) => {
     const item = items.find(i => i.id === id);

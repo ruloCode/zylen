@@ -7,40 +7,42 @@ import React from 'react';
 import { Home, CheckSquare, Flame, ShoppingBag, MessageCircle } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/utils';
+import { useLocale } from '@/hooks/useLocale';
 
 export function Navigation() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { t } = useLocale();
 
   const navItems = [
     {
       path: '/',
       icon: Home,
-      label: 'Home',
+      label: t('navigation.home'),
       color: 'text-gold-600'
     },
     {
       path: '/habits',
       icon: CheckSquare,
-      label: 'Habits',
+      label: t('navigation.habits'),
       color: 'text-teal-500'
     },
     {
       path: '/streaks',
       icon: Flame,
-      label: 'Streaks',
+      label: t('navigation.streaks'),
       color: 'text-warning-500'
     },
     {
       path: '/shop',
       icon: ShoppingBag,
-      label: 'Shop',
+      label: t('navigation.shop'),
       color: 'text-gold-700'
     },
     {
       path: '/chat',
       icon: MessageCircle,
-      label: 'Chat',
+      label: t('navigation.chat'),
       color: 'text-teal-600'
     }
   ];

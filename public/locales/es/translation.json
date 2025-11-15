@@ -1,0 +1,103 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "points": "Puntos",
+    "totalPoints": "Puntos Totales",
+    "level": "Nivel",
+    "xp": "XP",
+    "days": "Días",
+    "day": "Día",
+    "skip": "Saltar al contenido principal"
+  },
+  "app": {
+    "name": "MyWay",
+    "tagline": "Construye tu mejor versión"
+  },
+  "navigation": {
+    "home": "Inicio",
+    "habits": "Hábitos",
+    "streaks": "Rachas",
+    "shop": "Tienda",
+    "chat": "Chat",
+    "navigateTo": "Navegar a {{label}}"
+  },
+  "dashboard": {
+    "title": "Panel",
+    "lifeAreas": "Áreas de Vida",
+    "logHabits": "Registrar Hábitos del Día",
+    "keepGoing": "¡Sigue adelante, Campeón! 💪"
+  },
+  "lifeAreas": {
+    "health": "Salud",
+    "finance": "Finanzas",
+    "creativity": "Creatividad",
+    "social": "Social",
+    "family": "Familia",
+    "career": "Carrera"
+  },
+  "streaks": {
+    "title": "Tu Racha",
+    "subtitle": "¡No rompas la cadena!",
+    "current": "Racha Actual",
+    "best": "Mejor Racha",
+    "achievements": "Logros",
+    "onFire": "¡Estás en llamas! 🔥",
+    "motivation": "El éxito es la suma de pequeños esfuerzos repetidos día tras día.",
+    "badges": {
+      "weekWarrior": "Guerrero Semanal",
+      "consistencyKing": "Rey de la Consistencia",
+      "unstoppable": "Imparable"
+    }
+  },
+  "habits": {
+    "title": "Registro de Hábitos",
+    "daily": "Diario",
+    "weekly": "Semanal",
+    "noHabits": "No hay hábitos para hoy",
+    "addHabit": "Agregar Hábito",
+    "complete": "Completar",
+    "completed": "Completado",
+    "skip": "Omitir"
+  },
+  "rootHabit": {
+    "title": "Desafío de 30 Días",
+    "subtitle": "Tu viaje hacia la maestría",
+    "progress": "Progreso",
+    "daysCompleted": "días completados",
+    "keepGoing": "¡Sigue así!"
+  },
+  "shop": {
+    "title": "Tienda",
+    "subtitle": "Recompensas e Indulgencias",
+    "balance": "Saldo",
+    "buyNow": "Comprar Ahora",
+    "purchased": "Comprado",
+    "notEnoughPoints": "No tienes suficientes puntos",
+    "confirmPurchase": "¿Confirmar compra?"
+  },
+  "chat": {
+    "title": "Chat con tu Coach",
+    "subtitle": "Tu guía personal de IA",
+    "typeMessage": "Escribe un mensaje...",
+    "send": "Enviar",
+    "thinking": "Pensando...",
+    "welcomeMessage": "¡Hola! Soy tu coach de IA. ¿En qué puedo ayudarte hoy?"
+  },
+  "errors": {
+    "general": "Algo salió mal. Por favor, intenta de nuevo.",
+    "notFound": "Página no encontrada",
+    "unauthorized": "No autorizado",
+    "network": "Error de conexión. Verifica tu internet."
+  },
+  "actions": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "confirm": "Confirmar",
+    "back": "Volver",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "close": "Cerrar"
+  }
+}

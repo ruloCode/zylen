@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { shallow } from 'zustand/shallow';
 import { createUserSlice, UserSlice } from './userSlice';
 import { createHabitsSlice, HabitsSlice } from './habitsSlice';
 import { createStreaksSlice, StreaksSlice } from './streaksSlice';
@@ -25,7 +26,7 @@ export const useUser = () => useAppStore((state) => ({
   updatePoints: state.updatePoints,
   updateXP: state.updateXP,
   setUser: state.setUser,
-}));
+}), shallow);
 
 export const useHabits = () => useAppStore((state) => ({
   habits: state.habits,
@@ -36,14 +37,14 @@ export const useHabits = () => useAppStore((state) => ({
   toggleHabit: state.toggleHabit,
   resetDailyHabits: state.resetDailyHabits,
   getTotalXPEarned: state.getTotalXPEarned,
-}));
+}), shallow);
 
 export const useStreaks = () => useAppStore((state) => ({
   streak: state.streak,
   loadStreak: state.loadStreak,
   updateStreakForToday: state.updateStreakForToday,
   getStreakBonus: state.getStreakBonus,
-}));
+}), shallow);
 
 export const useShop = () => useAppStore((state) => ({
   purchaseHistory: state.purchaseHistory,
@@ -51,7 +52,7 @@ export const useShop = () => useAppStore((state) => ({
   purchaseItem: state.purchaseItem,
   getTotalSpent: state.getTotalSpent,
   clearHistory: state.clearHistory,
-}));
+}), shallow);
 
 export const useChat = () => useAppStore((state) => ({
   messages: state.messages,
@@ -59,7 +60,7 @@ export const useChat = () => useAppStore((state) => ({
   addMessage: state.addMessage,
   setLoading: state.setLoading,
   clearMessages: state.clearMessages,
-}));
+}), shallow);
 
 // Initialize store on app load
 export function initializeStore() {

@@ -1,20 +1,23 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Sparkles, TrendingUp } from 'lucide-react';
 import { LifeAreaCard } from '@/features/dashboard/components';
 import { StreakDisplay } from '@/features/streaks/components';
+import { LanguageSwitcher } from '@/features/settings/components';
 import { Button } from '@/components/ui';
 import { useNavigate } from 'react-router-dom';
-import { useUser, useStreaks } from '@/store';
+import { useAppStore } from '@/store';
 import { ROUTES, APP_CONFIG } from '@/constants';
+import { useLocale } from '@/hooks/useLocale';
 import ruloAvatar from '../assets/rulo_avatar.png';
 
 export function Dashboard() {
   const navigate = useNavigate();
-  const { user } = useUser();
-  const { streak } = useStreaks();
+  const user = useAppStore((state) => state.user);
+  const streak = useAppStore((state) => state.streak);
+  const { t } = useLocale();
 
   // TODO: Calculate life areas from actual habit completions
-  const lifeAreas = [{
+  const lifeAreas = useMemo(() => [{
     area: 'Health' as const,
     level: 5,
     currentXP: 320,
@@ -44,9 +47,14 @@ export function Dashboard() {
     level: 7,
     currentXP: 580,
     maxXP: 700
-  }];
+  }], []);
   return <div className="min-h-screen pb-24 px-4 pt-8">
       <div className="max-w-md mx-auto">
+        {/* Language Switcher */}
+        <div className="flex justify-end mb-4">
+          <LanguageSwitcher variant="compact" />
+        </div>
+
         {/* Header */}
         <header className="text-center mb-8">
           <h1 className="text-4xl md:text-5xl font-extrabold text-gradient-gold mb-3 tracking-tight">
@@ -67,7 +75,7 @@ export function Dashboard() {
           </div>
           <div className="text-base text-gray-700 font-semibold flex items-center justify-center gap-2" id="points-heading">
             <TrendingUp size={18} className="text-success-600" aria-hidden="true" />
-            <span>Total Points</span>
+            <span>{t('common.totalPoints')}</span>
           </div>
         </section>
 
@@ -85,7 +93,7 @@ export function Dashboard() {
 
         {/* Life Areas */}
         <section aria-labelledby="life-areas-heading" className="mb-8">
-          <h2 id="life-areas-heading" className="text-2xl font-bold text-gray-900 mb-5">Life Areas</h2>
+          <h2 id="life-areas-heading" className="text-2xl font-bold text-gray-900 mb-5">{t('dashboard.lifeAreas')}</h2>
           <div className="grid grid-cols-2 gap-4">
             {lifeAreas.map(area => <LifeAreaCard key={area.area} {...area} />)}
           </div>
@@ -94,11 +102,11 @@ export function Dashboard() {
         {/* CTA */}
         <Button variant="primary-gold" size="lg" className="w-full mb-4" onClick={() => navigate(ROUTES.HABITS)}>
           <Sparkles size={20} aria-hidden="true" />
-          Log Today's Habits
+          {t('dashboard.logHabits')}
         </Button>
 
         <p className="text-center text-base text-gray-700 font-semibold">
-          Keep going, Champion! 💪
+          {t('dashboard.keepGoing')}
         </p>
       </div>
     </div>;
