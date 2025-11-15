@@ -8,6 +8,8 @@ import {
   AdvancedStats,
   DangerZone,
 } from '@/features/profile/components';
+import { HabitForm } from '@/features/habits/components';
+import { Habit, HabitFormData } from '@/types';
 import { ROUTES } from '@/constants/routes';
 import { cn } from '@/utils';
 import ruloAvatar from '@/assets/rulo_avatar.png';
@@ -36,7 +38,7 @@ export function Profile() {
   const navigate = useNavigate();
   const { user, updateUserProfile } = useUser();
   const { lifeAreas, toggleLifeAreaEnabled } = useLifeAreas();
-  const { habits, deleteHabit } = useHabits();
+  const { habits, deleteHabit, updateHabit } = useHabits();
   const { t } = useLocale();
 
   const [isEditingName, setIsEditingName] = useState(false);
@@ -45,6 +47,8 @@ export function Profile() {
   const [selectedAvatar, setSelectedAvatar] = useState(
     user?.avatarUrl || ruloAvatar
   );
+  const [isEditingHabit, setIsEditingHabit] = useState(false);
+  const [habitToEdit, setHabitToEdit] = useState<Habit | undefined>(undefined);
 
   if (!user) {
     navigate(ROUTES.DASHBOARD);
@@ -63,12 +67,30 @@ export function Profile() {
     setIsEditingAvatar(false);
   };
 
+  const handleOpenEditHabit = (habit: Habit) => {
+    setHabitToEdit(habit);
+    setIsEditingHabit(true);
+  };
+
+  const handleEditHabit = (data: HabitFormData) => {
+    if (habitToEdit) {
+      updateHabit(habitToEdit.id, data);
+      setIsEditingHabit(false);
+      setHabitToEdit(undefined);
+    }
+  };
+
+  const handleCancelEditHabit = () => {
+    setIsEditingHabit(false);
+    setHabitToEdit(undefined);
+  };
+
   const selectedAreas = lifeAreas.filter((area) =>
     user.selectedLifeAreas.includes(area.id)
   );
 
   return (
-    <div className="min-h-screen bg-charcoal-900 pt-20 pb-24 px-6 md:px-8">
+    <div className="min-h-screen bg-charcoal-900 pt-20 pb-24 px-4">
       <div className="container mx-auto max-w-7xl">
         {/* 2 Column Grid Layout (Desktop) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -397,16 +419,24 @@ export function Profile() {
                             {habit.xp} XP • {habit.points} {t('common.pts')} • {areaName}
                           </p>
                         </div>
-                        <button
-                          onClick={() => {
-                            if (confirm(t('profile.deleteHabitConfirm'))) {
-                              deleteHabit(habit.id);
-                            }
-                          }}
-                          className="px-3 py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 border border-red-500/50"
-                        >
-                          {t('common.delete')}
-                        </button>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => handleOpenEditHabit(habit)}
+                            className="px-3 py-2 bg-teal-500/20 text-teal-400 rounded-lg hover:bg-teal-500/30 border border-teal-500/50"
+                          >
+                            {t('common.edit')}
+                          </button>
+                          <button
+                            onClick={() => {
+                              if (confirm(t('profile.deleteHabitConfirm'))) {
+                                deleteHabit(habit.id);
+                              }
+                            }}
+                            className="px-3 py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 border border-red-500/50"
+                          >
+                            {t('common.delete')}
+                          </button>
+                        </div>
                       </div>
                     );
                   })
@@ -431,6 +461,15 @@ export function Profile() {
           </main>
         </div>
       </div>
+
+      {/* Habit Edit Modal */}
+      {isEditingHabit && habitToEdit && (
+        <HabitForm
+          habit={habitToEdit}
+          onSubmit={handleEditHabit}
+          onCancel={handleCancelEditHabit}
+        />
+      )}
     </div>
   );
 }

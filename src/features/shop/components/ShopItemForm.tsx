@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
+import { X, Sparkles, AlertCircle } from 'lucide-react';
 import { IconSelector, HABIT_ICONS } from '@/features/habits/components/IconSelector';
 import { useLocale } from '@/hooks/useLocale';
 import type { ShopItem } from '@/types';
@@ -18,9 +18,28 @@ interface ShopItemFormProps {
 export function ShopItemForm({ item, onSubmit, onCancel }: ShopItemFormProps) {
   const { t } = useLocale();
 
+  // Check if item uses translation keys
+  const isTranslationKey = (text: string): boolean => {
+    return text?.startsWith('shop.items.') || false;
+  };
+
+  // Check if this is a predefined/default item
+  const isPredefinedItem = item?.id?.startsWith('default-') || false;
+
+  // Get initial values - translate if it's a translation key
+  const getInitialName = () => {
+    if (!item?.name) return '';
+    return isTranslationKey(item.name) ? t(item.name) : item.name;
+  };
+
+  const getInitialDescription = () => {
+    if (!item?.description) return '';
+    return isTranslationKey(item.description) ? t(item.description) : item.description;
+  };
+
   // Form state
-  const [name, setName] = useState(item?.name || '');
-  const [description, setDescription] = useState(item?.description || '');
+  const [name, setName] = useState(getInitialName());
+  const [description, setDescription] = useState(getInitialDescription());
   const [cost, setCost] = useState(item?.cost || 50);
   const [iconName, setIconName] = useState(item?.iconName || 'Candy');
   const [category, setCategory] = useState<'food' | 'leisure' | 'shopping' | 'other'>(
@@ -34,13 +53,13 @@ export function ShopItemForm({ item, onSubmit, onCancel }: ShopItemFormProps) {
   // Reset form when item prop changes
   useEffect(() => {
     if (item) {
-      setName(item.name);
-      setDescription(item.description);
+      setName(isTranslationKey(item.name) ? t(item.name) : item.name);
+      setDescription(isTranslationKey(item.description) ? t(item.description) : item.description);
       setCost(item.cost);
       setIconName(item.iconName);
       setCategory(item.category || 'other');
     }
-  }, [item]);
+  }, [item, t]);
 
   /**
    * Validate form fields
@@ -107,44 +126,64 @@ export function ShopItemForm({ item, onSubmit, onCancel }: ShopItemFormProps) {
       return;
     }
 
-    // Submit the data
-    onSubmit({
-      name: name.trim(),
-      description: description.trim(),
+    // If editing a predefined item, preserve the translation keys
+    // Otherwise use the actual values
+    const submitData = {
+      name: isPredefinedItem && item ? item.name : name.trim(),
+      description: isPredefinedItem && item ? item.description : description.trim(),
       cost,
       iconName,
       category,
       available: true,
-    });
+    };
+
+    onSubmit(submitData);
   };
 
   const isEditing = !!item;
   const SelectedIcon = HABIT_ICONS[iconName];
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 overflow-y-auto">
-      <div className="bg-white rounded-3xl shadow-2xl max-w-lg w-full my-8 max-h-[calc(100vh-4rem)] flex flex-col">
-        {/* Header */}
-        <div className="flex-shrink-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between rounded-t-3xl">
-          <h2 className="text-2xl font-bold text-gray-900">
-            {isEditing ? t('shopManager.editItem') : t('shopManager.createItem')}
-          </h2>
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 modal-overlay overflow-y-auto">
+      <div className="glass-card border-2 border-gold-300/40 rounded-3xl shadow-2xl max-w-lg w-full my-8 max-h-[calc(100vh-4rem)] flex flex-col overflow-hidden">
+        {/* Header with Gold Gradient */}
+        <div className="flex-shrink-0 bg-gradient-to-r from-gold-500 to-gold-600 px-6 py-5 flex items-center justify-between rounded-t-3xl shadow-glow-gold">
+          <div className="flex items-center gap-3">
+            <Sparkles className="w-6 h-6 text-white animate-pulse" />
+            <h2 className="text-2xl font-bold text-white">
+              {isEditing ? t('shopManager.editItem') : t('shopManager.createItem')}
+            </h2>
+          </div>
           <button
             type="button"
             onClick={onCancel}
-            className="p-2 rounded-xl hover:bg-gray-100 transition-colors"
+            className="p-2 rounded-xl hover:bg-white/20 transition-colors"
             aria-label={t('actions.cancel')}
           >
-            <X className="w-6 h-6 text-gray-600" />
+            <X className="w-6 h-6 text-white" />
           </button>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 space-y-6">
+        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 space-y-5 bg-parchment-50/95 backdrop-blur-xl">
+          {/* Warning for predefined items */}
+          {isPredefinedItem && (
+            <div className="flex items-start gap-3 p-4 bg-warning/10 border border-warning/30 rounded-xl">
+              <AlertCircle className="w-5 h-5 text-warning flex-shrink-0 mt-0.5" />
+              <div className="text-sm">
+                <p className="font-semibold text-charcoal-500 mb-1">Default Item</p>
+                <p className="text-gray-600">
+                  You can modify the cost, icon, and category. Name and description will remain as defined in translations.
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* Item Name */}
           <div>
-            <label htmlFor="item-name" className="block text-sm font-semibold text-gray-900 mb-2">
+            <label htmlFor="item-name" className="block text-sm font-semibold text-charcoal-500 mb-2">
               {t('shopManager.itemName')}
+              {isPredefinedItem && <span className="ml-2 text-xs text-gray-500">(Read-only for default items)</span>}
             </label>
             <input
               id="item-name"
@@ -153,18 +192,21 @@ export function ShopItemForm({ item, onSubmit, onCancel }: ShopItemFormProps) {
               onChange={(e) => setName(e.target.value)}
               onBlur={() => handleBlur('name')}
               placeholder={t('shopManager.itemNamePlaceholder')}
+              disabled={isPredefinedItem}
               className={cn(
-                'w-full px-4 py-3 rounded-xl border-2 transition-colors',
-                'focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent',
+                'w-full px-4 py-3 rounded-xl border-2 transition-all duration-200',
+                'focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-gold-500 focus:shadow-glow-gold',
+                'bg-white/80 backdrop-blur-sm',
+                isPredefinedItem && 'opacity-60 cursor-not-allowed bg-gray-100',
                 touched.name && errors.name
-                  ? 'border-red-500 bg-red-50'
-                  : 'border-gray-200 bg-white'
+                  ? 'border-danger bg-danger/5'
+                  : 'border-parchment-300 hover:border-gold-400'
               )}
               aria-invalid={touched.name && !!errors.name}
               aria-describedby={touched.name && errors.name ? 'name-error' : undefined}
             />
             {touched.name && errors.name && (
-              <p id="name-error" className="mt-1 text-sm text-red-600" role="alert">
+              <p id="name-error" className="mt-2 text-sm text-danger font-medium" role="alert">
                 {errors.name}
               </p>
             )}
@@ -172,8 +214,9 @@ export function ShopItemForm({ item, onSubmit, onCancel }: ShopItemFormProps) {
 
           {/* Description */}
           <div>
-            <label htmlFor="description" className="block text-sm font-semibold text-gray-900 mb-2">
+            <label htmlFor="description" className="block text-sm font-semibold text-charcoal-500 mb-2">
               {t('shopManager.description')}
+              {isPredefinedItem && <span className="ml-2 text-xs text-gray-500">(Read-only for default items)</span>}
             </label>
             <textarea
               id="description"
@@ -182,18 +225,21 @@ export function ShopItemForm({ item, onSubmit, onCancel }: ShopItemFormProps) {
               onBlur={() => handleBlur('description')}
               placeholder={t('shopManager.descriptionPlaceholder')}
               rows={3}
+              disabled={isPredefinedItem}
               className={cn(
-                'w-full px-4 py-3 rounded-xl border-2 transition-colors resize-none',
-                'focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent',
+                'w-full px-4 py-3 rounded-xl border-2 transition-all duration-200 resize-none',
+                'focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-gold-500 focus:shadow-glow-gold',
+                'bg-white/80 backdrop-blur-sm',
+                isPredefinedItem && 'opacity-60 cursor-not-allowed bg-gray-100',
                 touched.description && errors.description
-                  ? 'border-red-500 bg-red-50'
-                  : 'border-gray-200 bg-white'
+                  ? 'border-danger bg-danger/5'
+                  : 'border-parchment-300 hover:border-gold-400'
               )}
               aria-invalid={touched.description && !!errors.description}
               aria-describedby={touched.description && errors.description ? 'description-error' : undefined}
             />
             {touched.description && errors.description && (
-              <p id="description-error" className="mt-1 text-sm text-red-600" role="alert">
+              <p id="description-error" className="mt-2 text-sm text-danger font-medium" role="alert">
                 {errors.description}
               </p>
             )}
@@ -201,7 +247,7 @@ export function ShopItemForm({ item, onSubmit, onCancel }: ShopItemFormProps) {
 
           {/* Cost */}
           <div>
-            <label htmlFor="cost" className="block text-sm font-semibold text-gray-900 mb-2">
+            <label htmlFor="cost" className="block text-sm font-semibold text-charcoal-500 mb-2">
               {t('shopManager.cost')}
             </label>
             <input
@@ -214,20 +260,21 @@ export function ShopItemForm({ item, onSubmit, onCancel }: ShopItemFormProps) {
               onChange={(e) => setCost(parseInt(e.target.value) || 0)}
               onBlur={() => handleBlur('cost')}
               className={cn(
-                'w-full px-4 py-3 rounded-xl border-2 transition-colors',
-                'focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent',
+                'w-full px-4 py-3 rounded-xl border-2 transition-all duration-200',
+                'focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-gold-500 focus:shadow-glow-gold',
+                'bg-white/80 backdrop-blur-sm',
                 touched.cost && errors.cost
-                  ? 'border-red-500 bg-red-50'
-                  : 'border-gray-200 bg-white'
+                  ? 'border-danger bg-danger/5'
+                  : 'border-parchment-300 hover:border-gold-400'
               )}
               aria-invalid={touched.cost && !!errors.cost}
               aria-describedby={touched.cost && errors.cost ? 'cost-error' : undefined}
             />
-            <p className="mt-1 text-xs text-gray-500">
+            <p className="mt-2 text-xs text-gray-600">
               {t('shopManager.costDescription', { min: SHOP_CONFIG.minItemCost, max: SHOP_CONFIG.maxItemCost })}
             </p>
             {touched.cost && errors.cost && (
-              <p id="cost-error" className="mt-1 text-sm text-red-600" role="alert">
+              <p id="cost-error" className="mt-2 text-sm text-danger font-medium" role="alert">
                 {errors.cost}
               </p>
             )}
@@ -235,7 +282,7 @@ export function ShopItemForm({ item, onSubmit, onCancel }: ShopItemFormProps) {
 
           {/* Category */}
           <div>
-            <label htmlFor="category" className="block text-sm font-semibold text-gray-900 mb-2">
+            <label htmlFor="category" className="block text-sm font-semibold text-charcoal-500 mb-2">
               {t('shopManager.category')}
             </label>
             <select
@@ -243,7 +290,7 @@ export function ShopItemForm({ item, onSubmit, onCancel }: ShopItemFormProps) {
               value={category}
               onChange={(e) => setCategory(e.target.value as any)}
               onBlur={() => handleBlur('category')}
-              className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+              className="w-full px-4 py-3 rounded-xl border-2 border-parchment-300 bg-white/80 backdrop-blur-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-gold-500 focus:shadow-glow-gold hover:border-gold-400"
             >
               <option value="food">{t('shopManager.categories.food')}</option>
               <option value="leisure">{t('shopManager.categories.leisure')}</option>
@@ -254,18 +301,20 @@ export function ShopItemForm({ item, onSubmit, onCancel }: ShopItemFormProps) {
 
           {/* Icon Selection */}
           <div>
-            <label className="block text-sm font-semibold text-gray-900 mb-2">
+            <label className="block text-sm font-semibold text-charcoal-500 mb-2">
               {t('shopManager.icon')}
             </label>
-            <div className="mb-3 flex items-center gap-3 p-4 bg-gray-50 rounded-xl">
-              <div className="bg-teal-100 p-3 rounded-xl">
-                {SelectedIcon && <SelectedIcon className="w-6 h-6 text-teal-600" />}
+            <div className="mb-3 flex items-center gap-3 p-4 bg-gradient-to-br from-gold-100/50 to-teal-100/50 backdrop-blur-sm rounded-xl border border-gold-200/50">
+              <div className="icon-gradient-gold p-3 rounded-xl shadow-glow-gold">
+                {SelectedIcon && <SelectedIcon className="w-6 h-6 text-white" />}
               </div>
-              <span className="text-sm text-gray-700">{t('shopManager.selectedIcon')}: {iconName}</span>
+              <span className="text-sm font-medium text-charcoal-500">
+                {t('shopManager.selectedIcon')}: <span className="text-gold-700">{iconName}</span>
+              </span>
             </div>
             <IconSelector selectedIcon={iconName} onSelectIcon={setIconName} />
             {touched.icon && errors.icon && (
-              <p className="mt-2 text-sm text-red-600" role="alert">
+              <p className="mt-2 text-sm text-danger font-medium" role="alert">
                 {errors.icon}
               </p>
             )}
@@ -276,13 +325,13 @@ export function ShopItemForm({ item, onSubmit, onCancel }: ShopItemFormProps) {
             <button
               type="button"
               onClick={onCancel}
-              className="flex-1 px-6 py-3 rounded-xl border-2 border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 transition-colors"
+              className="flex-1 px-6 py-3 rounded-xl border-2 border-gray-300 text-gray-700 font-semibold hover:bg-gray-100 transition-all duration-200 bg-white/80"
             >
               {t('actions.cancel')}
             </button>
             <button
               type="submit"
-              className="flex-1 px-6 py-3 rounded-xl bg-teal-600 text-white font-semibold hover:bg-teal-700 transition-colors"
+              className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white font-semibold shadow-glow-teal hover:shadow-glow-teal transition-all duration-200 hover:scale-105"
             >
               {isEditing ? t('actions.saveChanges') : t('actions.create')}
             </button>

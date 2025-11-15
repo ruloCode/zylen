@@ -7,3 +7,4 @@ export * from './LevelBadge';
 export * from './LevelUpNotification';
 export * from './Modal';
 export * from './ColorPicker';
+export * from './Toast';

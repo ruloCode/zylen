@@ -1,13 +1,23 @@
 import React, { useState } from 'react';
-import { Edit, Trash2, Plus } from 'lucide-react';
+import { Edit, Trash2, Plus, Sparkles, Package } from 'lucide-react';
 import { ShopItemForm } from './ShopItemForm';
 import { useShop } from '@/store';
 import { useLocale } from '@/hooks/useLocale';
+import { useToast } from '@/hooks/useToast';
 import { HABIT_ICONS } from '@/features/habits/components/IconSelector';
 import type { ShopItem } from '@/types';
 
+// Category color mapping
+const categoryColors: Record<string, string> = {
+  food: 'bg-gold-100 text-gold-700 border-gold-300',
+  leisure: 'bg-teal-100 text-teal-700 border-teal-300',
+  shopping: 'bg-parchment-200 text-charcoal-500 border-parchment-300',
+  other: 'bg-gray-100 text-gray-700 border-gray-300',
+};
+
 export function ShopItemManager() {
   const { t } = useLocale();
+  const toast = useToast();
   const { shopItems, addShopItem, updateShopItem, deleteShopItem } = useShop();
 
   const [showForm, setShowForm] = useState(false);
@@ -33,8 +43,11 @@ export function ShopItemManager() {
    * Handle deleting an item
    */
   const handleDelete = (item: ShopItem) => {
-    if (confirm(t('shopManager.confirmDelete', { name: item.name }))) {
+    const displayName = getDisplayName(item);
+
+    if (confirm(t('shopManager.confirmDelete', { name: displayName }))) {
       deleteShopItem(item.id);
+      toast.success(t('shop.toast.itemDeleted', { name: displayName }));
     }
   };
 
@@ -42,15 +55,19 @@ export function ShopItemManager() {
    * Handle form submission
    */
   const handleFormSubmit = (data: Omit<ShopItem, 'id'>) => {
+    const displayName = isTranslationKey(data.name) ? t(data.name) : data.name;
+
     if (editingItem) {
       // Update existing item
       updateShopItem(editingItem.id, data);
+      toast.success(t('shop.toast.itemUpdated', { name: displayName }));
     } else {
       // Create new item
       addShopItem({
         id: crypto.randomUUID(),
         ...data,
       });
+      toast.success(t('shop.toast.itemAdded', { name: displayName }));
     }
 
     // Close form
@@ -99,12 +116,15 @@ export function ShopItemManager() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">{t('shopManager.title')}</h2>
-          <p className="text-sm text-gray-600 mt-1">{t('shopManager.subtitle')}</p>
+          <h2 className="text-3xl font-bold text-charcoal-500 flex items-center gap-2">
+            <Sparkles className="w-8 h-8 text-gold-500" />
+            {t('shopManager.title')}
+          </h2>
+          <p className="text-sm text-gray-600 mt-2">{t('shopManager.subtitle')}</p>
         </div>
         <button
           onClick={handleCreate}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-teal-600 text-white font-semibold hover:bg-teal-700 transition-colors"
+          className="flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white font-semibold shadow-glow-teal transition-all duration-200 hover:scale-105"
         >
           <Plus size={20} />
           {t('shopManager.addItem')}
@@ -114,11 +134,13 @@ export function ShopItemManager() {
       {/* Items List */}
       <div className="space-y-3">
         {shopItems.length === 0 ? (
-          <div className="text-center py-12 glass-card rounded-2xl">
-            <p className="text-gray-500">{t('shopManager.noItems')}</p>
+          <div className="text-center py-16 glass-card rounded-2xl border-2 border-gold-200/30">
+            <Package className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+            <p className="text-gray-600 text-lg mb-2">{t('shopManager.noItems')}</p>
+            <p className="text-gray-500 text-sm mb-6">Create your first reward to get started</p>
             <button
               onClick={handleCreate}
-              className="mt-4 px-6 py-2 rounded-xl bg-teal-600 text-white font-semibold hover:bg-teal-700 transition-colors"
+              className="px-6 py-3 rounded-xl bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-600 hover:to-gold-700 text-white font-semibold shadow-glow-gold transition-all duration-200 hover:scale-105"
             >
               {t('shopManager.addFirstItem')}
             </button>
@@ -129,34 +151,36 @@ export function ShopItemManager() {
             const displayName = getDisplayName(item);
             const displayDescription = getDisplayDescription(item);
             const isDefault = isPredefined(item);
+            const categoryColor = categoryColors[item.category || 'other'];
 
             return (
               <div
                 key={item.id}
-                className="glass-card rounded-xl p-4 flex items-center gap-4"
+                className="glass-card rounded-xl p-5 flex items-center gap-4 border-2 border-gold-200/20 hover:border-gold-300/40 transition-all duration-200 group"
               >
                 {/* Icon */}
-                <div className="bg-teal-100 p-3 rounded-xl flex-shrink-0">
-                  <Icon className="w-6 h-6 text-teal-600" />
+                <div className="icon-gradient-gold p-3 rounded-xl flex-shrink-0 shadow-glow-gold group-hover:scale-110 transition-transform duration-200">
+                  <Icon className="w-7 h-7 text-white" />
                 </div>
 
                 {/* Info */}
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-semibold text-gray-900">{displayName}</h3>
+                  <div className="flex items-center gap-2 mb-1">
+                    <h3 className="font-bold text-lg text-charcoal-500">{displayName}</h3>
                     {isDefault && (
-                      <span className="px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 text-xs font-medium">
+                      <span className="px-2 py-0.5 rounded-full bg-gradient-to-r from-teal-100 to-teal-200 text-teal-700 text-xs font-semibold border border-teal-300">
                         {t('shopManager.default')}
                       </span>
                     )}
                   </div>
-                  <p className="text-sm text-gray-600 truncate">{displayDescription}</p>
-                  <div className="flex items-center gap-4 mt-1">
-                    <span className="text-sm font-semibold text-gold-600">
+                  <p className="text-sm text-gray-600 mb-2">{displayDescription}</p>
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm font-bold text-gradient-gold flex items-center gap-1">
+                      <Sparkles className="w-4 h-4" />
                       {item.cost} {t('common.points')}
                     </span>
                     {item.category && (
-                      <span className="text-xs text-gray-500">
+                      <span className={`text-xs font-semibold px-2 py-1 rounded-full border ${categoryColor}`}>
                         {t(`shopManager.categories.${item.category}`)}
                       </span>
                     )}
@@ -167,17 +191,17 @@ export function ShopItemManager() {
                 <div className="flex items-center gap-2 flex-shrink-0">
                   <button
                     onClick={() => handleEdit(item)}
-                    className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                    className="p-2.5 rounded-lg hover:bg-teal-100 transition-all duration-200 group/edit"
                     title={t('actions.edit')}
                   >
-                    <Edit className="w-5 h-5 text-gray-600" />
+                    <Edit className="w-5 h-5 text-teal-600 group-hover/edit:scale-110 transition-transform" />
                   </button>
                   <button
                     onClick={() => handleDelete(item)}
-                    className="p-2 rounded-lg hover:bg-red-100 transition-colors"
+                    className="p-2.5 rounded-lg hover:bg-danger/10 transition-all duration-200 group/delete"
                     title={t('actions.delete')}
                   >
-                    <Trash2 className="w-5 h-5 text-red-600" />
+                    <Trash2 className="w-5 h-5 text-danger group-hover/delete:scale-110 transition-transform" />
                   </button>
                 </div>
               </div>

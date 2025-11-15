@@ -125,6 +125,13 @@
     "spendWisely": "Gasta sabiamente, héroe ⚖️",
     "rememberGoals": "⚠️ Recuerda Tus Objetivos",
     "indulgenceWarning": "Estas indulgencias son recompensas, no hábitos. Úsalas con consciencia para mantener tu progreso.",
+    "toast": {
+      "purchaseSuccess": "🎉 ¡{{name}} comprado! -{{cost}} puntos",
+      "purchaseError": "❌ ¡No tienes suficientes puntos! Necesitas {{needed}} más",
+      "itemAdded": "✨ Recompensa \"{{name}}\" agregada exitosamente",
+      "itemUpdated": "✅ Recompensa \"{{name}}\" actualizada",
+      "itemDeleted": "🗑️ Recompensa \"{{name}}\" eliminada"
+    },
     "items": {
       "sweetTreat": {
         "name": "Dulce Especial",

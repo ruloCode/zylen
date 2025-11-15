@@ -398,4 +398,111 @@
     background-size: 200px 150px, 250px 180px;
     background-position: 0% 0%, 50% 100%;
   }
+
+  /* ==========================================
+     SHOP-SPECIFIC ANIMATIONS
+     ========================================== */
+
+  /* Coin icon rotation on hover */
+  .coin-spin {
+    @apply transition-transform duration-500;
+  }
+
+  .coin-spin:hover {
+    @apply rotate-[360deg];
+  }
+
+  /* Purchase button pulse */
+  .btn-purchase-pulse {
+    @apply animate-pulse;
+    animation-duration: 1.5s;
+  }
+
+  /* Item card hover lift */
+  .shop-item-hover {
+    @apply transition-all duration-300 ease-out;
+  }
+
+  .shop-item-hover:hover {
+    @apply scale-105 shadow-glow-gold;
+    transform: translateY(-4px) scale(1.05);
+  }
+
+  /* Category badge glow */
+  .category-badge {
+    @apply transition-all duration-200;
+  }
+
+  .category-badge:hover {
+    @apply scale-110 shadow-sm;
+  }
+
+  /* Points counter animation */
+  @keyframes points-pop {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+  }
+
+  .points-pop {
+    animation: points-pop 0.3s ease-in-out;
+  }
+
+  /* Purchase success animation */
+  @keyframes purchase-success {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.2) rotate(5deg);
+      opacity: 0.8;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .purchase-success {
+    animation: purchase-success 0.5s ease-out;
+  }
+
+  /* Icon gradient background */
+  .icon-gradient-gold {
+    @apply bg-gradient-to-br from-gold-400 to-gold-600;
+  }
+
+  .icon-gradient-teal {
+    @apply bg-gradient-to-br from-teal-400 to-teal-600;
+  }
+
+  /* Glass modal overlay */
+  .modal-overlay {
+    @apply bg-charcoal-500/40 backdrop-blur-sm;
+  }
+
+  /* Shimmer loading effect */
+  @keyframes shimmer {
+    0% {
+      background-position: -200% center;
+    }
+    100% {
+      background-position: 200% center;
+    }
+  }
+
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 200, 87, 0.3) 50%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
 }

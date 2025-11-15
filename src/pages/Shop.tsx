@@ -1,8 +1,9 @@
 import React, { useState, useMemo } from 'react';
-import { Settings } from 'lucide-react';
+import { Settings, Coins, Sparkles, AlertTriangle, ShoppingBag } from 'lucide-react';
 import { ShopItem, ShopItemManager } from '@/features/shop/components';
 import { useAppStore, useShop } from '@/store';
 import { useLocale } from '@/hooks/useLocale';
+import { useToast } from '@/hooks/useToast';
 import type { ShopItem as ShopItemType } from '@/types';
 import { ShopItemsService } from '@/services';
 
@@ -11,8 +12,10 @@ export function Shop() {
   const updatePoints = useAppStore((state) => state.updatePoints);
   const { shopItems, purchaseItem } = useShop();
   const { t } = useLocale();
+  const toast = useToast();
 
   const [isManaging, setIsManaging] = useState(false);
+  const [isPurchasing, setIsPurchasing] = useState(false);
 
   /**
    * Get display name for item (translate if it's a translation key)
@@ -45,35 +48,52 @@ export function Shop() {
     const item = shopItems.find((i) => i.id === id);
     if (!item) return;
 
+    const displayName = getDisplayName(item);
+
     // Check if user has enough points
     if (!user || user.points < item.cost) {
-      alert(t('shop.notEnoughPoints'));
+      const needed = item.cost - (user?.points || 0);
+      toast.error(t('shop.toast.purchaseError', { needed }));
       return;
     }
+
+    // Trigger purchase animation
+    setIsPurchasing(true);
+    setTimeout(() => setIsPurchasing(false), 500);
 
     // Deduct points and record purchase
     updatePoints(-item.cost);
     purchaseItem(item);
-    alert(t('shop.purchaseConfirmed'));
+
+    // Show success toast
+    toast.success(t('shop.toast.purchaseSuccess', { name: displayName, cost: item.cost }));
   };
+
   return (
     <div className="min-h-screen pb-24 px-4 pt-8">
       <div className="max-w-md mx-auto">
         {/* Header */}
         <header className="mb-8">
           <div className="flex items-center justify-between mb-3">
-            <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight">
-              {t('shop.title')}
-            </h1>
+            <div className="flex items-center gap-3">
+              <ShoppingBag className="w-10 h-10 text-gold-500" />
+              <h1 className="text-4xl font-extrabold text-gradient-gold tracking-tight">
+                {t('shop.title')}
+              </h1>
+            </div>
             <button
               onClick={() => setIsManaging(!isManaging)}
-              className="p-2 rounded-xl hover:bg-gray-100 transition-colors"
+              className={`p-3 rounded-xl transition-all duration-200 ${
+                isManaging
+                  ? 'bg-gold-100 text-gold-600 shadow-glow-gold'
+                  : 'hover:bg-gray-100 text-gray-600'
+              }`}
               title={t('shopManager.manageItems')}
             >
-              <Settings className="w-6 h-6 text-gray-600" />
+              <Settings className="w-6 h-6" />
             </button>
           </div>
-          <p className="text-base text-gray-700 font-semibold">
+          <p className="text-base text-gray-700 font-medium">
             {isManaging ? t('shopManager.subtitle') : t('shop.subtitle')}
           </p>
         </header>
@@ -87,15 +107,33 @@ export function Shop() {
             {/* Points Balance */}
             <section
               aria-labelledby="balance-heading"
-              className="glass-card rounded-3xl p-6 mb-8 text-center bg-gradient-to-br from-gold-50/80 to-gold-100/60"
+              className={`glass-card rounded-3xl p-7 mb-8 text-center bg-gradient-to-br from-gold-100/60 to-gold-200/40 border-2 border-gold-300/40 shadow-glow-gold relative overflow-hidden ${
+                isPurchasing ? 'purchase-success' : ''
+              }`}
             >
-              <h2 className="text-base text-gray-700 font-semibold mb-2" id="balance-heading">
-                {t('common.points')}
-              </h2>
-              <div className="text-5xl font-bold text-gray-900" aria-live="polite">
-                {user?.points?.toLocaleString() || 0}
+              {/* Animated background glow */}
+              <div className="absolute inset-0 shimmer opacity-30 pointer-events-none" />
+
+              <div className="relative z-10">
+                <div className="flex items-center justify-center gap-2 mb-2">
+                  <Coins className="w-6 h-6 text-gold-600 coin-spin" />
+                  <h2 className="text-base text-gold-700 font-bold" id="balance-heading">
+                    {t('common.points')}
+                  </h2>
+                </div>
+                <div
+                  className={`text-6xl font-extrabold text-gradient-gold mb-3 ${
+                    isPurchasing ? 'points-pop' : ''
+                  }`}
+                  aria-live="polite"
+                >
+                  {user?.points?.toLocaleString() || 0}
+                </div>
+                <p className="text-sm text-gold-700 font-semibold flex items-center justify-center gap-2">
+                  <Sparkles className="w-4 h-4" />
+                  {t('shop.spendWisely')}
+                </p>
               </div>
-              <p className="text-base text-gray-700 font-semibold mt-3">{t('shop.spendWisely')}</p>
             </section>
 
             {/* Shop Items */}
@@ -104,11 +142,13 @@ export function Shop() {
                 Available Rewards
               </h2>
               {displayItems.length === 0 ? (
-                <div className="glass-card rounded-2xl p-8 text-center">
-                  <p className="text-gray-500">{t('shopManager.noItems')}</p>
+                <div className="glass-card rounded-2xl p-12 text-center border-2 border-gold-200/30">
+                  <ShoppingBag className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-600 text-lg mb-2">{t('shopManager.noItems')}</p>
+                  <p className="text-gray-500 text-sm mb-6">Add your first reward to get started</p>
                   <button
                     onClick={() => setIsManaging(true)}
-                    className="mt-4 px-6 py-2 rounded-xl bg-teal-600 text-white font-semibold hover:bg-teal-700 transition-colors"
+                    className="px-6 py-3 rounded-xl bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-600 hover:to-gold-700 text-white font-semibold shadow-glow-gold transition-all duration-200 hover:scale-105"
                   >
                     {t('shopManager.addFirstItem')}
                   </button>
@@ -124,14 +164,24 @@ export function Shop() {
 
             {/* Warning */}
             <aside
-              className="glass-card rounded-3xl p-6 text-center bg-gradient-to-br from-warning-50/80 to-danger-50/60"
+              className="glass-card rounded-3xl p-6 bg-gradient-to-br from-warning/10 to-danger/10 border-2 border-warning/30 relative overflow-hidden group hover:border-warning/50 transition-all duration-200"
               role="note"
               aria-label="Important reminder"
             >
-              <p className="text-gray-900 font-bold text-lg mb-3">{t('shop.rememberGoals')}</p>
-              <p className="text-base text-gray-800 font-medium leading-relaxed">
-                {t('shop.indulgenceWarning')}
-              </p>
+              {/* Warning icon with animation */}
+              <div className="absolute top-4 right-4 opacity-20 group-hover:opacity-30 transition-opacity">
+                <AlertTriangle className="w-12 h-12 text-warning" />
+              </div>
+
+              <div className="relative">
+                <div className="flex items-center gap-2 mb-3">
+                  <AlertTriangle className="w-5 h-5 text-warning" />
+                  <p className="text-charcoal-500 font-bold text-lg">{t('shop.rememberGoals')}</p>
+                </div>
+                <p className="text-base text-gray-700 leading-relaxed">
+                  {t('shop.indulgenceWarning')}
+                </p>
+              </div>
             </aside>
           </>
         )}

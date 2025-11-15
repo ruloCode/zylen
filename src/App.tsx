@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Navigation, Header } from '@/components/layout';
 import { AppProvider } from '@/app/AppProvider';
 import { I18nProvider } from '@/components/I18nProvider';
+import { ToastContainer } from '@/components/ui/Toast';
 import { ROUTES } from '@/constants';
 
 // Lazy load pages for code splitting
@@ -62,6 +63,9 @@ export function App() {
               <Navigation />
             </div>
           </Suspense>
+
+          {/* Toast Notifications */}
+          <ToastContainer />
         </AppProvider>
       </BrowserRouter>
     </I18nProvider>
