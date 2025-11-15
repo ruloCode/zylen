@@ -33,10 +33,13 @@ export class UserService {
   static initializeUser(): User {
     const defaultUser: User = {
       id: crypto.randomUUID(),
+      name: '', // Empty, will be set during onboarding
       points: 0,
       totalXPEarned: 0,
       level: 1, // Start at level 1
       joinedAt: new Date(),
+      hasCompletedOnboarding: false,
+      selectedLifeAreas: [],
     };
 
     this.setUser(defaultUser);

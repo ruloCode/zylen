@@ -16,6 +16,9 @@ export interface UserSlice {
   updatePoints: (delta: number) => void;
   updateXP: (xp: number) => void;
   setUser: (user: User) => void;
+  completeOnboarding: () => void;
+  updateUserProfile: (name: string, avatarUrl?: string) => void;
+  updateSelectedLifeAreas: (areaIds: string[]) => void;
 }
 
 export const createUserSlice: StateCreator<UserSlice> = (set) => ({
@@ -86,5 +89,48 @@ export const createUserSlice: StateCreator<UserSlice> = (set) => ({
   setUser: (user: User) => {
     UserService.setUser(user);
     set({ user });
+  },
+
+  completeOnboarding: () => {
+    set((state) => {
+      if (!state.user) return state;
+
+      const updatedUser = {
+        ...state.user,
+        hasCompletedOnboarding: true,
+      };
+
+      UserService.setUser(updatedUser);
+      return { user: updatedUser };
+    });
+  },
+
+  updateUserProfile: (name: string, avatarUrl?: string) => {
+    set((state) => {
+      if (!state.user) return state;
+
+      const updatedUser = {
+        ...state.user,
+        name,
+        ...(avatarUrl !== undefined && { avatarUrl }),
+      };
+
+      UserService.setUser(updatedUser);
+      return { user: updatedUser };
+    });
+  },
+
+  updateSelectedLifeAreas: (areaIds: string[]) => {
+    set((state) => {
+      if (!state.user) return state;
+
+      const updatedUser = {
+        ...state.user,
+        selectedLifeAreas: areaIds,
+      };
+
+      UserService.setUser(updatedUser);
+      return { user: updatedUser };
+    });
   },
 });

@@ -10,6 +10,8 @@ export const ROUTES = {
   ROOT_HABIT: '/root-habit',
   SHOP: '/shop',
   CHAT: '/chat',
+  PROFILE: '/profile',
+  ONBOARDING: '/onboarding',
 } as const;
 
 export type RouteKey = keyof typeof ROUTES;

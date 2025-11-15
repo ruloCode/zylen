@@ -1,6 +1,6 @@
 import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Navigation } from '@/components/layout';
+import { Navigation, Header } from '@/components/layout';
 import { AppProvider } from '@/app/AppProvider';
 import { I18nProvider } from '@/components/I18nProvider';
 import { ROUTES } from '@/constants';
@@ -12,6 +12,8 @@ const Streaks = lazy(() => import('./pages/Streaks').then(m => ({ default: m.Str
 const RootHabit = lazy(() => import('./pages/RootHabit').then(m => ({ default: m.RootHabit })));
 const Shop = lazy(() => import('./pages/Shop').then(m => ({ default: m.Shop })));
 const Chat = lazy(() => import('./pages/Chat').then(m => ({ default: m.Chat })));
+const Onboarding = lazy(() => import('./pages/Onboarding').then(m => ({ default: m.Onboarding })));
+const Profile = lazy(() => import('./pages/Profile').then(m => ({ default: m.Profile })));
 
 // Loading fallback component
 function PageLoader() {
@@ -27,9 +29,9 @@ function PageLoader() {
 
 export function App() {
   return (
-    <AppProvider>
-      <I18nProvider>
-        <BrowserRouter>
+    <I18nProvider>
+      <BrowserRouter>
+        <AppProvider>
           <Suspense fallback={<PageLoader />}>
             <div className="w-full min-h-screen">
               {/* Skip Navigation for screen readers (WCAG 2.4.1) */}
@@ -40,9 +42,14 @@ export function App() {
                 Skip to main content
               </a>
 
+              {/* Header */}
+              <Header />
+
               {/* Main content with proper landmark */}
               <main id="main-content" className="pb-24">
                 <Routes>
+                  <Route path={ROUTES.ONBOARDING} element={<Onboarding />} />
+                  <Route path={ROUTES.PROFILE} element={<Profile />} />
                   <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
                   <Route path={ROUTES.HABITS} element={<HabitLog />} />
                   <Route path={ROUTES.STREAKS} element={<Streaks />} />
@@ -55,8 +62,8 @@ export function App() {
               <Navigation />
             </div>
           </Suspense>
-        </BrowserRouter>
-      </I18nProvider>
-    </AppProvider>
+        </AppProvider>
+      </BrowserRouter>
+    </I18nProvider>
   );
 }

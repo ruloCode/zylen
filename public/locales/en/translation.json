@@ -5,9 +5,13 @@
     "totalPoints": "Total Points",
     "level": "Level",
     "xp": "XP",
+    "totalXP": "Total XP",
     "days": "Days",
     "day": "Day",
-    "skip": "Skip to main content"
+    "skip": "Skip to main content",
+    "edit": "Edit",
+    "delete": "Delete",
+    "cancel": "Cancel"
   },
   "app": {
     "name": "Zylen",
@@ -136,5 +140,60 @@
     "next": "Next",
     "previous": "Previous",
     "close": "Close"
+  },
+  "onboarding": {
+    "prevButton": "Previous",
+    "nextButton": "Next",
+    "finishButton": "Get Started",
+    "step1": {
+      "title": "Welcome to Zylen!",
+      "description": "Your journey to a better version of yourself starts here",
+      "nameLabel": "What's your name?",
+      "namePlaceholder": "Enter your name",
+      "nameError": "Name must be at least 2 characters",
+      "nextButton": "Continue",
+      "helperText": "This name will be shown on your profile"
+    },
+    "step2": {
+      "title": "Choose your life areas",
+      "description": "Select the areas you want to focus on",
+      "areasSelected": "areas selected"
+    },
+    "step3": {
+      "title": "Create your first habits",
+      "description": "Add at least one habit to start your journey",
+      "noHabits": "You haven't added any habits yet",
+      "habitNamePlaceholder": "Habit name (e.g., Meditate 10 min)",
+      "lifeAreaLabel": "Life Area",
+      "addButton": "Add",
+      "addHabitButton": "+ Add Habit"
+    },
+    "step4": {
+      "title": "How Zylen works",
+      "description": "Learn about the game mechanics",
+      "xpTitle": "Earn XP",
+      "xpDescription": "Complete habits daily to earn experience points",
+      "pointsTitle": "Accumulate Points",
+      "pointsDescription": "Convert your XP into points to spend on rewards",
+      "levelsTitle": "Level Up",
+      "levelsDescription": "Your global and area levels increase with every achievement",
+      "shopTitle": "Redeem Rewards",
+      "shopDescription": "Use your points to treat yourself in a controlled way",
+      "streaksTitle": "Maintain Streaks",
+      "streaksDescription": "Consistency gives you XP multipliers",
+      "readyTitle": "All set!",
+      "readyDescription": "It's time to start your transformation"
+    }
+  },
+  "profile": {
+    "editProfile": "Edit Profile",
+    "nameLabel": "Name",
+    "lifeAreasTitle": "Active Life Areas",
+    "habitsTitle": "My Habits",
+    "settingsTitle": "Settings",
+    "languageLabel": "Language",
+    "languageHint": "You can change the language from the icon in the header",
+    "noHabits": "You don't have any habits created",
+    "deleteHabitConfirm": "Are you sure you want to delete this habit?"
   }
 }

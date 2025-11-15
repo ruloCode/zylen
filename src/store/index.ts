@@ -6,9 +6,16 @@ import { createStreaksSlice, StreaksSlice } from './streaksSlice';
 import { createShopSlice, ShopSlice } from './shopSlice';
 import { createChatSlice, ChatSlice } from './chatSlice';
 import { createLifeAreasSlice, LifeAreasSlice } from './lifeAreasSlice';
+import { createOnboardingSlice, OnboardingSlice } from './onboardingSlice';
 
 // Combined store type
-type AppStore = UserSlice & HabitsSlice & StreaksSlice & ShopSlice & ChatSlice & LifeAreasSlice;
+type AppStore = UserSlice &
+  HabitsSlice &
+  StreaksSlice &
+  ShopSlice &
+  ChatSlice &
+  LifeAreasSlice &
+  OnboardingSlice;
 
 // Create the store with all slices
 export const useAppStore = create<AppStore>()((...a) => ({
@@ -18,6 +25,7 @@ export const useAppStore = create<AppStore>()((...a) => ({
   ...createShopSlice(...a),
   ...createChatSlice(...a),
   ...createLifeAreasSlice(...a),
+  ...createOnboardingSlice(...a),
 }));
 
 // Typed hooks for easier access
@@ -29,6 +37,9 @@ export function useUser() {
     updatePoints: state.updatePoints,
     updateXP: state.updateXP,
     setUser: state.setUser,
+    completeOnboarding: state.completeOnboarding,
+    updateUserProfile: state.updateUserProfile,
+    updateSelectedLifeAreas: state.updateSelectedLifeAreas,
   }));
   return useAppStore(selector);
 }
@@ -86,7 +97,30 @@ export function useLifeAreas() {
     initializeLifeAreas: state.initializeLifeAreas,
     loadLifeAreas: state.loadLifeAreas,
     getLifeArea: state.getLifeArea,
+    getLifeAreaById: state.getLifeAreaById,
     refreshLifeAreas: state.refreshLifeAreas,
+    addCustomLifeArea: state.addCustomLifeArea,
+    updateLifeArea: state.updateLifeArea,
+    deleteLifeArea: state.deleteLifeArea,
+    toggleLifeAreaEnabled: state.toggleLifeAreaEnabled,
+    addXPToLifeArea: state.addXPToLifeArea,
+  }));
+  return useAppStore(selector);
+}
+
+export function useOnboarding() {
+  const selector = useShallow((state: AppStore) => ({
+    currentStep: state.currentStep,
+    completedSteps: state.completedSteps,
+    isOnboardingComplete: state.isOnboardingComplete,
+    temporaryData: state.temporaryData,
+    nextStep: state.nextStep,
+    prevStep: state.prevStep,
+    goToStep: state.goToStep,
+    saveStepData: state.saveStepData,
+    completeStep: state.completeStep,
+    resetOnboarding: state.resetOnboarding,
+    finalizeOnboarding: state.finalizeOnboarding,
   }));
   return useAppStore(selector);
 }

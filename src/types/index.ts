@@ -5,6 +5,7 @@ export * from './streak';
 export * from './shop';
 export * from './user';
 export * from './chat';
+export * from './onboarding';
 
 // App-wide utility types
 export interface AppState {

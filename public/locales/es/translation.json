@@ -5,9 +5,13 @@
     "totalPoints": "Puntos Totales",
     "level": "Nivel",
     "xp": "XP",
+    "totalXP": "XP Total",
     "days": "Días",
     "day": "Día",
-    "skip": "Saltar al contenido principal"
+    "skip": "Saltar al contenido principal",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "cancel": "Cancelar"
   },
   "app": {
     "name": "Zylen",
@@ -136,5 +140,60 @@
     "next": "Siguiente",
     "previous": "Anterior",
     "close": "Cerrar"
+  },
+  "onboarding": {
+    "prevButton": "Anterior",
+    "nextButton": "Siguiente",
+    "finishButton": "Comenzar",
+    "step1": {
+      "title": "¡Bienvenido a Zylen!",
+      "description": "Tu viaje hacia una mejor versión de ti mismo comienza aquí",
+      "nameLabel": "¿Cómo te llamas?",
+      "namePlaceholder": "Ingresa tu nombre",
+      "nameError": "El nombre debe tener al menos 2 caracteres",
+      "nextButton": "Continuar",
+      "helperText": "Este nombre se mostrará en tu perfil"
+    },
+    "step2": {
+      "title": "Elige tus áreas de vida",
+      "description": "Selecciona las áreas en las que quieres enfocarte",
+      "areasSelected": "áreas seleccionadas"
+    },
+    "step3": {
+      "title": "Crea tus primeros hábitos",
+      "description": "Agrega al menos un hábito para comenzar tu viaje",
+      "noHabits": "No has agregado ningún hábito aún",
+      "habitNamePlaceholder": "Nombre del hábito (ej: Meditar 10 min)",
+      "lifeAreaLabel": "Área de Vida",
+      "addButton": "Agregar",
+      "addHabitButton": "+ Agregar Hábito"
+    },
+    "step4": {
+      "title": "¿Cómo funciona Zylen?",
+      "description": "Conoce las mecánicas del juego",
+      "xpTitle": "Gana XP",
+      "xpDescription": "Completa hábitos diariamente para ganar puntos de experiencia",
+      "pointsTitle": "Acumula Puntos",
+      "pointsDescription": "Convierte tu XP en puntos para gastar en recompensas",
+      "levelsTitle": "Sube de Nivel",
+      "levelsDescription": "Tu nivel global y por área aumenta con cada logro",
+      "shopTitle": "Canjea Recompensas",
+      "shopDescription": "Usa tus puntos para darte gustos controlados",
+      "streaksTitle": "Mantén Rachas",
+      "streaksDescription": "La consistencia te da multiplicadores de XP",
+      "readyTitle": "¡Todo listo!",
+      "readyDescription": "Es hora de comenzar tu transformación"
+    }
+  },
+  "profile": {
+    "editProfile": "Editar Perfil",
+    "nameLabel": "Nombre",
+    "lifeAreasTitle": "Áreas de Vida Activas",
+    "habitsTitle": "Mis Hábitos",
+    "settingsTitle": "Configuración",
+    "languageLabel": "Idioma",
+    "languageHint": "Puedes cambiar el idioma desde el icono en el encabezado",
+    "noHabits": "No tienes hábitos creados",
+    "deleteHabitConfirm": "¿Estás seguro de que quieres eliminar este hábito?"
   }
 }

@@ -2,7 +2,6 @@ import React from 'react';
 import { Sparkles, TrendingUp, Zap } from 'lucide-react';
 import { LifeAreaCard } from '@/features/dashboard/components';
 import { StreakDisplay } from '@/features/streaks/components';
-import { LanguageSwitcher } from '@/features/settings/components';
 import { Button, LevelBadge, ProgressBar } from '@/components/ui';
 import { useNavigate } from 'react-router-dom';
 import { useUser, useLifeAreas, useStreaks } from '@/store';
@@ -22,13 +21,8 @@ export function Dashboard() {
   const levelProgress = user
     ? getLevelProgress(user.totalXPEarned, user.level)
     : { current: 0, max: 0, percentage: 0 };
-  return <div className="min-h-screen pb-24 px-4 pt-8">
+  return <div className="min-h-screen pb-24 px-4 pt-20">
       <div className="max-w-md mx-auto">
-        {/* Language Switcher */}
-        <div className="flex justify-end mb-4">
-          <LanguageSwitcher variant="compact" />
-        </div>
-
         {/* Header */}
         <header className="text-center mb-8">
           <h1 className="text-4xl md:text-5xl font-extrabold text-gradient-gold mb-3 tracking-tight">

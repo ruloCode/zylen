@@ -32,8 +32,19 @@ export const createHabitsSlice: StateCreator<HabitsSlice> = (set, get) => ({
   },
 
   addHabit: (habit: Habit) => {
+    // Validate that lifeArea is provided (now required)
+    if (!habit.lifeArea) {
+      throw new Error('Habit must have a life area assigned');
+    }
+
+    // Ensure points are calculated if not provided
+    const habitWithPoints = {
+      ...habit,
+      points: habit.points || habit.xp * 0.5,
+    };
+
     set((state) => {
-      const newHabits = [...state.habits, habit];
+      const newHabits = [...state.habits, habitWithPoints];
       HabitsService.setHabits(newHabits);
       return { habits: newHabits };
     });
@@ -41,9 +52,18 @@ export const createHabitsSlice: StateCreator<HabitsSlice> = (set, get) => ({
 
   updateHabit: (id: string, updates: Partial<Habit>) => {
     set((state) => {
-      const habits = state.habits.map((h) =>
-        h.id === id ? { ...h, ...updates } : h
-      );
+      const habits = state.habits.map((h) => {
+        if (h.id !== id) return h;
+
+        const updatedHabit = { ...h, ...updates };
+
+        // Recalculate points if XP was updated
+        if (updates.xp !== undefined) {
+          updatedHabit.points = updates.xp * 0.5;
+        }
+
+        return updatedHabit;
+      });
       HabitsService.setHabits(habits);
       return { habits };
     });

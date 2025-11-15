@@ -6,7 +6,7 @@
 import React from 'react';
 
 interface LogoProps {
-  size?: number;
+  size?: number | 'sm' | 'md' | 'lg';
   className?: string;
   variant?: 'progress-node' | 'phoenix' | 'level-star';
 }
@@ -239,19 +239,24 @@ export const LevelStarLogo: React.FC<Omit<LogoProps, 'variant'>> = ({
 /**
  * Main Logo component with variant selection
  */
-const Logo: React.FC<LogoProps> = ({
+export const Logo: React.FC<LogoProps> = ({
   size = 48,
   className = '',
   variant = 'progress-node'
 }) => {
+  // Convert size string to number
+  const numericSize = typeof size === 'string'
+    ? { sm: 32, md: 48, lg: 64 }[size] || 48
+    : size;
+
   switch (variant) {
     case 'phoenix':
-      return <PhoenixLogo size={size} className={className} />;
+      return <PhoenixLogo size={numericSize} className={className} />;
     case 'level-star':
-      return <LevelStarLogo size={size} className={className} />;
+      return <LevelStarLogo size={numericSize} className={className} />;
     case 'progress-node':
     default:
-      return <ProgressNodeLogo size={size} className={className} />;
+      return <ProgressNodeLogo size={numericSize} className={className} />;
   }
 };
 

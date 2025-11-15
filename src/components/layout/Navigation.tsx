@@ -8,11 +8,17 @@ import { Home, CheckSquare, Flame, ShoppingBag, MessageCircle } from 'lucide-rea
 import { useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/utils';
 import { useLocale } from '@/hooks/useLocale';
+import { ROUTES } from '@/constants/routes';
 
 export function Navigation() {
   const location = useLocation();
   const navigate = useNavigate();
   const { t } = useLocale();
+
+  // Don't show navigation on onboarding page
+  if (location.pathname === ROUTES.ONBOARDING) {
+    return null;
+  }
 
   const navItems = [
     {

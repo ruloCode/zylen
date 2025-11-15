@@ -5,8 +5,9 @@ export interface Habit {
   name: string;
   iconName: string; // Changed from icon: ReactNode to iconName: string
   xp: number;
+  points: number; // Calculated points (xp × 0.5) - cached for display
   completed: boolean;
-  lifeArea?: LifeAreaType;
+  lifeArea: string; // Life area ID (now required)
   createdAt?: Date;
   completedAt?: Date;
 }
@@ -21,8 +22,9 @@ export type LifeAreaType =
 
 export interface HabitFormData {
   name: string;
+  iconName: string;
   xp: number;
-  lifeArea: LifeAreaType;
+  lifeArea: string; // Life area ID (required)
 }
 
 export interface HabitCompletion {

@@ -16,7 +16,14 @@ export class HabitsService {
 
   static addHabit(habit: Habit): boolean {
     const habits = this.getHabits();
-    habits.push(habit);
+
+    // Ensure points are calculated if not provided
+    const habitWithPoints = {
+      ...habit,
+      points: habit.points || habit.xp * 0.5,
+    };
+
+    habits.push(habitWithPoints);
     return this.setHabits(habits);
   }
 
@@ -26,7 +33,14 @@ export class HabitsService {
 
     if (index === -1) return false;
 
-    habits[index] = { ...habits[index], ...updates };
+    const updatedHabit = { ...habits[index], ...updates };
+
+    // Recalculate points if XP was updated
+    if (updates.xp !== undefined) {
+      updatedHabit.points = updates.xp * 0.5;
+    }
+
+    habits[index] = updatedHabit;
     return this.setHabits(habits);
   }
 
