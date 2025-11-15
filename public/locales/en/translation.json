@@ -71,9 +71,14 @@
     "daily": "Daily",
     "weekly": "Weekly",
     "noHabits": "No habits for today",
+    "noHabitsYet": "You haven't created any habits yet",
     "addHabit": "Add Habit",
+    "createFirstHabit": "Create first habit",
     "complete": "Complete",
     "completed": "Completed",
+    "habitCompleted": "Habit completed!",
+    "habitUncompleted": "Habit uncompleted",
+    "habitCreated": "Habit created successfully!",
     "skip": "Skip",
     "dailyQuests": "Daily Quests",
     "completedToday": "Completed Today",
@@ -83,6 +88,7 @@
     "perfectDay": "🎉 Perfect day! You're unstoppable!",
     "greatProgress": "💪 Great progress! Keep it up!",
     "everyStepCounts": "🌟 Every step counts. You've got this!",
+    "addYourFirstHabit": "Add your first habit to get started",
     "coachBelievesInYou": "Your AI coach believes in you"
   },
   "habitForm": {
@@ -202,11 +208,31 @@
       "4": "That's the spirit! Remember, I'm here to support you every step of the way."
     }
   },
+  "auth": {
+    "welcomeBack": "Welcome Back!",
+    "continueWithGoogle": "Continue with Google",
+    "continueWithGitHub": "Continue with GitHub",
+    "privacyNotice": "By continuing, you agree to our Terms of Service and Privacy Policy",
+    "completingSignIn": "Completing sign in",
+    "pleaseWait": "Please wait while we authenticate you...",
+    "redirectingToLogin": "Redirecting to login...",
+    "signOut": "Sign out",
+    "feature1Title": "Track your habits",
+    "feature1Desc": "Complete daily habits and earn XP to level up",
+    "feature2Title": "Earn rewards",
+    "feature2Desc": "Redeem points for controlled indulgences",
+    "feature3Title": "Maintain streaks",
+    "feature3Desc": "Consistency gives you XP multipliers"
+  },
   "errors": {
     "general": "Something went wrong. Please try again.",
     "notFound": "Page not found",
     "unauthorized": "Unauthorized",
-    "network": "Connection error. Check your internet."
+    "network": "Connection error. Check your internet.",
+    "authenticationFailed": "Authentication failed",
+    "habitCompleteFailed": "Failed to complete habit",
+    "habitUncompleteFailed": "Failed to uncomplete habit",
+    "habitCreateFailed": "Failed to create habit"
   },
   "actions": {
     "save": "Save",

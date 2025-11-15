@@ -1,4 +1,3 @@
-import React from 'react';
 import { Star, Coins, TrendingUp } from 'lucide-react';
 import { User } from '@/types';
 import { useLocale } from '@/hooks/useLocale';

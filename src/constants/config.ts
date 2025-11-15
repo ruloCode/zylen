@@ -11,9 +11,9 @@ export const APP_CONFIG = {
 
 // XP & Points configuration
 export const XP_CONFIG = {
-  // Global level configuration (fast progression: level 10 in ~7 days)
-  baseXPPerLevel: 150, // Base XP needed for first level
-  levelMultiplier: 1.08, // Gentle exponential growth (was 1.5)
+  // Global level configuration (moderate progression: level 10 in ~10-14 days with 3 habits/day)
+  baseXPPerLevel: 350, // Base XP needed for first level (increased from 150)
+  levelMultiplier: 1.12, // Moderate exponential growth (increased from 1.08 for more challenge)
   maxLevel: 50, // Global level cap
 
   // Life area level configuration (3x harder than global - more challenging progression)

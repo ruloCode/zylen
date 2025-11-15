@@ -1,136 +1,187 @@
 import { StateCreator } from 'zustand';
 import { User } from '@/types';
-import { UserService } from '@/services';
-import {
-  getLevelFromXP,
-  calculateGlobalLevelUpReward,
-  calculatePointsFromXP,
-} from '@/utils/xp';
+import { UserService } from '@/services/supabase/user.service';
+import { LifeAreasService } from '@/services/supabase/lifeAreas.service';
 
 export interface UserSlice {
   user: User | null;
   isInitialized: boolean;
+  isLoading: boolean;
+  error: string | null;
 
   // Actions
-  initializeUser: () => void;
-  updatePoints: (delta: number) => void;
-  updateXP: (xp: number) => void;
+  initializeUser: () => Promise<void>;
+  updatePoints: (delta: number) => Promise<void>;
+  updateXP: (xp: number) => Promise<void>;
   setUser: (user: User) => void;
-  completeOnboarding: () => void;
-  updateUserProfile: (name: string, avatarUrl?: string) => void;
-  updateSelectedLifeAreas: (areaIds: string[]) => void;
+  completeOnboarding: () => Promise<void>;
+  updateUserProfile: (name: string, avatarUrl?: string) => Promise<void>;
+  updateSelectedLifeAreas: (areaIds: string[]) => Promise<void>;
 }
 
-export const createUserSlice: StateCreator<UserSlice> = (set) => ({
+export const createUserSlice: StateCreator<UserSlice> = (set, get) => ({
   user: null,
   isInitialized: false,
+  isLoading: false,
+  error: null,
 
-  initializeUser: () => {
-    const existingUser = UserService.getUser();
-    if (existingUser) {
-      // Migration: Add level if it doesn't exist
-      if (existingUser.level === undefined) {
-        existingUser.level = getLevelFromXP(existingUser.totalXPEarned);
-        UserService.setUser(existingUser);
+  initializeUser: async () => {
+    try {
+      set({ isLoading: true, error: null });
+
+      const user = await UserService.getUser();
+
+      if (user) {
+        set({ user, isInitialized: true, isLoading: false });
+      } else {
+        // User not found - shouldn't happen if trigger works
+        console.warn('User not found after authentication');
+        set({ isInitialized: true, isLoading: false });
       }
-      set({ user: existingUser, isInitialized: true });
-    } else {
-      const newUser = UserService.initializeUser();
-      set({ user: newUser, isInitialized: true });
+    } catch (error) {
+      console.error('Error initializing user:', error);
+      set({
+        error: error instanceof Error ? error.message : 'Failed to initialize user',
+        isLoading: false,
+        isInitialized: true,
+      });
     }
   },
 
-  updatePoints: (delta: number) => {
-    set((state) => {
-      if (!state.user) return state;
+  updatePoints: async (delta: number) => {
+    try {
+      const currentUser = get().user;
+      if (!currentUser) return;
 
-      const updatedUser = {
-        ...state.user,
-        points: state.user.points + delta,
-      };
+      set({ isLoading: true, error: null });
 
-      UserService.setUser(updatedUser);
-      return { user: updatedUser };
-    });
+      const newPoints = await UserService.updatePoints(delta);
+
+      set((state) => ({
+        user: state.user ? { ...state.user, points: newPoints } : null,
+        isLoading: false,
+      }));
+    } catch (error) {
+      console.error('Error updating points:', error);
+      set({
+        error: error instanceof Error ? error.message : 'Failed to update points',
+        isLoading: false,
+      });
+    }
   },
 
-  updateXP: (xp: number) => {
-    set((state) => {
-      if (!state.user) return state;
+  updateXP: async (xp: number) => {
+    try {
+      const currentUser = get().user;
+      if (!currentUser) return;
 
-      const oldLevel = state.user.level;
-      const newTotalXP = state.user.totalXPEarned + xp;
-      const newLevel = getLevelFromXP(newTotalXP);
+      set({ isLoading: true, error: null });
 
-      // Calculate points earned from XP (separate from level up rewards)
-      const pointsEarned = calculatePointsFromXP(xp);
+      const result = await UserService.updateXP(xp);
 
-      // Check if user leveled up
-      let levelUpBonus = 0;
-      if (newLevel > oldLevel) {
-        // Award bonus points for each level gained
-        for (let level = oldLevel + 1; level <= newLevel; level++) {
-          levelUpBonus += calculateGlobalLevelUpReward(level);
-        }
-      }
-
-      const updatedUser = {
-        ...state.user,
-        totalXPEarned: newTotalXP,
-        level: newLevel,
-        points: state.user.points + pointsEarned + levelUpBonus,
-      };
-
-      UserService.setUser(updatedUser);
-      return { user: updatedUser };
-    });
+      set((state) => ({
+        user: state.user
+          ? {
+              ...state.user,
+              totalXPEarned: result.totalXP,
+              level: result.level,
+            }
+          : null,
+        isLoading: false,
+      }));
+    } catch (error) {
+      console.error('Error updating XP:', error);
+      set({
+        error: error instanceof Error ? error.message : 'Failed to update XP',
+        isLoading: false,
+      });
+    }
   },
 
   setUser: (user: User) => {
-    UserService.setUser(user);
     set({ user });
   },
 
-  completeOnboarding: () => {
-    set((state) => {
-      if (!state.user) return state;
+  completeOnboarding: async () => {
+    try {
+      const currentUser = get().user;
+      if (!currentUser) return;
 
-      const updatedUser = {
-        ...state.user,
-        hasCompletedOnboarding: true,
-      };
+      set({ isLoading: true, error: null });
 
-      UserService.setUser(updatedUser);
-      return { user: updatedUser };
-    });
+      await UserService.updateUser({ hasCompletedOnboarding: true });
+
+      set((state) => ({
+        user: state.user
+          ? { ...state.user, hasCompletedOnboarding: true }
+          : null,
+        isLoading: false,
+      }));
+    } catch (error) {
+      console.error('Error completing onboarding:', error);
+      set({
+        error: error instanceof Error ? error.message : 'Failed to complete onboarding',
+        isLoading: false,
+      });
+    }
   },
 
-  updateUserProfile: (name: string, avatarUrl?: string) => {
-    set((state) => {
-      if (!state.user) return state;
+  updateUserProfile: async (name: string, avatarUrl?: string) => {
+    try {
+      const currentUser = get().user;
+      if (!currentUser) return;
 
-      const updatedUser = {
-        ...state.user,
-        name,
-        ...(avatarUrl !== undefined && { avatarUrl }),
-      };
+      set({ isLoading: true, error: null });
 
-      UserService.setUser(updatedUser);
-      return { user: updatedUser };
-    });
+      const updates: Partial<User> = { name };
+      if (avatarUrl !== undefined) {
+        updates.avatarUrl = avatarUrl;
+      }
+
+      const updatedUser = await UserService.updateUser(updates);
+
+      set({ user: updatedUser, isLoading: false });
+    } catch (error) {
+      console.error('Error updating user profile:', error);
+      set({
+        error: error instanceof Error ? error.message : 'Failed to update profile',
+        isLoading: false,
+      });
+    }
   },
 
-  updateSelectedLifeAreas: (areaIds: string[]) => {
-    set((state) => {
-      if (!state.user) return state;
+  updateSelectedLifeAreas: async (areaIds: string[]) => {
+    try {
+      const currentUser = get().user;
+      if (!currentUser) return;
 
-      const updatedUser = {
-        ...state.user,
-        selectedLifeAreas: areaIds,
-      };
+      set({ isLoading: true, error: null });
 
-      UserService.setUser(updatedUser);
-      return { user: updatedUser };
-    });
+      // Enable/disable life areas based on selection
+      const allAreas = await LifeAreasService.getLifeAreas();
+
+      // Update each area's enabled status
+      await Promise.all(
+        allAreas.map(async (area) => {
+          const shouldBeEnabled = areaIds.includes(area.id);
+          if (area.enabled !== shouldBeEnabled) {
+            await LifeAreasService.updateLifeArea(area.id, { enabled: shouldBeEnabled });
+          }
+        })
+      );
+
+      set((state) => ({
+        user: state.user
+          ? { ...state.user, selectedLifeAreas: areaIds }
+          : null,
+        isLoading: false,
+      }));
+    } catch (error) {
+      console.error('Error updating selected life areas:', error);
+      set({
+        error: error instanceof Error ? error.message : 'Failed to update life areas',
+        isLoading: false,
+      });
+    }
   },
 });

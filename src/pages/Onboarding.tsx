@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { useOnboarding, useUser, useHabits, useLifeAreas } from '@/store';
 import { ROUTES } from '@/constants/routes';
 import { ONBOARDING_STEPS } from '@/types';
@@ -10,6 +11,7 @@ import {
   OnboardingStep3,
   OnboardingStep4,
 } from '@/features/onboarding/components';
+import { useLocale } from '@/hooks/useLocale';
 
 /**
  * Onboarding Page
@@ -23,6 +25,9 @@ import {
  */
 export function Onboarding() {
   const navigate = useNavigate();
+  const { t } = useLocale();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const {
     currentStep,
     completedSteps,
@@ -44,44 +49,52 @@ export function Onboarding() {
 
   const handleFinishOnboarding = async () => {
     try {
+      setIsSubmitting(true);
+
       // 1. Update user profile with name and avatar
       if (temporaryData.userName) {
-        updateUserProfile(temporaryData.userName, temporaryData.avatarUrl);
+        await updateUserProfile(temporaryData.userName, temporaryData.avatarUrl);
       }
 
       // 2. Enable/disable selected life areas
       if (temporaryData.selectedLifeAreaIds) {
-        // Disable all areas first, then enable selected ones
-        updateSelectedLifeAreas(temporaryData.selectedLifeAreaIds);
-
-        // Toggle areas based on selection
-        // This would be handled by the store/service layer
+        await updateSelectedLifeAreas(temporaryData.selectedLifeAreaIds);
       }
 
-      // 3. Create habits
+      // 3. Create habits - use Promise.all to wait for all habits to be created
       if (temporaryData.createdHabits && temporaryData.createdHabits.length > 0) {
-        temporaryData.createdHabits.forEach((habitData) => {
-          addHabit({
-            id: crypto.randomUUID(),
-            name: habitData.name,
-            iconName: habitData.iconName,
-            xp: habitData.xp,
-            points: habitData.xp * 0.5,
-            completed: false,
-            lifeArea: habitData.lifeArea,
-            createdAt: new Date(),
-          });
-        });
+        await Promise.all(
+          temporaryData.createdHabits.map((habitData) =>
+            addHabit({
+              id: crypto.randomUUID(),
+              name: habitData.name,
+              iconName: habitData.iconName,
+              xp: habitData.xp,
+              points: habitData.xp * 0.5,
+              completed: false,
+              lifeArea: habitData.lifeArea,
+              createdAt: new Date(),
+            })
+          )
+        );
       }
 
       // 4. Mark onboarding as complete
-      completeOnboarding();
+      await completeOnboarding();
       finalizeOnboarding();
 
-      // 5. Navigate to dashboard
+      // 5. Show success message
+      toast.success(t('onboarding.completedSuccess') || '¡Onboarding completado!');
+
+      // 6. Navigate to dashboard
       navigate(ROUTES.DASHBOARD, { replace: true });
     } catch (error) {
       console.error('Error completing onboarding:', error);
+      toast.error(
+        t('errors.onboardingFailed') || 'Error al completar el onboarding. Por favor, intenta de nuevo.'
+      );
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -108,7 +121,11 @@ export function Onboarding() {
           )}
 
           {currentStep === ONBOARDING_STEPS.TUTORIAL && (
-            <OnboardingStep4 onFinish={handleFinishOnboarding} onPrev={prevStep} />
+            <OnboardingStep4
+              onFinish={handleFinishOnboarding}
+              onPrev={prevStep}
+              isSubmitting={isSubmitting}
+            />
           )}
         </div>
       </div>

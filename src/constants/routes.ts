@@ -12,6 +12,8 @@ export const ROUTES = {
   CHAT: '/chat',
   PROFILE: '/profile',
   ONBOARDING: '/onboarding',
+  LOGIN: '/login',
+  AUTH_CALLBACK: '/auth/callback',
 } as const;
 
 export type RouteKey = keyof typeof ROUTES;

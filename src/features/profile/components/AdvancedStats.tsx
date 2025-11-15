@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   TrendingUp,
   Flame,
@@ -7,9 +7,9 @@ import {
   Award,
   BarChart3,
 } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/Card';
+import { Card } from '@/components/ui/Card';
 import { useLocale } from '@/hooks/useLocale';
-import { StatsService, UserStats } from '@/services/stats.service';
+import { StatsService, UserStats } from '@/services/supabase/stats.service';
 
 // Map life area names to translation keys
 const lifeAreaTranslationMap: Record<string, string> = {
@@ -27,8 +27,16 @@ export function AdvancedStats() {
 
   useEffect(() => {
     // Load stats when component mounts
-    const userStats = StatsService.getUserStats();
-    setStats(userStats);
+    const loadStats = async () => {
+      try {
+        const userStats = await StatsService.getUserStats();
+        setStats(userStats);
+      } catch (error) {
+        console.error('Error loading stats:', error);
+      }
+    };
+
+    loadStats();
   }, []);
 
   if (!stats) {

@@ -1,9 +1,14 @@
 import { StateCreator } from 'zustand';
 import { Habit } from '@/types';
-import { HabitsService } from '@/services';
+import {
+  HabitsService,
+  HabitWithCompletion,
+} from '@/services/supabase/habits.service';
+import { StreaksService } from '@/services/supabase/streaks.service';
 
 export interface HabitToggleResult {
   xpEarned: number;
+  pointsEarned: number;
   areaLevelUp?: {
     area: string;
     newLevel: number;
@@ -11,124 +16,175 @@ export interface HabitToggleResult {
 }
 
 export interface HabitsSlice {
-  habits: Habit[];
+  habits: HabitWithCompletion[];
+  isLoading: boolean;
+  error: string | null;
 
   // Actions
-  loadHabits: () => void;
-  addHabit: (habit: Habit) => void;
-  updateHabit: (id: string, updates: Partial<Habit>) => void;
-  deleteHabit: (id: string) => void;
-  toggleHabit: (id: string, completed: boolean) => HabitToggleResult; // Returns XP earned and level up info
-  resetDailyHabits: () => void;
-  getTotalXPEarned: () => number;
+  loadHabits: () => Promise<void>;
+  addHabit: (habit: Partial<Habit>) => Promise<void>;
+  updateHabit: (id: string, updates: Partial<Habit>) => Promise<void>;
+  deleteHabit: (id: string) => Promise<void>;
+  completeHabit: (id: string) => Promise<HabitToggleResult>;
+  uncompleteHabit: (id: string) => Promise<void>;
+  getTotalXPEarned: () => Promise<number>;
 }
 
 export const createHabitsSlice: StateCreator<HabitsSlice> = (set, get) => ({
   habits: [],
+  isLoading: false,
+  error: null,
 
-  loadHabits: () => {
-    const habits = HabitsService.getHabits();
-    set({ habits });
-  },
+  loadHabits: async () => {
+    try {
+      set({ isLoading: true, error: null });
 
-  addHabit: (habit: Habit) => {
-    // Validate that lifeArea is provided (now required)
-    if (!habit.lifeArea) {
-      throw new Error('Habit must have a life area assigned');
-    }
+      const habits = await HabitsService.getHabitsWithCompletions();
 
-    // Ensure points are calculated if not provided
-    const habitWithPoints = {
-      ...habit,
-      points: habit.points || habit.xp * 0.5,
-    };
-
-    set((state) => {
-      const newHabits = [...state.habits, habitWithPoints];
-      HabitsService.setHabits(newHabits);
-      return { habits: newHabits };
-    });
-  },
-
-  updateHabit: (id: string, updates: Partial<Habit>) => {
-    set((state) => {
-      const habits = state.habits.map((h) => {
-        if (h.id !== id) return h;
-
-        const updatedHabit = { ...h, ...updates };
-
-        // Recalculate points if XP was updated
-        if (updates.xp !== undefined) {
-          updatedHabit.points = updates.xp * 0.5;
-        }
-
-        return updatedHabit;
+      set({ habits, isLoading: false });
+    } catch (error) {
+      console.error('Error loading habits:', error);
+      set({
+        error: error instanceof Error ? error.message : 'Failed to load habits',
+        isLoading: false,
       });
-      HabitsService.setHabits(habits);
-      return { habits };
-    });
-  },
-
-  deleteHabit: (id: string) => {
-    set((state) => {
-      const habits = state.habits.filter((h) => h.id !== id);
-      HabitsService.setHabits(habits);
-      return { habits };
-    });
-  },
-
-  toggleHabit: (id: string, completed: boolean) => {
-    const habit = get().habits.find((h) => h.id === id);
-    if (!habit) return { xpEarned: 0 };
-
-    const xpEarned = completed ? habit.xp : -habit.xp;
-
-    // Update habit completion status
-    set((state) => {
-      const habits = state.habits.map((h) =>
-        h.id === id
-          ? { ...h, completed, completedAt: completed ? new Date() : undefined }
-          : h
-      );
-      HabitsService.setHabits(habits);
-      return { habits };
-    });
-
-    // Update life area XP if habit has an associated area
-    let areaLevelUp: { area: string; newLevel: number } | undefined;
-    if (habit.lifeArea) {
-      // Find the life area by ID
-      const lifeArea = get().getLifeAreaById?.(habit.lifeArea);
-      if (lifeArea) {
-        // Use the Zustand action to update both state and localStorage
-        const result = get().addXPToLifeArea?.(lifeArea.id, xpEarned);
-        if (result?.leveledUp && result.newLevel) {
-          areaLevelUp = {
-            area: habit.lifeArea,
-            newLevel: result.newLevel,
-          };
-        }
-      }
     }
-
-    return { xpEarned, areaLevelUp };
   },
 
-  resetDailyHabits: () => {
-    set((state) => {
-      const habits = state.habits.map((h) => ({
-        ...h,
-        completed: false,
-        completedAt: undefined,
+  addHabit: async (habit: Partial<Habit>) => {
+    try {
+      set({ isLoading: true, error: null });
+
+      // Validate that lifeArea is provided (now required)
+      if (!habit.lifeArea) {
+        throw new Error('Habit must have a life area assigned');
+      }
+
+      const newHabit = await HabitsService.addHabit(habit);
+
+      // Reload habits to get updated completion status
+      const habits = await HabitsService.getHabitsWithCompletions();
+
+      set({ habits, isLoading: false });
+    } catch (error) {
+      console.error('Error adding habit:', error);
+      set({
+        error: error instanceof Error ? error.message : 'Failed to add habit',
+        isLoading: false,
+      });
+      throw error; // Re-throw so UI can handle
+    }
+  },
+
+  updateHabit: async (id: string, updates: Partial<Habit>) => {
+    try {
+      set({ isLoading: true, error: null });
+
+      await HabitsService.updateHabit(id, updates);
+
+      // Reload habits to get updated data
+      const habits = await HabitsService.getHabitsWithCompletions();
+
+      set({ habits, isLoading: false });
+    } catch (error) {
+      console.error('Error updating habit:', error);
+      set({
+        error: error instanceof Error ? error.message : 'Failed to update habit',
+        isLoading: false,
+      });
+      throw error;
+    }
+  },
+
+  deleteHabit: async (id: string) => {
+    try {
+      set({ isLoading: true, error: null });
+
+      await HabitsService.deleteHabit(id);
+
+      // Remove from state
+      set((state) => ({
+        habits: state.habits.filter((h) => h.id !== id),
+        isLoading: false,
       }));
-      HabitsService.setHabits(habits);
-      return { habits };
-    });
+    } catch (error) {
+      console.error('Error deleting habit:', error);
+      set({
+        error: error instanceof Error ? error.message : 'Failed to delete habit',
+        isLoading: false,
+      });
+      throw error;
+    }
   },
 
-  getTotalXPEarned: () => {
-    return get().habits
-      .filter((h) => h.completed)
-      .reduce((sum, h) => sum + h.xp, 0);
+  completeHabit: async (id: string): Promise<HabitToggleResult> => {
+    try {
+      set({ isLoading: true, error: null });
+
+      const habit = get().habits.find((h) => h.id === id);
+      if (!habit) {
+        throw new Error('Habit not found');
+      }
+
+      // Complete habit via RPC (handles points, XP, life area updates)
+      const result = await HabitsService.completeHabit(id);
+
+      // Update streak
+      await StreaksService.updateStreakForToday(true);
+
+      // Reload habits to get updated completion status
+      const habits = await HabitsService.getHabitsWithCompletions();
+
+      set({ habits, isLoading: false });
+
+      return {
+        xpEarned: result.xpEarned,
+        pointsEarned: habit.points,
+        // Note: areaLevelUp info is now handled by complete_habit RPC
+        // We could extend the RPC return to include this info if needed
+      };
+    } catch (error) {
+      console.error('Error completing habit:', error);
+      set({
+        error: error instanceof Error ? error.message : 'Failed to complete habit',
+        isLoading: false,
+      });
+      throw error;
+    }
+  },
+
+  uncompleteHabit: async (id: string) => {
+    try {
+      set({ isLoading: true, error: null });
+
+      // Uncomplete habit via RPC (reverts points, XP, life area updates)
+      await HabitsService.uncompleteHabit(id);
+
+      // Check if any habits are still completed today
+      const habits = await HabitsService.getHabitsWithCompletions();
+      const anyCompleted = habits.some((h) => h.completedToday);
+
+      // Update streak based on whether any habits are still completed
+      await StreaksService.updateStreakForToday(anyCompleted);
+
+      set({ habits, isLoading: false });
+    } catch (error) {
+      console.error('Error uncompleting habit:', error);
+      set({
+        error: error instanceof Error ? error.message : 'Failed to uncomplete habit',
+        isLoading: false,
+      });
+      throw error;
+    }
+  },
+
+  getTotalXPEarned: async () => {
+    try {
+      const totalXP = await HabitsService.getTotalXPEarnedToday();
+      return totalXP;
+    } catch (error) {
+      console.error('Error getting total XP:', error);
+      return 0;
+    }
   },
 });

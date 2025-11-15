@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sparkles, TrendingUp } from 'lucide-react';
+import { Sparkles, TrendingUp, Loader2 } from 'lucide-react';
 import { LifeAreaCard, LifeAreaModal } from '@/features/dashboard/components';
 import { StreakDisplay } from '@/features/streaks/components';
 import { Button, LevelBadge, ProgressBar } from '@/components/ui';
@@ -12,9 +12,9 @@ import ruloAvatar from '@/assets/rulo_avatar.png';
 
 export function Dashboard() {
   const navigate = useNavigate();
-  const { user } = useUser();
-  const { lifeAreas } = useLifeAreas();
-  const { streak } = useStreaks();
+  const { user, isLoading: userLoading } = useUser();
+  const { lifeAreas, lifeAreasInitialized } = useLifeAreas();
+  const { streak, isLoading: streakLoading } = useStreaks();
   const { t } = useLocale();
 
   // Modal state
@@ -24,6 +24,21 @@ export function Dashboard() {
   const levelProgress = user
     ? getLevelProgress(user.totalXPEarned, user.level)
     : { current: 0, max: 0, percentage: 0 };
+
+  // Loading state - show spinner while any critical data is loading
+  const isLoading = userLoading || !lifeAreasInitialized || streakLoading;
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <Loader2 className="w-12 h-12 text-teal-500 animate-spin mx-auto mb-4" />
+          <p className="text-gray-700 font-semibold">{t('common.loading')}</p>
+        </div>
+      </div>
+    );
+  }
+
   return <div className="min-h-screen pb-24 px-4 pt-16">
       <div className="max-w-md mx-auto">
         {/* Header */}

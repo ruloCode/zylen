@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { Check, X } from 'lucide-react';
+import { Check, X, Loader2 } from 'lucide-react';
 import { cn } from '@/utils';
 import { XPBadge } from '@/components/ui';
 import { HABIT_ICONS } from './IconSelector';
@@ -17,11 +17,12 @@ const iconMap = HABIT_ICONS;
 interface HabitItemProps {
   id: string;
   name: string;
-  iconName: string; // Changed from icon: React.ReactNode
+  iconName: string;
   xp: number;
-  completed: boolean;
-  lifeArea: string; // Life area ID
-  onToggle: (id: string, completed: boolean) => void;
+  completedToday: boolean; // Changed from 'completed'
+  lifeArea: string;
+  onComplete: (id: string) => Promise<void>; // Changed from onToggle
+  onUncomplete: (id: string) => Promise<void>; // New prop
 }
 
 export function HabitItem({
@@ -29,38 +30,62 @@ export function HabitItem({
   name,
   iconName,
   xp,
-  completed,
+  completedToday,
   lifeArea,
-  onToggle
+  onComplete,
+  onUncomplete,
 }: HabitItemProps) {
   const { t } = useLocale();
   const { lifeAreas } = useLifeAreas();
-  const [isCompleted, setIsCompleted] = useState(completed);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleToggle = (value: boolean) => {
-    setIsCompleted(value);
-    onToggle(id, value);
+  const handleComplete = async () => {
+    if (isLoading || completedToday) return;
+
+    try {
+      setIsLoading(true);
+      await onComplete(id);
+    } catch (error) {
+      console.error('Error completing habit:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleUncomplete = async () => {
+    if (isLoading || !completedToday) return;
+
+    try {
+      setIsLoading(true);
+      await onUncomplete(id);
+    } catch (error) {
+      console.error('Error uncompleting habit:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // Get icon component from map, fallback to Target if not found
   const IconComponent = iconMap[iconName] || iconMap['Target'];
 
   // Get life area info
-  const lifeAreaInfo = lifeAreas.find(area => area.id === lifeArea);
-  const lifeAreaName = lifeAreaInfo ? t(`lifeAreas.${String(lifeAreaInfo.area).toLowerCase()}`) : '';
+  const lifeAreaInfo = lifeAreas.find((area) => area.id === lifeArea);
+  const lifeAreaName = lifeAreaInfo
+    ? t(`lifeAreas.${String(lifeAreaInfo.area).toLowerCase()}`)
+    : '';
 
   return (
     <article
       className={cn(
         'glass-card rounded-2xl p-3 sm:p-4 transition-all duration-500 relative overflow-hidden',
-        isCompleted
+        completedToday
           ? 'bg-gradient-to-br from-success-50/90 to-teal-50/80 border-2 border-success-300/60 shadow-glow-success'
           : 'hover:shadow-soft-lg hover:scale-[1.02]'
       )}
       aria-label={`Habit: ${name}`}
     >
       {/* Golden celebration glow on completion */}
-      {isCompleted && (
+      {completedToday && (
         <div className="absolute inset-0 bg-gradient-adventure-glow opacity-20 animate-glow-pulse pointer-events-none" />
       )}
 
@@ -69,7 +94,7 @@ export function HabitItem({
         <div
           className={cn(
             'p-2.5 sm:p-3 rounded-xl transition-all duration-300 flex-shrink-0',
-            isCompleted
+            completedToday
               ? 'bg-gradient-to-br from-teal-400 to-teal-600 text-white shadow-glow-teal'
               : 'bg-gradient-to-br from-parchment-100 to-parchment-200 text-gold-600 shadow-soft'
           )}
@@ -82,7 +107,7 @@ export function HabitItem({
           <h3
             className={cn(
               'font-display font-bold text-sm sm:text-base truncate transition-colors',
-              isCompleted ? 'text-success-700' : 'text-gray-900'
+              completedToday ? 'text-success-700' : 'text-gray-900'
             )}
           >
             {name}
@@ -99,26 +124,32 @@ export function HabitItem({
           </div>
         </div>
 
-        {/* Action buttons - Increased to 44x44px for better touch targets (WCAG 2.5.5) */}
+        {/* Action buttons */}
         <div className="flex gap-1.5 sm:gap-2 flex-shrink-0">
           {/* Complete button */}
           <button
             type="button"
-            onClick={() => handleToggle(true)}
+            onClick={handleComplete}
+            disabled={isLoading || completedToday}
             className={cn(
               'w-11 h-11 sm:w-12 sm:h-12 p-2 sm:p-3 rounded-xl transition-all duration-300 relative flex items-center justify-center',
               'focus:outline-none focus-visible:ring-4 focus-visible:ring-teal-400/50 focus-visible:ring-offset-2',
-              isCompleted
+              'disabled:opacity-50 disabled:cursor-not-allowed',
+              completedToday
                 ? 'bg-gradient-to-br from-success-500 to-success-600 text-white shadow-glow-success scale-110'
                 : 'bg-parchment-100/80 text-teal-600 hover:bg-teal-50 hover:text-teal-700 hover:scale-110 hover:shadow-soft-md'
             )}
             aria-label={`Mark ${name} as complete`}
-            aria-pressed={isCompleted}
+            aria-pressed={completedToday}
           >
-            <Check size={20} strokeWidth={isCompleted ? 3 : 2} />
+            {isLoading && !completedToday ? (
+              <Loader2 size={20} className="animate-spin" />
+            ) : (
+              <Check size={20} strokeWidth={completedToday ? 3 : 2} />
+            )}
 
             {/* Sparkle on completed */}
-            {isCompleted && (
+            {completedToday && (
               <div className="absolute -top-1 -right-1 w-2 h-2 bg-gold-400 rounded-full animate-sparkle" />
             )}
           </button>
@@ -126,24 +157,30 @@ export function HabitItem({
           {/* Incomplete button */}
           <button
             type="button"
-            onClick={() => handleToggle(false)}
+            onClick={handleUncomplete}
+            disabled={isLoading || !completedToday}
             className={cn(
               'w-11 h-11 sm:w-12 sm:h-12 p-2 sm:p-3 rounded-xl transition-all duration-300 flex items-center justify-center',
               'focus:outline-none focus-visible:ring-4 focus-visible:ring-danger-400/50 focus-visible:ring-offset-2',
-              !isCompleted && isCompleted !== completed
-                ? 'bg-gradient-to-br from-danger-400 to-danger-500 text-white shadow-soft-lg scale-110'
+              'disabled:opacity-50 disabled:cursor-not-allowed',
+              !completedToday
+                ? 'bg-parchment-100/80 text-navy-400 hover:bg-danger-50 hover:text-danger-600 hover:scale-110 hover:shadow-soft-md'
                 : 'bg-parchment-100/80 text-navy-400 hover:bg-danger-50 hover:text-danger-600 hover:scale-110 hover:shadow-soft-md'
             )}
             aria-label={`Mark ${name} as incomplete`}
-            aria-pressed={!isCompleted}
+            aria-pressed={!completedToday}
           >
-            <X size={20} strokeWidth={2} />
+            {isLoading && completedToday ? (
+              <Loader2 size={20} className="animate-spin" />
+            ) : (
+              <X size={20} strokeWidth={2} />
+            )}
           </button>
         </div>
       </div>
 
       {/* Completion celebration effect */}
-      {isCompleted && (
+      {completedToday && (
         <>
           <div className="absolute top-2 right-2 w-3 h-3 bg-gold-500 rounded-full animate-sparkle-rise opacity-0" />
           <div className="absolute top-4 right-8 w-2 h-2 bg-gold-400 rounded-full animate-sparkle-rise opacity-0 animation-delay-100" />

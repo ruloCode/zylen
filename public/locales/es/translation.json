@@ -71,9 +71,14 @@
     "daily": "Diario",
     "weekly": "Semanal",
     "noHabits": "No hay hábitos para hoy",
+    "noHabitsYet": "No has creado hábitos aún",
     "addHabit": "Agregar Hábito",
+    "createFirstHabit": "Crear primer hábito",
     "complete": "Completar",
     "completed": "Completado",
+    "habitCompleted": "¡Hábito completado!",
+    "habitUncompleted": "Hábito desmarcado",
+    "habitCreated": "¡Hábito creado exitosamente!",
     "skip": "Omitir",
     "dailyQuests": "Misiones Diarias",
     "completedToday": "Completados Hoy",
@@ -83,6 +88,7 @@
     "perfectDay": "🎉 ¡Día perfecto! ¡Eres imparable!",
     "greatProgress": "💪 ¡Gran progreso! ¡Sigue así!",
     "everyStepCounts": "🌟 Cada paso cuenta. ¡Tú puedes!",
+    "addYourFirstHabit": "Agrega tu primer hábito para comenzar",
     "coachBelievesInYou": "Tu coach IA cree en ti"
   },
   "habitForm": {
@@ -202,11 +208,31 @@
       "4": "¡Ese es el espíritu! Recuerda, estoy aquí para apoyarte en cada paso del camino."
     }
   },
+  "auth": {
+    "welcomeBack": "¡Bienvenido de vuelta!",
+    "continueWithGoogle": "Continuar con Google",
+    "continueWithGitHub": "Continuar con GitHub",
+    "privacyNotice": "Al continuar, aceptas nuestros Términos de Servicio y Política de Privacidad",
+    "completingSignIn": "Completando inicio de sesión",
+    "pleaseWait": "Por favor espera mientras te autenticamos...",
+    "redirectingToLogin": "Redirigiendo a inicio de sesión...",
+    "signOut": "Cerrar sesión",
+    "feature1Title": "Rastrea tus hábitos",
+    "feature1Desc": "Completa hábitos diarios y gana XP para subir de nivel",
+    "feature2Title": "Gana recompensas",
+    "feature2Desc": "Canjea puntos por indulgencias controladas",
+    "feature3Title": "Mantén rachas",
+    "feature3Desc": "La consistencia te da multiplicadores de XP"
+  },
   "errors": {
     "general": "Algo salió mal. Por favor, intenta de nuevo.",
     "notFound": "Página no encontrada",
     "unauthorized": "No autorizado",
-    "network": "Error de conexión. Verifica tu internet."
+    "network": "Error de conexión. Verifica tu internet.",
+    "authenticationFailed": "Error de autenticación",
+    "habitCompleteFailed": "No se pudo completar el hábito",
+    "habitUncompleteFailed": "No se pudo desmarcar el hábito",
+    "habitCreateFailed": "No se pudo crear el hábito"
   },
   "actions": {
     "save": "Guardar",

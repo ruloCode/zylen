@@ -1,18 +1,16 @@
 import React, { useState, useMemo } from 'react';
-import { Settings, Coins, Sparkles, AlertTriangle, ShoppingBag } from 'lucide-react';
+import { Settings, Coins, Sparkles, AlertTriangle, ShoppingBag, Loader2 } from 'lucide-react';
+import toast from 'react-hot-toast';
 import { ShopItem, ShopItemManager } from '@/features/shop/components';
-import { useAppStore, useShop } from '@/store';
+import { useUser, useShop } from '@/store';
 import { useLocale } from '@/hooks/useLocale';
-import { useToast } from '@/hooks/useToast';
 import type { ShopItem as ShopItemType } from '@/types';
-import { ShopItemsService } from '@/services';
+import { ShopItemsService } from '@/services/supabase/shopItems.service';
 
 export function Shop() {
-  const user = useAppStore((state) => state.user);
-  const updatePoints = useAppStore((state) => state.updatePoints);
-  const { shopItems, purchaseItem } = useShop();
+  const { user, initializeUser } = useUser();
+  const { shopItems, purchaseItem, isLoading } = useShop();
   const { t } = useLocale();
-  const toast = useToast();
 
   const [isManaging, setIsManaging] = useState(false);
   const [isPurchasing, setIsPurchasing] = useState(false);
@@ -44,7 +42,7 @@ export function Shop() {
       }));
   }, [shopItems, t]);
 
-  const handlePurchase = (id: string) => {
+  const handlePurchase = async (id: string) => {
     const item = shopItems.find((i) => i.id === id);
     if (!item) return;
 
@@ -57,17 +55,41 @@ export function Shop() {
       return;
     }
 
-    // Trigger purchase animation
-    setIsPurchasing(true);
-    setTimeout(() => setIsPurchasing(false), 500);
+    try {
+      // Trigger purchase animation
+      setIsPurchasing(true);
 
-    // Deduct points and record purchase
-    updatePoints(-item.cost);
-    purchaseItem(item);
+      // Purchase item (handles points deduction and purchase record)
+      const success = await purchaseItem(id);
 
-    // Show success toast
-    toast.success(t('shop.toast.purchaseSuccess', { name: displayName, cost: item.cost }));
+      if (success) {
+        // Refresh user data to get updated points
+        await initializeUser();
+
+        // Show success toast
+        toast.success(t('shop.toast.purchaseSuccess', { name: displayName, cost: item.cost }));
+      } else {
+        toast.error(t('errors.general'));
+      }
+    } catch (error) {
+      console.error('Error purchasing item:', error);
+      toast.error(t('errors.general'));
+    } finally {
+      setTimeout(() => setIsPurchasing(false), 500);
+    }
   };
+
+  // Loading state
+  if (isLoading && shopItems.length === 0) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <Loader2 className="w-12 h-12 text-gold-500 animate-spin mx-auto mb-4" />
+          <p className="text-gray-700 font-semibold">{t('common.loading')}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen pb-24 px-4 pt-8">

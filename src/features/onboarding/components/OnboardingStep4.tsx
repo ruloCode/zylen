@@ -1,17 +1,18 @@
 import React from 'react';
-import { Trophy, Coins, Star, ShoppingBag, Flame, ArrowLeft, Check } from 'lucide-react';
+import { Trophy, Coins, Star, ShoppingBag, Flame, ArrowLeft, Check, Loader2 } from 'lucide-react';
 import { useLocale } from '@/hooks/useLocale';
 import { cn } from '@/utils';
 
 interface OnboardingStep4Props {
   onFinish: () => void;
   onPrev: () => void;
+  isSubmitting?: boolean;
 }
 
 /**
  * Onboarding Step 4: Tutorial / Mechanics Overview
  */
-export function OnboardingStep4({ onFinish, onPrev }: OnboardingStep4Props) {
+export function OnboardingStep4({ onFinish, onPrev, isSubmitting = false }: OnboardingStep4Props) {
   const { t } = useLocale();
 
   const features = [
@@ -96,7 +97,8 @@ export function OnboardingStep4({ onFinish, onPrev }: OnboardingStep4Props) {
         <button
           type="button"
           onClick={onPrev}
-          className="flex-1 py-3 px-6 rounded-xl font-semibold bg-charcoal-700 text-white border-2 border-charcoal-600 hover:bg-charcoal-600 flex items-center justify-center gap-2"
+          disabled={isSubmitting}
+          className="flex-1 py-3 px-6 rounded-xl font-semibold bg-charcoal-700 text-white border-2 border-charcoal-600 hover:bg-charcoal-600 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <ArrowLeft size={20} />
           {t('onboarding.prevButton')}
@@ -105,10 +107,20 @@ export function OnboardingStep4({ onFinish, onPrev }: OnboardingStep4Props) {
         <button
           type="button"
           onClick={onFinish}
-          className="flex-1 py-3 px-6 rounded-xl font-semibold bg-gradient-to-r from-teal-500 to-gold-600 text-white hover:from-teal-600 hover:to-gold-700 shadow-lg flex items-center justify-center gap-2"
+          disabled={isSubmitting}
+          className="flex-1 py-3 px-6 rounded-xl font-semibold bg-gradient-to-r from-teal-500 to-gold-600 text-white hover:from-teal-600 hover:to-gold-700 shadow-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <Check size={20} />
-          {t('onboarding.finishButton')}
+          {isSubmitting ? (
+            <>
+              <Loader2 size={20} className="animate-spin" />
+              {t('common.saving') || 'Guardando...'}
+            </>
+          ) : (
+            <>
+              <Check size={20} />
+              {t('onboarding.finishButton')}
+            </>
+          )}
         </button>
       </div>
     </div>

@@ -1,84 +1,179 @@
 import { StateCreator } from 'zustand';
 import { ShopItem, Purchase, PurchaseHistory } from '@/types';
-import { ShopService, ShopItemsService } from '@/services';
+import { ShopService } from '@/services/supabase/shop.service';
+import { ShopItemsService } from '@/services/supabase/shopItems.service';
 
 export interface ShopSlice {
   purchaseHistory: PurchaseHistory;
   shopItems: ShopItem[];
+  isLoading: boolean;
+  error: string | null;
 
   // Purchase history actions
-  loadPurchaseHistory: () => void;
-  purchaseItem: (item: ShopItem) => boolean;
+  loadPurchaseHistory: () => Promise<void>;
+  purchaseItem: (itemId: string) => Promise<boolean>;
   getTotalSpent: () => number;
-  clearHistory: () => void;
+  clearHistory: () => Promise<void>;
 
   // Shop items actions
-  loadShopItems: () => void;
-  addShopItem: (item: ShopItem) => boolean;
-  updateShopItem: (id: string, updates: Partial<ShopItem>) => boolean;
-  deleteShopItem: (id: string) => boolean;
+  loadShopItems: () => Promise<void>;
+  addShopItem: (item: Partial<ShopItem>) => Promise<boolean>;
+  updateShopItem: (id: string, updates: Partial<ShopItem>) => Promise<boolean>;
+  deleteShopItem: (id: string) => Promise<boolean>;
   getShopItemById: (id: string) => ShopItem | undefined;
 }
 
 export const createShopSlice: StateCreator<ShopSlice> = (set, get) => ({
   purchaseHistory: { purchases: [], totalSpent: 0 },
   shopItems: [],
+  isLoading: false,
+  error: null,
 
   // Purchase history actions
-  loadPurchaseHistory: () => {
-    const history = ShopService.getPurchaseHistory();
-    set({ purchaseHistory: history });
+  loadPurchaseHistory: async () => {
+    try {
+      set({ isLoading: true, error: null });
+
+      const history = await ShopService.getPurchaseHistory();
+
+      set({ purchaseHistory: history, isLoading: false });
+    } catch (error) {
+      console.error('Error loading purchase history:', error);
+      set({
+        error: error instanceof Error ? error.message : 'Failed to load purchase history',
+        isLoading: false,
+      });
+    }
   },
 
-  purchaseItem: (item: ShopItem) => {
-    const success = ShopService.addPurchase(item);
-    if (success) {
-      const history = ShopService.getPurchaseHistory();
-      set({ purchaseHistory: history });
+  purchaseItem: async (itemId: string) => {
+    try {
+      set({ isLoading: true, error: null });
+
+      // This will check points, create purchase, and deduct points
+      const purchase = await ShopService.addPurchase(itemId);
+
+      // Reload purchase history
+      const history = await ShopService.getPurchaseHistory();
+
+      set({ purchaseHistory: history, isLoading: false });
+
+      return true;
+    } catch (error) {
+      console.error('Error purchasing item:', error);
+      set({
+        error: error instanceof Error ? error.message : 'Failed to purchase item',
+        isLoading: false,
+      });
+      return false;
     }
-    return success;
   },
 
   getTotalSpent: () => {
     return get().purchaseHistory.totalSpent;
   },
 
-  clearHistory: () => {
-    ShopService.clearHistory();
-    set({ purchaseHistory: { purchases: [], totalSpent: 0 } });
+  clearHistory: async () => {
+    try {
+      set({ isLoading: true, error: null });
+
+      await ShopService.clearHistory();
+
+      set({
+        purchaseHistory: { purchases: [], totalSpent: 0 },
+        isLoading: false,
+      });
+    } catch (error) {
+      console.error('Error clearing history:', error);
+      set({
+        error: error instanceof Error ? error.message : 'Failed to clear history',
+        isLoading: false,
+      });
+    }
   },
 
   // Shop items actions
-  loadShopItems: () => {
-    const items = ShopItemsService.getShopItems();
-    set({ shopItems: items });
+  loadShopItems: async () => {
+    try {
+      set({ isLoading: true, error: null });
+
+      const items = await ShopItemsService.getShopItems();
+
+      set({ shopItems: items, isLoading: false });
+    } catch (error) {
+      console.error('Error loading shop items:', error);
+      set({
+        error: error instanceof Error ? error.message : 'Failed to load shop items',
+        isLoading: false,
+      });
+    }
   },
 
-  addShopItem: (item: ShopItem) => {
-    const success = ShopItemsService.addItem(item);
-    if (success) {
-      const items = ShopItemsService.getShopItems();
-      set({ shopItems: items });
+  addShopItem: async (item: Partial<ShopItem>) => {
+    try {
+      set({ isLoading: true, error: null });
+
+      await ShopItemsService.addItem(item);
+
+      // Reload items
+      const items = await ShopItemsService.getShopItems();
+
+      set({ shopItems: items, isLoading: false });
+
+      return true;
+    } catch (error) {
+      console.error('Error adding shop item:', error);
+      set({
+        error: error instanceof Error ? error.message : 'Failed to add shop item',
+        isLoading: false,
+      });
+      return false;
     }
-    return success;
   },
 
-  updateShopItem: (id: string, updates: Partial<ShopItem>) => {
-    const success = ShopItemsService.updateItem(id, updates);
-    if (success) {
-      const items = ShopItemsService.getShopItems();
-      set({ shopItems: items });
+  updateShopItem: async (id: string, updates: Partial<ShopItem>) => {
+    try {
+      set({ isLoading: true, error: null });
+
+      await ShopItemsService.updateItem(id, updates);
+
+      // Reload items
+      const items = await ShopItemsService.getShopItems();
+
+      set({ shopItems: items, isLoading: false });
+
+      return true;
+    } catch (error) {
+      console.error('Error updating shop item:', error);
+      set({
+        error: error instanceof Error ? error.message : 'Failed to update shop item',
+        isLoading: false,
+      });
+      return false;
     }
-    return success;
   },
 
-  deleteShopItem: (id: string) => {
-    const success = ShopItemsService.deleteItem(id);
-    if (success) {
-      const items = ShopItemsService.getShopItems();
-      set({ shopItems: items });
+  deleteShopItem: async (id: string) => {
+    try {
+      set({ isLoading: true, error: null });
+
+      await ShopItemsService.deleteItem(id);
+
+      // Remove from state
+      set((state) => ({
+        shopItems: state.shopItems.filter((item) => item.id !== id),
+        isLoading: false,
+      }));
+
+      return true;
+    } catch (error) {
+      console.error('Error deleting shop item:', error);
+      set({
+        error: error instanceof Error ? error.message : 'Failed to delete shop item',
+        isLoading: false,
+      });
+      return false;
     }
-    return success;
   },
 
   getShopItemById: (id: string) => {

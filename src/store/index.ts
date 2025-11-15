@@ -33,6 +33,8 @@ export function useUser() {
   const selector = useShallow((state: AppStore) => ({
     user: state.user,
     isInitialized: state.isInitialized,
+    isLoading: state.isLoading,
+    error: state.error,
     initializeUser: state.initializeUser,
     updatePoints: state.updatePoints,
     updateXP: state.updateXP,
@@ -47,12 +49,14 @@ export function useUser() {
 export function useHabits() {
   const selector = useShallow((state: AppStore) => ({
     habits: state.habits,
+    isLoading: state.isLoading,
+    error: state.error,
     loadHabits: state.loadHabits,
     addHabit: state.addHabit,
     updateHabit: state.updateHabit,
     deleteHabit: state.deleteHabit,
-    toggleHabit: state.toggleHabit,
-    resetDailyHabits: state.resetDailyHabits,
+    completeHabit: state.completeHabit,
+    uncompleteHabit: state.uncompleteHabit,
     getTotalXPEarned: state.getTotalXPEarned,
   }));
   return useAppStore(selector);
@@ -61,6 +65,8 @@ export function useHabits() {
 export function useStreaks() {
   const selector = useShallow((state: AppStore) => ({
     streak: state.streak,
+    isLoading: state.isLoading,
+    error: state.error,
     loadStreak: state.loadStreak,
     updateStreakForToday: state.updateStreakForToday,
     getStreakBonus: state.getStreakBonus,
@@ -72,6 +78,8 @@ export function useShop() {
   const selector = useShallow((state: AppStore) => ({
     // Purchase history
     purchaseHistory: state.purchaseHistory,
+    isLoading: state.isLoading,
+    error: state.error,
     loadPurchaseHistory: state.loadPurchaseHistory,
     purchaseItem: state.purchaseItem,
     getTotalSpent: state.getTotalSpent,
@@ -102,6 +110,8 @@ export function useLifeAreas() {
   const selector = useShallow((state: AppStore) => ({
     lifeAreas: state.lifeAreas,
     lifeAreasInitialized: state.lifeAreasInitialized,
+    lifeAreasLoading: state.lifeAreasLoading,
+    lifeAreasError: state.lifeAreasError,
     initializeLifeAreas: state.initializeLifeAreas,
     loadLifeAreas: state.loadLifeAreas,
     getLifeArea: state.getLifeArea,
@@ -134,11 +144,22 @@ export function useOnboarding() {
 }
 
 // Initialize store on app load
-export function initializeStore() {
-  useAppStore.getState().initializeUser();
-  useAppStore.getState().loadHabits();
-  useAppStore.getState().loadStreak();
-  useAppStore.getState().loadPurchaseHistory();
-  useAppStore.getState().loadShopItems();
-  useAppStore.getState().initializeLifeAreas();
+export async function initializeStore() {
+  try {
+    const state = useAppStore.getState();
+
+    // Initialize in parallel for better performance
+    await Promise.all([
+      state.initializeUser(),
+      state.loadHabits(),
+      state.loadStreak(),
+      state.loadPurchaseHistory(),
+      state.loadShopItems(),
+      state.initializeLifeAreas(),
+    ]);
+
+    console.log('Store initialized successfully');
+  } catch (error) {
+    console.error('Error initializing store:', error);
+  }
 }

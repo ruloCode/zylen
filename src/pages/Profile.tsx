@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Settings, Edit2, Save, X } from 'lucide-react';
+import { Settings, Edit2, Save, X, LogOut } from 'lucide-react';
+import toast from 'react-hot-toast';
+import { supabase } from '@/lib/supabase';
 import { useUser, useLifeAreas, useHabits } from '@/store';
 import { useLocale } from '@/hooks/useLocale';
 import {
@@ -9,7 +11,7 @@ import {
   DangerZone,
 } from '@/features/profile/components';
 import { HabitForm } from '@/features/habits/components';
-import { Habit, HabitFormData } from '@/types';
+import { Habit, HabitFormData, HabitWithCompletion } from '@/types';
 import { ROUTES } from '@/constants/routes';
 import { cn } from '@/utils';
 import ruloAvatar from '@/assets/rulo_avatar.png';
@@ -67,8 +69,18 @@ export function Profile() {
     setIsEditingAvatar(false);
   };
 
-  const handleOpenEditHabit = (habit: Habit) => {
-    setHabitToEdit(habit);
+  const handleOpenEditHabit = (habit: HabitWithCompletion) => {
+    // Extract only Habit properties (without 'completed')
+    const habitData: Habit = {
+      id: habit.id,
+      userId: habit.userId,
+      name: habit.name,
+      lifeArea: habit.lifeArea,
+      xp: habit.xp,
+      points: habit.points,
+      createdAt: habit.createdAt,
+    };
+    setHabitToEdit(habitData);
     setIsEditingHabit(true);
   };
 
@@ -83,6 +95,20 @@ export function Profile() {
   const handleCancelEditHabit = () => {
     setIsEditingHabit(false);
     setHabitToEdit(undefined);
+  };
+
+  const handleSignOut = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+
+      if (error) throw error;
+
+      // Redirect to root (which will redirect to login)
+      window.location.href = '/';
+    } catch (error) {
+      console.error('Error signing out:', error);
+      toast.error(t('errors.general'));
+    }
   };
 
   const selectedAreas = lifeAreas.filter((area) =>
@@ -347,10 +373,12 @@ export function Profile() {
               <div className="grid gap-3">
                 {lifeAreas.map((area) => {
                   // Get translated name or use original if not in map
-                  const areaName =
-                    typeof area.area === 'string' && lifeAreaTranslationMap[area.area]
-                      ? t(lifeAreaTranslationMap[area.area])
-                      : area.area;
+                  const translationKey = typeof area.area === 'string'
+                    ? lifeAreaTranslationMap[area.area]
+                    : undefined;
+                  const areaName = translationKey
+                    ? t(translationKey as any)
+                    : area.area;
 
                   return (
                     <div
@@ -400,10 +428,11 @@ export function Profile() {
                   habits.map((habit) => {
                     const area = lifeAreas.find((a) => a.id === habit.lifeArea);
                     // Get translated area name or use original if not in map
+                    const translationKey = area && typeof area.area === 'string'
+                      ? lifeAreaTranslationMap[area.area]
+                      : undefined;
                     const areaName = area
-                      ? typeof area.area === 'string' && lifeAreaTranslationMap[area.area]
-                        ? t(lifeAreaTranslationMap[area.area])
-                        : area.area
+                      ? (translationKey ? t(translationKey as any) : area.area)
                       : t('common.noArea');
 
                     return (
@@ -451,9 +480,22 @@ export function Profile() {
                 {t('profile.settingsTitle')}
               </h2>
 
-              <p className="text-sm text-gray-400">
-                {t('profile.languageHint')}
-              </p>
+              <div className="space-y-4">
+                <p className="text-sm text-gray-400">
+                  {t('profile.languageHint')}
+                </p>
+
+                {/* Sign Out Button */}
+                <div className="pt-4 border-t border-charcoal-700">
+                  <button
+                    onClick={handleSignOut}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 border border-red-500/50 transition-all duration-200 font-semibold"
+                  >
+                    <LogOut size={18} />
+                    {t('auth.signOut')}
+                  </button>
+                </div>
+              </div>
             </section>
 
             {/* Danger Zone */}
