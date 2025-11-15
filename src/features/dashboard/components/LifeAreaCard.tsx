@@ -2,11 +2,12 @@ import React from 'react';
 import { Heart, DollarSign, Palette, Users, Home, Briefcase } from 'lucide-react';
 import { ProgressBar } from '@/components/ui';
 import { useLocale } from '@/hooks/useLocale';
+import { getAreaLevelProgress } from '@/utils/xp';
+
 interface LifeAreaCardProps {
   area: 'Health' | 'Finance' | 'Creativity' | 'Social' | 'Family' | 'Career';
   level: number;
-  currentXP: number;
-  maxXP: number;
+  totalXP: number;
 }
 const iconMap = {
   Health: Heart,
@@ -37,13 +38,16 @@ const translationKeyMap = {
 export function LifeAreaCard({
   area,
   level,
-  currentXP,
-  maxXP
+  totalXP
 }: LifeAreaCardProps) {
   const { t } = useLocale();
   const Icon = iconMap[area];
   const colorClass = colorMap[area];
   const translatedArea = t(translationKeyMap[area]);
+
+  // Calculate progress to next level
+  const progress = getAreaLevelProgress(totalXP, level);
+
   return <div className="glass-card rounded-2xl p-4 hover:scale-105 transition-transform duration-200">
       <div className="flex items-center gap-3 mb-3">
         <div className={`${colorClass} bg-white/50 p-2 rounded-xl`}>
@@ -54,6 +58,6 @@ export function LifeAreaCard({
           <p className="text-xs text-gray-500">{t('common.level')} {level}</p>
         </div>
       </div>
-      <ProgressBar current={currentXP} max={maxXP} showLabel={false} size="sm" />
+      <ProgressBar current={progress.current} max={progress.max} showLabel={false} size="sm" />
     </div>;
 }

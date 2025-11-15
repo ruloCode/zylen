@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-MyWay (LifeQuest) is a gamified habit tracking application that helps users build better habits by earning XP and leveling up life areas. The app uses a reward/indulgence system where users can spend earned points on controlled indulgences.
+Zylen is a gamified habit tracking application that helps users build better habits by earning XP and leveling up life areas. The app uses a reward/indulgence system where users can spend earned points on controlled indulgences.
 
 ## Development Commands
 

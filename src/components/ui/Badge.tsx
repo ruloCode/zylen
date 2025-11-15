@@ -113,25 +113,6 @@ export function XPBadge({ xp, size = 'md', className = '', showPlus = true }: XP
 }
 
 /**
- * Level Badge with level number
- */
-interface LevelBadgeProps {
-  level: number;
-  size?: 'sm' | 'md' | 'lg';
-  className?: string;
-}
-
-export function LevelBadge({ level, size = 'md', className = '' }: LevelBadgeProps) {
-  return (
-    <Badge variant="level" size={size} className={className}>
-      <span className="drop-shadow-sm">
-        Lv. {level}
-      </span>
-    </Badge>
-  );
-}
-
-/**
  * Coin Badge for shop points
  */
 interface CoinBadgeProps {

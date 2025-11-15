@@ -10,8 +10,8 @@
     "skip": "Skip to main content"
   },
   "app": {
-    "name": "MyWay",
-    "tagline": "Build your best self"
+    "name": "Zylen",
+    "tagline": "Level up your life"
   },
   "navigation": {
     "home": "Home",
@@ -57,7 +57,16 @@
     "addHabit": "Add Habit",
     "complete": "Complete",
     "completed": "Completed",
-    "skip": "Skip"
+    "skip": "Skip",
+    "dailyQuests": "Daily Quests",
+    "completedToday": "Completed Today",
+    "xpEarned": "XP Earned",
+    "yourDailyHabits": "Your Daily Habits",
+    "completeHabitsToEarnXP": "Complete your habits to earn XP",
+    "perfectDay": "🎉 Perfect day! You're unstoppable!",
+    "greatProgress": "💪 Great progress! Keep it up!",
+    "everyStepCounts": "🌟 Every step counts. You've got this!",
+    "coachBelievesInYou": "Your AI coach believes in you"
   },
   "rootHabit": {
     "title": "30-Day Challenge",

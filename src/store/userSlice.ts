@@ -1,6 +1,11 @@
 import { StateCreator } from 'zustand';
 import { User } from '@/types';
 import { UserService } from '@/services';
+import {
+  getLevelFromXP,
+  calculateGlobalLevelUpReward,
+  calculatePointsFromXP,
+} from '@/utils/xp';
 
 export interface UserSlice {
   user: User | null;
@@ -20,6 +25,11 @@ export const createUserSlice: StateCreator<UserSlice> = (set) => ({
   initializeUser: () => {
     const existingUser = UserService.getUser();
     if (existingUser) {
+      // Migration: Add level if it doesn't exist
+      if (existingUser.level === undefined) {
+        existingUser.level = getLevelFromXP(existingUser.totalXPEarned);
+        UserService.setUser(existingUser);
+      }
       set({ user: existingUser, isInitialized: true });
     } else {
       const newUser = UserService.initializeUser();
@@ -45,10 +55,27 @@ export const createUserSlice: StateCreator<UserSlice> = (set) => ({
     set((state) => {
       if (!state.user) return state;
 
+      const oldLevel = state.user.level;
+      const newTotalXP = state.user.totalXPEarned + xp;
+      const newLevel = getLevelFromXP(newTotalXP);
+
+      // Calculate points earned from XP (separate from level up rewards)
+      const pointsEarned = calculatePointsFromXP(xp);
+
+      // Check if user leveled up
+      let levelUpBonus = 0;
+      if (newLevel > oldLevel) {
+        // Award bonus points for each level gained
+        for (let level = oldLevel + 1; level <= newLevel; level++) {
+          levelUpBonus += calculateGlobalLevelUpReward(level);
+        }
+      }
+
       const updatedUser = {
         ...state.user,
-        totalXPEarned: state.user.totalXPEarned + xp,
-        points: state.user.points + xp, // XP also adds to points
+        totalXPEarned: newTotalXP,
+        level: newLevel,
+        points: state.user.points + pointsEarned + levelUpBonus,
       };
 
       UserService.setUser(updatedUser);

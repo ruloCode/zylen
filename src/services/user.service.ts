@@ -35,6 +35,7 @@ export class UserService {
       id: crypto.randomUUID(),
       points: 0,
       totalXPEarned: 0,
+      level: 1, // Start at level 1
       joinedAt: new Date(),
     };
 

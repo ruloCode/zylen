@@ -1,6 +1,14 @@
 import { StateCreator } from 'zustand';
 import { Habit } from '@/types';
-import { HabitsService } from '@/services';
+import { HabitsService, LifeAreasService } from '@/services';
+
+export interface HabitToggleResult {
+  xpEarned: number;
+  areaLevelUp?: {
+    area: string;
+    newLevel: number;
+  };
+}
 
 export interface HabitsSlice {
   habits: Habit[];
@@ -10,7 +18,7 @@ export interface HabitsSlice {
   addHabit: (habit: Habit) => void;
   updateHabit: (id: string, updates: Partial<Habit>) => void;
   deleteHabit: (id: string) => void;
-  toggleHabit: (id: string, completed: boolean) => number; // Returns XP earned
+  toggleHabit: (id: string, completed: boolean) => HabitToggleResult; // Returns XP earned and level up info
   resetDailyHabits: () => void;
   getTotalXPEarned: () => number;
 }
@@ -51,10 +59,11 @@ export const createHabitsSlice: StateCreator<HabitsSlice> = (set, get) => ({
 
   toggleHabit: (id: string, completed: boolean) => {
     const habit = get().habits.find((h) => h.id === id);
-    if (!habit) return 0;
+    if (!habit) return { xpEarned: 0 };
 
     const xpEarned = completed ? habit.xp : -habit.xp;
 
+    // Update habit completion status
     set((state) => {
       const habits = state.habits.map((h) =>
         h.id === id
@@ -65,7 +74,19 @@ export const createHabitsSlice: StateCreator<HabitsSlice> = (set, get) => ({
       return { habits };
     });
 
-    return xpEarned;
+    // Update life area XP if habit has an associated area
+    let areaLevelUp: { area: string; newLevel: number } | undefined;
+    if (habit.lifeArea) {
+      const newLevel = LifeAreasService.updateAreaXP(habit.lifeArea, xpEarned);
+      if (newLevel) {
+        areaLevelUp = {
+          area: habit.lifeArea,
+          newLevel,
+        };
+      }
+    }
+
+    return { xpEarned, areaLevelUp };
   },
 
   resetDailyHabits: () => {

@@ -2,9 +2,8 @@ import { LifeAreaType } from './habit';
 
 export interface LifeArea {
   area: LifeAreaType;
-  level: number;
-  currentXP: number;
-  maxXP: number;
+  level: number; // Current level for this life area
+  totalXP: number; // Total XP accumulated in this area
 }
 
 export interface LifeAreaProgress {

@@ -4,3 +4,4 @@ export * from './user.service';
 export * from './habits.service';
 export * from './streaks.service';
 export * from './shop.service';
+export * from './lifeAreas.service';

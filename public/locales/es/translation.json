@@ -10,7 +10,7 @@
     "skip": "Saltar al contenido principal"
   },
   "app": {
-    "name": "MyWay",
+    "name": "Zylen",
     "tagline": "Tu vida, subida de nivel"
   },
   "navigation": {
@@ -57,7 +57,16 @@
     "addHabit": "Agregar Hábito",
     "complete": "Completar",
     "completed": "Completado",
-    "skip": "Omitir"
+    "skip": "Omitir",
+    "dailyQuests": "Misiones Diarias",
+    "completedToday": "Completados Hoy",
+    "xpEarned": "XP Ganados",
+    "yourDailyHabits": "Tus Hábitos Diarios",
+    "completeHabitsToEarnXP": "Completa tus hábitos para ganar XP",
+    "perfectDay": "🎉 ¡Día perfecto! ¡Eres imparable!",
+    "greatProgress": "💪 ¡Gran progreso! ¡Sigue así!",
+    "everyStepCounts": "🌟 Cada paso cuenta. ¡Tú puedes!",
+    "coachBelievesInYou": "Tu coach IA cree en ti"
   },
   "rootHabit": {
     "title": "Desafío de 30 Días",

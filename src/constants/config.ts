@@ -3,19 +3,34 @@
  */
 
 export const APP_CONFIG = {
-  name: 'MyWay',
-  displayName: 'LifeQuest',
+  name: 'Zylen',
+  displayName: 'Zylen',
   // tagline is now in i18n translations: app.tagline
   version: '1.0.0',
 } as const;
 
 // XP & Points configuration
 export const XP_CONFIG = {
-  baseXPPerLevel: 100,
-  levelMultiplier: 1.5,
-  maxLevel: 100,
+  // Global level configuration (fast progression: level 10 in ~7 days)
+  baseXPPerLevel: 150, // Base XP needed for first level
+  levelMultiplier: 1.08, // Gentle exponential growth (was 1.5)
+  maxLevel: 50, // Global level cap
+
+  // Life area level configuration (same progression per area)
+  areaBaseXPPerLevel: 150,
+  areaLevelMultiplier: 1.08,
+  maxAreaLevel: 50,
+
+  // Habit XP ranges
   minHabitXP: 10,
   maxHabitXP: 100,
+
+  // Level-up rewards (points bonus)
+  globalLevelUpBonus: 100, // Points awarded per global level (level × 100)
+  areaLevelUpBonus: 25, // Points awarded per area level (level × 25)
+
+  // Point rewards for habits (separate from XP)
+  pointsToXPRatio: 0.5, // 1 XP = 0.5 points (so 30 XP habit = 15 points)
 } as const;
 
 // Streak configuration
@@ -34,14 +49,14 @@ export const SHOP_CONFIG = {
 
 // Storage keys for localStorage
 export const STORAGE_KEYS = {
-  USER: 'myway_user',
-  HABITS: 'myway_habits',
-  LIFE_AREAS: 'myway_life_areas',
-  STREAKS: 'myway_streaks',
-  SHOP: 'myway_shop',
-  PURCHASES: 'myway_purchases',
-  SETTINGS: 'myway_settings',
-  APP_STATE: 'myway_app_state',
+  USER: 'zylen_user',
+  HABITS: 'zylen_habits',
+  LIFE_AREAS: 'zylen_life_areas',
+  STREAKS: 'zylen_streaks',
+  SHOP: 'zylen_shop',
+  PURCHASES: 'zylen_purchases',
+  SETTINGS: 'zylen_settings',
+  APP_STATE: 'zylen_app_state',
 } as const;
 
 // Life areas configuration
