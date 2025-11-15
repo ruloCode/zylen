@@ -1,12 +1,19 @@
 import React from 'react';
 import { Sparkles, TrendingUp } from 'lucide-react';
-import { LifeAreaCard } from '../components/LifeAreaCard';
-import { StreakDisplay } from '../components/StreakDisplay';
-import { Button } from '../components/Button';
+import { LifeAreaCard } from '@/features/dashboard/components';
+import { StreakDisplay } from '@/features/streaks/components';
+import { Button } from '@/components/ui';
 import { useNavigate } from 'react-router-dom';
+import { useUser, useStreaks } from '@/store';
+import { ROUTES, APP_CONFIG } from '@/constants';
 import ruloAvatar from '../assets/rulo_avatar.png';
+
 export function Dashboard() {
   const navigate = useNavigate();
+  const { user } = useUser();
+  const { streak } = useStreaks();
+
+  // TODO: Calculate life areas from actual habit completions
   const lifeAreas = [{
     area: 'Health' as const,
     level: 5,
@@ -41,50 +48,56 @@ export function Dashboard() {
   return <div className="min-h-screen pb-24 px-4 pt-8">
       <div className="max-w-md mx-auto">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-quest-blue to-quest-purple bg-clip-text text-transparent mb-2">
-            LifeQuest
+        <header className="text-center mb-8">
+          <h1 className="text-4xl md:text-5xl font-extrabold text-gradient-gold mb-3 tracking-tight">
+            {APP_CONFIG.displayName}
           </h1>
-          <p className="text-gray-600 text-sm">Your Life, Leveled Up</p>
-        </div>
+          <p className="text-gray-700 text-base font-semibold">{APP_CONFIG.tagline}</p>
+        </header>
 
         {/* Points & Avatar */}
-        <div className="bg-white rounded-3xl p-6 mb-6 text-center shadow-lg border border-white/20">
+        <section aria-labelledby="points-heading" className="bg-white rounded-3xl p-6 mb-6 text-center shadow-lg border border-white/20">
           <img
             src={ruloAvatar}
             alt="Rulo Avatar"
             className="w-32 mx-auto mb-4 float-animation object-contain"
           />
-          <div className="text-5xl font-bold text-gray-800 mb-2">2,450</div>
-          <div className="text-sm text-gray-600 flex items-center justify-center gap-2">
-            <TrendingUp size={16} className="text-quest-green" />
-            Total Points
+          <div className="text-5xl font-bold text-gray-900 mb-2" aria-live="polite">
+            {user?.points?.toLocaleString() || 0}
           </div>
-        </div>
+          <div className="text-base text-gray-700 font-semibold flex items-center justify-center gap-2" id="points-heading">
+            <TrendingUp size={18} className="text-success-600" aria-hidden="true" />
+            <span>Total Points</span>
+          </div>
+        </section>
 
         {/* Streak */}
-        <div className="glass-card rounded-3xl p-6 mb-6 text-center">
-          <StreakDisplay streak={12} size="lg" />
-          <p className="mt-4 text-lg font-semibold text-gray-800">
-            12 Day Streak!
-          </p>
-          <p className="text-sm text-gray-600">Keep the fire alive 🔥</p>
-        </div>
+        {streak && (
+          <section aria-labelledby="streak-heading" className="glass-card rounded-3xl mb-6">
+            <StreakDisplay
+              streak={streak.currentStreak}
+              weeklyStreak={streak.weeklyStreak}
+              lastSevenDays={streak.lastSevenDays}
+              size="lg"
+            />
+          </section>
+        )}
 
         {/* Life Areas */}
-        <div className="mb-6">
-          <h2 className="text-xl font-bold text-gray-800 mb-4">Life Areas</h2>
+        <section aria-labelledby="life-areas-heading" className="mb-8">
+          <h2 id="life-areas-heading" className="text-2xl font-bold text-gray-900 mb-5">Life Areas</h2>
           <div className="grid grid-cols-2 gap-4">
             {lifeAreas.map(area => <LifeAreaCard key={area.area} {...area} />)}
           </div>
-        </div>
+        </section>
 
         {/* CTA */}
-        <Button variant="primary" size="lg" className="w-full" onClick={() => navigate('/habits')}>
+        <Button variant="primary-gold" size="lg" className="w-full mb-4" onClick={() => navigate(ROUTES.HABITS)}>
+          <Sparkles size={20} aria-hidden="true" />
           Log Today's Habits
         </Button>
 
-        <p className="text-center text-sm text-gray-600 mt-4">
+        <p className="text-center text-base text-gray-700 font-semibold">
           Keep going, Champion! 💪
         </p>
       </div>

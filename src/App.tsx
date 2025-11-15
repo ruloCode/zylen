@@ -1,24 +1,59 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Dashboard } from './pages/Dashboard';
-import { HabitLog } from './pages/HabitLog';
-import { Streaks } from './pages/Streaks';
-import { RootHabit } from './pages/RootHabit';
-import { Shop } from './pages/Shop';
-import { Chat } from './pages/Chat';
-import { Navigation } from './components/Navigation';
-export function App() {
-  return <BrowserRouter>
-      <div className="w-full min-h-screen">
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/habits" element={<HabitLog />} />
-          <Route path="/streaks" element={<Streaks />} />
-          <Route path="/root-habit" element={<RootHabit />} />
-          <Route path="/shop" element={<Shop />} />
-          <Route path="/chat" element={<Chat />} />
-        </Routes>
-        <Navigation />
+import { Navigation } from '@/components/layout';
+import { AppProvider } from '@/app/AppProvider';
+import { ROUTES } from '@/constants';
+
+// Lazy load pages for code splitting
+const Dashboard = lazy(() => import('./pages/Dashboard').then(m => ({ default: m.Dashboard })));
+const HabitLog = lazy(() => import('./pages/HabitLog').then(m => ({ default: m.HabitLog })));
+const Streaks = lazy(() => import('./pages/Streaks').then(m => ({ default: m.Streaks })));
+const RootHabit = lazy(() => import('./pages/RootHabit').then(m => ({ default: m.RootHabit })));
+const Shop = lazy(() => import('./pages/Shop').then(m => ({ default: m.Shop })));
+const Chat = lazy(() => import('./pages/Chat').then(m => ({ default: m.Chat })));
+
+// Loading fallback component
+function PageLoader() {
+  return (
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gold-500 mx-auto mb-4"></div>
+        <p className="text-gray-600 font-semibold">Loading...</p>
       </div>
-    </BrowserRouter>;
+    </div>
+  );
+}
+
+export function App() {
+  return (
+    <AppProvider>
+      <BrowserRouter>
+        <div className="w-full min-h-screen">
+          {/* Skip Navigation for screen readers (WCAG 2.4.1) */}
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-6 focus:py-3 focus:bg-gold-500 focus:text-navy-700 focus:rounded-xl focus:font-bold focus:shadow-glow-gold focus:outline-none focus:ring-4 focus:ring-gold-400"
+          >
+            Skip to main content
+          </a>
+
+          {/* Main content with proper landmark */}
+          <main id="main-content" className="pb-24">
+            <Suspense fallback={<PageLoader />}>
+              <Routes>
+                <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
+                <Route path={ROUTES.HABITS} element={<HabitLog />} />
+                <Route path={ROUTES.STREAKS} element={<Streaks />} />
+                <Route path={ROUTES.ROOT_HABIT} element={<RootHabit />} />
+                <Route path={ROUTES.SHOP} element={<Shop />} />
+                <Route path={ROUTES.CHAT} element={<Chat />} />
+              </Routes>
+            </Suspense>
+          </main>
+
+          <Navigation />
+        </div>
+      </BrowserRouter>
+    </AppProvider>
+  );
 }

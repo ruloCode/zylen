@@ -1,7 +1,8 @@
 import React from 'react';
 import { Sunrise, CheckCircle2 } from 'lucide-react';
-import { Button } from '../components/Button';
-import { ProgressBar } from '../components/ProgressBar';
+import { Button } from '@/components/ui';
+import { ProgressBar } from '@/components/ui';
+
 export function RootHabit() {
   const checkIns = Array.from({
     length: 30

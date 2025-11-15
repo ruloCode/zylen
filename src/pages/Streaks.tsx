@@ -1,7 +1,10 @@
 import React from 'react';
 import { Trophy, Award, Zap } from 'lucide-react';
-import { StreakDisplay } from '../components/StreakDisplay';
+import { StreakDisplay } from '@/features/streaks/components';
+import { useStreaks } from '@/store';
+
 export function Streaks() {
+  const { streak } = useStreaks();
   const badges = [{
     id: 1,
     name: 'Week Warrior',
@@ -27,44 +30,36 @@ export function Streaks() {
         </div>
 
         {/* Current Streak */}
-        <div className="glass-card rounded-3xl p-8 mb-6 text-center relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-orange-100/50 to-red-100/50" />
-          <div className="relative z-10">
-            <StreakDisplay streak={12} size="lg" />
-            <h2 className="text-2xl font-bold text-gray-800 mt-6 mb-2">
-              Current Streak
-            </h2>
-            <p className="text-gray-600">You're on fire! 🔥</p>
-          </div>
-        </div>
-
-        {/* Best Streak */}
-        <div className="glass-card rounded-3xl p-6 mb-6 flex items-center justify-between">
-          <div>
-            <div className="text-sm text-gray-600 mb-1">Best Streak</div>
-            <div className="text-3xl font-bold text-gray-800">28 Days</div>
-          </div>
-          <Trophy size={48} className="text-quest-gold" />
-        </div>
-
-        {/* Avatar with Aura */}
-        <div className="glass-card rounded-3xl p-8 mb-6 text-center relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-quest-blue/10 to-quest-purple/10" />
-          <div className="relative z-10">
-            <div className="relative inline-block">
-              <div className="absolute -inset-8 bg-gradient-to-r from-quest-blue/30 to-quest-purple/30 rounded-full blur-2xl animate-pulse" />
-              <div className="relative w-32 h-32 rounded-full bg-gradient-to-br from-quest-blue to-quest-purple flex items-center justify-center shadow-2xl">
-                <Zap size={48} className="text-white" />
+        {streak && (
+          <>
+            <div className="glass-card rounded-3xl p-8 mb-6 text-center relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-orange-100/50 to-red-100/50" />
+              <div className="relative z-10">
+                <StreakDisplay
+                  streak={streak.currentStreak}
+                  weeklyStreak={streak.weeklyStreak}
+                  lastSevenDays={streak.lastSevenDays}
+                  size="lg"
+                />
+                <h2 className="text-2xl font-bold text-gray-800 mt-6 mb-2">
+                  Current Streak
+                </h2>
+                <p className="text-gray-600">You're on fire! 🔥</p>
               </div>
             </div>
-            <p className="mt-6 text-gray-800 font-semibold">
-              Your aura grows stronger!
-            </p>
-            <p className="text-sm text-gray-600">
-              Keep your streak to level up
-            </p>
-          </div>
-        </div>
+
+            {/* Best Streak */}
+            <div className="glass-card rounded-3xl p-6 mb-6 flex items-center justify-between">
+              <div>
+                <div className="text-sm text-gray-600 mb-1">Best Streak</div>
+                <div className="text-3xl font-bold text-gray-800">{streak.longestStreak} Days</div>
+              </div>
+              <Trophy size={48} className="text-quest-gold" />
+            </div>
+          </>
+        )}
+
+       
 
         {/* Badges */}
         <div className="mb-6">

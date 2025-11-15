@@ -1,6 +1,6 @@
 import React from 'react';
 import { Heart, DollarSign, Palette, Users, Home, Briefcase } from 'lucide-react';
-import { ProgressBar } from './ProgressBar';
+import { ProgressBar } from '@/components/ui';
 interface LifeAreaCardProps {
   area: 'Health' | 'Finance' | 'Creativity' | 'Social' | 'Family' | 'Career';
   level: number;

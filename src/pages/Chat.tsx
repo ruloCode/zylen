@@ -1,72 +1,117 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Send } from 'lucide-react';
-import { ChatBubble } from '../components/ChatBubble';
-import { Button } from '../components/Button';
+import { ChatBubble } from '@/features/chat/components';
+import { Button } from '@/components/ui';
+import { useChat } from '@/store';
+import { CHAT_CONFIG } from '@/constants';
+import ruloAvatar from '../assets/rulo_avatar.png';
+
 export function Chat() {
-  const [messages, setMessages] = useState([{
-    id: '1',
-    message: "Hey there, Champion! 👋 I'm your AI coach. How can I help you level up today?",
-    isUser: false,
-    timestamp: '10:30 AM'
-  }, {
-    id: '2',
-    message: "I'm struggling to stay consistent with my morning routine.",
-    isUser: true,
-    timestamp: '10:32 AM'
-  }, {
-    id: '3',
-    message: "I hear you! Consistency is tough. Let's break it down: What's the smallest version of your morning routine you could do even on your worst day? Start there and build up gradually. 💪",
-    isUser: false,
-    timestamp: '10:33 AM'
-  }]);
+  const { messages, isLoading, addMessage, setLoading } = useChat();
   const [input, setInput] = useState('');
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Initialize with welcome message if empty
+  useEffect(() => {
+    if (messages.length === 0) {
+      addMessage(
+        "Hey there, champion! 💪 I'm here to support you on your journey. How are you feeling today?",
+        'assistant'
+      );
+    }
+  }, []);
+
+  // Scroll to bottom when new messages arrive
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
   const handleSend = () => {
-    if (!input.trim()) return;
-    const newMessage = {
-      id: Date.now().toString(),
-      message: input,
-      isUser: true,
-      timestamp: new Date().toLocaleTimeString([], {
-        hour: '2-digit',
-        minute: '2-digit'
-      })
-    };
-    setMessages([...messages, newMessage]);
+    if (!input.trim() || input.length > CHAT_CONFIG.maxMessageLength) return;
+
+    // Add user message
+    addMessage(input, 'user');
     setInput('');
-    // Simulate AI response
+    setLoading(true);
+
+    // Simulate AI response with delay
     setTimeout(() => {
-      const aiResponse = {
-        id: (Date.now() + 1).toString(),
-        message: "That's a great question! Remember, progress over perfection. Every small step counts toward your bigger goals. Keep going! 🌟",
-        isUser: false,
-        timestamp: new Date().toLocaleTimeString([], {
-          hour: '2-digit',
-          minute: '2-digit'
-        })
-      };
-      setMessages(prev => [...prev, aiResponse]);
-    }, 1000);
+      const responses = [
+        "That's great to hear! Remember, every small step counts. Keep up the amazing work!",
+        "I'm proud of your progress! Consistency is the key to success. 🌟",
+        "You're doing amazing! Keep building those healthy habits one day at a time.",
+        "That's the spirit! Remember, I'm here to support you every step of the way.",
+      ];
+      const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+      addMessage(randomResponse, 'assistant');
+      setLoading(false);
+    }, CHAT_CONFIG.aiResponseDelay);
   };
-  return <div className="min-h-screen pb-32 px-4 pt-8 flex flex-col">
+
+  return (
+    <div className="min-h-screen pb-32 px-4 pt-8 flex flex-col">
       <div className="max-w-md mx-auto w-full flex-1 flex flex-col">
         {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">AI Coach</h1>
-          <p className="text-gray-600">Your personal mentor is here</p>
-        </div>
+        <header className="mb-8">
+          <h1 className="text-4xl font-extrabold text-gray-900 mb-3 tracking-tight">AI Coach</h1>
+          <p className="text-base text-gray-700 font-semibold">Your personal mentor is here</p>
+        </header>
 
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto mb-4 space-y-4">
-          {messages.map(msg => <ChatBubble key={msg.id} {...msg} />)}
-        </div>
+        <section aria-labelledby="messages-heading" className="space-y-4 mb-24">
+          <h2 className="sr-only" id="messages-heading">Chat Messages</h2>
+          {messages.map(msg => (
+            <ChatBubble
+              key={msg.id}
+              id={msg.id}
+              message={msg.content}
+              isUser={msg.role === 'user'}
+              timestamp={new Date(msg.timestamp).toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit',
+              })}
+            />
+          ))}
+          {isLoading && (
+            <div className="flex justify-start">
+              <div className="bg-white/70 rounded-2xl px-5 py-3 shadow-lg">
+                <div className="flex space-x-2">
+                  <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
+                  <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                  <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                </div>
+              </div>
+            </div>
+          )}
+          <div ref={messagesEndRef} />
+        </section>
 
         {/* Input */}
-        <div className="glass-card rounded-3xl p-4 flex gap-3 items-center">
-          <input type="text" value={input} onChange={e => setInput(e.target.value)} onKeyPress={e => e.key === 'Enter' && handleSend()} placeholder="Ask your coach anything..." className="flex-1 bg-transparent outline-none text-gray-800 placeholder-gray-500" />
-          <button onClick={handleSend} className="bg-gradient-to-r from-quest-blue to-quest-purple text-white p-3 rounded-xl hover:scale-105 transition-transform">
-            <Send size={20} />
+        <form
+          onSubmit={(e) => { e.preventDefault(); handleSend(); }}
+          className="glass-card rounded-3xl p-4 flex gap-3 items-center"
+        >
+          <label htmlFor="chat-input" className="sr-only">Message to AI coach</label>
+          <input
+            id="chat-input"
+            type="text"
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            placeholder="Ask your coach anything..."
+            className="flex-1 bg-transparent outline-none text-gray-900 placeholder-gray-500 text-base py-2 focus:ring-0"
+            aria-label="Type your message"
+            maxLength={CHAT_CONFIG.maxMessageLength}
+          />
+          <button
+            type="submit"
+            disabled={!input.trim() || isLoading}
+            aria-label="Send message"
+            className="bg-gradient-to-br from-teal-500 to-teal-600 text-white p-3 rounded-xl hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 focus:outline-none focus-visible:ring-4 focus-visible:ring-teal-400/50 focus-visible:ring-offset-2 min-w-[48px] min-h-[48px] flex items-center justify-center"
+          >
+            <Send size={20} aria-hidden="true" />
           </button>
-        </div>
+        </form>
       </div>
-    </div>;
+    </div>
+  );
 }

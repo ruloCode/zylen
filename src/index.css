@@ -1,9 +1,15 @@
+/* MyWay (LifeQuest) - RPG-inspired Design System */
+
+/* Import Google Fonts - Nunito (body) & Space Grotesk (display) */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
+    /* Base semantic colors */
     --background: 0 0% 100%;
     --foreground: 222.2 47.4% 11.2%;
 
@@ -19,61 +25,99 @@
     --card: 0 0% 100%;
     --card-foreground: 222.2 47.4% 11.2%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 45 100% 51%;        /* Warm gold primary */
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 174 55% 41%;      /* Teal accent */
+    --secondary-foreground: 0 0% 100%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 174 55% 41%;         /* Teal accent */
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 100% 50%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 350 81% 71%;    /* Rose red */
+    --destructive-foreground: 0 0% 100%;
 
-    --ring: 215 20.2% 65.1%;
+    --ring: 45 100% 51%;
 
-    --radius: 0.5rem;
-    
-    /* LifeQuest Custom Colors */
-    --quest-blue: 211 52% 63%;
-    --quest-blue-light: 211 52% 80%;
-    --quest-green: 156 45% 63%;
-    --quest-gold: 45 86% 70%;
-    --quest-purple: 250 43% 71%;
+    --radius: 0.75rem;             /* Slightly more rounded default */
+
+    /* MyWay RPG Color System (HSL for consistency with Tailwind) */
+    /* Primary warm gold palette */
+    --gold-50: 48 100% 94%;        /* #FFF8E1 */
+    --gold-100: 48 100% 90%;       /* #FFF3CC */
+    --gold-200: 48 100% 80%;       /* #FFE699 */
+    --gold-300: 48 100% 70%;       /* #FFD966 */
+    --gold-400: 48 100% 60%;       /* #FFCC33 */
+    --gold-500: 45 100% 68%;       /* #FFC857 - Primary warm gold */
+    --gold-600: 36 100% 64%;       /* #FFB74D - Rich gold */
+    --gold-700: 29 100% 58%;       /* #FFA726 */
+    --gold-800: 45 100% 48%;       /* #F4B400 - Highlight gold */
+    --gold-900: 45 100% 46%;       /* #E89F00 */
+
+    /* Primary teal palette */
+    --teal-50: 174 75% 94%;        /* #E0F7F5 */
+    --teal-100: 174 69% 81%;       /* #B2EBE6 */
+    --teal-200: 174 62% 68%;       /* #80DED6 */
+    --teal-300: 174 56% 56%;       /* #4DD1C6 */
+    --teal-400: 174 62% 44%;       /* #2AB7A9 - Primary teal */
+    --teal-500: 174 55% 41%;       /* #26A69A */
+    --teal-600: 174 100% 27%;      /* #00897B */
+    --teal-700: 174 100% 24%;      /* #00796B */
+    --teal-800: 174 100% 20%;      /* #00695C */
+    --teal-900: 174 100% 13%;      /* #004D40 */
+
+    /* Deep navy palette */
+    --navy-500: 210 30% 25%;       /* #2D3E50 - Deep navy */
+    --navy-600: 210 28% 21%;       /* #263849 */
+    --navy-700: 210 30% 18%;       /* #1F2937 */
+
+    /* Soft parchment palette */
+    --parchment-50: 40 100% 99%;   /* #FFFDFB */
+    --parchment-100: 40 67% 95%;   /* #FBF5E8 */
+    --parchment-200: 40 59% 91%;   /* #F7EEDB - Primary parchment */
+    --parchment-300: 40 48% 86%;   /* #F0E4C8 */
+
+    /* Dark charcoal palette */
+    --charcoal-500: 210 10% 11%;   /* #1A1D1F - Dark charcoal */
+    --charcoal-600: 210 12% 7%;    /* #131517 */
+
+    /* Semantic colors */
+    --success: 156 48% 44%;        /* #42B381 - Jade green */
+    --danger: 350 81% 71%;         /* #E87481 - Rose red */
+    --warning: 45 100% 51%;        /* #FFC107 - Amber */
   }
 
   :root[class~="dark"] {
-    --background: 224 71% 4%;
-    --foreground: 213 31% 91%;
+    --background: 210 30% 18%;     /* Navy dark */
+    --foreground: 210 15% 89%;
 
-    --muted: 223 47% 11%;
+    --muted: 210 30% 15%;
     --muted-foreground: 215.4 16.3% 56.9%;
 
-    --accent: 216 34% 17%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 174 62% 44%;         /* Teal in dark mode */
+    --accent-foreground: 0 0% 100%;
 
-    --popover: 224 71% 4%;
-    --popover-foreground: 215 20.2% 65.1%;
+    --popover: 210 30% 18%;
+    --popover-foreground: 215 20.2% 85.1%;
 
-    --border: 216 34% 17%;
-    --input: 216 34% 17%;
+    --border: 210 30% 25%;
+    --input: 210 30% 25%;
 
-    --card: 224 71% 4%;
-    --card-foreground: 213 31% 91%;
+    --card: 210 30% 18%;
+    --card-foreground: 210 15% 89%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 1.2%;
+    --primary: 45 100% 68%;        /* Warm gold stays bright in dark */
+    --primary-foreground: 210 30% 18%;
 
-    --secondary: 222.2 47.4% 11.2%;
+    --secondary: 210 30% 21%;
     --secondary-foreground: 210 40% 98%;
 
-    --destructive: 0 63% 31%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 350 81% 71%;
+    --destructive-foreground: 0 0% 100%;
 
-    --ring: 216 34% 17%;
+    --ring: 174 62% 44%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
   }
 }
 
@@ -81,37 +125,277 @@
   * {
     @apply border-border;
   }
+
   body {
-    @apply bg-gradient-to-br from-blue-50 via-purple-50 to-green-50 text-foreground min-h-screen;
+    /* Warm hero background gradient with parchment/teal tones */
+    @apply bg-gradient-hero-bg text-foreground min-h-screen;
     font-feature-settings: "rlig" 1, "calt" 1;
-    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'SF Pro Display', 'Segoe UI', sans-serif;
+    font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Inter', 'SF Pro Display', 'Segoe UI', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 700;
   }
 }
 
 @layer utilities {
+  /* ==========================================
+     ACCESSIBILITY UTILITIES
+     ========================================== */
+
+  /* Screen reader only - visually hidden but accessible */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  .not-sr-only {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+  }
+
+  /* ==========================================
+     RPG CARD STYLES
+     ========================================== */
+
+  /* Warm parchment card with soft glass effect */
+  .rpg-card {
+    @apply bg-parchment-50/90 backdrop-blur-xl border-2 border-parchment-300/40 shadow-soft-lg rounded-2xl;
+  }
+
+  /* Glass card with warm tint (replaces old glass-card) */
   .glass-card {
-    @apply bg-white/80 backdrop-blur-xl border border-white/20 shadow-lg;
+    @apply bg-parchment-50/80 backdrop-blur-xl border border-parchment-200/30 shadow-soft-md rounded-2xl;
   }
-  
-  .glow-effect {
-    box-shadow: 0 0 20px rgba(107, 155, 209, 0.3), 0 0 40px rgba(107, 155, 209, 0.1);
+
+  /* Elevated card with isometric shadow */
+  .card-isometric {
+    @apply bg-white/95 border-2 border-gold-200 rounded-2xl shadow-isometric;
+    transition: all 0.2s ease;
   }
-  
+
+  .card-isometric:hover {
+    @apply shadow-isometric-hover;
+    transform: translate(-2px, -2px);
+  }
+
+  /* ==========================================
+     ANIME LIGHTING EFFECTS
+     ========================================== */
+
+  /* Golden rim light effect (anime edge highlight) */
+  .rim-light-gold {
+    box-shadow: inset 0 -2px 0 rgba(255, 215, 0, 0.5),
+                inset 2px 0 4px rgba(255, 215, 0, 0.3);
+  }
+
+  /* Adventure glow (warm radial highlight) */
+  .adventure-glow {
+    position: relative;
+  }
+
+  .adventure-glow::before {
+    content: '';
+    position: absolute;
+    top: -10%;
+    left: -10%;
+    right: -10%;
+    bottom: -10%;
+    background: radial-gradient(circle at center, rgba(255, 200, 87, 0.3) 0%, transparent 70%);
+    border-radius: inherit;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  /* Dramatic anime shadow */
+  .dramatic-shadow {
+    @apply shadow-dramatic;
+  }
+
+  /* ==========================================
+     GLOW EFFECTS
+     ========================================== */
+
+  /* Gold glow (for XP, rewards, achievements) */
+  .glow-gold {
+    @apply shadow-glow-gold;
+  }
+
+  /* Teal glow (for actions, progress) */
+  .glow-teal {
+    @apply shadow-glow-teal;
+  }
+
+  /* Success glow (for completions) */
+  .glow-success {
+    @apply shadow-glow-success;
+  }
+
+  /* Pulsing glow animation */
+  .glow-pulse {
+    @apply animate-glow-pulse;
+  }
+
+  /* ==========================================
+     GRADIENT TEXT
+     ========================================== */
+
+  .text-gradient-gold {
+    @apply bg-gradient-golden-hour bg-clip-text text-transparent;
+  }
+
+  .text-gradient-warm {
+    @apply bg-gradient-warm-teal bg-clip-text text-transparent;
+  }
+
+  .text-gradient-sunrise {
+    @apply bg-gradient-sunrise bg-clip-text text-transparent;
+  }
+
+  /* ==========================================
+     BUTTON EFFECTS
+     ========================================== */
+
+  /* Button with rim light on hover */
+  .btn-rim-light:hover {
+    @apply rim-light-gold;
+  }
+
+  /* ==========================================
+     FLOATING ANIMATIONS
+     ========================================== */
+
+  .float-gentle {
+    @apply animate-float-gentle;
+  }
+
+  .float-medium {
+    @apply animate-float-medium;
+  }
+
+  .float-energetic {
+    @apply animate-float-energetic;
+  }
+
+  /* ==========================================
+     PROGRESS & XP EFFECTS
+     ========================================== */
+
+  /* Shimmer effect for progress bars */
+  .shimmer-gold {
+    @apply animate-shimmer-gold;
+    background-size: 200% 100%;
+    background-image: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 215, 0, 0.6) 50%,
+      transparent 100%
+    );
+  }
+
+  /* ==========================================
+     PARTICLE & SPARKLE EFFECTS
+     ========================================== */
+
+  .sparkle-rise {
+    @apply animate-sparkle-rise;
+  }
+
   .sparkle {
-    animation: sparkle 1.5s ease-in-out infinite;
+    @apply animate-sparkle;
   }
-}
 
-@keyframes sparkle {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(1.1); }
-}
+  /* ==========================================
+     FIRE & STREAK EFFECTS
+     ========================================== */
 
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-}
+  .fire-flicker {
+    @apply animate-fire-flicker;
+  }
 
-.float-animation {
-  animation: float 3s ease-in-out infinite;
+  /* ==========================================
+     CELEBRATION EFFECTS
+     ========================================== */
+
+  .level-up-burst {
+    @apply animate-level-up-burst;
+  }
+
+  /* ==========================================
+     ISOMETRIC 3D DEPTH
+     ========================================== */
+
+  .iso-shadow {
+    @apply shadow-isometric;
+  }
+
+  .iso-shadow-hover {
+    @apply shadow-isometric-hover;
+  }
+
+  /* ==========================================
+     HERO BACKGROUNDS (Isometric Patterns)
+     ========================================== */
+
+  /* Low-poly mountain peaks */
+  .bg-mountains {
+    background-image:
+      linear-gradient(135deg, #FFC857 0%, #FFA726 50%, #FF8A65 100%),
+      repeating-linear-gradient(45deg, transparent, transparent 50px, rgba(255, 200, 87, 0.1) 50px, rgba(255, 200, 87, 0.1) 100px);
+  }
+
+  /* Isometric cube grid */
+  .bg-iso-grid {
+    background-color: #FFF8E1;
+    background-image:
+      linear-gradient(30deg, #F7EEDB 12%, transparent 12.5%, transparent 87%, #F7EEDB 87.5%, #F7EEDB),
+      linear-gradient(150deg, #F7EEDB 12%, transparent 12.5%, transparent 87%, #F7EEDB 87.5%, #F7EEDB),
+      linear-gradient(30deg, #F7EEDB 12%, transparent 12.5%, transparent 87%, #F7EEDB 87.5%, #F7EEDB),
+      linear-gradient(150deg, #F7EEDB 12%, transparent 12.5%, transparent 87%, #F7EEDB 87.5%, #F7EEDB);
+    background-size: 80px 140px;
+    background-position: 0 0, 0 0, 40px 70px, 40px 70px;
+  }
+
+  /* Geometric node network */
+  .bg-nodes {
+    background-color: #FFF8E1;
+    background-image: radial-gradient(circle at 25% 25%, rgba(255, 200, 87, 0.1) 2%, transparent 0%),
+                      radial-gradient(circle at 75% 75%, rgba(42, 183, 169, 0.1) 2%, transparent 0%);
+    background-size: 100px 100px;
+  }
+
+  /* Layered horizon (adventure journey) */
+  .bg-horizon {
+    background: linear-gradient(180deg,
+      #FFF8E1 0%,
+      #FFD966 25%,
+      #FFA726 50%,
+      #E0F7F5 75%,
+      #2AB7A9 100%);
+    opacity: 0.3;
+  }
+
+  /* Floating islands */
+  .bg-islands {
+    background-color: #E0F7F5;
+    background-image:
+      radial-gradient(ellipse at top, rgba(255, 200, 87, 0.2) 0%, transparent 50%),
+      radial-gradient(ellipse at bottom, rgba(42, 183, 169, 0.2) 0%, transparent 50%);
+    background-size: 200px 150px, 250px 180px;
+    background-position: 0% 0%, 50% 100%;
+  }
 }

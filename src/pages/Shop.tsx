@@ -1,67 +1,91 @@
 import React from 'react';
 import { Candy, ShoppingCart, Moon, Coffee } from 'lucide-react';
-import { ShopItem } from '../components/ShopItem';
+import { ShopItem } from '@/features/shop/components';
+import { useUser, useShop } from '@/store';
+import type { ShopItem as ShopItemType } from '@/types';
+
 export function Shop() {
-  const items = [{
+  const { user, updatePoints } = useUser();
+  const { purchaseItem } = useShop();
+
+  const items: ShopItemType[] = [{
     id: '1',
     name: 'Sweet Treat',
-    icon: <Candy size={32} />,
+    iconName: 'Candy',
     cost: 50,
     description: 'Enjoy a small dessert'
   }, {
     id: '2',
     name: 'Impulse Buy',
-    icon: <ShoppingCart size={32} />,
+    iconName: 'ShoppingCart',
     cost: 100,
     description: 'Small purchase under $20'
   }, {
     id: '3',
     name: 'Stay Up Late',
-    icon: <Moon size={32} />,
+    iconName: 'Moon',
     cost: 75,
     description: 'Sleep after midnight'
   }, {
     id: '4',
     name: 'Extra Coffee',
-    icon: <Coffee size={32} />,
+    iconName: 'Coffee',
     cost: 30,
     description: 'Third cup of the day'
   }];
+
   const handlePurchase = (id: string) => {
+    const item = items.find(i => i.id === id);
+    if (!item) return;
+
+    // Check if user has enough points
+    if (!user || user.points < item.cost) {
+      alert('Not enough points! Complete more habits to earn points.');
+      return;
+    }
+
+    // Deduct points and record purchase
+    updatePoints(-item.cost);
+    purchaseItem(item);
     alert('Purchase confirmed! Enjoy responsibly 😊');
   };
   return <div className="min-h-screen pb-24 px-4 pt-8">
       <div className="max-w-md mx-auto">
         {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">
+        <header className="mb-8">
+          <h1 className="text-4xl font-extrabold text-gray-900 mb-3 tracking-tight">
             Indulgence Shop
           </h1>
-          <p className="text-gray-600">Treat yourself (occasionally)</p>
-        </div>
+          <p className="text-base text-gray-700 font-semibold">Treat yourself (occasionally)</p>
+        </header>
 
         {/* Points Balance */}
-        <div className="glass-card rounded-3xl p-6 mb-6 text-center bg-gradient-to-br from-quest-gold/10 to-orange-100/50">
-          <div className="text-sm text-gray-600 mb-1">Available Points</div>
-          <div className="text-4xl font-bold text-gray-800">2,450</div>
-          <p className="text-sm text-gray-600 mt-2">Spend wisely, hero ⚖️</p>
-        </div>
+        <section aria-labelledby="balance-heading" className="glass-card rounded-3xl p-6 mb-8 text-center bg-gradient-to-br from-gold-50/80 to-gold-100/60">
+          <h2 className="text-base text-gray-700 font-semibold mb-2" id="balance-heading">Available Points</h2>
+          <div className="text-5xl font-bold text-gray-900" aria-live="polite">
+            {user?.points?.toLocaleString() || 0}
+          </div>
+          <p className="text-base text-gray-700 font-semibold mt-3">Spend wisely, hero ⚖️</p>
+        </section>
 
         {/* Shop Items */}
-        <div className="grid grid-cols-2 gap-4 mb-6">
-          {items.map(item => <ShopItem key={item.id} {...item} onPurchase={handlePurchase} />)}
-        </div>
+        <section aria-labelledby="items-heading" className="mb-8">
+          <h2 className="sr-only" id="items-heading">Available Rewards</h2>
+          <div className="grid grid-cols-2 gap-4">
+            {items.map(item => <ShopItem key={item.id} {...item} onPurchase={handlePurchase} />)}
+          </div>
+        </section>
 
         {/* Warning */}
-        <div className="glass-card rounded-3xl p-6 text-center bg-gradient-to-br from-orange-50/80 to-red-50/80">
-          <p className="text-gray-800 font-semibold mb-2">
+        <aside className="glass-card rounded-3xl p-6 text-center bg-gradient-to-br from-warning-50/80 to-danger-50/60" role="note" aria-label="Important reminder">
+          <p className="text-gray-900 font-bold text-lg mb-3">
             ⚠️ Remember Your Goals
           </p>
-          <p className="text-sm text-gray-600">
+          <p className="text-base text-gray-800 font-medium leading-relaxed">
             These indulgences are rewards, not habits. Use them mindfully to
             maintain your progress.
           </p>
-        </div>
+        </aside>
       </div>
     </div>;
 }

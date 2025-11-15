@@ -1,10 +1,20 @@
 import React from 'react';
-import { Coins } from 'lucide-react';
-import { Button } from './Button';
+import { Coins, Candy, ShoppingCart, Moon, Coffee, Gift } from 'lucide-react';
+import { Button } from '@/components/ui';
+
+// Icon mapper for shop items
+const iconMap: Record<string, React.ComponentType<{ size?: number }>> = {
+  Candy,
+  ShoppingCart,
+  Moon,
+  Coffee,
+  Gift,
+};
+
 interface ShopItemProps {
   id: string;
   name: string;
-  icon: React.ReactNode;
+  iconName: string; // Changed from icon: React.ReactNode
   cost: number;
   description: string;
   onPurchase: (id: string) => void;
@@ -12,15 +22,17 @@ interface ShopItemProps {
 export function ShopItem({
   id,
   name,
-  icon,
+  iconName,
   cost,
   description,
   onPurchase
 }: ShopItemProps) {
+  const IconComponent = iconMap[iconName] || Gift;
+
   return <div className="glass-card rounded-2xl p-5 hover:scale-105 transition-transform duration-200">
       <div className="flex flex-col items-center text-center gap-3">
         <div className="text-quest-purple bg-white/50 p-4 rounded-2xl">
-          {icon}
+          <IconComponent size={32} />
         </div>
         <h3 className="font-semibold text-gray-800">{name}</h3>
         <p className="text-sm text-gray-600">{description}</p>
