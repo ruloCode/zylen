@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Send } from 'lucide-react';
 import { ChatBubble } from '@/features/chat/components';
 import { Button } from '@/components/ui';
 import { useAppStore } from '@/store';
+import { useLocale } from '@/hooks/useLocale';
 import { CHAT_CONFIG } from '@/constants';
 import ruloAvatar from '../assets/rulo_avatar.png';
 
@@ -11,14 +12,22 @@ export function Chat() {
   const isLoading = useAppStore((state) => state.isLoading);
   const addMessage = useAppStore((state) => state.addMessage);
   const setLoading = useAppStore((state) => state.setLoading);
+  const { t } = useLocale();
   const [input, setInput] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const responses = useMemo(() => [
+    t('chat.responses.1'),
+    t('chat.responses.2'),
+    t('chat.responses.3'),
+    t('chat.responses.4'),
+  ], [t]);
 
   // Initialize with welcome message if empty
   useEffect(() => {
     if (messages.length === 0) {
       addMessage(
-        "Hey there, champion! 💪 I'm here to support you on your journey. How are you feeling today?",
+        t('chat.welcomeMessage'),
         'assistant'
       );
     }
@@ -39,12 +48,6 @@ export function Chat() {
 
     // Simulate AI response with delay
     setTimeout(() => {
-      const responses = [
-        "That's great to hear! Remember, every small step counts. Keep up the amazing work!",
-        "I'm proud of your progress! Consistency is the key to success. 🌟",
-        "You're doing amazing! Keep building those healthy habits one day at a time.",
-        "That's the spirit! Remember, I'm here to support you every step of the way.",
-      ];
       const randomResponse = responses[Math.floor(Math.random() * responses.length)];
       addMessage(randomResponse, 'assistant');
       setLoading(false);
@@ -56,8 +59,8 @@ export function Chat() {
       <div className="max-w-md mx-auto w-full flex-1 flex flex-col">
         {/* Header */}
         <header className="mb-8">
-          <h1 className="text-4xl font-extrabold text-gray-900 mb-3 tracking-tight">AI Coach</h1>
-          <p className="text-base text-gray-700 font-semibold">Your personal mentor is here</p>
+          <h1 className="text-4xl font-extrabold text-gray-900 mb-3 tracking-tight">{t('chat.title')}</h1>
+          <p className="text-base text-gray-700 font-semibold">{t('chat.subtitle')}</p>
         </header>
 
         {/* Messages */}
@@ -100,7 +103,7 @@ export function Chat() {
             type="text"
             value={input}
             onChange={e => setInput(e.target.value)}
-            placeholder="Ask your coach anything..."
+            placeholder={t('chat.typeMessage')}
             className="flex-1 bg-transparent outline-none text-gray-900 placeholder-gray-500 text-base py-2 focus:ring-0"
             aria-label="Type your message"
             maxLength={CHAT_CONFIG.maxMessageLength}

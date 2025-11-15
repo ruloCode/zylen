@@ -5,7 +5,7 @@
 export const APP_CONFIG = {
   name: 'MyWay',
   displayName: 'LifeQuest',
-  tagline: 'Your Life, Leveled Up',
+  // tagline is now in i18n translations: app.tagline
   version: '1.0.0',
 } as const;
 

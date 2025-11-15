@@ -67,21 +67,49 @@
     "keepGoing": "Keep it up!"
   },
   "shop": {
-    "title": "Shop",
-    "subtitle": "Rewards & Indulgences",
+    "title": "Indulgence Shop",
+    "subtitle": "Treat yourself (occasionally)",
     "balance": "Balance",
     "buyNow": "Buy Now",
     "purchased": "Purchased",
-    "notEnoughPoints": "Not enough points",
-    "confirmPurchase": "Confirm purchase?"
+    "notEnoughPoints": "Not enough points! Complete more habits to earn points.",
+    "confirmPurchase": "Confirm purchase?",
+    "purchaseConfirmed": "Purchase confirmed! Enjoy responsibly 😊",
+    "spendWisely": "Spend wisely, hero ⚖️",
+    "rememberGoals": "⚠️ Remember Your Goals",
+    "indulgenceWarning": "These indulgences are rewards, not habits. Use them mindfully to maintain your progress.",
+    "items": {
+      "sweetTreat": {
+        "name": "Sweet Treat",
+        "description": "Enjoy a small dessert"
+      },
+      "impulseBuy": {
+        "name": "Impulse Buy",
+        "description": "Small purchase under $20"
+      },
+      "stayUpLate": {
+        "name": "Stay Up Late",
+        "description": "Sleep after midnight"
+      },
+      "extraCoffee": {
+        "name": "Extra Coffee",
+        "description": "Third cup of the day"
+      }
+    }
   },
   "chat": {
-    "title": "Chat with your Coach",
-    "subtitle": "Your personal AI guide",
-    "typeMessage": "Type a message...",
+    "title": "AI Coach",
+    "subtitle": "Your personal mentor is here",
+    "typeMessage": "Ask your coach anything...",
     "send": "Send",
     "thinking": "Thinking...",
-    "welcomeMessage": "Hi! I'm your AI coach. How can I help you today?"
+    "welcomeMessage": "Hey there, champion! 💪 I'm here to support you on your journey. How are you feeling today?",
+    "responses": {
+      "1": "That's great to hear! Remember, every small step counts. Keep up the amazing work!",
+      "2": "I'm proud of your progress! Consistency is the key to success. 🌟",
+      "3": "You're doing amazing! Keep building those healthy habits one day at a time.",
+      "4": "That's the spirit! Remember, I'm here to support you every step of the way."
+    }
   },
   "errors": {
     "general": "Something went wrong. Please try again.",

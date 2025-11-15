@@ -11,7 +11,7 @@
   },
   "app": {
     "name": "MyWay",
-    "tagline": "Construye tu mejor versión"
+    "tagline": "Tu vida, subida de nivel"
   },
   "navigation": {
     "home": "Inicio",
@@ -67,21 +67,49 @@
     "keepGoing": "¡Sigue así!"
   },
   "shop": {
-    "title": "Tienda",
-    "subtitle": "Recompensas e Indulgencias",
+    "title": "Tienda de Indulgencias",
+    "subtitle": "Date un gusto (ocasionalmente)",
     "balance": "Saldo",
     "buyNow": "Comprar Ahora",
     "purchased": "Comprado",
-    "notEnoughPoints": "No tienes suficientes puntos",
-    "confirmPurchase": "¿Confirmar compra?"
+    "notEnoughPoints": "No tienes suficientes puntos! Completa más hábitos para ganar puntos.",
+    "confirmPurchase": "¿Confirmar compra?",
+    "purchaseConfirmed": "¡Compra confirmada! Disfruta responsablemente 😊",
+    "spendWisely": "Gasta sabiamente, héroe ⚖️",
+    "rememberGoals": "⚠️ Recuerda Tus Objetivos",
+    "indulgenceWarning": "Estas indulgencias son recompensas, no hábitos. Úsalas con consciencia para mantener tu progreso.",
+    "items": {
+      "sweetTreat": {
+        "name": "Dulce Especial",
+        "description": "Disfruta un pequeño postre"
+      },
+      "impulseBuy": {
+        "name": "Compra Impulsiva",
+        "description": "Compra pequeña menor a $20"
+      },
+      "stayUpLate": {
+        "name": "Trasnochar",
+        "description": "Dormir después de medianoche"
+      },
+      "extraCoffee": {
+        "name": "Café Extra",
+        "description": "Tercera taza del día"
+      }
+    }
   },
   "chat": {
-    "title": "Chat con tu Coach",
-    "subtitle": "Tu guía personal de IA",
-    "typeMessage": "Escribe un mensaje...",
+    "title": "Coach IA",
+    "subtitle": "Tu mentor personal está aquí",
+    "typeMessage": "Pregúntale lo que sea a tu coach...",
     "send": "Enviar",
     "thinking": "Pensando...",
-    "welcomeMessage": "¡Hola! Soy tu coach de IA. ¿En qué puedo ayudarte hoy?"
+    "welcomeMessage": "¡Hola campeón! 💪 Estoy aquí para apoyarte en tu camino. ¿Cómo te sientes hoy?",
+    "responses": {
+      "1": "¡Qué bueno escuchar eso! Recuerda, cada pequeño paso cuenta. ¡Sigue con el increíble trabajo!",
+      "2": "¡Estoy orgulloso de tu progreso! La consistencia es la clave del éxito. 🌟",
+      "3": "¡Lo estás haciendo increíble! Sigue construyendo esos hábitos saludables un día a la vez.",
+      "4": "¡Ese es el espíritu! Recuerda, estoy aquí para apoyarte en cada paso del camino."
+    }
   },
   "errors": {
     "general": "Algo salió mal. Por favor, intenta de nuevo.",

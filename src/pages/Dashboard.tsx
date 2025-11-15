@@ -60,7 +60,7 @@ export function Dashboard() {
           <h1 className="text-4xl md:text-5xl font-extrabold text-gradient-gold mb-3 tracking-tight">
             {APP_CONFIG.displayName}
           </h1>
-          <p className="text-gray-700 text-base font-semibold">{APP_CONFIG.tagline}</p>
+          <p className="text-gray-700 text-base font-semibold">{t('app.tagline')}</p>
         </header>
 
         {/* Points & Avatar */}
