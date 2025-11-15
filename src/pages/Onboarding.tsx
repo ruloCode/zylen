@@ -44,9 +44,9 @@ export function Onboarding() {
 
   const handleFinishOnboarding = async () => {
     try {
-      // 1. Update user profile with name
+      // 1. Update user profile with name and avatar
       if (temporaryData.userName) {
-        updateUserProfile(temporaryData.userName);
+        updateUserProfile(temporaryData.userName, temporaryData.avatarUrl);
       }
 
       // 2. Enable/disable selected life areas

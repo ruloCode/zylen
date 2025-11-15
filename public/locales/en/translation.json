@@ -152,7 +152,10 @@
       "namePlaceholder": "Enter your name",
       "nameError": "Name must be at least 2 characters",
       "nextButton": "Continue",
-      "helperText": "This name will be shown on your profile"
+      "helperText": "This name will be shown on your profile",
+      "avatarLabel": "Choose your avatar",
+      "avatarMale": "Male",
+      "avatarFemale": "Female"
     },
     "step2": {
       "title": "Choose your life areas",
@@ -188,6 +191,10 @@
   "profile": {
     "editProfile": "Edit Profile",
     "nameLabel": "Name",
+    "avatarLabel": "Avatar",
+    "changeAvatar": "Change avatar",
+    "avatarMale": "Male",
+    "avatarFemale": "Female",
     "lifeAreasTitle": "Active Life Areas",
     "habitsTitle": "My Habits",
     "settingsTitle": "Settings",

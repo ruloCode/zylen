@@ -7,6 +7,7 @@ export interface OnboardingState {
 
 export interface OnboardingData {
   userName?: string;
+  avatarUrl?: string; // Selected avatar URL (Rulo or Dani)
   selectedLifeAreaIds?: string[]; // IDs of selected life areas
   createdHabits?: Array<{
     name: string;

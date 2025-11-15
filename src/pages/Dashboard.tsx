@@ -21,7 +21,7 @@ export function Dashboard() {
   const levelProgress = user
     ? getLevelProgress(user.totalXPEarned, user.level)
     : { current: 0, max: 0, percentage: 0 };
-  return <div className="min-h-screen pb-24 px-4 pt-20">
+  return <div className="min-h-screen pb-24 px-4 pt-16">
       <div className="max-w-md mx-auto">
         {/* Header */}
         <header className="text-center mb-8">

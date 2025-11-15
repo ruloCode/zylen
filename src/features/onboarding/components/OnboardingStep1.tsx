@@ -4,6 +4,8 @@ import { useOnboarding } from '@/store';
 import { useLocale } from '@/hooks/useLocale';
 import { Logo } from '@/components/branding/Logo';
 import { cn } from '@/utils';
+import ruloAvatar from '@/assets/rulo_avatar.png';
+import daniAvatar from '@/assets/dani_avatar.png';
 
 interface OnboardingStep1Props {
   onNext: () => void;
@@ -16,14 +18,18 @@ export function OnboardingStep1({ onNext }: OnboardingStep1Props) {
   const { temporaryData, saveStepData, completeStep } = useOnboarding();
   const { t } = useLocale();
   const [name, setName] = useState(temporaryData.userName || '');
+  const [selectedAvatar, setSelectedAvatar] = useState(temporaryData.avatarUrl || ruloAvatar);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    // Load saved name if exists
+    // Load saved name and avatar if exists
     if (temporaryData.userName) {
       setName(temporaryData.userName);
     }
-  }, [temporaryData.userName]);
+    if (temporaryData.avatarUrl) {
+      setSelectedAvatar(temporaryData.avatarUrl);
+    }
+  }, [temporaryData.userName, temporaryData.avatarUrl]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,8 +41,8 @@ export function OnboardingStep1({ onNext }: OnboardingStep1Props) {
       return;
     }
 
-    // Save name to temporary data
-    saveStepData({ userName: trimmedName });
+    // Save name and avatar to temporary data
+    saveStepData({ userName: trimmedName, avatarUrl: selectedAvatar });
     completeStep(0);
     onNext();
   };
@@ -92,6 +98,86 @@ export function OnboardingStep1({ onNext }: OnboardingStep1Props) {
               {error}
             </p>
           )}
+        </div>
+
+        {/* Avatar Selection */}
+        <div>
+          <label className="block text-sm font-medium text-gray-300 mb-3">
+            {t('onboarding.step1.avatarLabel')}
+          </label>
+          <div className="grid grid-cols-2 gap-4">
+            {/* Rulo Avatar (Male) */}
+            <button
+              type="button"
+              onClick={() => setSelectedAvatar(ruloAvatar)}
+              className={cn(
+                'relative p-4 rounded-xl transition-all duration-200',
+                'border-2 hover:scale-105',
+                'focus:outline-none focus:ring-2 focus:ring-gold-400',
+                selectedAvatar === ruloAvatar
+                  ? 'border-gold-400 bg-gold-400/10 shadow-lg shadow-gold-400/30'
+                  : 'border-charcoal-600 bg-charcoal-700 hover:border-gold-400/50'
+              )}
+            >
+              <div className="flex flex-col items-center gap-3">
+                <div className={cn(
+                  'w-20 h-20 rounded-full overflow-hidden border-2',
+                  selectedAvatar === ruloAvatar ? 'border-gold-400' : 'border-charcoal-500'
+                )}>
+                  <img src={ruloAvatar} alt="Rulo" className="w-full h-full object-cover" />
+                </div>
+                <span className={cn(
+                  'text-sm font-medium',
+                  selectedAvatar === ruloAvatar ? 'text-gold-400' : 'text-gray-300'
+                )}>
+                  {t('onboarding.step1.avatarMale')}
+                </span>
+              </div>
+              {selectedAvatar === ruloAvatar && (
+                <div className="absolute top-2 right-2 w-6 h-6 bg-gold-400 rounded-full flex items-center justify-center">
+                  <svg className="w-4 h-4 text-charcoal-900" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </div>
+              )}
+            </button>
+
+            {/* Dani Avatar (Female) */}
+            <button
+              type="button"
+              onClick={() => setSelectedAvatar(daniAvatar)}
+              className={cn(
+                'relative p-4 rounded-xl transition-all duration-200',
+                'border-2 hover:scale-105',
+                'focus:outline-none focus:ring-2 focus:ring-gold-400',
+                selectedAvatar === daniAvatar
+                  ? 'border-gold-400 bg-gold-400/10 shadow-lg shadow-gold-400/30'
+                  : 'border-charcoal-600 bg-charcoal-700 hover:border-gold-400/50'
+              )}
+            >
+              <div className="flex flex-col items-center gap-3">
+                <div className={cn(
+                  'w-20 h-20 rounded-full overflow-hidden border-2',
+                  selectedAvatar === daniAvatar ? 'border-gold-400' : 'border-charcoal-500'
+                )}>
+                  <img src={daniAvatar} alt="Dani" className="w-full h-full object-cover" />
+                </div>
+                <span className={cn(
+                  'text-sm font-medium',
+                  selectedAvatar === daniAvatar ? 'text-gold-400' : 'text-gray-300'
+                )}>
+                  {t('onboarding.step1.avatarFemale')}
+                </span>
+              </div>
+              {selectedAvatar === daniAvatar && (
+                <div className="absolute top-2 right-2 w-6 h-6 bg-gold-400 rounded-full flex items-center justify-center">
+                  <svg className="w-4 h-4 text-charcoal-900" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </div>
+              )}
+            </button>
+          </div>
         </div>
 
         {/* Next Button */}
