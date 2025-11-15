@@ -12,7 +12,9 @@
     "edit": "Editar",
     "delete": "Eliminar",
     "cancel": "Cancelar",
-    "progress": "Progreso"
+    "progress": "Progreso",
+    "pts": "pts",
+    "noArea": "Sin área"
   },
   "app": {
     "name": "Zylen",
@@ -272,6 +274,41 @@
     "languageLabel": "Idioma",
     "languageHint": "Puedes cambiar el idioma desde el icono en el encabezado",
     "noHabits": "No tienes hábitos creados",
-    "deleteHabitConfirm": "¿Estás seguro de que quieres eliminar este hábito?"
+    "deleteHabitConfirm": "¿Estás seguro de que quieres eliminar este hábito?",
+    "stats": {
+      "title": "Estadísticas",
+      "longestStreak": "Racha Más Larga",
+      "currentStreak": "Racha Actual",
+      "activeDays": "Días Activos",
+      "last7Days": "últimos 7 días",
+      "dailyAverage": "Promedio Diario",
+      "habitsPerDay": "hábitos/día",
+      "totalHabits": "Total de Hábitos",
+      "habits": "hábitos",
+      "xpDistribution": "Distribución de XP"
+    },
+    "dangerZone": {
+      "title": "Zona de Peligro",
+      "description": "Acciones irreversibles que afectan tus datos",
+      "resetTitle": "Eliminar Todos los Datos",
+      "resetDescription": "Borra permanentemente toda tu información y progreso",
+      "resetButton": "Eliminar Todo",
+      "deleteList": {
+        "habits": "Todos tus hábitos y su historial",
+        "streaks": "Todas tus rachas",
+        "progress": "Todo el progreso de áreas de vida",
+        "purchases": "Historial de compras",
+        "profile": "Tu perfil de usuario",
+        "settings": "Todas las configuraciones"
+      }
+    },
+    "resetModal": {
+      "title": "⚠️ Confirmar Eliminación",
+      "subtitle": "Esta acción NO se puede deshacer",
+      "warning": "Se eliminarán permanentemente los siguientes datos:",
+      "inputLabel": "Para confirmar, escribe \"{{text}}\" exactamente:",
+      "inputError": "El texto no coincide. Escribe exactamente como se indica.",
+      "confirmButton": "Eliminar Permanentemente"
+    }
   }
 }

@@ -12,7 +12,9 @@
     "edit": "Edit",
     "delete": "Delete",
     "cancel": "Cancel",
-    "progress": "Progress"
+    "progress": "Progress",
+    "pts": "pts",
+    "noArea": "No area"
   },
   "app": {
     "name": "Zylen",
@@ -272,6 +274,41 @@
     "languageLabel": "Language",
     "languageHint": "You can change the language from the icon in the header",
     "noHabits": "You don't have any habits created",
-    "deleteHabitConfirm": "Are you sure you want to delete this habit?"
+    "deleteHabitConfirm": "Are you sure you want to delete this habit?",
+    "stats": {
+      "title": "Statistics",
+      "longestStreak": "Longest Streak",
+      "currentStreak": "Current Streak",
+      "activeDays": "Active Days",
+      "last7Days": "last 7 days",
+      "dailyAverage": "Daily Average",
+      "habitsPerDay": "habits/day",
+      "totalHabits": "Total Habits",
+      "habits": "habits",
+      "xpDistribution": "XP Distribution"
+    },
+    "dangerZone": {
+      "title": "Danger Zone",
+      "description": "Irreversible actions that affect your data",
+      "resetTitle": "Delete All Data",
+      "resetDescription": "Permanently erase all your information and progress",
+      "resetButton": "Delete Everything",
+      "deleteList": {
+        "habits": "All your habits and their history",
+        "streaks": "All your streaks",
+        "progress": "All life area progress",
+        "purchases": "Purchase history",
+        "profile": "Your user profile",
+        "settings": "All settings"
+      }
+    },
+    "resetModal": {
+      "title": "⚠️ Confirm Deletion",
+      "subtitle": "This action CANNOT be undone",
+      "warning": "The following data will be permanently deleted:",
+      "inputLabel": "To confirm, type \"{{text}}\" exactly:",
+      "inputError": "Text doesn't match. Type exactly as shown.",
+      "confirmButton": "Delete Permanently"
+    }
   }
 }
