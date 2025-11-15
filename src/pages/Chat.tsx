@@ -55,68 +55,72 @@ export function Chat() {
   };
 
   return (
-    <div className="min-h-screen pb-32 px-4 pt-8 flex flex-col">
-      <div className="max-w-md mx-auto w-full flex-1 flex flex-col">
+    <div className="h-[calc(100vh-10rem)] px-4 flex flex-col">
+      <div className="max-w-md mx-auto w-full h-full flex flex-col">
         {/* Header */}
-        <header className="mb-8">
+        <header className="pt-6 pb-4 flex-shrink-0">
           <h1 className="text-4xl font-extrabold text-gray-900 mb-3 tracking-tight">{t('chat.title')}</h1>
           <p className="text-base text-gray-700 font-semibold">{t('chat.subtitle')}</p>
         </header>
 
-        {/* Messages */}
-        <section aria-labelledby="messages-heading" className="space-y-4 mb-24">
-          <h2 className="sr-only" id="messages-heading">Chat Messages</h2>
-          {messages.map(msg => (
-            <ChatBubble
-              key={msg.id}
-              id={msg.id}
-              message={msg.content}
-              isUser={msg.role === 'user'}
-              timestamp={new Date(msg.timestamp).toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit',
-              })}
-            />
-          ))}
-          {isLoading && (
-            <div className="flex justify-start">
-              <div className="bg-white/70 rounded-2xl px-5 py-3 shadow-lg">
-                <div className="flex space-x-2">
-                  <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
-                  <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                  <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+        {/* Messages - Scrollable Area */}
+        <div className="flex-1 overflow-y-auto pb-4 flex flex-col">
+          <section aria-labelledby="messages-heading" className="space-y-4 flex-1">
+            <h2 className="sr-only" id="messages-heading">Chat Messages</h2>
+            {messages.map(msg => (
+              <ChatBubble
+                key={msg.id}
+                id={msg.id}
+                message={msg.content}
+                isUser={msg.role === 'user'}
+                timestamp={new Date(msg.timestamp).toLocaleTimeString([], {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })}
+              />
+            ))}
+            {isLoading && (
+              <div className="flex justify-start">
+                <div className="bg-white/70 rounded-2xl px-5 py-3 shadow-lg">
+                  <div className="flex space-x-2">
+                    <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
+                    <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                    <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
-          <div ref={messagesEndRef} />
-        </section>
+            )}
+            <div ref={messagesEndRef} />
+          </section>
+        </div>
 
-        {/* Input */}
-        <form
-          onSubmit={(e) => { e.preventDefault(); handleSend(); }}
-          className="glass-card rounded-3xl p-4 flex gap-3 items-center"
-        >
-          <label htmlFor="chat-input" className="sr-only">Message to AI coach</label>
-          <input
-            id="chat-input"
-            type="text"
-            value={input}
-            onChange={e => setInput(e.target.value)}
-            placeholder={t('chat.typeMessage')}
-            className="flex-1 bg-transparent outline-none text-gray-900 placeholder-gray-500 text-base py-2 focus:ring-0"
-            aria-label="Type your message"
-            maxLength={CHAT_CONFIG.maxMessageLength}
-          />
-          <button
-            type="submit"
-            disabled={!input.trim() || isLoading}
-            aria-label="Send message"
-            className="bg-gradient-to-br from-teal-500 to-teal-600 text-white p-3 rounded-xl hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 focus:outline-none focus-visible:ring-4 focus-visible:ring-teal-400/50 focus-visible:ring-offset-2 min-w-[48px] min-h-[48px] flex items-center justify-center"
+        {/* Input - Always Visible at Bottom */}
+        <div className="pt-4 flex-shrink-0">
+          <form
+            onSubmit={(e) => { e.preventDefault(); handleSend(); }}
+            className="glass-card rounded-3xl p-4 flex gap-3 items-center shadow-lg"
           >
-            <Send size={20} aria-hidden="true" />
-          </button>
-        </form>
+            <label htmlFor="chat-input" className="sr-only">Message to AI coach</label>
+            <input
+              id="chat-input"
+              type="text"
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              placeholder={t('chat.typeMessage')}
+              className="flex-1 bg-transparent outline-none text-gray-900 placeholder-gray-500 text-base py-2 focus:ring-0"
+              aria-label="Type your message"
+              maxLength={CHAT_CONFIG.maxMessageLength}
+            />
+            <button
+              type="submit"
+              disabled={!input.trim() || isLoading}
+              aria-label="Send message"
+              className="bg-gradient-to-br from-teal-500 to-teal-600 text-white p-3 rounded-xl hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 focus:outline-none focus-visible:ring-4 focus-visible:ring-teal-400/50 focus-visible:ring-offset-2 min-w-[48px] min-h-[48px] flex items-center justify-center"
+            >
+              <Send size={20} aria-hidden="true" />
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );

@@ -46,7 +46,7 @@ export function App() {
               <Header />
 
               {/* Main content with proper landmark */}
-              <main id="main-content" className="pb-24">
+              <main id="main-content" className="pt-16 pb-24">
                 <Routes>
                   <Route path={ROUTES.ONBOARDING} element={<Onboarding />} />
                   <Route path={ROUTES.PROFILE} element={<Profile />} />
