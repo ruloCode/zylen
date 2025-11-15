@@ -4,24 +4,15 @@
  */
 
 import React, { useState } from 'react';
-import { Check, X, Dumbbell, Book, Apple, Bed, Droplets, Brain, Heart, DollarSign, Coffee, Moon, Target } from 'lucide-react';
+import { Edit2, Check, X } from 'lucide-react';
 import { cn } from '@/utils';
 import { XPBadge } from '@/components/ui';
+import { HABIT_ICONS } from './IconSelector';
+import { useLifeAreas } from '@/store';
+import { useLocale } from '@/hooks/useLocale';
 
-// Icon mapper to convert icon names to components
-const iconMap: Record<string, React.ComponentType<{ size?: number }>> = {
-  Dumbbell,
-  Book,
-  Apple,
-  Bed,
-  Droplets,
-  Brain,
-  Heart,
-  DollarSign,
-  Coffee,
-  Moon,
-  Target,
-};
+// Icon mapper using the centralized HABIT_ICONS from IconSelector
+const iconMap = HABIT_ICONS;
 
 interface HabitItemProps {
   id: string;
@@ -29,7 +20,9 @@ interface HabitItemProps {
   iconName: string; // Changed from icon: React.ReactNode
   xp: number;
   completed: boolean;
+  lifeArea: string; // Life area ID
   onToggle: (id: string, completed: boolean) => void;
+  onEdit?: (id: string) => void; // Optional edit callback
 }
 
 export function HabitItem({
@@ -38,8 +31,12 @@ export function HabitItem({
   iconName,
   xp,
   completed,
-  onToggle
+  lifeArea,
+  onToggle,
+  onEdit
 }: HabitItemProps) {
+  const { t } = useLocale();
+  const { lifeAreas } = useLifeAreas();
   const [isCompleted, setIsCompleted] = useState(completed);
 
   const handleToggle = (value: boolean) => {
@@ -48,7 +45,11 @@ export function HabitItem({
   };
 
   // Get icon component from map, fallback to Target if not found
-  const IconComponent = iconMap[iconName] || Target;
+  const IconComponent = iconMap[iconName] || iconMap['Target'];
+
+  // Get life area info
+  const lifeAreaInfo = lifeAreas.find(area => area.id === lifeArea);
+  const lifeAreaName = lifeAreaInfo ? t(`lifeAreas.${String(lifeAreaInfo.area).toLowerCase()}`) : '';
 
   return (
     <article
@@ -89,14 +90,35 @@ export function HabitItem({
             {name}
           </h3>
 
-          {/* XP Badge */}
-          <div className="mt-1">
+          {/* XP Badge and Life Area Badge */}
+          <div className="mt-1 flex items-center gap-2">
             <XPBadge xp={xp} size="sm" />
+            {lifeAreaName && (
+              <span className="px-2 py-0.5 text-xs font-semibold rounded-md bg-teal-100 text-teal-700">
+                {lifeAreaName}
+              </span>
+            )}
           </div>
         </div>
 
         {/* Action buttons - Increased to 44x44px for better touch targets (WCAG 2.5.5) */}
         <div className="flex gap-2">
+          {/* Edit button (if onEdit is provided) */}
+          {onEdit && (
+            <button
+              type="button"
+              onClick={() => onEdit(id)}
+              className={cn(
+                'min-w-[44px] min-h-[44px] p-3 rounded-xl transition-all duration-300',
+                'focus:outline-none focus-visible:ring-4 focus-visible:ring-gray-400/50 focus-visible:ring-offset-2',
+                'bg-parchment-100/80 text-gray-600 hover:bg-gray-100 hover:text-gray-800 hover:scale-110 hover:shadow-soft-md'
+              )}
+              aria-label={`Edit ${name}`}
+            >
+              <Edit2 size={18} />
+            </button>
+          )}
+
           {/* Complete button */}
           <button
             type="button"

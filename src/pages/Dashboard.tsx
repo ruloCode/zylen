@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Sparkles, TrendingUp, Zap } from 'lucide-react';
-import { LifeAreaCard } from '@/features/dashboard/components';
+import { LifeAreaCard, LifeAreaModal } from '@/features/dashboard/components';
 import { StreakDisplay } from '@/features/streaks/components';
 import { Button, LevelBadge, ProgressBar } from '@/components/ui';
 import { useNavigate } from 'react-router-dom';
@@ -16,6 +16,9 @@ export function Dashboard() {
   const { lifeAreas } = useLifeAreas();
   const { streak } = useStreaks();
   const { t } = useLocale();
+
+  // Modal state
+  const [selectedAreaId, setSelectedAreaId] = useState<string | null>(null);
 
   // Calculate progress to next level
   const levelProgress = user
@@ -84,7 +87,7 @@ export function Dashboard() {
         <section aria-labelledby="life-areas-heading" className="mb-8">
           <h2 id="life-areas-heading" className="text-2xl font-bold text-gray-900 mb-5">{t('dashboard.lifeAreas')}</h2>
           <div className="grid grid-cols-2 gap-4">
-            {lifeAreas.map(area => <LifeAreaCard key={area.area} {...area} />)}
+            {lifeAreas.map(area => <LifeAreaCard key={area.area} {...area} onClick={() => setSelectedAreaId(area.id)} />)}
           </div>
         </section>
 
@@ -98,5 +101,12 @@ export function Dashboard() {
           {t('dashboard.keepGoing')}
         </p>
       </div>
+
+      {/* Life Area Modal */}
+      <LifeAreaModal
+        lifeAreaId={selectedAreaId}
+        isOpen={selectedAreaId !== null}
+        onClose={() => setSelectedAreaId(null)}
+      />
     </div>;
 }

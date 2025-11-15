@@ -1,6 +1,6 @@
 import { StateCreator } from 'zustand';
 import { Habit } from '@/types';
-import { HabitsService, LifeAreasService } from '@/services';
+import { HabitsService } from '@/services';
 
 export interface HabitToggleResult {
   xpEarned: number;
@@ -97,12 +97,17 @@ export const createHabitsSlice: StateCreator<HabitsSlice> = (set, get) => ({
     // Update life area XP if habit has an associated area
     let areaLevelUp: { area: string; newLevel: number } | undefined;
     if (habit.lifeArea) {
-      const newLevel = LifeAreasService.updateAreaXP(habit.lifeArea, xpEarned);
-      if (newLevel) {
-        areaLevelUp = {
-          area: habit.lifeArea,
-          newLevel,
-        };
+      // Find the life area by ID
+      const lifeArea = get().getLifeAreaById?.(habit.lifeArea);
+      if (lifeArea) {
+        // Use the Zustand action to update both state and localStorage
+        const result = get().addXPToLifeArea?.(lifeArea.id, xpEarned);
+        if (result?.leveledUp && result.newLevel) {
+          areaLevelUp = {
+            area: habit.lifeArea,
+            newLevel: result.newLevel,
+          };
+        }
       }
     }
 

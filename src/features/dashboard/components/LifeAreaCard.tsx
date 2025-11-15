@@ -8,6 +8,7 @@ interface LifeAreaCardProps {
   area: 'Health' | 'Finance' | 'Creativity' | 'Social' | 'Family' | 'Career';
   level: number;
   totalXP: number;
+  onClick?: () => void;
 }
 const iconMap = {
   Health: Heart,
@@ -38,7 +39,8 @@ const translationKeyMap = {
 export function LifeAreaCard({
   area,
   level,
-  totalXP
+  totalXP,
+  onClick
 }: LifeAreaCardProps) {
   const { t } = useLocale();
   const Icon = iconMap[area];
@@ -48,7 +50,18 @@ export function LifeAreaCard({
   // Calculate progress to next level
   const progress = getAreaLevelProgress(totalXP, level);
 
-  return <div className="glass-card rounded-2xl p-4 hover:scale-105 transition-transform duration-200">
+  return <div
+    className="glass-card rounded-2xl p-4 hover:scale-105 transition-transform duration-200 cursor-pointer"
+    onClick={onClick}
+    role="button"
+    tabIndex={0}
+    onKeyDown={(e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        onClick?.();
+      }
+    }}
+  >
       <div className="flex items-center gap-3 mb-3">
         <div className={`${colorClass} bg-white/50 p-2 rounded-xl`}>
           <Icon size={20} />

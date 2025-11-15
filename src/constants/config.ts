@@ -16,9 +16,9 @@ export const XP_CONFIG = {
   levelMultiplier: 1.08, // Gentle exponential growth (was 1.5)
   maxLevel: 50, // Global level cap
 
-  // Life area level configuration (same progression per area)
-  areaBaseXPPerLevel: 150,
-  areaLevelMultiplier: 1.08,
+  // Life area level configuration (3x harder than global - more challenging progression)
+  areaBaseXPPerLevel: 450, // 3x harder than global (was 150)
+  areaLevelMultiplier: 1.15, // Steeper curve (was 1.08)
   maxAreaLevel: 50,
 
   // Habit XP ranges

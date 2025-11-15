@@ -11,7 +11,8 @@
     "skip": "Saltar al contenido principal",
     "edit": "Editar",
     "delete": "Eliminar",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "progress": "Progreso"
   },
   "app": {
     "name": "Zylen",
@@ -38,6 +39,16 @@
     "social": "Social",
     "family": "Familia",
     "career": "Carrera"
+  },
+  "lifeAreaModal": {
+    "title": "Detalles del Área de Vida",
+    "totalXP": "XP Total",
+    "xpToNextLevel": "XP para Nivel {{level}}",
+    "habitsInArea": "Hábitos en esta área",
+    "completedToday": "Completados Hoy",
+    "noHabits": "No hay hábitos en esta área todavía",
+    "viewAllHabits": "Ver Todos los Hábitos",
+    "close": "Cerrar"
   },
   "streaks": {
     "title": "Tu Racha",
@@ -71,6 +82,27 @@
     "greatProgress": "💪 ¡Gran progreso! ¡Sigue así!",
     "everyStepCounts": "🌟 Cada paso cuenta. ¡Tú puedes!",
     "coachBelievesInYou": "Tu coach IA cree en ti"
+  },
+  "habitForm": {
+    "createHabit": "Crear Hábito",
+    "editHabit": "Editar Hábito",
+    "habitName": "Nombre del Hábito",
+    "habitNamePlaceholder": "Ej: Meditar 10 minutos",
+    "lifeArea": "Área de Vida",
+    "selectLifeArea": "Selecciona un área de vida",
+    "icon": "Ícono",
+    "selectedIcon": "Ícono seleccionado",
+    "xpValue": "Valor de XP",
+    "xpDescription": "Elige entre {{min}} y {{max}} XP según la dificultad",
+    "errors": {
+      "nameRequired": "El nombre es obligatorio",
+      "nameTooShort": "El nombre debe tener al menos 3 caracteres",
+      "nameTooLong": "El nombre no puede tener más de 50 caracteres",
+      "lifeAreaRequired": "Debes seleccionar un área de vida",
+      "iconRequired": "Debes seleccionar un ícono",
+      "xpTooLow": "El XP mínimo es {{min}}",
+      "xpTooHigh": "El XP máximo es {{max}}"
+    }
   },
   "rootHabit": {
     "title": "Desafío de 30 Días",
@@ -139,7 +171,9 @@
     "back": "Volver",
     "next": "Siguiente",
     "previous": "Anterior",
-    "close": "Cerrar"
+    "close": "Cerrar",
+    "create": "Crear",
+    "saveChanges": "Guardar Cambios"
   },
   "onboarding": {
     "prevButton": "Anterior",

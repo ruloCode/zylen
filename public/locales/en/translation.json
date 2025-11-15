@@ -11,7 +11,8 @@
     "skip": "Skip to main content",
     "edit": "Edit",
     "delete": "Delete",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "progress": "Progress"
   },
   "app": {
     "name": "Zylen",
@@ -38,6 +39,16 @@
     "social": "Social",
     "family": "Family",
     "career": "Career"
+  },
+  "lifeAreaModal": {
+    "title": "Life Area Details",
+    "totalXP": "Total XP",
+    "xpToNextLevel": "XP to Level {{level}}",
+    "habitsInArea": "Habits in this area",
+    "completedToday": "Completed Today",
+    "noHabits": "No habits in this area yet",
+    "viewAllHabits": "View All Habits",
+    "close": "Close"
   },
   "streaks": {
     "title": "Your Streak",
@@ -71,6 +82,27 @@
     "greatProgress": "💪 Great progress! Keep it up!",
     "everyStepCounts": "🌟 Every step counts. You've got this!",
     "coachBelievesInYou": "Your AI coach believes in you"
+  },
+  "habitForm": {
+    "createHabit": "Create Habit",
+    "editHabit": "Edit Habit",
+    "habitName": "Habit Name",
+    "habitNamePlaceholder": "E.g., Meditate 10 minutes",
+    "lifeArea": "Life Area",
+    "selectLifeArea": "Select a life area",
+    "icon": "Icon",
+    "selectedIcon": "Selected icon",
+    "xpValue": "XP Value",
+    "xpDescription": "Choose between {{min}} and {{max}} XP based on difficulty",
+    "errors": {
+      "nameRequired": "Name is required",
+      "nameTooShort": "Name must be at least 3 characters",
+      "nameTooLong": "Name cannot be longer than 50 characters",
+      "lifeAreaRequired": "You must select a life area",
+      "iconRequired": "You must select an icon",
+      "xpTooLow": "Minimum XP is {{min}}",
+      "xpTooHigh": "Maximum XP is {{max}}"
+    }
   },
   "rootHabit": {
     "title": "30-Day Challenge",
@@ -139,7 +171,9 @@
     "back": "Back",
     "next": "Next",
     "previous": "Previous",
-    "close": "Close"
+    "close": "Close",
+    "create": "Create",
+    "saveChanges": "Save Changes"
   },
   "onboarding": {
     "prevButton": "Previous",
