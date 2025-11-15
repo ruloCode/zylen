@@ -54,6 +54,7 @@ export const STORAGE_KEYS = {
   LIFE_AREAS: 'zylen_life_areas',
   STREAKS: 'zylen_streaks',
   SHOP: 'zylen_shop',
+  SHOP_ITEMS: 'zylen_shop_items',
   PURCHASES: 'zylen_purchases',
   SETTINGS: 'zylen_settings',
   APP_STATE: 'zylen_app_state',

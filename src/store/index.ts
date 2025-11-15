@@ -70,11 +70,19 @@ export function useStreaks() {
 
 export function useShop() {
   const selector = useShallow((state: AppStore) => ({
+    // Purchase history
     purchaseHistory: state.purchaseHistory,
     loadPurchaseHistory: state.loadPurchaseHistory,
     purchaseItem: state.purchaseItem,
     getTotalSpent: state.getTotalSpent,
     clearHistory: state.clearHistory,
+    // Shop items
+    shopItems: state.shopItems,
+    loadShopItems: state.loadShopItems,
+    addShopItem: state.addShopItem,
+    updateShopItem: state.updateShopItem,
+    deleteShopItem: state.deleteShopItem,
+    getShopItemById: state.getShopItemById,
   }));
   return useAppStore(selector);
 }
@@ -131,5 +139,6 @@ export function initializeStore() {
   useAppStore.getState().loadHabits();
   useAppStore.getState().loadStreak();
   useAppStore.getState().loadPurchaseHistory();
+  useAppStore.getState().loadShopItems();
   useAppStore.getState().initializeLifeAreas();
 }

@@ -25,7 +25,7 @@ i18n
     // Fallback language if translation is missing
     fallbackLng: 'es',
 
-    // Default language (Spanish)
+    // Default language (Spanish) - will be overridden ONLY by localStorage
     lng: 'es',
 
     // Supported languages
@@ -51,8 +51,9 @@ i18n
 
     // Language detection options
     detection: {
-      // Order of detection methods
-      order: ['localStorage', 'navigator'],
+      // Order of detection methods - ONLY localStorage, ignore browser language
+      // This ensures the app always starts in Spanish unless user manually changes it
+      order: ['localStorage'],
 
       // Cache user language preference
       caches: ['localStorage'],

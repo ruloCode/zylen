@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { Edit2, Check, X } from 'lucide-react';
+import { Check, X } from 'lucide-react';
 import { cn } from '@/utils';
 import { XPBadge } from '@/components/ui';
 import { HABIT_ICONS } from './IconSelector';
@@ -22,7 +22,6 @@ interface HabitItemProps {
   completed: boolean;
   lifeArea: string; // Life area ID
   onToggle: (id: string, completed: boolean) => void;
-  onEdit?: (id: string) => void; // Optional edit callback
 }
 
 export function HabitItem({
@@ -32,8 +31,7 @@ export function HabitItem({
   xp,
   completed,
   lifeArea,
-  onToggle,
-  onEdit
+  onToggle
 }: HabitItemProps) {
   const { t } = useLocale();
   const { lifeAreas } = useLifeAreas();
@@ -54,7 +52,7 @@ export function HabitItem({
   return (
     <article
       className={cn(
-        'glass-card rounded-2xl p-4 transition-all duration-500 relative overflow-hidden',
+        'glass-card rounded-2xl p-3 sm:p-4 transition-all duration-500 relative overflow-hidden',
         isCompleted
           ? 'bg-gradient-to-br from-success-50/90 to-teal-50/80 border-2 border-success-300/60 shadow-glow-success'
           : 'hover:shadow-soft-lg hover:scale-[1.02]'
@@ -66,24 +64,24 @@ export function HabitItem({
         <div className="absolute inset-0 bg-gradient-adventure-glow opacity-20 animate-glow-pulse pointer-events-none" />
       )}
 
-      <div className="flex items-center gap-4 relative z-10">
+      <div className="flex items-center gap-3 relative z-10">
         {/* Icon with warm background */}
         <div
           className={cn(
-            'p-3 rounded-xl transition-all duration-300',
+            'p-2.5 sm:p-3 rounded-xl transition-all duration-300 flex-shrink-0',
             isCompleted
               ? 'bg-gradient-to-br from-teal-400 to-teal-600 text-white shadow-glow-teal'
               : 'bg-gradient-to-br from-parchment-100 to-parchment-200 text-gold-600 shadow-soft'
           )}
         >
-          <IconComponent size={24} />
+          <IconComponent size={20} className="sm:w-6 sm:h-6" />
         </div>
 
         {/* Habit details */}
         <div className="flex-1 min-w-0">
           <h3
             className={cn(
-              'font-display font-bold text-base truncate transition-colors',
+              'font-display font-bold text-sm sm:text-base truncate transition-colors',
               isCompleted ? 'text-success-700' : 'text-gray-900'
             )}
           >
@@ -91,10 +89,10 @@ export function HabitItem({
           </h3>
 
           {/* XP Badge and Life Area Badge */}
-          <div className="mt-1 flex items-center gap-2">
+          <div className="mt-1 flex items-center gap-1.5 flex-wrap">
             <XPBadge xp={xp} size="sm" />
             {lifeAreaName && (
-              <span className="px-2 py-0.5 text-xs font-semibold rounded-md bg-teal-100 text-teal-700">
+              <span className="px-1.5 py-0.5 text-xs font-semibold rounded-md bg-teal-100 text-teal-700">
                 {lifeAreaName}
               </span>
             )}
@@ -102,29 +100,13 @@ export function HabitItem({
         </div>
 
         {/* Action buttons - Increased to 44x44px for better touch targets (WCAG 2.5.5) */}
-        <div className="flex gap-2">
-          {/* Edit button (if onEdit is provided) */}
-          {onEdit && (
-            <button
-              type="button"
-              onClick={() => onEdit(id)}
-              className={cn(
-                'min-w-[44px] min-h-[44px] p-3 rounded-xl transition-all duration-300',
-                'focus:outline-none focus-visible:ring-4 focus-visible:ring-gray-400/50 focus-visible:ring-offset-2',
-                'bg-parchment-100/80 text-gray-600 hover:bg-gray-100 hover:text-gray-800 hover:scale-110 hover:shadow-soft-md'
-              )}
-              aria-label={`Edit ${name}`}
-            >
-              <Edit2 size={18} />
-            </button>
-          )}
-
+        <div className="flex gap-1.5 sm:gap-2 flex-shrink-0">
           {/* Complete button */}
           <button
             type="button"
             onClick={() => handleToggle(true)}
             className={cn(
-              'min-w-[44px] min-h-[44px] p-3 rounded-xl transition-all duration-300 relative',
+              'w-11 h-11 sm:w-12 sm:h-12 p-2 sm:p-3 rounded-xl transition-all duration-300 relative flex items-center justify-center',
               'focus:outline-none focus-visible:ring-4 focus-visible:ring-teal-400/50 focus-visible:ring-offset-2',
               isCompleted
                 ? 'bg-gradient-to-br from-success-500 to-success-600 text-white shadow-glow-success scale-110'
@@ -146,7 +128,7 @@ export function HabitItem({
             type="button"
             onClick={() => handleToggle(false)}
             className={cn(
-              'min-w-[44px] min-h-[44px] p-3 rounded-xl transition-all duration-300',
+              'w-11 h-11 sm:w-12 sm:h-12 p-2 sm:p-3 rounded-xl transition-all duration-300 flex items-center justify-center',
               'focus:outline-none focus-visible:ring-4 focus-visible:ring-danger-400/50 focus-visible:ring-offset-2',
               !isCompleted && isCompleted !== completed
                 ? 'bg-gradient-to-br from-danger-400 to-danger-500 text-white shadow-soft-lg scale-110'

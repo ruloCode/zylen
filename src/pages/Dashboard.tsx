@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sparkles, TrendingUp, Zap } from 'lucide-react';
+import { Sparkles, TrendingUp } from 'lucide-react';
 import { LifeAreaCard, LifeAreaModal } from '@/features/dashboard/components';
 import { StreakDisplay } from '@/features/streaks/components';
 import { Button, LevelBadge, ProgressBar } from '@/components/ui';
@@ -8,7 +8,7 @@ import { useUser, useLifeAreas, useStreaks } from '@/store';
 import { ROUTES, APP_CONFIG } from '@/constants';
 import { useLocale } from '@/hooks/useLocale';
 import { getLevelProgress } from '@/utils/xp';
-import ruloAvatar from '../assets/rulo_avatar.png';
+import ruloAvatar from '@/assets/rulo_avatar.png';
 
 export function Dashboard() {
   const navigate = useNavigate();
@@ -36,11 +36,19 @@ export function Dashboard() {
 
         {/* User Stats Card */}
         <section aria-labelledby="stats-heading" className="bg-white rounded-3xl p-6 mb-6 text-center shadow-lg border border-white/20">
-          <img
-            src={ruloAvatar}
-            alt="Rulo Avatar"
-            className="w-32 mx-auto mb-4 float-animation object-contain"
-          />
+          {user?.avatarUrl ? (
+            <img
+              src={user.avatarUrl}
+              alt={user.name || 'User Avatar'}
+              className="w-32 h-32 mx-auto mb-4 float-animation object-cover rounded-full"
+            />
+          ) : (
+            <div className="w-32 h-32 mx-auto mb-4 float-animation rounded-full bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center">
+              <span className="text-5xl font-bold text-white">
+                {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+              </span>
+            </div>
+          )}
 
           {/* Global Level */}
           <div className="flex items-center justify-center gap-3 mb-4">

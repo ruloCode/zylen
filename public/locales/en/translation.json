@@ -142,6 +142,43 @@
       }
     }
   },
+  "shopManager": {
+    "title": "Manage Rewards",
+    "subtitle": "Create and edit your custom rewards",
+    "addItem": "Add Reward",
+    "noItems": "No rewards available",
+    "addFirstItem": "Add First Reward",
+    "editItem": "Edit Reward",
+    "createItem": "Create Reward",
+    "itemName": "Reward Name",
+    "itemNamePlaceholder": "E.g., Special dessert",
+    "description": "Description",
+    "descriptionPlaceholder": "Describe the reward...",
+    "cost": "Cost in Points",
+    "costDescription": "Between {{min}} and {{max}} points",
+    "category": "Category",
+    "categories": {
+      "food": "Food",
+      "leisure": "Leisure",
+      "shopping": "Shopping",
+      "other": "Other"
+    },
+    "icon": "Icon",
+    "selectedIcon": "Selected icon",
+    "manageItems": "Manage rewards",
+    "default": "Default",
+    "confirmDelete": "Are you sure you want to delete \"{{name}}\"?",
+    "errors": {
+      "nameRequired": "Name is required",
+      "nameTooShort": "Name must be at least 3 characters",
+      "nameTooLong": "Name cannot be longer than 50 characters",
+      "descriptionRequired": "Description is required",
+      "descriptionTooLong": "Description cannot be longer than 200 characters",
+      "costTooLow": "Minimum cost is {{min}} points",
+      "costTooHigh": "Maximum cost is {{max}} points",
+      "iconRequired": "You must select an icon"
+    }
+  },
   "chat": {
     "title": "AI Coach",
     "subtitle": "Your personal mentor is here",

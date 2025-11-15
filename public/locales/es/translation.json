@@ -142,6 +142,43 @@
       }
     }
   },
+  "shopManager": {
+    "title": "Gestionar Recompensas",
+    "subtitle": "Crea y edita tus recompensas personalizadas",
+    "addItem": "Agregar Recompensa",
+    "noItems": "No hay recompensas disponibles",
+    "addFirstItem": "Agregar Primera Recompensa",
+    "editItem": "Editar Recompensa",
+    "createItem": "Crear Recompensa",
+    "itemName": "Nombre de la Recompensa",
+    "itemNamePlaceholder": "Ej: Postre especial",
+    "description": "Descripción",
+    "descriptionPlaceholder": "Describe la recompensa...",
+    "cost": "Costo en Puntos",
+    "costDescription": "Entre {{min}} y {{max}} puntos",
+    "category": "Categoría",
+    "categories": {
+      "food": "Comida",
+      "leisure": "Ocio",
+      "shopping": "Compras",
+      "other": "Otro"
+    },
+    "icon": "Ícono",
+    "selectedIcon": "Ícono seleccionado",
+    "manageItems": "Gestionar recompensas",
+    "default": "Por defecto",
+    "confirmDelete": "¿Estás seguro de que quieres eliminar \"{{name}}\"?",
+    "errors": {
+      "nameRequired": "El nombre es obligatorio",
+      "nameTooShort": "El nombre debe tener al menos 3 caracteres",
+      "nameTooLong": "El nombre no puede tener más de 50 caracteres",
+      "descriptionRequired": "La descripción es obligatoria",
+      "descriptionTooLong": "La descripción no puede tener más de 200 caracteres",
+      "costTooLow": "El costo mínimo es {{min}} puntos",
+      "costTooHigh": "El costo máximo es {{max}} puntos",
+      "iconRequired": "Debes seleccionar un ícono"
+    }
+  },
   "chat": {
     "title": "Coach IA",
     "subtitle": "Tu mentor personal está aquí",

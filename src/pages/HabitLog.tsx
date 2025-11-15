@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Dumbbell, Book, Apple, Bed, Droplets, Brain, Plus } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { HabitItem, HabitForm } from '@/features/habits/components';
 import { LevelUpNotification } from '@/components/ui';
 import { useUser, useLifeAreas, useAppStore } from '@/store';
@@ -21,8 +21,6 @@ export function HabitLog() {
   const habits = useAppStore((state) => state.habits);
   const loadHabits = useAppStore((state) => state.loadHabits);
   const addHabit = useAppStore((state) => state.addHabit);
-  const updateHabit = useAppStore((state) => state.updateHabit);
-  const deleteHabit = useAppStore((state) => state.deleteHabit);
   const toggleHabit = useAppStore((state) => state.toggleHabit);
   const updateXP = useAppStore((state) => state.updateXP);
   const updateStreakForToday = useAppStore((state) => state.updateStreakForToday);
@@ -32,9 +30,8 @@ export function HabitLog() {
   // State for level up notifications
   const [levelUpNotification, setLevelUpNotification] = useState<LevelUpState | null>(null);
 
-  // State for habit form
+  // State for habit form (only for creation)
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [editingHabit, setEditingHabit] = useState<Habit | undefined>(undefined);
 
   // Load habits on mount or initialize with default habits if empty
   useEffect(() => {
@@ -149,43 +146,25 @@ export function HabitLog() {
    * Open form to create new habit
    */
   const handleCreateHabit = () => {
-    setEditingHabit(undefined);
     setIsFormOpen(true);
   };
 
   /**
-   * Open form to edit existing habit
-   */
-  const handleEditHabit = (id: string) => {
-    const habit = habits.find(h => h.id === id);
-    if (habit) {
-      setEditingHabit(habit);
-      setIsFormOpen(true);
-    }
-  };
-
-  /**
-   * Handle form submission (create or edit)
+   * Handle form submission (create only)
    */
   const handleFormSubmit = (data: HabitFormData) => {
-    if (editingHabit) {
-      // Update existing habit
-      updateHabit(editingHabit.id, data);
-    } else {
-      // Create new habit
-      const newHabit: Habit = {
-        id: `habit-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-        ...data,
-        completed: false,
-        points: data.xp * 0.5, // Calculate points
-        createdAt: new Date(),
-      };
-      addHabit(newHabit);
-    }
+    // Create new habit
+    const newHabit: Habit = {
+      id: `habit-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      ...data,
+      completed: false,
+      points: data.xp * 0.5, // Calculate points
+      createdAt: new Date(),
+    };
+    addHabit(newHabit);
 
     // Close form
     setIsFormOpen(false);
-    setEditingHabit(undefined);
   };
 
   /**
@@ -193,7 +172,6 @@ export function HabitLog() {
    */
   const handleFormCancel = () => {
     setIsFormOpen(false);
-    setEditingHabit(undefined);
   };
 
   const completedCount = habits.filter(h => h.completed).length;
@@ -207,65 +185,64 @@ export function HabitLog() {
   };
 
   return <>
-      <div className="min-h-screen pb-24 px-4 pt-8">
+      <div className="min-h-screen pb-24 px-3 sm:px-4 pt-6 sm:pt-8">
         <div className="max-w-md mx-auto">
           {/* Header */}
-          <header className="mb-8">
-            <div className="flex items-center justify-between mb-3">
-              <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight">
+          <header className="mb-6 sm:mb-8">
+            <div className="flex items-center justify-between mb-2 sm:mb-3">
+              <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
                 {t('habits.dailyQuests')}
               </h1>
               <button
                 onClick={handleCreateHabit}
-                className="flex items-center justify-center w-12 h-12 rounded-xl bg-teal-500 text-white hover:bg-teal-600 transition-colors shadow-lg hover:shadow-xl hover:scale-110"
+                className="flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-teal-500 text-white hover:bg-teal-600 transition-colors shadow-lg hover:shadow-xl hover:scale-110 flex-shrink-0"
                 aria-label={t('habitForm.createHabit')}
               >
-                <Plus className="w-6 h-6" />
+                <Plus className="w-5 h-5 sm:w-6 sm:h-6" />
               </button>
             </div>
-            <p className="text-base text-gray-700 font-semibold">{t('habits.completeHabitsToEarnXP')}</p>
+            <p className="text-sm sm:text-base text-gray-700 font-semibold">{t('habits.completeHabitsToEarnXP')}</p>
           </header>
 
           {/* Progress Summary */}
-          <section aria-labelledby="progress-heading" className="glass-card rounded-3xl p-6 mb-8">
+          <section aria-labelledby="progress-heading" className="glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 mb-6 sm:mb-8">
             <h2 className="sr-only" id="progress-heading">Progress Summary</h2>
-            <div className="flex justify-between items-center">
-              <div>
-                <div className="text-4xl font-bold text-gray-900" aria-live="polite" aria-atomic="true">
+            <div className="flex justify-between items-center gap-4">
+              <div className="flex-1">
+                <div className="text-3xl sm:text-4xl font-bold text-gray-900" aria-live="polite" aria-atomic="true">
                   {completedCount}/{habits.length}
                 </div>
-                <div className="text-base text-gray-700 font-semibold mt-1">{t('habits.completedToday')}</div>
+                <div className="text-sm sm:text-base text-gray-700 font-semibold mt-1">{t('habits.completedToday')}</div>
               </div>
-              <div className="text-right">
-                <div className="text-4xl font-bold text-gold-700" aria-live="polite" aria-atomic="true">
+              <div className="text-right flex-1">
+                <div className="text-3xl sm:text-4xl font-bold text-gold-700" aria-live="polite" aria-atomic="true">
                   +{totalXP}
                 </div>
-                <div className="text-base text-gray-700 font-semibold mt-1">{t('habits.xpEarned')}</div>
+                <div className="text-sm sm:text-base text-gray-700 font-semibold mt-1">{t('habits.xpEarned')}</div>
               </div>
             </div>
           </section>
 
           {/* Habits List */}
-          <section aria-labelledby="habits-heading" className="mb-8">
+          <section aria-labelledby="habits-heading" className="mb-6 sm:mb-8">
             <h2 className="sr-only" id="habits-heading">{t('habits.yourDailyHabits')}</h2>
-            <div className="space-y-4">
+            <div className="space-y-2.5 sm:space-y-3">
               {habits.map(habit => (
                 <HabitItem
                   key={habit.id}
                   {...habit}
                   onToggle={handleToggle}
-                  onEdit={handleEditHabit}
                 />
               ))}
             </div>
           </section>
 
           {/* Motivational Message */}
-          <aside className="glass-card rounded-3xl p-6 text-center bg-gradient-to-br from-teal-50/80 to-gold-50/60" role="status" aria-live="polite">
-            <p className="text-gray-900 font-bold text-lg mb-2">
+          <aside className="glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 text-center bg-gradient-to-br from-teal-50/80 to-gold-50/60" role="status" aria-live="polite">
+            <p className="text-gray-900 font-bold text-base sm:text-lg mb-2">
               {getMotivationalMessage()}
             </p>
-            <p className="text-base text-gray-700 font-semibold">{t('habits.coachBelievesInYou')}</p>
+            <p className="text-sm sm:text-base text-gray-700 font-semibold">{t('habits.coachBelievesInYou')}</p>
           </aside>
         </div>
       </div>
@@ -281,10 +258,9 @@ export function HabitLog() {
         />
       )}
 
-      {/* Habit Form (Create/Edit) */}
+      {/* Habit Form (Create only) */}
       {isFormOpen && (
         <HabitForm
-          habit={editingHabit}
           onSubmit={handleFormSubmit}
           onCancel={handleFormCancel}
         />
