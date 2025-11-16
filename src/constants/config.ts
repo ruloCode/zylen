@@ -70,6 +70,17 @@ export const LIFE_AREAS = [
   'Career',
 ] as const;
 
+// Avatar configuration
+export const AVATARS = {
+  RULO: '/avatars/rulo_avatar.png',
+  DANI: '/avatars/dani_avatar.png',
+} as const;
+
+export const AVATAR_OPTIONS = [
+  { id: 'rulo', name: 'Rulo', url: AVATARS.RULO },
+  { id: 'dani', name: 'Dani', url: AVATARS.DANI },
+] as const;
+
 // Chat configuration
 export const CHAT_CONFIG = {
   maxMessages: 100,

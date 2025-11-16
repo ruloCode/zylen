@@ -8,7 +8,6 @@ import { useUser, useLifeAreas, useStreaks } from '@/store';
 import { ROUTES, APP_CONFIG } from '@/constants';
 import { useLocale } from '@/hooks/useLocale';
 import { getLevelProgress } from '@/utils/xp';
-import ruloAvatar from '@/assets/rulo_avatar.png';
 
 export function Dashboard() {
   const navigate = useNavigate();

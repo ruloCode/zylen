@@ -12,10 +12,8 @@ import {
 } from '@/features/profile/components';
 import { HabitForm } from '@/features/habits/components';
 import { Habit, HabitFormData, HabitWithCompletion } from '@/types';
-import { ROUTES } from '@/constants/routes';
+import { ROUTES, AVATARS } from '@/constants';
 import { cn } from '@/utils';
-import ruloAvatar from '@/assets/rulo_avatar.png';
-import daniAvatar from '@/assets/dani_avatar.png';
 
 // Map life area names to translation keys
 const lifeAreaTranslationMap: Record<string, string> = {
@@ -47,7 +45,7 @@ export function Profile() {
   const [newName, setNewName] = useState(user?.name || '');
   const [isEditingAvatar, setIsEditingAvatar] = useState(false);
   const [selectedAvatar, setSelectedAvatar] = useState(
-    user?.avatarUrl || ruloAvatar
+    user?.avatarUrl || AVATARS.RULO
   );
   const [isEditingHabit, setIsEditingHabit] = useState(false);
   const [habitToEdit, setHabitToEdit] = useState<Habit | undefined>(undefined);
@@ -194,12 +192,12 @@ export function Profile() {
                     {/* Rulo Avatar (Male) */}
                     <button
                       type="button"
-                      onClick={() => setSelectedAvatar(ruloAvatar)}
+                      onClick={() => setSelectedAvatar(AVATARS.RULO)}
                       className={cn(
                         'relative p-4 rounded-xl transition-all duration-200',
                         'border-2 hover:scale-105',
                         'focus:outline-none focus:ring-2 focus:ring-gold-400',
-                        selectedAvatar === ruloAvatar
+                        selectedAvatar === AVATARS.RULO
                           ? 'border-gold-400 bg-gold-400/10 shadow-lg shadow-gold-400/30'
                           : 'border-charcoal-600 bg-charcoal-700 hover:border-gold-400/50'
                       )}
@@ -208,13 +206,13 @@ export function Profile() {
                         <div
                           className={cn(
                             'w-20 h-20 rounded-full overflow-hidden border-2',
-                            selectedAvatar === ruloAvatar
+                            selectedAvatar === AVATARS.RULO
                               ? 'border-gold-400'
                               : 'border-charcoal-500'
                           )}
                         >
                           <img
-                            src={ruloAvatar}
+                            src={AVATARS.RULO}
                             alt="Rulo"
                             className="w-full h-full object-cover"
                           />
@@ -222,7 +220,7 @@ export function Profile() {
                         <span
                           className={cn(
                             'text-sm font-medium',
-                            selectedAvatar === ruloAvatar
+                            selectedAvatar === AVATARS.RULO
                               ? 'text-gold-400'
                               : 'text-gray-300'
                           )}
@@ -230,7 +228,7 @@ export function Profile() {
                           {t('profile.avatarMale')}
                         </span>
                       </div>
-                      {selectedAvatar === ruloAvatar && (
+                      {selectedAvatar === AVATARS.RULO && (
                         <div className="absolute top-2 right-2 w-6 h-6 bg-gold-400 rounded-full flex items-center justify-center">
                           <svg
                             className="w-4 h-4 text-charcoal-900"
@@ -250,12 +248,12 @@ export function Profile() {
                     {/* Dani Avatar (Female) */}
                     <button
                       type="button"
-                      onClick={() => setSelectedAvatar(daniAvatar)}
+                      onClick={() => setSelectedAvatar(AVATARS.DANI)}
                       className={cn(
                         'relative p-4 rounded-xl transition-all duration-200',
                         'border-2 hover:scale-105',
                         'focus:outline-none focus:ring-2 focus:ring-gold-400',
-                        selectedAvatar === daniAvatar
+                        selectedAvatar === AVATARS.DANI
                           ? 'border-gold-400 bg-gold-400/10 shadow-lg shadow-gold-400/30'
                           : 'border-charcoal-600 bg-charcoal-700 hover:border-gold-400/50'
                       )}
@@ -264,13 +262,13 @@ export function Profile() {
                         <div
                           className={cn(
                             'w-20 h-20 rounded-full overflow-hidden border-2',
-                            selectedAvatar === daniAvatar
+                            selectedAvatar === AVATARS.DANI
                               ? 'border-gold-400'
                               : 'border-charcoal-500'
                           )}
                         >
                           <img
-                            src={daniAvatar}
+                            src={AVATARS.DANI}
                             alt="Dani"
                             className="w-full h-full object-cover"
                           />
@@ -278,7 +276,7 @@ export function Profile() {
                         <span
                           className={cn(
                             'text-sm font-medium',
-                            selectedAvatar === daniAvatar
+                            selectedAvatar === AVATARS.DANI
                               ? 'text-gold-400'
                               : 'text-gray-300'
                           )}
@@ -286,7 +284,7 @@ export function Profile() {
                           {t('profile.avatarFemale')}
                         </span>
                       </div>
-                      {selectedAvatar === daniAvatar && (
+                      {selectedAvatar === AVATARS.DANI && (
                         <div className="absolute top-2 right-2 w-6 h-6 bg-gold-400 rounded-full flex items-center justify-center">
                           <svg
                             className="w-4 h-4 text-charcoal-900"
@@ -314,7 +312,7 @@ export function Profile() {
                     </button>
                     <button
                       onClick={() => {
-                        setSelectedAvatar(user.avatarUrl || ruloAvatar);
+                        setSelectedAvatar(user.avatarUrl || AVATARS.RULO);
                         setIsEditingAvatar(false);
                       }}
                       className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-500"
@@ -346,9 +344,9 @@ export function Profile() {
                         {t('profile.avatarLabel')}
                       </p>
                       <p className="text-white font-semibold">
-                        {user.avatarUrl === ruloAvatar
+                        {user.avatarUrl === AVATARS.RULO
                           ? t('profile.avatarMale')
-                          : user.avatarUrl === daniAvatar
+                          : user.avatarUrl === AVATARS.DANI
                           ? t('profile.avatarFemale')
                           : '-'}
                       </p>
