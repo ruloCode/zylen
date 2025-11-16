@@ -5,7 +5,6 @@ import { Button } from '@/components/ui';
 import { useAppStore } from '@/store';
 import { useLocale } from '@/hooks/useLocale';
 import { CHAT_CONFIG } from '@/constants';
-import ruloAvatar from '../assets/rulo_avatar.png';
 
 export function Chat() {
   const messages = useAppStore((state) => state.messages);

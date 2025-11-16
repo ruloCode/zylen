@@ -11,6 +11,7 @@ import type { Habit, HabitCompletion } from '@/types/habit';
 import type { Streak } from '@/types/streak';
 import type { ShopItem, Purchase } from '@/types/shop';
 import { mapDBDateToDate } from './utils';
+import { AVATARS } from '@/constants';
 
 // Database row types for convenience
 type ProfileRow = Database['public']['Tables']['profiles']['Row'];
@@ -32,7 +33,7 @@ export function mapProfileToUser(profile: ProfileRow, selectedLifeAreas: string[
     totalXPEarned: profile.total_xp_earned,
     level: profile.level,
     joinedAt: mapDBDateToDate(profile.created_at),
-    avatarUrl: profile.avatar_url || undefined,
+    avatarUrl: profile.avatar_url || AVATARS.RULO, // Default to RULO avatar if not set
     hasCompletedOnboarding: profile.has_completed_onboarding,
     selectedLifeAreas, // This needs to be fetched separately from life_areas where enabled=true
   };
