@@ -196,7 +196,7 @@ export function Profile() {
           <main className="lg:col-span-8 space-y-6">
             {/* Edit Name Section */}
             <section className="glass-card p-6">
-              <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
                 <Edit2 size={20} />
                 {t('profile.editProfile')}
               </h2>
@@ -207,7 +207,7 @@ export function Profile() {
                     type="text"
                     value={newName}
                     onChange={(e) => setNewName(e.target.value)}
-                    className="flex-1 px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-400"
+                    className="flex-1 px-4 py-2 bg-white/5 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-teal-400"
                     autoFocus
                   />
                   <button
@@ -221,7 +221,7 @@ export function Profile() {
                       setNewName(user.name);
                       setIsEditingName(false);
                     }}
-                    className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+                    className="px-4 py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-colors"
                   >
                     <X size={18} />
                   </button>
@@ -229,14 +229,14 @@ export function Profile() {
               ) : (
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-white">
                       {t('profile.nameLabel')}
                     </p>
-                    <p className="text-gray-900 font-semibold">{user.name}</p>
+                    <p className="text-white font-semibold">{user.name}</p>
                   </div>
                   <button
                     onClick={() => setIsEditingName(true)}
-                    className="px-4 py-2 bg-white text-gray-700 rounded-lg hover:bg-gray-50 border border-gray-300 transition-colors"
+                    className="px-4 py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 border border-white/20 transition-colors"
                   >
                     {t('common.edit')}
                   </button>
@@ -246,7 +246,7 @@ export function Profile() {
 
             {/* Username Section */}
             <section className="glass-card p-6">
-              <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
                 <UserIcon size={20} />
                 {t('username.title')}
               </h2>
@@ -261,7 +261,7 @@ export function Profile() {
                         setNewUsername(e.target.value);
                         handleCheckUsername(e.target.value);
                       }}
-                      className="flex-1 px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-400"
+                      className="flex-1 px-4 py-2 bg-white/5 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-teal-400"
                       placeholder={t('username.placeholder')}
                       autoFocus
                       maxLength={20}
@@ -290,7 +290,7 @@ export function Profile() {
                         setUsernameAvailable(null);
                         setIsEditingUsername(false);
                       }}
-                      className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+                      className="px-4 py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-colors"
                     >
                       <X size={18} />
                     </button>
@@ -299,10 +299,10 @@ export function Profile() {
               ) : (
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-white">
                       {t('username.title')}
                     </p>
-                    <p className="text-gray-900 font-semibold">
+                    <p className="text-white font-semibold">
                       {currentUsername ? `@${currentUsername}` : t('username.choose')}
                     </p>
                   </div>
@@ -311,7 +311,7 @@ export function Profile() {
                       setNewUsername(currentUsername || '');
                       setIsEditingUsername(true);
                     }}
-                    className="px-4 py-2 bg-white text-gray-700 rounded-lg hover:bg-gray-50 border border-gray-300 transition-colors"
+                    className="px-4 py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 border border-white/20 transition-colors"
                   >
                     {t('common.edit')}
                   </button>
@@ -321,7 +321,7 @@ export function Profile() {
 
             {/* Avatar Selection Section */}
             <section className="glass-card p-6">
-              <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
                 <Edit2 size={20} />
                 {t('profile.changeAvatar')}
               </h2>
@@ -339,7 +339,7 @@ export function Profile() {
                         'focus:outline-none focus:ring-2 focus:ring-gold-400',
                         selectedAvatar === AVATARS.RULO
                           ? 'border-gold-400 bg-gold-400/10 shadow-lg shadow-gold-400/30'
-                          : 'border-gray-300 bg-white hover:border-gold-400/50'
+                          : 'border-white/20 bg-white/5 hover:border-gold-400/50'
                       )}
                     >
                       <div className="flex flex-col items-center gap-3">
@@ -348,7 +348,7 @@ export function Profile() {
                             'w-20 h-20 rounded-full overflow-hidden border-2',
                             selectedAvatar === AVATARS.RULO
                               ? 'border-gold-400'
-                              : 'border-gray-200'
+                              : 'border-white/20'
                           )}
                         >
                           <img
@@ -362,7 +362,7 @@ export function Profile() {
                             'text-sm font-medium',
                             selectedAvatar === AVATARS.RULO
                               ? 'text-gold-400'
-                              : 'text-gray-700'
+                              : 'text-white'
                           )}
                         >
                           {t('profile.avatarMale')}
@@ -395,7 +395,7 @@ export function Profile() {
                         'focus:outline-none focus:ring-2 focus:ring-gold-400',
                         selectedAvatar === AVATARS.DANI
                           ? 'border-gold-400 bg-gold-400/10 shadow-lg shadow-gold-400/30'
-                          : 'border-gray-300 bg-white hover:border-gold-400/50'
+                          : 'border-white/20 bg-white/5 hover:border-gold-400/50'
                       )}
                     >
                       <div className="flex flex-col items-center gap-3">
@@ -404,7 +404,7 @@ export function Profile() {
                             'w-20 h-20 rounded-full overflow-hidden border-2',
                             selectedAvatar === AVATARS.DANI
                               ? 'border-gold-400'
-                              : 'border-gray-200'
+                              : 'border-white/20'
                           )}
                         >
                           <img
@@ -418,7 +418,7 @@ export function Profile() {
                             'text-sm font-medium',
                             selectedAvatar === AVATARS.DANI
                               ? 'text-gold-400'
-                              : 'text-gray-700'
+                              : 'text-white'
                           )}
                         >
                           {t('profile.avatarFemale')}
@@ -455,7 +455,7 @@ export function Profile() {
                         setSelectedAvatar(user.avatarUrl || AVATARS.RULO);
                         setIsEditingAvatar(false);
                       }}
-                      className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+                      className="px-4 py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-colors"
                     >
                       <X size={18} />
                     </button>
@@ -464,7 +464,7 @@ export function Profile() {
               ) : (
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-gray-200">
+                    <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-white/20">
                       {user.avatarUrl ? (
                         <img
                           src={user.avatarUrl}
@@ -480,10 +480,10 @@ export function Profile() {
                       )}
                     </div>
                     <div>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-white">
                         {t('profile.avatarLabel')}
                       </p>
-                      <p className="text-gray-900 font-semibold">
+                      <p className="text-white font-semibold">
                         {user.avatarUrl === AVATARS.RULO
                           ? t('profile.avatarMale')
                           : user.avatarUrl === AVATARS.DANI
@@ -494,7 +494,7 @@ export function Profile() {
                   </div>
                   <button
                     onClick={() => setIsEditingAvatar(true)}
-                    className="px-4 py-2 bg-white text-gray-700 rounded-lg hover:bg-gray-50 border border-gray-300 transition-colors"
+                    className="px-4 py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 border border-white/20 transition-colors"
                   >
                     {t('common.edit')}
                   </button>
@@ -504,7 +504,7 @@ export function Profile() {
 
             {/* Life Areas Section */}
             <section className="glass-card p-6">
-              <h2 className="text-lg font-bold text-gray-900 mb-4">
+              <h2 className="text-lg font-bold text-white mb-4">
                 {t('profile.lifeAreasTitle')}
               </h2>
 
@@ -521,11 +521,11 @@ export function Profile() {
                   return (
                     <div
                       key={area.id}
-                      className="flex items-center justify-between p-4 bg-white/50 rounded-lg border border-gray-200"
+                      className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/20"
                     >
                       <div>
-                        <p className="font-semibold text-gray-900">{areaName}</p>
-                        <p className="text-sm text-gray-600">
+                        <p className="font-semibold text-white">{areaName}</p>
+                        <p className="text-sm text-white">
                           {t('common.level')} {area.level} • {area.totalXP} XP
                         </p>
                       </div>
@@ -543,7 +543,7 @@ export function Profile() {
                             selectedAreas.length <= 1
                           }
                         />
-                        <div className="w-11 h-6 bg-gray-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-400 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
+                        <div className="w-11 h-6 bg-white/20 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-teal-400 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
                       </label>
                     </div>
                   );
@@ -553,13 +553,13 @@ export function Profile() {
 
             {/* Habits Section */}
             <section className="glass-card p-6">
-              <h2 className="text-lg font-bold text-gray-900 mb-4">
+              <h2 className="text-lg font-bold text-white mb-4">
                 {t('profile.habitsTitle')}
               </h2>
 
               <div className="grid gap-3">
                 {habits.length === 0 ? (
-                  <p className="text-center text-gray-600 py-6">
+                  <p className="text-center text-white py-6">
                     {t('profile.noHabits')}
                   </p>
                 ) : (
@@ -576,13 +576,13 @@ export function Profile() {
                     return (
                       <div
                         key={habit.id}
-                        className="flex items-center justify-between p-4 bg-white/50 rounded-lg border border-gray-200"
+                        className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/20"
                       >
                         <div>
-                          <p className="font-semibold text-gray-900">
+                          <p className="font-semibold text-white">
                             {habit.name}
                           </p>
-                          <p className="text-sm text-gray-600">
+                          <p className="text-sm text-white">
                             {habit.xp} XP • {habit.points} {t('common.pts')} • {areaName}
                           </p>
                         </div>
@@ -613,18 +613,18 @@ export function Profile() {
 
             {/* Settings Section */}
             <section className="glass-card p-6">
-              <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
                 <Settings size={20} />
                 {t('profile.settingsTitle')}
               </h2>
 
               <div className="space-y-4">
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-white">
                   {t('profile.languageHint')}
                 </p>
 
                 {/* Sign Out Button */}
-                <div className="pt-4 border-t border-gray-200">
+                <div className="pt-4 border-t border-white/20">
                   <button
                     onClick={handleSignOut}
                     className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 border border-red-500/50 transition-all duration-200 font-semibold"

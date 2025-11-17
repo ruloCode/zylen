@@ -28,10 +28,10 @@ export function Badge({
   const variants = {
     // XP badge - Golden with shimmer
     xp: `
-      bg-gradient-to-br from-gold-500 to-gold-700
-      text-navy-700
-      border-2 border-gold-400/60
-      shadow-isometric
+      bg-gradient-to-br from-[#F29C06] to-[#D68500]
+      text-[#1A0F00]
+      border-2 border-[#FFBF3F]/80
+      shadow-[0_2px_8px_rgba(242,156,6,0.6)]
     `,
 
     // Level badge - Teal with metallic feel
@@ -45,7 +45,7 @@ export function Badge({
     // Achievement badge - Gold with special glow
     achievement: `
       bg-gradient-to-br from-gold-600 via-gold-500 to-warning-500
-      text-navy-800
+      text-black
       border-2 border-gold-400/80
       shadow-glow-gold
     `,
@@ -61,7 +61,7 @@ export function Badge({
     // Coin badge - Shiny gold coin
     coin: `
       bg-gradient-to-br from-gold-400 via-gold-600 to-gold-800
-      text-navy-900
+      text-black
       border-2 border-gold-300/70
       shadow-isometric
     `
@@ -104,8 +104,8 @@ interface XPBadgeProps {
 
 export function XPBadge({ xp, size = 'md', className = '', showPlus = true }: XPBadgeProps) {
   return (
-    <Badge variant="xp" size={size} className={className} withGlow>
-      <span className="drop-shadow-sm">
+    <Badge variant="xp" size={size} className={cn('animate-glow-pulse', className)} withGlow>
+      <span className="drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] font-extrabold">
         {showPlus && '+'}{xp} XP
       </span>
     </Badge>

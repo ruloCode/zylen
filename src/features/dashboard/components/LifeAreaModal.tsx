@@ -83,29 +83,29 @@ export function LifeAreaModal({ lifeAreaId, isOpen, onClose }: LifeAreaModalProp
       {/* Header with Icon and Title */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
-          <div className={`${colorClass} ${bgColorClass} p-4 rounded-2xl`}>
+          <div className={`${colorClass} bg-charcoal-700 p-4 rounded-none`}>
             <Icon size={32} />
           </div>
           <div>
-            <h2 className="text-3xl font-bold text-gray-900">{translatedArea}</h2>
-            <p className="text-sm text-gray-500">{t('lifeAreaModal.title')}</p>
+            <h2 className="text-3xl font-bold text-white">{translatedArea}</h2>
+            <p className="text-sm text-white/70">{t('lifeAreaModal.title')}</p>
           </div>
         </div>
         <LevelBadge level={lifeArea.level} />
       </div>
 
       {/* Stats Section */}
-      <div className="glass-card rounded-2xl p-6 mb-6">
+      <div className="rpg-card p-6 mb-6">
         <div className="grid grid-cols-2 gap-4 mb-4">
           <div>
-            <p className="text-sm text-gray-600 mb-1">{t('lifeAreaModal.totalXP')}</p>
-            <p className="text-2xl font-bold text-gold-600">{lifeArea.totalXP} XP</p>
+            <p className="text-sm text-white/70 mb-1">{t('lifeAreaModal.totalXP')}</p>
+            <p className="text-2xl font-bold text-orange-500">{lifeArea.totalXP} XP</p>
           </div>
           <div>
-            <p className="text-sm text-gray-600 mb-1">
+            <p className="text-sm text-white/70 mb-1">
               {t('lifeAreaModal.xpToNextLevel', { level: lifeArea.level + 1 })}
             </p>
-            <p className="text-2xl font-bold text-teal-600">
+            <p className="text-2xl font-bold text-cyan-400">
               {progress.max - progress.current} XP
             </p>
           </div>
@@ -113,12 +113,12 @@ export function LifeAreaModal({ lifeAreaId, isOpen, onClose }: LifeAreaModalProp
 
         {/* Progress Bar */}
         <div className="space-y-2">
-          <div className="flex justify-between text-sm text-gray-600">
+          <div className="flex justify-between text-sm text-white/80">
             <span>{t('common.progress')}</span>
             <span>{progress.percentage}%</span>
           </div>
           <ProgressBar current={progress.current} max={progress.max} showLabel={false} />
-          <div className="flex justify-between text-xs text-gray-500">
+          <div className="flex justify-between text-xs text-white/60">
             <span>{progress.current} XP</span>
             <span>{xpForNextLevel} XP</span>
           </div>
@@ -128,17 +128,17 @@ export function LifeAreaModal({ lifeAreaId, isOpen, onClose }: LifeAreaModalProp
       {/* Habits Section */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-gray-900">
+          <h3 className="text-lg font-semibold text-white">
             {t('lifeAreaModal.habitsInArea')}
           </h3>
-          <span className="text-sm text-gray-600">
+          <span className="text-sm text-white/70">
             {completedHabits.length}/{areaHabits.length} {t('lifeAreaModal.completedToday')}
           </span>
         </div>
 
         {areaHabits.length === 0 ? (
-          <div className="glass-card rounded-2xl p-8 text-center">
-            <p className="text-gray-500">{t('lifeAreaModal.noHabits')}</p>
+          <div className="rpg-card p-8 text-center">
+            <p className="text-white/60">{t('lifeAreaModal.noHabits')}</p>
           </div>
         ) : (
           <div className="space-y-2">
@@ -147,33 +147,33 @@ export function LifeAreaModal({ lifeAreaId, isOpen, onClose }: LifeAreaModalProp
               return (
                 <div
                   key={habit.id}
-                  className="glass-card rounded-xl p-4 flex items-center gap-3 hover:scale-[1.02] transition-transform"
+                  className="rpg-card p-4 flex items-center gap-3 hover:scale-[1.02] transition-dofus"
                 >
                   {/* Completion Status */}
                   <div>
                     {habit.completed ? (
                       <CheckCircle2 className="w-6 h-6 text-green-500" />
                     ) : (
-                      <Circle className="w-6 h-6 text-gray-300" />
+                      <Circle className="w-6 h-6 text-white/30" />
                     )}
                   </div>
 
                   {/* Habit Icon */}
-                  <div className={`${colorClass} ${bgColorClass} p-2 rounded-lg`}>
+                  <div className={`${colorClass} bg-charcoal-700 p-2`}>
                     <HabitIcon size={20} />
                   </div>
 
                   {/* Habit Info */}
                   <div className="flex-1">
-                    <h4 className="font-semibold text-gray-900">{habit.name}</h4>
-                    <p className="text-sm text-gray-500">
+                    <h4 className="font-semibold text-white">{habit.name}</h4>
+                    <p className="text-sm text-white/60">
                       +{habit.xp} XP · +{habit.points} {t('common.points')}
                     </p>
                   </div>
 
                   {/* XP Badge */}
                   <div className="text-right">
-                    <span className="inline-block px-3 py-1 rounded-full bg-gold-100 text-gold-700 text-sm font-semibold">
+                    <span className="inline-block px-3 py-1 bg-orange-500/20 text-orange-400 text-sm font-semibold border border-orange-500/30">
                       {habit.xp} XP
                     </span>
                   </div>
@@ -185,10 +185,10 @@ export function LifeAreaModal({ lifeAreaId, isOpen, onClose }: LifeAreaModalProp
       </div>
 
       {/* Footer */}
-      <div className="mt-6 pt-6 border-t border-gray-200 flex justify-end">
+      <div className="mt-6 pt-6 border-t border-white/10 flex justify-end">
         <button
           onClick={onClose}
-          className="px-6 py-2 rounded-xl bg-teal-600 text-white font-semibold hover:bg-teal-700 transition-colors"
+          className="px-6 py-2 bg-green-500 text-black font-bold hover:bg-green-400 transition-dofus uppercase"
         >
           {t('lifeAreaModal.close')}
         </button>

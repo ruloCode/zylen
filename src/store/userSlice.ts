@@ -32,7 +32,15 @@ export const createUserSlice: StateCreator<UserSlice> = (set, get) => ({
       const user = await UserService.getUser();
 
       if (user) {
-        set({ user, isInitialized: true, isLoading: false });
+        // Sync timezone with browser automatically
+        try {
+          const updatedUser = await UserService.syncTimezone();
+          set({ user: updatedUser, isInitialized: true, isLoading: false });
+        } catch (tzError) {
+          // If timezone sync fails, still initialize with the user we have
+          console.warn('Failed to sync timezone, continuing with existing user:', tzError);
+          set({ user, isInitialized: true, isLoading: false });
+        }
       } else {
         // User not found - shouldn't happen if trigger works
         console.warn('User not found after authentication');

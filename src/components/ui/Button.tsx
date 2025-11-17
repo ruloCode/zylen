@@ -1,6 +1,10 @@
 /**
  * Zylen Button Component
- * Dofus-styled buttons with lime green primary and clean transitions
+ * DOFUS-styled buttons - Exact DOFUS specification
+ * - Square corners (border-radius: 0)
+ * - Green primary rgb(151, 168, 0)
+ * - Orange secondary rgb(242, 156, 6)
+ * - font-weight: 400, font-size: 23px
  */
 
 import React from 'react';
@@ -26,10 +30,10 @@ export function Button({
   type = 'button',
   'aria-label': ariaLabel
 }: ButtonProps) {
-  // Base styles - Dofus style (rounded corners, bold, uppercase)
+  // Base styles - DOFUS style (SQUARE corners, normal weight, uppercase)
   const baseStyles = `
-    rounded-[10px]
-    font-extrabold
+    rounded-none
+    font-normal
     uppercase
     transition-all
     duration-200
@@ -43,31 +47,30 @@ export function Button({
     justify-center
     gap-2
     focus:outline-none
-    focus-visible:ring-4
+    focus-visible:ring-2
     focus-visible:ring-offset-2
     border-0
-    tracking-wide
   `;
 
   const variants = {
-    // Primary lime green - Dofus CTA style
+    // Primary verde brillante - Alto contraste
     'primary': `
-      bg-[rgb(137,184,32)]
-      text-white
-      hover:bg-[rgb(151,168,0)]
-      shadow-[0px_0px_4px_0px_rgb(0,0,0)]
-      hover:shadow-[0px_0px_8px_0px_rgba(137,184,32,0.5)]
-      focus-visible:ring-[rgb(137,184,32)]
+      bg-[rgb(155,215,50)]
+      text-black
+      hover:bg-[rgb(180,240,80)]
+      shadow-dofus
+      hover:shadow-dofus-hover
+      focus-visible:ring-[rgb(155,215,50)]
     `,
 
-    // Secondary gray-brown - Dofus secondary buttons
+    // Secondary DOFUS orange - Exact DOFUS secondary CTA
     'secondary': `
-      bg-[rgb(71,65,61)]
+      bg-[rgb(242,156,6)]
       text-white
-      hover:bg-[rgb(91,85,81)]
-      shadow-[0px_0px_3px_0px_rgba(0,0,0,0.5)]
-      hover:shadow-[0px_0px_6px_0px_rgba(0,0,0,0.6)]
-      focus-visible:ring-[rgb(71,65,61)]
+      hover:opacity-90
+      shadow-dofus
+      hover:shadow-dofus-hover
+      focus-visible:ring-[rgb(242,156,6)]
     `,
 
     // Ghost - Transparent with border
@@ -81,21 +84,21 @@ export function Button({
       focus-visible:ring-white/50
     `,
 
-    // Danger - Rose red for destructive actions
+    // Danger - DOFUS red for destructive actions
     'danger': `
-      bg-[rgb(232,116,129)]
+      bg-[rgb(217,83,79)]
       text-white
-      hover:bg-[rgb(220,100,113)]
-      shadow-[0px_0px_4px_0px_rgb(0,0,0)]
-      hover:shadow-[0px_0px_8px_0px_rgba(232,116,129,0.5)]
-      focus-visible:ring-[rgb(232,116,129)]
+      hover:opacity-90
+      shadow-dofus
+      hover:shadow-dofus-hover
+      focus-visible:ring-[rgb(217,83,79)]
     `
   };
 
   const sizes = {
-    sm: 'px-3 py-2 text-sm h-8',              // 12px 8px, 14px text
-    md: 'px-[18px] py-[10px] text-lg h-10',  // 18px 10px, 18px text - Dofus standard
-    lg: 'px-6 py-3 text-xl h-12'             // 24px 12px, 20px text
+    sm: 'px-3 py-2 text-sm h-8',               // Small buttons
+    md: 'px-[34px] py-[12px] text-[23px] h-auto',  // DOFUS standard: 12px 34px, 23px text
+    lg: 'px-[34px] py-[12px] text-[23px] h-auto'   // DOFUS large: same as md
   };
 
   return (

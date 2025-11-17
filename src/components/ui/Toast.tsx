@@ -1,8 +1,8 @@
 import { Toaster } from 'react-hot-toast';
 
 /**
- * Toast container component with Zylen brand styling
- * Uses react-hot-toast with custom configuration
+ * Toast container component with Zylen DOFUS dark theme styling
+ * Uses react-hot-toast with custom DOFUS-inspired configuration
  */
 export function ToastContainer() {
   return (
@@ -13,59 +13,64 @@ export function ToastContainer() {
         right: '1rem',
       }}
       toastOptions={{
-        // Default options
+        // Default options - DOFUS dark theme
         duration: 3000,
         style: {
-          background: 'rgba(255, 253, 251, 0.95)',
+          background: 'rgba(23, 20, 18, 0.95)', // charcoal oscuro DOFUS
           backdropFilter: 'blur(12px)',
-          border: '1px solid rgba(247, 238, 219, 0.5)',
-          borderRadius: '1rem',
+          border: '1px solid rgba(255, 255, 255, 0.1)', // borde sutil blanco
+          borderRadius: '0px', // esquinas cuadradas DOFUS
           padding: '1rem 1.25rem',
           fontSize: '0.9375rem',
           fontWeight: '500',
-          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1), 0 0 20px rgba(255, 200, 87, 0.15)',
+          color: '#FFFFFF', // texto blanco
+          boxShadow: '0px 0px 4px 0px rgb(0, 0, 0)', // shadow DOFUS
         },
-        // Success toast
+        // Success toast - Verde brillante DOFUS
         success: {
           duration: 3500,
           style: {
-            background: 'linear-gradient(135deg, rgba(255, 200, 87, 0.15) 0%, rgba(255, 183, 77, 0.15) 100%)',
+            background: 'rgba(155, 215, 50, 0.15)', // verde brillante con transparencia
             backdropFilter: 'blur(12px)',
-            border: '1px solid rgba(255, 200, 87, 0.4)',
-            color: '#1A1D1F',
-            boxShadow: '0 4px 12px rgba(255, 200, 87, 0.2), 0 0 20px rgba(255, 200, 87, 0.3)',
+            border: '1px solid rgba(155, 215, 50, 0.4)', // borde verde brillante
+            borderRadius: '0px', // esquinas cuadradas
+            color: '#FFFFFF', // texto blanco
+            boxShadow: '0 0 12px rgba(155, 215, 50, 0.4)', // brillo verde
           },
           iconTheme: {
-            primary: '#FFC857',
-            secondary: '#FFFAEE',
+            primary: '#9BD732', // verde brillante DOFUS
+            secondary: '#000000', // negro para contraste
           },
         },
-        // Error toast
+        // Error toast - Rojo DOFUS
         error: {
           duration: 4000,
           style: {
-            background: 'rgba(232, 116, 129, 0.1)',
+            background: 'rgba(217, 83, 79, 0.15)', // rojo DOFUS con transparencia
             backdropFilter: 'blur(12px)',
-            border: '1px solid rgba(232, 116, 129, 0.4)',
-            color: '#1A1D1F',
-            boxShadow: '0 4px 12px rgba(232, 116, 129, 0.2), 0 0 20px rgba(232, 116, 129, 0.2)',
+            border: '1px solid rgba(217, 83, 79, 0.4)', // borde rojo DOFUS
+            borderRadius: '0px', // esquinas cuadradas
+            color: '#FFFFFF', // texto blanco
+            boxShadow: '0 0 12px rgba(217, 83, 79, 0.4)', // brillo rojo
           },
           iconTheme: {
-            primary: '#E87481',
-            secondary: '#FFFAEE',
+            primary: '#D9534F', // rojo DOFUS
+            secondary: '#FFFFFF', // blanco
           },
         },
-        // Loading toast
+        // Loading toast - Cyan brillante
         loading: {
           style: {
-            background: 'rgba(42, 183, 169, 0.1)',
+            background: 'rgba(50, 200, 220, 0.15)', // cyan brillante con transparencia
             backdropFilter: 'blur(12px)',
-            border: '1px solid rgba(42, 183, 169, 0.4)',
-            color: '#1A1D1F',
+            border: '1px solid rgba(50, 200, 220, 0.4)', // borde cyan
+            borderRadius: '0px', // esquinas cuadradas
+            color: '#FFFFFF', // texto blanco
+            boxShadow: '0 0 12px rgba(50, 200, 220, 0.4)', // brillo cyan
           },
           iconTheme: {
-            primary: '#26A69A',
-            secondary: '#FFFAEE',
+            primary: '#32C8DC', // cyan brillante
+            secondary: '#FFFFFF', // blanco
           },
         },
       }}

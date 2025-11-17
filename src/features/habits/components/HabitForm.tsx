@@ -114,19 +114,19 @@ export function HabitForm({ habit, onSubmit, onCancel }: HabitFormProps) {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 overflow-y-auto">
-      <div className="bg-white rounded-3xl shadow-2xl max-w-lg w-full my-8 max-h-[calc(100vh-4rem)] flex flex-col">
+      <div className="bg-charcoal-500 rounded-3xl shadow-2xl max-w-lg w-full my-8 max-h-[calc(100vh-4rem)] flex flex-col">
         {/* Header */}
-        <div className="flex-shrink-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between rounded-t-3xl">
-          <h2 className="text-2xl font-bold text-gray-900">
+        <div className="flex-shrink-0 bg-charcoal-500 border-b border-white/10 px-6 py-4 flex items-center justify-between rounded-t-3xl">
+          <h2 className="text-2xl font-bold text-white">
             {isEditing ? t('habitForm.editHabit') : t('habitForm.createHabit')}
           </h2>
           <button
             type="button"
             onClick={onCancel}
-            className="p-2 rounded-xl hover:bg-gray-100 transition-colors"
+            className="p-2 rounded-xl hover:bg-white/10 transition-colors"
             aria-label={t('actions.cancel')}
           >
-            <X className="w-6 h-6 text-gray-600" />
+            <X className="w-6 h-6 text-white" />
           </button>
         </div>
 
@@ -134,7 +134,7 @@ export function HabitForm({ habit, onSubmit, onCancel }: HabitFormProps) {
         <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 space-y-6">
           {/* Habit Name */}
           <div>
-            <label htmlFor="habit-name" className="block text-sm font-semibold text-gray-900 mb-2">
+            <label htmlFor="habit-name" className="block text-sm font-semibold text-white mb-2">
               {t('habitForm.habitName')}
             </label>
             <input
@@ -145,11 +145,11 @@ export function HabitForm({ habit, onSubmit, onCancel }: HabitFormProps) {
               onBlur={() => handleBlur('name')}
               placeholder={t('habitForm.habitNamePlaceholder')}
               className={cn(
-                'w-full px-4 py-3 rounded-xl border-2 transition-colors',
+                'w-full px-4 py-3 rounded-xl border-2 transition-colors text-white',
                 'focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent',
                 touched.name && errors.name
-                  ? 'border-red-500 bg-red-50'
-                  : 'border-gray-200 bg-white'
+                  ? 'border-red-500 bg-red-500/10'
+                  : 'border-white/20 bg-white/5'
               )}
               aria-invalid={touched.name && !!errors.name}
               aria-describedby={touched.name && errors.name ? 'name-error' : undefined}
@@ -163,7 +163,7 @@ export function HabitForm({ habit, onSubmit, onCancel }: HabitFormProps) {
 
           {/* Life Area Selection */}
           <div>
-            <label htmlFor="life-area" className="block text-sm font-semibold text-gray-900 mb-2">
+            <label htmlFor="life-area" className="block text-sm font-semibold text-white mb-2">
               {t('habitForm.lifeArea')}
             </label>
             <select
@@ -172,11 +172,11 @@ export function HabitForm({ habit, onSubmit, onCancel }: HabitFormProps) {
               onChange={(e) => setLifeArea(e.target.value)}
               onBlur={() => handleBlur('lifeArea')}
               className={cn(
-                'w-full px-4 py-3 rounded-xl border-2 transition-colors',
+                'w-full px-4 py-3 rounded-xl border-2 transition-colors text-white',
                 'focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent',
                 touched.lifeArea && errors.lifeArea
-                  ? 'border-red-500 bg-red-50'
-                  : 'border-gray-200 bg-white'
+                  ? 'border-red-500 bg-red-500/10'
+                  : 'border-white/20 bg-white/5'
               )}
               aria-invalid={touched.lifeArea && !!errors.lifeArea}
               aria-describedby={touched.lifeArea && errors.lifeArea ? 'lifeArea-error' : undefined}
@@ -197,16 +197,16 @@ export function HabitForm({ habit, onSubmit, onCancel }: HabitFormProps) {
 
           {/* Icon Selection */}
           <div>
-            <label className="block text-sm font-semibold text-gray-900 mb-2">
+            <label className="block text-sm font-semibold text-white mb-2">
               {t('habitForm.icon')}
             </label>
-            <div className="mb-4 flex items-center gap-3 p-4 bg-gray-50 rounded-xl">
+            <div className="mb-4 flex items-center gap-3 p-4 bg-white/5 rounded-xl">
               <div className="flex items-center justify-center w-12 h-12 bg-teal-500 text-white rounded-xl">
                 {SelectedIcon && <SelectedIcon className="w-7 h-7" />}
               </div>
-              <div className="text-sm text-gray-700">
+              <div className="text-sm text-white">
                 <div className="font-semibold">{t('habitForm.selectedIcon')}</div>
-                <div className="text-gray-600">{iconName}</div>
+                <div className="text-white/70">{iconName}</div>
               </div>
             </div>
             <IconSelector
@@ -225,7 +225,7 @@ export function HabitForm({ habit, onSubmit, onCancel }: HabitFormProps) {
 
           {/* XP Value */}
           <div>
-            <label htmlFor="habit-xp" className="block text-sm font-semibold text-gray-900 mb-2">
+            <label htmlFor="habit-xp" className="block text-sm font-semibold text-white mb-2">
               {t('habitForm.xpValue')}
             </label>
             <div className="flex items-center gap-4">
@@ -243,13 +243,13 @@ export function HabitForm({ habit, onSubmit, onCancel }: HabitFormProps) {
               />
               <div
                 id="xp-value"
-                className="text-2xl font-bold text-gold-700 min-w-[60px] text-center"
+                className="text-2xl font-bold text-[rgb(242,156,6)] min-w-[60px] text-center"
                 aria-live="polite"
               >
                 {xp}
               </div>
             </div>
-            <p className="mt-2 text-sm text-gray-600">
+            <p className="mt-2 text-sm text-white/70">
               {t('habitForm.xpDescription', {
                 min: XP_CONFIG.minHabitXP,
                 max: XP_CONFIG.maxHabitXP,
@@ -267,7 +267,7 @@ export function HabitForm({ habit, onSubmit, onCancel }: HabitFormProps) {
             <button
               type="button"
               onClick={onCancel}
-              className="flex-1 px-6 py-3 rounded-xl font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors"
+              className="flex-1 px-6 py-3 rounded-xl font-semibold text-white bg-white/10 hover:bg-white/20 transition-colors"
             >
               {t('actions.cancel')}
             </button>

@@ -24,6 +24,8 @@ DECLARE
   v_new_life_area_level INTEGER;
   v_today_start TIMESTAMP;
   v_today_end TIMESTAMP;
+  v_user_timezone TEXT;
+  v_today_date DATE;
 BEGIN
   -- Get authenticated user
   v_user_id := auth.uid();
@@ -31,8 +33,21 @@ BEGIN
     RAISE EXCEPTION 'Not authenticated';
   END IF;
 
-  -- Get today's date range
-  v_today_start := DATE_TRUNC('day', NOW());
+  -- Get user's timezone from profile
+  SELECT timezone INTO v_user_timezone
+  FROM public.profiles
+  WHERE id = v_user_id;
+
+  IF v_user_timezone IS NULL THEN
+    v_user_timezone := 'America/Bogota'; -- Default fallback
+  END IF;
+
+  -- Get today's date range in user's timezone
+  -- 1. Convert current UTC time to user's timezone and extract the date
+  v_today_date := (NOW() AT TIME ZONE v_user_timezone)::date;
+
+  -- 2. Convert that date to midnight timestamp in user's timezone, then to UTC
+  v_today_start := (v_today_date::timestamp AT TIME ZONE v_user_timezone) AT TIME ZONE 'UTC';
   v_today_end := v_today_start + INTERVAL '1 day' - INTERVAL '1 second';
 
   -- Get habit details and verify ownership
@@ -133,6 +148,8 @@ DECLARE
   v_new_life_area_level INTEGER;
   v_today_start TIMESTAMP;
   v_today_end TIMESTAMP;
+  v_user_timezone TEXT;
+  v_today_date DATE;
 BEGIN
   -- Get authenticated user
   v_user_id := auth.uid();
@@ -140,8 +157,21 @@ BEGIN
     RAISE EXCEPTION 'Not authenticated';
   END IF;
 
-  -- Get today's date range
-  v_today_start := DATE_TRUNC('day', NOW());
+  -- Get user's timezone from profile
+  SELECT timezone INTO v_user_timezone
+  FROM public.profiles
+  WHERE id = v_user_id;
+
+  IF v_user_timezone IS NULL THEN
+    v_user_timezone := 'America/Bogota'; -- Default fallback
+  END IF;
+
+  -- Get today's date range in user's timezone
+  -- 1. Convert current UTC time to user's timezone and extract the date
+  v_today_date := (NOW() AT TIME ZONE v_user_timezone)::date;
+
+  -- 2. Convert that date to midnight timestamp in user's timezone, then to UTC
+  v_today_start := (v_today_date::timestamp AT TIME ZONE v_user_timezone) AT TIME ZONE 'UTC';
   v_today_end := v_today_start + INTERVAL '1 day' - INTERVAL '1 second';
 
   -- Get habit details

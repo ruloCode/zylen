@@ -155,20 +155,20 @@ export function Leaderboard() {
       <div className="container mx-auto max-w-4xl">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2 flex items-center gap-3">
+          <h1 className="text-3xl font-bold text-white mb-2 flex items-center gap-3">
             <Trophy className="w-8 h-8 text-gold-400" />
             {t('leaderboard.title')}
           </h1>
         </div>
 
         {/* Main Tabs */}
-        <div className="flex gap-2 mb-6 border-b border-gray-200">
+        <div className="flex gap-2 mb-6 border-b border-white/20">
           <button
             onClick={() => setActiveTab('rankings')}
             className={`px-4 py-3 font-semibold transition-colors ${
               activeTab === 'rankings'
                 ? 'text-gold-600 border-b-2 border-gold-600'
-                : 'text-gray-500 hover:text-gray-900'
+                : 'text-white hover:text-white'
             }`}
           >
             <div className="flex items-center gap-2">
@@ -181,7 +181,7 @@ export function Leaderboard() {
             className={`px-4 py-3 font-semibold transition-colors relative ${
               activeTab === 'social'
                 ? 'text-teal-600 border-b-2 border-teal-600'
-                : 'text-gray-500 hover:text-gray-900'
+                : 'text-white hover:text-white'
             }`}
           >
             <div className="flex items-center gap-2">
@@ -199,7 +199,7 @@ export function Leaderboard() {
             className={`px-4 py-3 font-semibold transition-colors ${
               activeTab === 'streaks'
                 ? 'text-gold-600 border-b-2 border-gold-600'
-                : 'text-gray-500 hover:text-gray-900'
+                : 'text-white hover:text-white'
             }`}
           >
             <div className="flex items-center gap-2">
@@ -221,7 +221,7 @@ export function Leaderboard() {
                     <div className="text-center">
                       <div className="flex items-center justify-center gap-2 mb-2">
                         <Trophy className="w-5 h-5 text-gold-500" />
-                        <p className="text-sm text-gray-600">{t('leaderboard.yourRank')}</p>
+                        <p className="text-sm text-white">{t('leaderboard.yourRank')}</p>
                       </div>
                       <p className="text-2xl font-bold text-gold-600">
                         {userRank > 0 ? `#${userRank}` : '-'}
@@ -230,7 +230,7 @@ export function Leaderboard() {
                     <div className="text-center">
                       <div className="flex items-center justify-center gap-2 mb-2">
                         <TrendingUp className="w-5 h-5 text-teal-500" />
-                        <p className="text-sm text-gray-600">{t('leaderboard.weeklyXP')}</p>
+                        <p className="text-sm text-white">{t('leaderboard.weeklyXP')}</p>
                       </div>
                       <p className="text-2xl font-bold text-teal-600">
                         {userWeeklyStats.weeklyXPEarned}
@@ -239,7 +239,7 @@ export function Leaderboard() {
                     <div className="text-center">
                       <div className="flex items-center justify-center gap-2 mb-2">
                         <Flame className="w-5 h-5 text-gold-500" />
-                        <p className="text-sm text-gray-600">{t('leaderboard.weeklyPoints')}</p>
+                        <p className="text-sm text-white">{t('leaderboard.weeklyPoints')}</p>
                       </div>
                       <p className="text-2xl font-bold text-gold-600">
                         {userWeeklyStats.weeklyPointsEarned}
@@ -248,7 +248,7 @@ export function Leaderboard() {
                     <div className="text-center">
                       <div className="flex items-center justify-center gap-2 mb-2">
                         <Target className="w-5 h-5 text-success-500" />
-                        <p className="text-sm text-gray-600">{t('leaderboard.habitsCompleted')}</p>
+                        <p className="text-sm text-white">{t('leaderboard.habitsCompleted')}</p>
                       </div>
                       <p className="text-2xl font-bold text-success-600">
                         {userWeeklyStats.habitsCompleted}
@@ -260,8 +260,8 @@ export function Leaderboard() {
 
               {/* Leaderboard Table */}
               <div className="glass-card overflow-hidden">
-                <div className="bg-white/60 p-4 border-b border-gray-200">
-                  <h2 className="text-lg font-semibold text-gray-900">
+                <div className="bg-white/5 p-4 border-b border-white/20">
+                  <h2 className="text-lg font-semibold text-white">
                     {t('leaderboard.topPlayers')}
                   </h2>
                 </div>
@@ -269,10 +269,10 @@ export function Leaderboard() {
                 {leaderboardLoading ? (
                   <div className="p-12 text-center">
                     <div className="animate-spin w-8 h-8 border-4 border-teal-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-                    <p className="text-gray-600">{t('common.loading')}</p>
+                    <p className="text-white">{t('common.loading')}</p>
                   </div>
                 ) : weeklyLeaderboard && weeklyLeaderboard.entries.length > 0 ? (
-                  <div className="divide-y divide-gray-200">
+                  <div className="divide-y divide-white/10">
                     {weeklyLeaderboard.entries.map((entry) => {
                       const medal = getMedal(entry.rank);
                       const isCurrentUser = entry.isCurrentUser;
@@ -282,8 +282,8 @@ export function Leaderboard() {
                           key={entry.userId}
                           className={`p-4 transition-colors ${
                             isCurrentUser
-                              ? 'bg-teal-50 border-l-4 border-teal-500'
-                              : 'hover:bg-gray-50'
+                              ? 'bg-teal-500/10 border-l-4 border-teal-500'
+                              : 'hover:bg-white/5'
                           }`}
                         >
                           <div className="flex items-center justify-between">
@@ -293,7 +293,7 @@ export function Leaderboard() {
                                 {medal ? (
                                   <span className="text-3xl">{medal}</span>
                                 ) : (
-                                  <span className="text-xl font-bold text-gray-400">
+                                  <span className="text-xl font-bold text-white/70">
                                     #{entry.rank}
                                   </span>
                                 )}
@@ -305,7 +305,7 @@ export function Leaderboard() {
                                   </span>
                                 </div>
                                 <div>
-                                  <p className="font-semibold text-gray-900">
+                                  <p className="font-semibold text-white">
                                     @{entry.username}
                                     {isCurrentUser && (
                                       <span className="ml-2 text-xs text-teal-600">
@@ -313,7 +313,7 @@ export function Leaderboard() {
                                       </span>
                                     )}
                                   </p>
-                                  <p className="text-sm text-gray-600">
+                                  <p className="text-sm text-white">
                                     {t('common.level')} {entry.level}
                                   </p>
                                 </div>
@@ -323,15 +323,15 @@ export function Leaderboard() {
                             {/* Stats */}
                             <div className="hidden md:flex items-center gap-6">
                               <div className="text-right">
-                                <p className="text-sm text-gray-500">{t('leaderboard.weeklyXP')}</p>
+                                <p className="text-sm text-white">{t('leaderboard.weeklyXP')}</p>
                                 <p className="font-semibold text-teal-600">{entry.weeklyXPEarned}</p>
                               </div>
                               <div className="text-right">
-                                <p className="text-sm text-gray-500">{t('leaderboard.weeklyPoints')}</p>
+                                <p className="text-sm text-white">{t('leaderboard.weeklyPoints')}</p>
                                 <p className="font-semibold text-gold-600">{entry.weeklyPointsEarned}</p>
                               </div>
                               <div className="text-right">
-                                <p className="text-sm text-gray-500">{t('leaderboard.habitsCompleted')}</p>
+                                <p className="text-sm text-white">{t('leaderboard.habitsCompleted')}</p>
                                 <p className="font-semibold text-success-600">{entry.habitsCompleted}</p>
                               </div>
                             </div>
@@ -342,8 +342,8 @@ export function Leaderboard() {
                   </div>
                 ) : (
                   <div className="p-12 text-center">
-                    <Trophy className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                    <p className="text-gray-600">{t('leaderboard.notRanked')}</p>
+                    <Trophy className="w-16 h-16 text-white/30 mx-auto mb-4" />
+                    <p className="text-white">{t('leaderboard.notRanked')}</p>
                   </div>
                 )}
               </div>
@@ -354,13 +354,13 @@ export function Leaderboard() {
           {activeTab === 'social' && (
             <>
               {/* Social Sub-Tabs */}
-              <div className="flex gap-2 mb-6 border-b border-gray-200">
+              <div className="flex gap-2 mb-6 border-b border-white/20">
                 <button
                   onClick={() => setSocialSubTab('friends')}
                   className={`px-4 py-3 font-semibold transition-colors ${
                     socialSubTab === 'friends'
                       ? 'text-teal-600 border-b-2 border-teal-600'
-                      : 'text-gray-500 hover:text-gray-900'
+                      : 'text-white hover:text-white'
                   }`}
                 >
                   {t('social.tabs.friends')} ({friends.length})
@@ -370,7 +370,7 @@ export function Leaderboard() {
                   className={`px-4 py-3 font-semibold transition-colors relative ${
                     socialSubTab === 'requests'
                       ? 'text-teal-600 border-b-2 border-teal-600'
-                      : 'text-gray-500 hover:text-gray-900'
+                      : 'text-white hover:text-white'
                   }`}
                 >
                   {t('social.tabs.requests')}
@@ -385,7 +385,7 @@ export function Leaderboard() {
                   className={`px-4 py-3 font-semibold transition-colors ${
                     socialSubTab === 'search'
                       ? 'text-teal-600 border-b-2 border-teal-600'
-                      : 'text-gray-500 hover:text-gray-900'
+                      : 'text-white hover:text-white'
                   }`}
                 >
                   {t('social.tabs.search')}
@@ -399,8 +399,8 @@ export function Leaderboard() {
                   <div className="space-y-3">
                     {friends.length === 0 ? (
                       <div className="glass-card text-center py-12">
-                        <Users className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                        <p className="text-gray-600">{t('social.noFriends')}</p>
+                        <Users className="w-16 h-16 text-white/30 mx-auto mb-4" />
+                        <p className="text-white">{t('social.noFriends')}</p>
                       </div>
                     ) : (
                       friends.map((friend) => (
@@ -413,8 +413,8 @@ export function Leaderboard() {
                                 </span>
                               </div>
                               <div>
-                                <p className="font-semibold text-gray-900">@{friend.username}</p>
-                                <p className="text-sm text-gray-600">
+                                <p className="font-semibold text-white">@{friend.username}</p>
+                                <p className="text-sm text-white">
                                   {t('common.level')} {friend.level} • {friend.currentStreak} {t('streaks.current')}
                                 </p>
                               </div>
@@ -438,13 +438,13 @@ export function Leaderboard() {
                   <div className="space-y-4">
                     {/* Received Requests */}
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                      <h3 className="text-lg font-semibold text-white mb-3">
                         {t('social.requestsReceived')}
                       </h3>
                       <div className="space-y-3">
                         {pendingRequests.length === 0 ? (
                           <div className="glass-card text-center py-8">
-                            <p className="text-gray-600">{t('social.noRequests')}</p>
+                            <p className="text-white">{t('social.noRequests')}</p>
                           </div>
                         ) : (
                           pendingRequests.map((request) => (
@@ -457,8 +457,8 @@ export function Leaderboard() {
                                     </span>
                                   </div>
                                   <div>
-                                    <p className="font-semibold text-gray-900">@{request.username}</p>
-                                    <p className="text-sm text-gray-600">
+                                    <p className="font-semibold text-white">@{request.username}</p>
+                                    <p className="text-sm text-white">
                                       {t('common.level')} {request.level}
                                     </p>
                                   </div>
@@ -489,13 +489,13 @@ export function Leaderboard() {
 
                     {/* Sent Requests */}
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                      <h3 className="text-lg font-semibold text-white mb-3">
                         {t('social.requestsSent')}
                       </h3>
                       <div className="space-y-3">
                         {sentRequests.length === 0 ? (
                           <div className="glass-card text-center py-8">
-                            <p className="text-gray-600">{t('social.noRequests')}</p>
+                            <p className="text-white">{t('social.noRequests')}</p>
                           </div>
                         ) : (
                           sentRequests.map((request) => (
@@ -508,8 +508,8 @@ export function Leaderboard() {
                                     </span>
                                   </div>
                                   <div>
-                                    <p className="font-semibold text-gray-900">@{request.username}</p>
-                                    <p className="text-sm text-gray-600">{t('social.requestSent')}</p>
+                                    <p className="font-semibold text-white">@{request.username}</p>
+                                    <p className="text-sm text-white">{t('social.requestSent')}</p>
                                   </div>
                                 </div>
                               </div>
@@ -526,13 +526,13 @@ export function Leaderboard() {
                   <div className="space-y-4">
                     {/* Search Input */}
                     <div className="relative">
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/70" />
                       <input
                         type="text"
                         value={searchTerm}
                         onChange={(e) => handleSearch(e.target.value)}
                         placeholder={t('social.searchPlaceholder')}
-                        className="w-full pl-11 pr-4 py-3 bg-white border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                        className="w-full pl-11 pr-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-teal-500"
                       />
                     </div>
 
@@ -540,8 +540,8 @@ export function Leaderboard() {
                     <div className="space-y-3">
                       {searchResults.length === 0 && searchTerm.length >= 2 ? (
                         <div className="glass-card text-center py-12">
-                          <Search className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                          <p className="text-gray-600">{t('social.noResults')}</p>
+                          <Search className="w-16 h-16 text-white/30 mx-auto mb-4" />
+                          <p className="text-white">{t('social.noResults')}</p>
                         </div>
                       ) : (
                         searchResults.map((user) => (
@@ -554,8 +554,8 @@ export function Leaderboard() {
                                   </span>
                                 </div>
                                 <div>
-                                  <p className="font-semibold text-gray-900">@{user.username}</p>
-                                  <p className="text-sm text-gray-600">
+                                  <p className="font-semibold text-white">@{user.username}</p>
+                                  <p className="text-sm text-white">
                                     {t('common.level')} {user.level} • {user.currentStreak} {t('streaks.current')}
                                   </p>
                                 </div>
@@ -571,12 +571,12 @@ export function Leaderboard() {
                                 </Button>
                               )}
                               {user.friendshipStatus === 'request_sent' && (
-                                <div className="px-4 py-2 bg-gray-100 text-gray-600 rounded-lg text-sm">
+                                <div className="px-4 py-2 bg-white/10 text-white rounded-lg text-sm">
                                   {t('social.requestSent')}
                                 </div>
                               )}
                               {user.friendshipStatus === 'friends' && (
-                                <div className="px-4 py-2 bg-success-50 text-success-600 rounded-lg text-sm flex items-center gap-2">
+                                <div className="px-4 py-2 bg-success-500/20 text-white rounded-lg text-sm flex items-center gap-2">
                                   <UserCheck className="w-4 h-4" />
                                   {t('social.friends')}
                                 </div>
@@ -607,18 +607,18 @@ export function Leaderboard() {
                         lastSevenDays={streak.lastSevenDays}
                         size="lg"
                       />
-                      <h2 className="text-2xl font-bold text-gray-900 mt-6 mb-2">
+                      <h2 className="text-2xl font-bold text-white mt-6 mb-2">
                         {t('streaks.current')}
                       </h2>
-                      <p className="text-gray-600">{t('streaks.onFire')}</p>
+                      <p className="text-white">{t('streaks.onFire')}</p>
                     </div>
                   </div>
 
                   {/* Best Streak */}
                   <div className="glass-card p-6 flex items-center justify-between">
                     <div>
-                      <div className="text-sm text-gray-500 mb-1">{t('streaks.best')}</div>
-                      <div className="text-3xl font-bold text-gray-900">
+                      <div className="text-sm text-white mb-1">{t('streaks.best')}</div>
+                      <div className="text-3xl font-bold text-white">
                         {streak.longestStreak} {t('common.days')}
                       </div>
                     </div>
@@ -629,7 +629,7 @@ export function Leaderboard() {
 
               {/* Badges */}
               <div className="mb-6">
-                <h2 className="text-xl font-bold text-gray-900 mb-4">{t('streaks.achievements')}</h2>
+                <h2 className="text-xl font-bold text-white mb-4">{t('streaks.achievements')}</h2>
                 <div className="grid grid-cols-3 gap-4">
                   {badges.map(badge => (
                     <div
@@ -638,10 +638,10 @@ export function Leaderboard() {
                         badge.unlocked ? 'scale-100' : 'opacity-50 grayscale'
                       }`}
                     >
-                      <div className={`${badge.unlocked ? 'text-gold-500' : 'text-gray-400'} mb-2 flex justify-center`}>
+                      <div className={`${badge.unlocked ? 'text-gold-500' : 'text-white/70'} mb-2 flex justify-center`}>
                         {badge.icon}
                       </div>
-                      <p className="text-xs font-semibold text-gray-900">
+                      <p className="text-xs font-semibold text-white">
                         {badge.name}
                       </p>
                     </div>
@@ -651,7 +651,7 @@ export function Leaderboard() {
 
               {/* Motivation */}
               <div className="glass-card p-6 text-center bg-gradient-to-br from-gold-400/10 to-gold-500/10 border-gold-500/20">
-                <p className="text-gray-900 font-semibold">
+                <p className="text-white font-semibold">
                   "{t('streaks.motivation')}"
                 </p>
               </div>

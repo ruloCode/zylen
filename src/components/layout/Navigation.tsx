@@ -69,7 +69,7 @@ export function Navigation() {
                   'focus:outline-none focus-visible:ring-4 focus-visible:ring-[rgb(137,184,32)]/50 focus-visible:ring-offset-2',
                   isActive
                     ? 'text-[rgb(137,184,32)] bg-gradient-to-br from-[rgb(137,184,32)]/20 to-[rgb(137,184,32)]/10 scale-110 shadow-soft-md border-2 border-[rgb(137,184,32)]/50'
-                    : 'text-gray-600 hover:text-[rgb(137,184,32)] hover:bg-[rgb(137,184,32)]/10 hover:scale-105'
+                    : 'text-white/60 hover:text-[rgb(137,184,32)] hover:bg-[rgb(137,184,32)]/10 hover:scale-105'
                 )}
               >
                 {/* Active indicator glow */}

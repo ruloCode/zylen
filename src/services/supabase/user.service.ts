@@ -7,7 +7,7 @@
 import { supabase } from '@/lib/supabase';
 import type { User, UserStats } from '@/types';
 import { UserServiceError, USER_ERROR_CODES } from '@/types/errors';
-import { getAuthUserId } from './utils';
+import { getAuthUserId, getBrowserTimezone } from './utils';
 import { mapProfileToUser, mapUserToProfileUpdate } from './mappers';
 
 export class UserService {
@@ -235,5 +235,69 @@ export class UserService {
       'UserService.initializeUser is deprecated. Profiles are auto-created by Supabase trigger.'
     );
     return this.getUser();
+  }
+
+  /**
+   * Sync user's timezone with browser timezone
+   * Automatically detects and updates the user's timezone if it's not set or has changed
+   * This should be called on app initialization to ensure habits reset at correct local time
+   * @returns Updated user profile
+   */
+  static async syncTimezone(): Promise<User> {
+    try {
+      const userId = await getAuthUserId();
+      const browserTimezone = getBrowserTimezone();
+
+      // Get current profile to check if timezone needs updating
+      const { data: profile, error: fetchError } = await supabase
+        .from('profiles')
+        .select('timezone')
+        .eq('id', userId)
+        .single();
+
+      if (fetchError) {
+        throw new UserServiceError(
+          fetchError.message,
+          USER_ERROR_CODES.PROFILE_NOT_FOUND
+        );
+      }
+
+      // Only update if timezone is different (to avoid unnecessary DB writes)
+      if (profile.timezone !== browserTimezone) {
+        console.log(
+          `Updating user timezone from "${profile.timezone}" to "${browserTimezone}"`
+        );
+
+        const { error: updateError } = await supabase
+          .from('profiles')
+          .update({ timezone: browserTimezone })
+          .eq('id', userId);
+
+        if (updateError) {
+          throw new UserServiceError(
+            updateError.message,
+            USER_ERROR_CODES.UPDATE_FAILED
+          );
+        }
+      }
+
+      // Return updated user
+      const user = await this.getUser();
+      if (!user) {
+        throw new UserServiceError(
+          'Profile not found after timezone sync',
+          USER_ERROR_CODES.PROFILE_NOT_FOUND
+        );
+      }
+
+      return user;
+    } catch (error) {
+      if (error instanceof UserServiceError) throw error;
+      console.error('Error in UserService.syncTimezone:', error);
+      throw new UserServiceError(
+        'Failed to sync timezone',
+        USER_ERROR_CODES.UPDATE_FAILED
+      );
+    }
   }
 }

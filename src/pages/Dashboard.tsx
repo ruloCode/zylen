@@ -32,7 +32,7 @@ export function Dashboard() {
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <Loader2 className="w-12 h-12 text-teal-500 animate-spin mx-auto mb-4" />
-          <p className="text-gray-700 font-semibold">{t('common.loading')}</p>
+          <p className="text-white font-semibold">{t('common.loading')}</p>
         </div>
       </div>
     );
@@ -42,14 +42,14 @@ export function Dashboard() {
       <div className="max-w-md mx-auto">
         {/* Header */}
         <header className="text-center mb-8">
-          <h1 className="text-4xl md:text-5xl font-extrabold text-gradient-gold mb-3 tracking-tight">
+          <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-3 tracking-tight">
             {APP_CONFIG.displayName}
           </h1>
-          <p className="text-gray-700 text-base font-semibold">{t('app.tagline')}</p>
+          <p className="text-white text-base font-semibold">{t('app.tagline')}</p>
         </header>
 
         {/* User Stats Card */}
-        <section aria-labelledby="stats-heading" className="bg-white rounded-3xl p-6 mb-6 text-center shadow-lg border border-white/20">
+        <section aria-labelledby="stats-heading" className="bg-charcoal-500 rounded-3xl p-6 mb-6 text-center shadow-lg border border-white/10">
           {user?.avatarUrl ? (
             <img
               src={user.avatarUrl}
@@ -77,17 +77,18 @@ export function Dashboard() {
               variant="gold"
               size="md"
               showLabel={false}
+              withGlow={true}
             />
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-white mt-1">
               {levelProgress.max - levelProgress.current} XP to Level {(user?.level || 1) + 1}
             </p>
           </div>
 
           {/* Points */}
-          <div className="text-5xl font-bold text-gray-900 mb-2" aria-live="polite">
+          <div className="text-5xl font-bold text-white mb-2" aria-live="polite">
             {user?.points?.toLocaleString() || 0}
           </div>
-          <div className="text-base text-gray-700 font-semibold flex items-center justify-center gap-2" id="stats-heading">
+          <div className="text-base text-white font-semibold flex items-center justify-center gap-2" id="stats-heading">
             <TrendingUp size={18} className="text-success-600" aria-hidden="true" />
             <span>{t('common.points')}</span>
           </div>
@@ -107,19 +108,19 @@ export function Dashboard() {
 
         {/* Life Areas */}
         <section aria-labelledby="life-areas-heading" className="mb-8">
-          <h2 id="life-areas-heading" className="text-2xl font-bold text-gray-900 mb-5">{t('dashboard.lifeAreas')}</h2>
+          <h2 id="life-areas-heading" className="text-2xl font-bold text-white mb-5">{t('dashboard.lifeAreas')}</h2>
           <div className="grid grid-cols-2 gap-4">
             {lifeAreas.map(area => <LifeAreaCard key={area.area} {...area} onClick={() => setSelectedAreaId(area.id)} />)}
           </div>
         </section>
 
         {/* CTA */}
-        <Button variant="primary-gold" size="lg" className="w-full mb-4" onClick={() => navigate(ROUTES.HABITS)}>
+        <Button variant="primary" size="lg" className="w-full mb-4" onClick={() => navigate(ROUTES.HABITS)}>
           <Sparkles size={20} aria-hidden="true" />
           {t('dashboard.logHabits')}
         </Button>
 
-        <p className="text-center text-base text-gray-700 font-semibold">
+        <p className="text-center text-base text-white font-semibold">
           {t('dashboard.keepGoing')}
         </p>
       </div>

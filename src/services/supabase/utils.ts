@@ -57,7 +57,22 @@ export function mapDateToDBDate(date: Date): string {
 }
 
 /**
+ * Get browser's IANA timezone
+ * @returns IANA timezone string (e.g., 'America/Bogota', 'America/New_York')
+ */
+export function getBrowserTimezone(): string {
+  try {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone;
+  } catch (error) {
+    console.warn('Failed to detect browser timezone, using default:', error);
+    return 'America/Bogota'; // Fallback to default
+  }
+}
+
+/**
  * Get today's date range for filtering (start and end of day)
+ * Note: This uses the browser's local timezone for display purposes.
+ * The backend uses the user's stored timezone for validation.
  */
 export function getTodayDateRange(): { start: string; end: string } {
   const today = new Date();

@@ -43,11 +43,11 @@ export function ProgressBar({
 
   // Fixed gradient variants (no dynamic class generation)
   const gradientVariants = {
-    // Warm gold - primary XP color
-    gold: 'bg-gradient-to-r from-gold-500 via-gold-600 to-gold-700',
+    // Warm gold - DOFUS orange (dorado)
+    gold: 'bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600',
 
     // Teal - secondary progress
-    teal: 'bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600',
+    teal: 'bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600',
 
     // Success jade - completed habits
     success: 'bg-gradient-to-r from-success-400 via-success-500 to-success-600',
@@ -58,10 +58,10 @@ export function ProgressBar({
 
   // Glow effects for each variant
   const glowVariants = {
-    gold: 'shadow-glow-gold',
-    teal: 'shadow-glow-teal',
+    gold: 'shadow-[0_0_12px_rgba(242,156,6,0.6)]',
+    teal: 'shadow-[0_0_12px_rgba(50,200,220,0.6)]',
     success: 'shadow-glow-success',
-    fire: 'shadow-soft-md'
+    fire: 'shadow-[0_0_12px_rgba(255,193,7,0.6)]'
   };
 
   const glowClass = withGlow && percentage > 0 ? glowVariants[variant] : '';
@@ -71,7 +71,7 @@ export function ProgressBar({
       {/* Progress bar container */}
       <div
         className={cn(
-          'w-full bg-parchment-200/50 rounded-full overflow-hidden border border-parchment-300/30',
+          'w-full bg-charcoal-500/30 rounded-full overflow-hidden border border-white/10',
           heights[size]
         )}
       >
@@ -107,12 +107,12 @@ export function ProgressBar({
       {showLabel && (
         <div
           className={cn(
-            'flex justify-between mt-1.5 font-body font-semibold text-navy-600',
+            'flex justify-between mt-1.5 font-body font-semibold text-white',
             labelSizes[size]
           )}
         >
           <span>{current.toLocaleString()} XP</span>
-          <span className="text-navy-400">{max.toLocaleString()} XP</span>
+          <span className="text-white/70">{max.toLocaleString()} XP</span>
         </div>
       )}
     </div>

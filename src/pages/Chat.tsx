@@ -58,8 +58,8 @@ export function Chat() {
       <div className="max-w-md mx-auto w-full h-full flex flex-col">
         {/* Header */}
         <header className="pt-6 pb-4 flex-shrink-0">
-          <h1 className="text-4xl font-extrabold text-gray-900 mb-3 tracking-tight">{t('chat.title')}</h1>
-          <p className="text-base text-gray-700 font-semibold">{t('chat.subtitle')}</p>
+          <h1 className="text-4xl font-extrabold text-white mb-3 tracking-tight">{t('chat.title')}</h1>
+          <p className="text-base text-white font-semibold">{t('chat.subtitle')}</p>
         </header>
 
         {/* Messages - Scrollable Area */}
@@ -82,9 +82,9 @@ export function Chat() {
               <div className="flex justify-start">
                 <div className="bg-white/70 rounded-2xl px-5 py-3 shadow-lg">
                   <div className="flex space-x-2">
-                    <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
-                    <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                    <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                    <div className="w-2 h-2 bg-teal-500 rounded-full animate-bounce"></div>
+                    <div className="w-2 h-2 bg-teal-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                    <div className="w-2 h-2 bg-teal-500 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
                   </div>
                 </div>
               </div>
@@ -106,7 +106,7 @@ export function Chat() {
               value={input}
               onChange={e => setInput(e.target.value)}
               placeholder={t('chat.typeMessage')}
-              className="flex-1 bg-transparent outline-none text-gray-900 placeholder-gray-500 text-base py-2 focus:ring-0"
+              className="flex-1 bg-transparent outline-none text-white placeholder-white/50 text-base py-2 focus:ring-0"
               aria-label="Type your message"
               maxLength={CHAT_CONFIG.maxMessageLength}
             />

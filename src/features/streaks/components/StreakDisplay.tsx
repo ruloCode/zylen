@@ -37,13 +37,13 @@ export function StreakDisplay({
     <div className="w-full p-6">
       {/* Main Streak Number */}
       <div className="flex items-center justify-center gap-3 mb-6">
-        <Flame size={32} className="text-orange-500" />
-        <div className="text-5xl font-bold text-gray-900">
+        <Flame size={32} className="text-[rgb(242,156,6)]" />
+        <div className="text-5xl font-bold text-white">
           {streak}
         </div>
-       
+
       </div>
-      <div className="text-center text-gray-600">
+      <div className="text-center text-white">
           Keep it up!
         </div>
 

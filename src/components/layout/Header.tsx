@@ -45,7 +45,7 @@ export function Header() {
               <span className="text-sm font-semibold text-white">
                 {user.points.toLocaleString()}
               </span>
-              <span className="text-xs text-gray-400">pts</span>
+              <span className="text-xs text-gray-200">pts</span>
             </div>
 
             {/* Level */}

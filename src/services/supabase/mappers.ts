@@ -29,6 +29,7 @@ export function mapProfileToUser(profile: ProfileRow, selectedLifeAreas: string[
   return {
     id: profile.id,
     name: profile.name,
+    username: profile.username || undefined,
     points: profile.points,
     totalXPEarned: profile.total_xp_earned,
     level: profile.level,
@@ -36,6 +37,7 @@ export function mapProfileToUser(profile: ProfileRow, selectedLifeAreas: string[
     avatarUrl: profile.avatar_url || AVATARS.RULO, // Default to RULO avatar if not set
     hasCompletedOnboarding: profile.has_completed_onboarding,
     selectedLifeAreas, // This needs to be fetched separately from life_areas where enabled=true
+    timezone: profile.timezone || 'America/Bogota', // Default timezone if not set
   };
 }
 
@@ -172,12 +174,14 @@ export function mapUserToProfileUpdate(
   const update: Database['public']['Tables']['profiles']['Update'] = {};
 
   if (user.name !== undefined) update.name = user.name;
+  if (user.username !== undefined) update.username = user.username || null;
   if (user.points !== undefined) update.points = user.points;
   if (user.totalXPEarned !== undefined) update.total_xp_earned = user.totalXPEarned;
   if (user.level !== undefined) update.level = user.level;
   if (user.avatarUrl !== undefined) update.avatar_url = user.avatarUrl || null;
   if (user.hasCompletedOnboarding !== undefined)
     update.has_completed_onboarding = user.hasCompletedOnboarding;
+  if (user.timezone !== undefined) update.timezone = user.timezone;
 
   return update;
 }

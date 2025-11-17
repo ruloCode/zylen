@@ -110,7 +110,7 @@ export function Social() {
             className={`px-4 py-3 font-semibold transition-colors ${
               activeTab === 'friends'
                 ? 'text-teal-400 border-b-2 border-teal-400'
-                : 'text-charcoal-400 hover:text-pale-100'
+                : 'text-white/60 hover:text-white'
             }`}
           >
             {t('social.tabs.friends')} ({friends.length})
@@ -120,7 +120,7 @@ export function Social() {
             className={`px-4 py-3 font-semibold transition-colors relative ${
               activeTab === 'requests'
                 ? 'text-teal-400 border-b-2 border-teal-400'
-                : 'text-charcoal-400 hover:text-pale-100'
+                : 'text-white/60 hover:text-white'
             }`}
           >
             {t('social.tabs.requests')}
@@ -135,7 +135,7 @@ export function Social() {
             className={`px-4 py-3 font-semibold transition-colors ${
               activeTab === 'search'
                 ? 'text-teal-400 border-b-2 border-teal-400'
-                : 'text-charcoal-400 hover:text-pale-100'
+                : 'text-white/60 hover:text-white'
             }`}
           >
             {t('social.tabs.search')}
@@ -149,8 +149,8 @@ export function Social() {
             <div className="space-y-3">
               {friends.length === 0 ? (
                 <Card className="text-center py-12">
-                  <Users className="w-16 h-16 text-charcoal-600 mx-auto mb-4" />
-                  <p className="text-charcoal-300">{t('social.noFriends')}</p>
+                  <Users className="w-16 h-16 text-white/30 mx-auto mb-4" />
+                  <p className="text-white/70">{t('social.noFriends')}</p>
                 </Card>
               ) : (
                 friends.map((friend) => (
@@ -163,8 +163,8 @@ export function Social() {
                           </span>
                         </div>
                         <div>
-                          <p className="font-semibold text-pale-50">@{friend.username}</p>
-                          <p className="text-sm text-charcoal-300">
+                          <p className="font-semibold text-white">@{friend.username}</p>
+                          <p className="text-sm text-white/70">
                             {t('common.level')} {friend.level} • {friend.currentStreak} {t('streaks.current')}
                           </p>
                         </div>
@@ -194,7 +194,7 @@ export function Social() {
                 <div className="space-y-3">
                   {pendingRequests.length === 0 ? (
                     <Card className="text-center py-8">
-                      <p className="text-charcoal-300">{t('social.noRequests')}</p>
+                      <p className="text-white/70">{t('social.noRequests')}</p>
                     </Card>
                   ) : (
                     pendingRequests.map((request) => (
@@ -207,8 +207,8 @@ export function Social() {
                               </span>
                             </div>
                             <div>
-                              <p className="font-semibold text-pale-50">@{request.username}</p>
-                              <p className="text-sm text-charcoal-300">
+                              <p className="font-semibold text-white">@{request.username}</p>
+                              <p className="text-sm text-white/70">
                                 {t('common.level')} {request.level}
                               </p>
                             </div>
@@ -245,7 +245,7 @@ export function Social() {
                 <div className="space-y-3">
                   {sentRequests.length === 0 ? (
                     <Card className="text-center py-8">
-                      <p className="text-charcoal-300">{t('social.noRequests')}</p>
+                      <p className="text-white/70">{t('social.noRequests')}</p>
                     </Card>
                   ) : (
                     sentRequests.map((request) => (
@@ -258,8 +258,8 @@ export function Social() {
                               </span>
                             </div>
                             <div>
-                              <p className="font-semibold text-pale-50">@{request.username}</p>
-                              <p className="text-sm text-charcoal-300">{t('social.requestSent')}</p>
+                              <p className="font-semibold text-white">@{request.username}</p>
+                              <p className="text-sm text-white/70">{t('social.requestSent')}</p>
                             </div>
                           </div>
                         </div>
@@ -276,7 +276,7 @@ export function Social() {
             <div className="space-y-4">
               {/* Search Input */}
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-charcoal-400" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/50" />
                 <input
                   type="text"
                   value={searchTerm}
@@ -290,8 +290,8 @@ export function Social() {
               <div className="space-y-3">
                 {searchResults.length === 0 && searchTerm.length >= 2 ? (
                   <Card className="text-center py-12">
-                    <Search className="w-16 h-16 text-charcoal-600 mx-auto mb-4" />
-                    <p className="text-charcoal-300">{t('social.noResults')}</p>
+                    <Search className="w-16 h-16 text-white/30 mx-auto mb-4" />
+                    <p className="text-white/70">{t('social.noResults')}</p>
                   </Card>
                 ) : (
                   searchResults.map((user) => (
@@ -304,8 +304,8 @@ export function Social() {
                             </span>
                           </div>
                           <div>
-                            <p className="font-semibold text-pale-50">@{user.username}</p>
-                            <p className="text-sm text-charcoal-300">
+                            <p className="font-semibold text-white">@{user.username}</p>
+                            <p className="text-sm text-white/70">
                               {t('common.level')} {user.level} • {user.currentStreak} {t('streaks.current')}
                             </p>
                           </div>
@@ -321,7 +321,7 @@ export function Social() {
                           </Button>
                         )}
                         {user.friendshipStatus === 'request_sent' && (
-                          <div className="px-4 py-2 bg-charcoal-700 text-charcoal-300 rounded-lg text-sm">
+                          <div className="px-4 py-2 bg-white/10 text-white/70 rounded-lg text-sm">
                             {t('social.requestSent')}
                           </div>
                         )}

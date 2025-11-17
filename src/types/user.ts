@@ -9,6 +9,7 @@ export interface User {
   avatarUrl?: string;
   hasCompletedOnboarding: boolean; // Whether user has completed the onboarding flow
   selectedLifeAreas: string[]; // IDs of active life areas
+  timezone: string; // IANA timezone (e.g., 'America/Bogota') for habit reset calculation
 }
 
 export interface UserStats {

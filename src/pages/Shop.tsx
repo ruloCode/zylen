@@ -84,8 +84,8 @@ export function Shop() {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <Loader2 className="w-12 h-12 text-gold-500 animate-spin mx-auto mb-4" />
-          <p className="text-gray-700 font-semibold">{t('common.loading')}</p>
+          <Loader2 className="w-12 h-12 text-[rgb(155,215,50)] animate-spin mx-auto mb-4" />
+          <p className="text-white font-semibold">{t('common.loading')}</p>
         </div>
       </div>
     );
@@ -98,8 +98,8 @@ export function Shop() {
         <header className="mb-8">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-3">
-              <ShoppingBag className="w-10 h-10 text-gold-500" />
-              <h1 className="text-4xl font-extrabold text-gradient-gold tracking-tight">
+              <ShoppingBag className="w-10 h-10 text-[rgb(155,215,50)]" />
+              <h1 className="text-4xl font-extrabold text-white tracking-tight">
                 {t('shop.title')}
               </h1>
             </div>
@@ -108,14 +108,14 @@ export function Shop() {
               className={`p-3 rounded-xl transition-all duration-200 ${
                 isManaging
                   ? 'bg-gold-100 text-gold-600 shadow-glow-gold'
-                  : 'hover:bg-gray-100 text-gray-600'
+                  : 'hover:bg-white/10 text-white/70'
               }`}
               title={t('shopManager.manageItems')}
             >
               <Settings className="w-6 h-6" />
             </button>
           </div>
-          <p className="text-base text-gray-700 font-medium">
+          <p className="text-base text-white font-medium">
             {isManaging ? t('shopManager.subtitle') : t('shop.subtitle')}
           </p>
         </header>
@@ -138,20 +138,20 @@ export function Shop() {
 
               <div className="relative z-10">
                 <div className="flex items-center justify-center gap-2 mb-2">
-                  <Coins className="w-6 h-6 text-gold-600 coin-spin" />
-                  <h2 className="text-base text-gold-700 font-bold" id="balance-heading">
+                  <Coins className="w-6 h-6 text-[rgb(155,215,50)] coin-spin" />
+                  <h2 className="text-base text-[rgb(155,215,50)] font-bold" id="balance-heading">
                     {t('common.points')}
                   </h2>
                 </div>
                 <div
-                  className={`text-6xl font-extrabold text-gradient-gold mb-3 ${
+                  className={`text-6xl font-extrabold text-white mb-3 ${
                     isPurchasing ? 'points-pop' : ''
                   }`}
                   aria-live="polite"
                 >
                   {user?.points?.toLocaleString() || 0}
                 </div>
-                <p className="text-sm text-gold-700 font-semibold flex items-center justify-center gap-2">
+                <p className="text-sm text-[rgb(155,215,50)] font-semibold flex items-center justify-center gap-2">
                   <Sparkles className="w-4 h-4" />
                   {t('shop.spendWisely')}
                 </p>
@@ -165,9 +165,9 @@ export function Shop() {
               </h2>
               {displayItems.length === 0 ? (
                 <div className="glass-card rounded-2xl p-12 text-center border-2 border-gold-200/30">
-                  <ShoppingBag className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-600 text-lg mb-2">{t('shopManager.noItems')}</p>
-                  <p className="text-gray-500 text-sm mb-6">Add your first reward to get started</p>
+                  <ShoppingBag className="w-16 h-16 text-white/50 mx-auto mb-4" />
+                  <p className="text-white text-lg mb-2">{t('shopManager.noItems')}</p>
+                  <p className="text-white/80 text-sm mb-6">Add your first reward to get started</p>
                   <button
                     onClick={() => setIsManaging(true)}
                     className="px-6 py-3 rounded-xl bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-600 hover:to-gold-700 text-white font-semibold shadow-glow-gold transition-all duration-200 hover:scale-105"
@@ -198,9 +198,9 @@ export function Shop() {
               <div className="relative">
                 <div className="flex items-center gap-2 mb-3">
                   <AlertTriangle className="w-5 h-5 text-warning" />
-                  <p className="text-charcoal-500 font-bold text-lg">{t('shop.rememberGoals')}</p>
+                  <p className="text-white font-bold text-lg">{t('shop.rememberGoals')}</p>
                 </div>
-                <p className="text-base text-gray-700 leading-relaxed">
+                <p className="text-base text-white leading-relaxed">
                   {t('shop.indulgenceWarning')}
                 </p>
               </div>

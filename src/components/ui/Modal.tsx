@@ -75,16 +75,16 @@ export function Modal({
     >
       <div
         className={cn(
-          'bg-white rounded-3xl shadow-2xl w-full my-8 max-h-[calc(100vh-4rem)] flex flex-col',
+          'bg-charcoal-500 rounded-3xl shadow-2xl w-full my-8 max-h-[calc(100vh-4rem)] flex flex-col border border-white/10',
           maxWidthClasses[maxWidth],
           className
         )}
       >
         {/* Header */}
         {(title || showCloseButton) && (
-          <div className="flex-shrink-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between rounded-t-3xl">
+          <div className="flex-shrink-0 bg-charcoal-600 border-b border-white/10 px-6 py-4 flex items-center justify-between rounded-t-3xl">
             {title && (
-              <h2 id="modal-title" className="text-2xl font-bold text-gray-900">
+              <h2 id="modal-title" className="text-2xl font-bold text-white">
                 {title}
               </h2>
             )}
@@ -92,10 +92,10 @@ export function Modal({
               <button
                 type="button"
                 onClick={onClose}
-                className="p-2 rounded-xl hover:bg-gray-100 transition-colors ml-auto"
+                className="p-2 rounded-xl hover:bg-white/10 transition-colors ml-auto"
                 aria-label="Close modal"
               >
-                <X className="w-6 h-6 text-gray-600" />
+                <X className="w-6 h-6 text-white" />
               </button>
             )}
           </div>

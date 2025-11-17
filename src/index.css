@@ -1,7 +1,7 @@
 /* Zylen - Dark Fantasy MMORPG Design System (Dofus-inspired) */
 
-/* Import Google Fonts - Nunito (body) & Space Grotesk (display/bold) */
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700;800&display=swap');
+/* Import Google Fonts - Roboto (body) & Bebas Neue (display/headers) - DOFUS Style */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Bebas+Neue&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -25,19 +25,19 @@
     --card: 20 8% 10%;             /* Dark charcoal cards */
     --card-foreground: 0 0% 100%;
 
-    --primary: 76 73% 62%;         /* Lime green rgb(137, 184, 32) */
+    --primary: 76 85% 50%;         /* Verde Brillante - Alto contraste con fondo oscuro */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 65 100% 36%;      /* Yellow-green rgb(170, 183, 0) */
+    --secondary: 36 98% 49%;       /* DOFUS Orange rgb(242, 156, 6) - Secondary CTA */
     --secondary-foreground: 0 0% 100%;
 
-    --accent: 76 73% 62%;          /* Lime green accent */
+    --accent: 76 85% 50%;          /* Verde Brillante accent - Alto contraste */
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 350 81% 71%;    /* Rose red (keep for errors) */
+    --destructive: 4 66% 58%;      /* DOFUS Red rgb(217, 83, 79) - Alert/Danger */
     --destructive-foreground: 0 0% 100%;
 
-    --ring: 76 73% 62%;            /* Lime green ring */
+    --ring: 76 85% 50%;            /* Verde Brillante ring */
 
     --radius: 0rem;                /* Sharp corners by default - Dofus style */
 
@@ -53,41 +53,55 @@
     --dofus-dark-brown: 15 8% 17%;      /* rgb(46, 42, 39) - UI elements */
     --dofus-gray-brown: 20 7% 26%;      /* rgb(71, 65, 61) - Buttons, selector */
 
-    /* Vibrant accent colors - Lime/Yellow-Green */
-    --lime-50: 76 85% 95%;              /* Very light lime */
-    --lime-100: 76 80% 85%;             /* Light lime */
-    --lime-200: 76 75% 75%;             /* Soft lime */
-    --lime-300: 76 73% 65%;             /* Medium lime */
-    --lime-400: 76 73% 55%;             /* Standard lime */
-    --lime-500: 76 73% 62%;             /* rgb(137, 184, 32) - PRIMARY LIME */
-    --lime-600: 65 100% 36%;            /* rgb(170, 183, 0) - Yellow-green */
-    --lime-700: 65 100% 33%;            /* rgb(151, 168, 0) - Darker lime (hover) */
-    --lime-800: 65 100% 28%;            /* Deep lime */
-    --lime-900: 65 100% 23%;            /* Very deep lime */
+    /* Verde Brillante Palette - Alto contraste con fondo oscuro */
+    --green-50: 76 90% 95%;        /* Verde muy claro */
+    --green-100: 76 85% 90%;       /* Verde claro */
+    --green-200: 76 85% 80%;       /* Verde suave brillante */
+    --green-300: 76 85% 70%;       /* Verde medio brillante */
+    --green-400: 76 85% 60%;       /* Verde estándar brillante */
+    --green-500: 76 85% 52%;       /* rgb(155, 215, 50) - PRIMARY VERDE BRILLANTE */
+    --green-600: 76 73% 42%;       /* rgb(137, 184, 32) - Verde DOFUS */
+    --green-700: 65 100% 33%;      /* rgb(151, 168, 0) - Verde oscuro */
+    --green-800: 65 100% 28%;      /* Verde profundo */
+    --green-900: 65 100% 23%;      /* Verde muy oscuro */
+
+    /* DOFUS Orange Palette - Secondary CTA color */
+    --dofus-orange-50: 36 90% 95%;      /* Very light orange */
+    --dofus-orange-100: 36 85% 85%;     /* Light orange */
+    --dofus-orange-200: 36 80% 75%;     /* Soft orange */
+    --dofus-orange-300: 36 75% 65%;     /* Medium orange */
+    --dofus-orange-400: 36 90% 55%;     /* Standard orange */
+    --dofus-orange-500: 36 98% 49%;     /* rgb(242, 156, 6) - PRIMARY DOFUS ORANGE */
+    --dofus-orange-600: 36 95% 45%;     /* Darker orange */
+    --dofus-orange-700: 36 90% 40%;     /* Deep orange */
+    --dofus-orange-800: 36 85% 35%;     /* Very deep orange */
+    --dofus-orange-900: 36 80% 30%;     /* Ultra deep orange */
 
     /* Text colors - White/Gray hierarchy (improved contrast) */
     --text-primary: 0 0% 100%;          /* Pure white rgb(255, 255, 255) */
     --text-secondary: 0 0% 87%;         /* Light gray rgb(222, 222, 222) */
     --text-tertiary: 0 0% 75%;          /* Light-medium gray rgb(191, 191, 191) - improved contrast */
     --text-dark: 0 0% 20%;              /* Dark gray rgb(51, 51, 51) */
-    --text-brown: 30 50% 14%;           /* Dark brown rgb(54, 39, 18) - Card titles */
-    --text-brown-dark: 31 74% 21%;      /* Darker brown rgb(91, 54, 14) */
+    --text-brown: 30 50% 14%;           /* DOFUS Brown rgb(54, 39, 18) - Warm accents */
+    --text-brown-dark: 31 74% 21%;      /* DOFUS Brown Dark rgb(91, 54, 14) - Headings */
+    --text-medium-gray: 0 0% 44%;       /* Medium gray rgb(111, 111, 111) */
+    --text-light-gray: 0 0% 51%;        /* Light gray rgb(131, 131, 131) */
 
-    /* Vibrant life area colors - Dofus card style (saturated & bright) */
-    --vibrant-red: 0 76% 53%;           /* Bright red rgb(220, 50, 50) */
-    --vibrant-green: 140 60% 49%;       /* Bright green rgb(50, 200, 80) */
-    --vibrant-purple: 285 54% 51%;      /* Bright purple rgb(180, 60, 200) */
-    --vibrant-blue: 210 100% 60%;       /* Bright blue rgb(50, 150, 255) */
-    --vibrant-orange: 28 100% 60%;      /* Bright orange rgb(255, 140, 50) */
-    --vibrant-cyan: 186 63% 53%;        /* Bright cyan rgb(50, 200, 220) */
-    --vibrant-pink: 327 73% 64%;        /* Bright pink/magenta */
-    --vibrant-yellow: 48 100% 60%;      /* Bright yellow rgb(255, 230, 50) */
+    /* Vibrant life area colors - Alto contraste para fondo oscuro */
+    --vibrant-red: 0 85% 60%;           /* Rojo brillante - alto contraste */
+    --vibrant-green: 140 75% 55%;       /* Verde brillante - alto contraste */
+    --vibrant-purple: 285 70% 65%;      /* Púrpura brillante - alto contraste */
+    --vibrant-blue: 210 100% 65%;       /* Azul brillante - alto contraste */
+    --vibrant-orange: 28 100% 65%;      /* Naranja brillante - alto contraste */
+    --vibrant-cyan: 186 75% 60%;        /* Cyan brillante - alto contraste */
+    --vibrant-pink: 327 80% 68%;        /* Rosa brillante - alto contraste */
+    --vibrant-yellow: 48 100% 65%;      /* Amarillo brillante - alto contraste */
 
-    /* Semantic colors - Adjusted for dark theme */
-    --success: 156 48% 44%;             /* Jade green (keep) */
-    --danger: 350 81% 71%;              /* Rose red (keep) */
-    --warning: 45 100% 51%;             /* Amber (keep) */
-    --info: 210 100% 60%;               /* Blue info */
+    /* Semantic colors - Alto contraste para dark theme */
+    --success: 156 65% 50%;             /* Verde jade brillante */
+    --danger: 0 85% 65%;                /* Rojo brillante */
+    --warning: 45 100% 60%;             /* Amarillo brillante */
+    --info: 210 100% 65%;               /* Azul brillante */
 
     /* Shadow colors for Dofus effect */
     --shadow-color: 0 0% 0%;            /* Pure black shadows */
@@ -137,17 +151,36 @@
   }
 
   body {
-    /* Deep teal-black background - Dofus style */
+    /* Deep teal-black background - DOFUS style */
     background-color: rgb(11, 25, 29);
     @apply text-foreground min-h-screen;
     font-feature-settings: "rlig" 1, "calt" 1;
-    font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Inter', 'SF Pro Display', 'Segoe UI', sans-serif;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    color: rgb(51, 51, 51);
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Bebas Neue', sans-serif;
+    font-weight: 400;
+    text-transform: uppercase;  /* DOFUS style - uppercase headers */
+  }
+
+  h1 {
+    font-size: 48px;
+    line-height: 1.2;
+  }
+
+  h2 {
+    font-size: 32px;
+    line-height: 1.2;
+  }
+
+  h3 {
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
     font-weight: 700;
-    text-transform: uppercase;  /* Dofus style - uppercase headers */
+    line-height: 1.1;
   }
 }
 
@@ -218,9 +251,9 @@
      DOFUS GLOW EFFECTS - Simplified and clean
      ========================================== */
 
-  /* Lime green glow (for XP, rewards, primary actions) */
+  /* Verde brillante glow (for XP, rewards, primary actions) */
   .glow-lime {
-    box-shadow: 0px 0px 8px 0px rgba(137, 184, 32, 0.5);
+    box-shadow: 0px 0px 8px 0px rgba(155, 215, 50, 0.6);
   }
 
   /* Success glow (for completions) */
@@ -237,9 +270,9 @@
      DOFUS TEXT STYLES
      ========================================== */
 
-  /* Lime green gradient text */
+  /* Verde brillante gradient text */
   .text-gradient-lime {
-    background: linear-gradient(135deg, rgb(137, 184, 32), rgb(170, 183, 0));
+    background: linear-gradient(135deg, rgb(155, 215, 50), rgb(180, 240, 80));
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -302,38 +335,38 @@
      DOFUS BUTTON STYLES
      ========================================== */
 
-  /* Primary lime green button - Dofus CTA style */
+  /* Primary verde brillante button */
   .btn-dofus-primary {
-    background-color: rgb(137, 184, 32);
-    color: white;
+    background-color: rgb(155, 215, 50);
+    color: rgb(0, 0, 0);  /* Texto negro para mejor contraste */
     font-weight: 700;
     text-transform: uppercase;
-    padding: 10px 18px;
-    border-radius: 10px;
+    padding: 12px 34px;
+    border-radius: 0px;  /* Square buttons - DOFUS style */
     border: 0px;
-    transition: 0.2s ease-in-out;
-    font-size: 18px;
-    letter-spacing: 0.05em;
+    transition: all 0.2s ease-in-out;
+    font-size: 23px;
   }
 
   .btn-dofus-primary:hover {
-    background-color: rgb(151, 168, 0);
+    background-color: rgb(180, 240, 80);
   }
 
-  /* Secondary button - Gray-brown */
+  /* Secondary DOFUS orange button - Exact DOFUS spec */
   .btn-dofus-secondary {
-    background-color: rgb(71, 65, 61);
-    color: white;
-    font-weight: 700;
+    background-color: rgb(242, 156, 6);
+    color: rgb(255, 255, 255);
+    font-weight: 400;
     text-transform: uppercase;
-    padding: 10px 12px;
-    border-radius: 10px;
+    padding: 12px 34px;
+    border-radius: 0px;  /* Square buttons - DOFUS style */
     border: 0px;
-    transition: 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
+    font-size: 23px;
   }
 
   .btn-dofus-secondary:hover {
-    background-color: rgb(91, 85, 81);
+    opacity: 0.9;
   }
 
   /* ==========================================

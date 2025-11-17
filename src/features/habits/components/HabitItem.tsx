@@ -79,7 +79,7 @@ export function HabitItem({
       className={cn(
         'glass-card rounded-2xl p-3 sm:p-4 transition-all duration-500 relative overflow-hidden',
         completedToday
-          ? 'bg-gradient-to-br from-success-50/90 to-teal-50/80 border-2 border-success-300/60 shadow-glow-success'
+          ? 'bg-gradient-to-br from-success-500/20 to-teal-500/20 border-2 border-success-300/60 shadow-glow-success'
           : 'hover:shadow-soft-lg hover:scale-[1.02]'
       )}
       aria-label={`Habit: ${name}`}
@@ -96,7 +96,7 @@ export function HabitItem({
             'p-2.5 sm:p-3 rounded-xl transition-all duration-300 flex-shrink-0',
             completedToday
               ? 'bg-gradient-to-br from-teal-400 to-teal-600 text-white shadow-glow-teal'
-              : 'bg-gradient-to-br from-parchment-100 to-parchment-200 text-gold-600 shadow-soft'
+              : 'bg-gradient-to-br from-gold-500/30 to-gold-600/30 text-[rgb(242,156,6)] shadow-soft'
           )}
         >
           <IconComponent size={20} className="sm:w-6 sm:h-6" />
@@ -107,7 +107,7 @@ export function HabitItem({
           <h3
             className={cn(
               'font-display font-bold text-sm sm:text-base truncate transition-colors',
-              completedToday ? 'text-success-700' : 'text-gray-900'
+              completedToday ? 'text-white' : 'text-white'
             )}
           >
             {name}
@@ -117,7 +117,7 @@ export function HabitItem({
           <div className="mt-1 flex items-center gap-1.5 flex-wrap">
             <XPBadge xp={xp} size="sm" />
             {lifeAreaName && (
-              <span className="px-1.5 py-0.5 text-xs font-semibold rounded-md bg-teal-100 text-teal-700">
+              <span className="px-1.5 py-0.5 text-xs font-semibold rounded-md bg-teal-500/30 text-white">
                 {lifeAreaName}
               </span>
             )}
@@ -137,7 +137,7 @@ export function HabitItem({
               'disabled:opacity-50 disabled:cursor-not-allowed',
               completedToday
                 ? 'bg-gradient-to-br from-success-500 to-success-600 text-white shadow-glow-success scale-110'
-                : 'bg-parchment-100/80 text-teal-600 hover:bg-teal-50 hover:text-teal-700 hover:scale-110 hover:shadow-soft-md'
+                : 'bg-white/10 text-teal-500 hover:bg-teal-500/20 hover:text-white hover:scale-110 hover:shadow-soft-md'
             )}
             aria-label={`Mark ${name} as complete`}
             aria-pressed={completedToday}
@@ -164,8 +164,8 @@ export function HabitItem({
               'focus:outline-none focus-visible:ring-4 focus-visible:ring-danger-400/50 focus-visible:ring-offset-2',
               'disabled:opacity-50 disabled:cursor-not-allowed',
               !completedToday
-                ? 'bg-parchment-100/80 text-navy-400 hover:bg-danger-50 hover:text-danger-600 hover:scale-110 hover:shadow-soft-md'
-                : 'bg-parchment-100/80 text-navy-400 hover:bg-danger-50 hover:text-danger-600 hover:scale-110 hover:shadow-soft-md'
+                ? 'bg-white/10 text-white/50 hover:bg-danger-500/20 hover:text-white hover:scale-110 hover:shadow-soft-md'
+                : 'bg-white/10 text-white/50 hover:bg-danger-500/20 hover:text-white hover:scale-110 hover:shadow-soft-md'
             )}
             aria-label={`Mark ${name} as incomplete`}
             aria-pressed={!completedToday}

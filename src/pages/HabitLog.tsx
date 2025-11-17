@@ -135,7 +135,7 @@ export function HabitLog() {
           {/* Header */}
           <header className="mb-6 sm:mb-8">
             <div className="flex items-center justify-between mb-2 sm:mb-3">
-              <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
+              <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
                 {t('habits.dailyQuests')}
               </h1>
               <button
@@ -147,7 +147,7 @@ export function HabitLog() {
                 <Plus className="w-5 h-5 sm:w-6 sm:h-6" />
               </button>
             </div>
-            <p className="text-sm sm:text-base text-gray-700 font-semibold">
+            <p className="text-sm sm:text-base text-white font-semibold">
               {t('habits.completeHabitsToEarnXP')}
             </p>
           </header>
@@ -163,25 +163,25 @@ export function HabitLog() {
             <div className="flex justify-between items-center gap-4">
               <div className="flex-1">
                 <div
-                  className="text-3xl sm:text-4xl font-bold text-gray-900"
+                  className="text-3xl sm:text-4xl font-bold text-white"
                   aria-live="polite"
                   aria-atomic="true"
                 >
                   {completedCount}/{habits.length}
                 </div>
-                <div className="text-sm sm:text-base text-gray-700 font-semibold mt-1">
+                <div className="text-sm sm:text-base text-white font-semibold mt-1">
                   {t('habits.completedToday')}
                 </div>
               </div>
               <div className="text-right flex-1">
                 <div
-                  className="text-3xl sm:text-4xl font-bold text-gold-700"
+                  className="text-3xl sm:text-4xl font-bold text-[rgb(155,215,50)]"
                   aria-live="polite"
                   aria-atomic="true"
                 >
                   +{totalXP}
                 </div>
-                <div className="text-sm sm:text-base text-gray-700 font-semibold mt-1">
+                <div className="text-sm sm:text-base text-white font-semibold mt-1">
                   {t('habits.xpEarned')}
                 </div>
               </div>
@@ -198,7 +198,7 @@ export function HabitLog() {
           {/* Empty State */}
           {!isLoading && habits.length === 0 && (
             <div className="glass-card rounded-2xl sm:rounded-3xl p-8 text-center">
-              <p className="text-gray-700 font-semibold mb-4">
+              <p className="text-white font-semibold mb-4">
                 {t('habits.noHabitsYet')}
               </p>
               <button
@@ -236,14 +236,14 @@ export function HabitLog() {
 
           {/* Motivational Message */}
           <aside
-            className="glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 text-center bg-gradient-to-br from-teal-50/80 to-gold-50/60"
+            className="glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 text-center bg-gradient-to-br from-teal-500/10 to-gold-500/10"
             role="status"
             aria-live="polite"
           >
-            <p className="text-gray-900 font-bold text-base sm:text-lg mb-2">
+            <p className="text-white font-bold text-base sm:text-lg mb-2">
               {getMotivationalMessage()}
             </p>
-            <p className="text-sm sm:text-base text-gray-700 font-semibold">
+            <p className="text-sm sm:text-base text-white font-semibold">
               {t('habits.coachBelievesInYou')}
             </p>
           </aside>

@@ -34,14 +34,14 @@ export function LevelBadge({
       className={cn(
         'inline-flex items-center gap-1.5 rounded-full font-bold',
         'bg-gradient-to-r from-gold-400 to-gold-500',
-        'text-charcoal-900 shadow-md',
+        'text-white shadow-md',
         'glow-effect',
         sizeClasses[size],
         className
       )}
     >
       {showIcon && <Trophy size={iconSizes[size]} className="flex-shrink-0" />}
-      <span>LVL {level}</span>
+      <span className="text-white">LVL {level}</span>
     </div>
   );
 }

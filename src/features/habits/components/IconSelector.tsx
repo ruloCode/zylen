@@ -76,11 +76,11 @@ export function IconSelector({ selectedIcon, onSelectIcon }: IconSelectorProps) 
           onClick={() => onSelectIcon(name)}
           className={cn(
             'flex items-center justify-center p-3 rounded-xl transition-all',
-            'hover:bg-teal-100 hover:scale-110',
+            'hover:bg-teal-500/20 hover:scale-110',
             'focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2',
             selectedIcon === name
               ? 'bg-teal-500 text-white scale-110 shadow-lg'
-              : 'bg-gray-100 text-gray-700'
+              : 'bg-white/10 text-white'
           )}
           aria-label={name}
           aria-pressed={selectedIcon === name}

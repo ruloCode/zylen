@@ -12,27 +12,27 @@ const iconMap: Record<string, React.ComponentType<{ size?: number; className?: s
   Gift,
 };
 
-// Category color mapping using brand palette
+// Category color mapping using DOFUS brand palette
 const categoryColors: Record<string, { bg: string; border: string; text: string }> = {
   food: {
-    bg: 'bg-gold-100',
-    border: 'border-gold-300',
-    text: 'text-gold-700',
+    bg: 'bg-gold-500/20',
+    border: 'border-gold-400/30',
+    text: 'text-white',
   },
   leisure: {
-    bg: 'bg-teal-100',
-    border: 'border-teal-300',
-    text: 'text-teal-700',
+    bg: 'bg-teal-500/20',
+    border: 'border-teal-400/30',
+    text: 'text-white',
   },
   shopping: {
-    bg: 'bg-parchment-200',
-    border: 'border-parchment-300',
-    text: 'text-charcoal-500',
+    bg: 'bg-white/10',
+    border: 'border-white/20',
+    text: 'text-white',
   },
   other: {
-    bg: 'bg-gray-100',
-    border: 'border-gray-300',
-    text: 'text-gray-700',
+    bg: 'bg-white/10',
+    border: 'border-white/20',
+    text: 'text-white',
   },
 };
 
@@ -62,7 +62,7 @@ export function ShopItem({
   return (
     <div className="glass-card rounded-2xl p-5 shop-item-hover border-2 border-gold-200/30 relative overflow-hidden group">
       {/* Subtle background glow on hover */}
-      <div className="absolute inset-0 bg-gradient-to-br from-gold-100/30 to-teal-100/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl" />
+      <div className="absolute inset-0 bg-gradient-to-br from-gold-500/20 to-teal-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl" />
 
       <div className="relative flex flex-col items-center text-center gap-3">
         {/* Icon with gradient background */}
@@ -78,19 +78,19 @@ export function ShopItem({
         </div>
 
         {/* Item Name */}
-        <h3 className="font-bold text-lg text-charcoal-500 group-hover:text-gradient-gold transition-all duration-200">
+        <h3 className="font-bold text-lg text-white group-hover:text-[rgb(155,215,50)] transition-all duration-200">
           {name}
         </h3>
 
         {/* Description */}
-        <p className="text-sm text-gray-600 leading-relaxed min-h-[2.5rem]">
+        <p className="text-sm text-white leading-relaxed min-h-[2.5rem]">
           {description}
         </p>
 
         {/* Cost Display */}
-        <div className="flex items-center gap-2 text-gold-600 font-bold text-lg my-1">
+        <div className="flex items-center gap-2 text-[rgb(155,215,50)] font-bold text-lg my-1">
           <Coins size={22} className="coin-spin" />
-          <span className="text-gradient-gold">{cost}</span>
+          <span className="text-[rgb(155,215,50)]">{cost}</span>
         </div>
 
         {/* Purchase Button */}

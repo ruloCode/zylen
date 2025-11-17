@@ -11,7 +11,7 @@ import type { ShopItem } from '@/types';
 const categoryColors: Record<string, string> = {
   food: 'bg-gold-100 text-gold-700 border-gold-300',
   leisure: 'bg-teal-100 text-teal-700 border-teal-300',
-  shopping: 'bg-parchment-200 text-charcoal-500 border-parchment-300',
+  shopping: 'bg-parchment-200 text-white border-parchment-300',
   other: 'bg-gray-100 text-gray-700 border-gray-300',
 };
 
@@ -116,11 +116,11 @@ export function ShopItemManager() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-3xl font-bold text-charcoal-500 flex items-center gap-2">
+          <h2 className="text-3xl font-bold text-white flex items-center gap-2">
             <Sparkles className="w-8 h-8 text-gold-500" />
             {t('shopManager.title')}
           </h2>
-          <p className="text-sm text-gray-600 mt-2">{t('shopManager.subtitle')}</p>
+          <p className="text-sm text-white mt-2">{t('shopManager.subtitle')}</p>
         </div>
         <button
           onClick={handleCreate}
@@ -135,9 +135,9 @@ export function ShopItemManager() {
       <div className="space-y-3">
         {shopItems.length === 0 ? (
           <div className="text-center py-16 glass-card rounded-2xl border-2 border-gold-200/30">
-            <Package className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-600 text-lg mb-2">{t('shopManager.noItems')}</p>
-            <p className="text-gray-500 text-sm mb-6">Create your first reward to get started</p>
+            <Package className="w-16 h-16 text-white/60 mx-auto mb-4" />
+            <p className="text-white text-lg mb-2">{t('shopManager.noItems')}</p>
+            <p className="text-white/80 text-sm mb-6">Create your first reward to get started</p>
             <button
               onClick={handleCreate}
               className="px-6 py-3 rounded-xl bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-600 hover:to-gold-700 text-white font-semibold shadow-glow-gold transition-all duration-200 hover:scale-105"
@@ -166,16 +166,16 @@ export function ShopItemManager() {
                 {/* Info */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <h3 className="font-bold text-lg text-charcoal-500">{displayName}</h3>
+                    <h3 className="font-bold text-lg text-white">{displayName}</h3>
                     {isDefault && (
                       <span className="px-2 py-0.5 rounded-full bg-gradient-to-r from-teal-100 to-teal-200 text-teal-700 text-xs font-semibold border border-teal-300">
                         {t('shopManager.default')}
                       </span>
                     )}
                   </div>
-                  <p className="text-sm text-gray-600 mb-2">{displayDescription}</p>
+                  <p className="text-sm text-white mb-2">{displayDescription}</p>
                   <div className="flex items-center gap-3">
-                    <span className="text-sm font-bold text-gradient-gold flex items-center gap-1">
+                    <span className="text-sm font-bold text-[rgb(155,215,50)] flex items-center gap-1">
                       <Sparkles className="w-4 h-4" />
                       {item.cost} {t('common.points')}
                     </span>
