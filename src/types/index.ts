@@ -6,6 +6,8 @@ export * from './shop';
 export * from './user';
 export * from './chat';
 export * from './onboarding';
+export * from './rootHabit';
+export * from './achievement';
 
 // App-wide utility types
 export interface AppState {

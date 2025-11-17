@@ -9,6 +9,8 @@ import { createLifeAreasSlice, LifeAreasSlice } from './lifeAreasSlice';
 import { createOnboardingSlice, OnboardingSlice } from './onboardingSlice';
 import { createSocialSlice, SocialSlice } from './socialSlice';
 import { createLeaderboardSlice, LeaderboardSlice } from './leaderboardSlice';
+import { createRootHabitSlice, RootHabitSlice } from './rootHabitSlice';
+import { createAchievementsSlice, AchievementsSlice } from './achievementsSlice';
 
 // Combined store type
 type AppStore = UserSlice &
@@ -19,7 +21,9 @@ type AppStore = UserSlice &
   LifeAreasSlice &
   OnboardingSlice &
   SocialSlice &
-  LeaderboardSlice;
+  LeaderboardSlice &
+  RootHabitSlice &
+  AchievementsSlice;
 
 // Create the store with all slices
 export const useAppStore = create<AppStore>()((...a) => ({
@@ -32,6 +36,8 @@ export const useAppStore = create<AppStore>()((...a) => ({
   ...createOnboardingSlice(...a),
   ...createSocialSlice(...a),
   ...createLeaderboardSlice(...a),
+  ...createRootHabitSlice(...a),
+  ...createAchievementsSlice(...a),
 }));
 
 // Typed hooks for easier access
@@ -182,6 +188,40 @@ export function useLeaderboard() {
     loadUserWeeklyStats: state.loadUserWeeklyStats,
     refreshLeaderboard: state.refreshLeaderboard,
     clearError: state.clearError,
+  }));
+  return useAppStore(selector);
+}
+
+export function useRootHabit() {
+  const selector = useShallow((state: AppStore) => ({
+    progress: state.progress,
+    checkIns: state.checkIns,
+    isLoading: state.isLoading,
+    error: state.error,
+    canCheckIn: state.canCheckIn,
+    loadProgress: state.loadProgress,
+    checkIn: state.checkIn,
+    checkInDay: state.checkInDay,
+    deleteCheckIn: state.deleteCheckIn,
+    resetChallenge: state.resetChallenge,
+    refreshCanCheckIn: state.refreshCanCheckIn,
+  }));
+  return useAppStore(selector);
+}
+
+export function useAchievements() {
+  const selector = useShallow((state: AppStore) => ({
+    achievements: state.achievements,
+    userAchievements: state.userAchievements,
+    achievementsWithProgress: state.achievementsWithProgress,
+    unlockedCount: state.unlockedCount,
+    isLoading: state.isLoading,
+    error: state.error,
+    loadAchievements: state.loadAchievements,
+    loadAchievementsWithProgress: state.loadAchievementsWithProgress,
+    checkAndUnlockAchievements: state.checkAndUnlockAchievements,
+    getAchievementsByCategory: state.getAchievementsByCategory,
+    refreshAchievements: state.refreshAchievements,
   }));
   return useAppStore(selector);
 }

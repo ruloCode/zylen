@@ -5,6 +5,7 @@ import {
   HabitWithCompletion,
 } from '@/services/supabase/habits.service';
 import { StreaksService } from '@/services/supabase/streaks.service';
+import { AchievementsService } from '@/services/supabase/achievements.service';
 
 export interface HabitToggleResult {
   xpEarned: number;
@@ -131,6 +132,18 @@ export const createHabitsSlice: StateCreator<HabitsSlice> = (set, get) => ({
 
       // Update streak
       await StreaksService.updateStreakForToday(true);
+
+      // Check and unlock achievements automatically
+      try {
+        const achievementResult = await AchievementsService.checkAndUnlockAchievements();
+        if (achievementResult.newly_unlocked > 0) {
+          console.log(`🎉 Unlocked ${achievementResult.newly_unlocked} achievement(s)!`, achievementResult.achievements_unlocked);
+          // You could also show a notification here
+        }
+      } catch (err) {
+        console.error('Error checking achievements:', err);
+        // Don't fail the habit completion if achievement check fails
+      }
 
       // Reload habits to get updated completion status
       const habits = await HabitsService.getHabitsWithCompletions();

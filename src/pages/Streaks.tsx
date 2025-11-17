@@ -1,29 +1,37 @@
-import React, { useMemo } from 'react';
-import { Trophy, Award, Zap } from 'lucide-react';
+import React, { useEffect } from 'react';
+import { Trophy, Award, Zap, Star, Flame, Crown, CheckCheck, Target, Sparkles } from 'lucide-react';
 import { StreakDisplay } from '@/features/streaks/components';
-import { useAppStore } from '@/store';
+import { useAppStore, useAchievements } from '@/store';
 import { useLocale } from '@/hooks/useLocale';
+import * as LucideIcons from 'lucide-react';
 
 export function Streaks() {
   const streak = useAppStore((state) => state.streak);
   const { t } = useLocale();
+  const {
+    achievementsWithProgress,
+    loadAchievementsWithProgress,
+    isLoading
+  } = useAchievements();
 
-  const badges = useMemo(() => [{
-    id: 1,
-    name: t('streaks.badges.weekWarrior'),
-    icon: <Award size={32} />,
-    unlocked: true
-  }, {
-    id: 2,
-    name: t('streaks.badges.consistencyKing'),
-    icon: <Trophy size={32} />,
-    unlocked: true
-  }, {
-    id: 3,
-    name: t('streaks.badges.unstoppable'),
-    icon: <Zap size={32} />,
-    unlocked: false
-  }], [t]);
+  // Load achievements on mount
+  useEffect(() => {
+    loadAchievementsWithProgress();
+  }, [loadAchievementsWithProgress]);
+
+  // Get icon component from icon name
+  const getIcon = (iconName: string) => {
+    const IconComponent = (LucideIcons as any)[iconName];
+    if (IconComponent) {
+      return <IconComponent size={32} />;
+    }
+    return <Award size={32} />;
+  };
+
+  // Filter to show only streak-related achievements (or all if you want)
+  const streakAchievements = achievementsWithProgress
+    .filter(a => a.category === 'streak')
+    .slice(0, 6); // Show top 6
   return <div className="min-h-screen pb-24 px-4 pt-8">
       <div className="max-w-md mx-auto">
         {/* Header */}
@@ -67,16 +75,27 @@ export function Streaks() {
         {/* Badges */}
         <div className="mb-6">
           <h2 className="text-xl font-bold text-white mb-4">{t('streaks.achievements')}</h2>
-          <div className="grid grid-cols-3 gap-4">
-            {badges.map(badge => <div key={badge.id} className={`glass-card rounded-2xl p-4 text-center transition-all ${badge.unlocked ? 'scale-100' : 'opacity-50 grayscale'}`}>
-                <div className={`${badge.unlocked ? 'text-[rgb(242,156,6)]' : 'text-white/50'} mb-2`}>
-                  {badge.icon}
+          {isLoading ? (
+            <div className="text-center text-white/70 py-8">Loading achievements...</div>
+          ) : (
+            <div className="grid grid-cols-3 gap-4">
+              {streakAchievements.map(achievement => (
+                <div key={achievement.id} className={`glass-card rounded-2xl p-4 text-center transition-all ${achievement.unlocked ? 'scale-100' : 'opacity-50 grayscale'}`}>
+                  <div className={`${achievement.unlocked ? 'text-[rgb(242,156,6)]' : 'text-white/50'} mb-2`}>
+                    {getIcon(achievement.iconName)}
+                  </div>
+                  <p className="text-xs font-semibold text-white">
+                    {achievement.name}
+                  </p>
+                  {!achievement.unlocked && achievement.requirementValue && (
+                    <p className="text-xs text-white/50 mt-1">
+                      {achievement.requirementValue} {t('common.days')}
+                    </p>
+                  )}
                 </div>
-                <p className="text-xs font-semibold text-white">
-                  {badge.name}
-                </p>
-              </div>)}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Motivation */}

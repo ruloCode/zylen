@@ -1,15 +1,44 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Sunrise, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui';
 import { ProgressBar } from '@/components/ui';
+import { useRootHabit } from '@/store';
+import { useLocale } from '@/hooks/useLocale';
 
 export function RootHabit() {
-  const checkIns = Array.from({
-    length: 30
-  }, (_, i) => ({
+  const { t } = useLocale();
+  const {
+    progress,
+    isLoading,
+    error,
+    canCheckIn,
+    loadProgress,
+    checkIn,
+  } = useRootHabit();
+
+  // Load progress on mount
+  useEffect(() => {
+    loadProgress();
+  }, [loadProgress]);
+
+  const handleCheckIn = async () => {
+    try {
+      await checkIn();
+      // Show success message or notification
+      alert(t('rootHabit.checkInSuccess') || 'Check-in successful! +20 XP');
+    } catch (err) {
+      alert(error || 'Failed to check in. Please try again.');
+    }
+  };
+
+  // Create array of 30 days with completion status
+  const checkIns = Array.from({ length: 30 }, (_, i) => ({
     day: i + 1,
-    completed: i < 12
+    completed: progress?.completed_days?.includes(i + 1) || false,
   }));
+
+  const currentDay = progress?.current_day || 0;
+  const completionPercentage = Math.round(progress?.completion_percentage || 0);
   return <div className="min-h-screen pb-24 px-4 pt-8 bg-gradient-to-b from-charcoal-600 to-charcoal-700">
       <div className="max-w-md mx-auto">
         {/* Epic Header */}
@@ -30,11 +59,11 @@ export function RootHabit() {
             30-Day Challenge
           </h2>
           <div className="mb-6">
-            <ProgressBar current={12} max={30} variant="gold" size="lg" />
+            <ProgressBar current={currentDay} max={30} variant="gold" size="lg" />
           </div>
           <div className="flex justify-between text-white mb-4">
-            <span>Day 12 of 30</span>
-            <span className="text-[rgb(242,156,6)] font-bold">40% Complete</span>
+            <span>Day {currentDay} of 30</span>
+            <span className="text-[rgb(242,156,6)] font-bold">{completionPercentage}% Complete</span>
           </div>
         </div>
 
@@ -59,8 +88,17 @@ export function RootHabit() {
         </div>
 
         {/* CTA */}
-        <Button variant="primary" size="lg" className="w-full bg-gradient-to-r from-gold-400 to-gold-600">
-          Check In Today
+        <Button
+          variant="primary"
+          size="lg"
+          className="w-full bg-gradient-to-r from-gold-400 to-gold-600"
+          onClick={handleCheckIn}
+          disabled={!canCheckIn || isLoading || progress?.is_completed}
+        >
+          {isLoading ? 'Loading...' :
+           progress?.is_completed ? 'Challenge Completed! 🎉' :
+           canCheckIn ? 'Check In Today' :
+           'Already Checked In'}
         </Button>
       </div>
     </div>;

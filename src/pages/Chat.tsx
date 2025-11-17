@@ -1,26 +1,23 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { Send } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Send, AlertCircle } from 'lucide-react';
 import { ChatBubble } from '@/features/chat/components';
-import { Button } from '@/components/ui';
 import { useAppStore } from '@/store';
 import { useLocale } from '@/hooks/useLocale';
 import { CHAT_CONFIG } from '@/constants';
+import { OpenAIService } from '@/services/openai.service';
 
 export function Chat() {
   const messages = useAppStore((state) => state.messages);
   const isLoading = useAppStore((state) => state.isLoading);
   const addMessage = useAppStore((state) => state.addMessage);
+  const startStreamingMessage = useAppStore((state) => state.startStreamingMessage);
+  const updateStreamingMessage = useAppStore((state) => state.updateStreamingMessage);
+  const finishStreamingMessage = useAppStore((state) => state.finishStreamingMessage);
   const setLoading = useAppStore((state) => state.setLoading);
   const { t } = useLocale();
   const [input, setInput] = useState('');
+  const [error, setError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  const responses = useMemo(() => [
-    t('chat.responses.1'),
-    t('chat.responses.2'),
-    t('chat.responses.3'),
-    t('chat.responses.4'),
-  ], [t]);
 
   // Initialize with welcome message if empty
   useEffect(() => {
@@ -37,20 +34,49 @@ export function Chat() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!input.trim() || input.length > CHAT_CONFIG.maxMessageLength) return;
 
-    // Add user message
-    addMessage(input, 'user');
+    // Check if OpenAI is configured
+    if (!OpenAIService.isConfigured()) {
+      setError('OpenAI API key not configured. Please add your API key to .env.local');
+      return;
+    }
+
+    const userMessage = input.trim();
     setInput('');
+    setError(null);
+
+    // Add user message
+    addMessage(userMessage, 'user');
     setLoading(true);
 
-    // Simulate AI response with delay
-    setTimeout(() => {
-      const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-      addMessage(randomResponse, 'assistant');
+    try {
+      // Start streaming AI response
+      const streamingId = startStreamingMessage();
+      let accumulatedContent = '';
+
+      await OpenAIService.streamChatCompletion(
+        messages.concat([{
+          id: crypto.randomUUID(),
+          role: 'user',
+          content: userMessage,
+          timestamp: new Date(),
+        }]),
+        (delta: string) => {
+          accumulatedContent += delta;
+          updateStreamingMessage(streamingId, accumulatedContent);
+        }
+      );
+
+      finishStreamingMessage();
+    } catch (err) {
+      console.error('Error streaming chat completion:', err);
+      setError(err instanceof Error ? err.message : 'Failed to get AI response');
+      finishStreamingMessage();
+    } finally {
       setLoading(false);
-    }, CHAT_CONFIG.aiResponseDelay);
+    }
   };
 
   return (
@@ -62,6 +88,14 @@ export function Chat() {
           <p className="text-base text-white font-semibold">{t('chat.subtitle')}</p>
         </header>
 
+        {/* Error Message */}
+        {error && (
+          <div className="flex-shrink-0 mb-4 bg-red-500/20 border border-red-500/50 rounded-xl p-3 flex items-start gap-2">
+            <AlertCircle size={20} className="text-red-400 flex-shrink-0 mt-0.5" />
+            <p className="text-sm text-red-200">{error}</p>
+          </div>
+        )}
+
         {/* Messages - Scrollable Area */}
         <div className="flex-1 overflow-y-auto pb-4 flex flex-col">
           <section aria-labelledby="messages-heading" className="space-y-4 flex-1">
@@ -69,7 +103,6 @@ export function Chat() {
             {messages.map(msg => (
               <ChatBubble
                 key={msg.id}
-                id={msg.id}
                 message={msg.content}
                 isUser={msg.role === 'user'}
                 timestamp={new Date(msg.timestamp).toLocaleTimeString([], {
