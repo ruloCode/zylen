@@ -9,10 +9,11 @@ import {
   UserPlus, UserCheck, X, Check, Award, Zap
 } from 'lucide-react';
 import { useLocale } from '@/hooks/useLocale';
-import { useLeaderboard, useUser, useSocial, useAppStore } from '@/store';
+import { useLeaderboard, useUser, useSocial, useAppStore, useAchievements } from '@/store';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { StreakDisplay } from '@/features/streaks/components';
+import { AchievementCard } from '@/features/achievements/components';
 import toast from 'react-hot-toast';
 
 type TabType = 'rankings' | 'social' | 'streaks';
@@ -51,6 +52,13 @@ export function Leaderboard() {
     clearSearchResults,
   } = useSocial();
 
+  // Achievements state
+  const {
+    achievementsWithProgress,
+    isLoading: achievementsLoading,
+    loadAchievementsWithProgress,
+  } = useAchievements();
+
   // Tab state
   const [activeTab, setActiveTab] = useState<TabType>('rankings');
   const [socialSubTab, setSocialSubTab] = useState<SocialSubTab>('friends');
@@ -70,6 +78,11 @@ export function Leaderboard() {
     loadPendingRequests();
     loadSentRequests();
   }, [loadFriends, loadPendingRequests, loadSentRequests]);
+
+  // Load achievements data
+  useEffect(() => {
+    loadAchievementsWithProgress();
+  }, [loadAchievementsWithProgress]);
 
   // Get medal emoji for top 3
   const getMedal = (rank: number) => {
@@ -128,27 +141,10 @@ export function Leaderboard() {
     }
   };
 
-  // Badges for streaks tab
-  const badges = [
-    {
-      id: 1,
-      name: t('streaks.badges.weekWarrior'),
-      icon: <Award size={32} />,
-      unlocked: true
-    },
-    {
-      id: 2,
-      name: t('streaks.badges.consistencyKing'),
-      icon: <Trophy size={32} />,
-      unlocked: true
-    },
-    {
-      id: 3,
-      name: t('streaks.badges.unstoppable'),
-      icon: <Zap size={32} />,
-      unlocked: false
-    }
-  ];
+  // Filter streak achievements and sort by requirement value
+  const streakAchievements = achievementsWithProgress
+    .filter((a) => a.category === 'streak')
+    .sort((a, b) => a.requirementValue - b.requirementValue);
 
   return (
     <div className="min-h-screen pb-24 px-4 pt-8">
@@ -627,26 +623,38 @@ export function Leaderboard() {
                 </>
               )}
 
-              {/* Badges */}
+              {/* Achievements */}
               <div className="mb-6">
-                <h2 className="text-xl font-bold text-white mb-4">{t('streaks.achievements')}</h2>
-                <div className="grid grid-cols-3 gap-4">
-                  {badges.map(badge => (
-                    <div
-                      key={badge.id}
-                      className={`glass-card p-4 text-center transition-all ${
-                        badge.unlocked ? 'scale-100' : 'opacity-50 grayscale'
-                      }`}
-                    >
-                      <div className={`${badge.unlocked ? 'text-gold-500' : 'text-white/70'} mb-2 flex justify-center`}>
-                        {badge.icon}
-                      </div>
-                      <p className="text-xs font-semibold text-white">
-                        {badge.name}
-                      </p>
-                    </div>
-                  ))}
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-2xl font-bold text-white">
+                    🏆 Logros de Rachas
+                  </h2>
+                  <div className="text-sm text-white/70">
+                    {streakAchievements.filter(a => a.unlocked).length} / {streakAchievements.length} desbloqueados
+                  </div>
                 </div>
+
+                {achievementsLoading ? (
+                  <div className="text-center py-12">
+                    <div className="animate-spin w-8 h-8 border-4 border-gold-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+                    <p className="text-white/70">{t('common.loading')}</p>
+                  </div>
+                ) : streakAchievements.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {streakAchievements.map((achievement) => (
+                      <AchievementCard
+                        key={achievement.id}
+                        achievement={achievement}
+                        currentStreak={streak?.currentStreak || 0}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="glass-card p-12 text-center">
+                    <Trophy className="w-16 h-16 text-white/30 mx-auto mb-4" />
+                    <p className="text-white/70">No hay logros disponibles</p>
+                  </div>
+                )}
               </div>
 
               {/* Motivation */}
