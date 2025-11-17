@@ -22,6 +22,7 @@ export interface Database {
         Row: {
           id: string;
           name: string;
+          username: string | null;
           points: number;
           total_xp_earned: number;
           level: number;
@@ -33,6 +34,7 @@ export interface Database {
         Insert: {
           id: string;
           name: string;
+          username?: string | null;
           points?: number;
           total_xp_earned?: number;
           level?: number;
@@ -44,6 +46,7 @@ export interface Database {
         Update: {
           id?: string;
           name?: string;
+          username?: string | null;
           points?: number;
           total_xp_earned?: number;
           level?: number;
@@ -268,6 +271,70 @@ export interface Database {
           created_at?: string;
         };
       };
+      friendships: {
+        Row: {
+          id: string;
+          user_id: string;
+          friend_id: string;
+          status: 'pending' | 'accepted' | 'rejected';
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          friend_id: string;
+          status?: 'pending' | 'accepted' | 'rejected';
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          friend_id?: string;
+          status?: 'pending' | 'accepted' | 'rejected';
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
+      weekly_leaderboard: {
+        Row: {
+          id: string;
+          user_id: string;
+          week_start_date: string;
+          week_end_date: string;
+          weekly_xp_earned: number;
+          weekly_points_earned: number;
+          habits_completed: number;
+          rank: number | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          week_start_date: string;
+          week_end_date: string;
+          weekly_xp_earned?: number;
+          weekly_points_earned?: number;
+          habits_completed?: number;
+          rank?: number | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          week_start_date?: string;
+          week_end_date?: string;
+          weekly_xp_earned?: number;
+          weekly_points_earned?: number;
+          habits_completed?: number;
+          rank?: number | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
     };
     Views: {
       [_ in never]: never;
@@ -276,7 +343,7 @@ export interface Database {
       [_ in never]: never;
     };
     Enums: {
-      [_ in never]: never;
+      friendship_status: 'pending' | 'accepted' | 'rejected';
     };
   };
 }

@@ -10,6 +10,8 @@ export const ROUTES = {
   ROOT_HABIT: '/root-habit',
   SHOP: '/shop',
   CHAT: '/chat',
+  SOCIAL: '/social',
+  LEADERBOARD: '/leaderboard',
   PROFILE: '/profile',
   ONBOARDING: '/onboarding',
   LOGIN: '/login',
@@ -29,7 +31,7 @@ export interface NavItem {
 export const NAV_ITEMS: NavItem[] = [
   { path: ROUTES.DASHBOARD, label: 'Home', icon: 'Home' },
   { path: ROUTES.HABITS, label: 'Habits', icon: 'CheckSquare' },
-  { path: ROUTES.STREAKS, label: 'Streaks', icon: 'Flame' },
+  { path: ROUTES.LEADERBOARD, label: 'Leaderboard', icon: 'Trophy' },
   { path: ROUTES.SHOP, label: 'Shop', icon: 'Store' },
   { path: ROUTES.CHAT, label: 'Coach', icon: 'MessageCircle' },
 ];

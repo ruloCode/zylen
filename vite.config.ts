@@ -5,6 +5,14 @@ import react from "@vitejs/plugin-react";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+
+  // Development server configuration
+  server: {
+    port: 5173, // Fixed port for consistent OAuth redirects
+    strictPort: true, // Fail if port is already in use
+    open: false, // Don't auto-open browser
+  },
+
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

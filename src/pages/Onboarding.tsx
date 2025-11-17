@@ -7,6 +7,7 @@ import { ONBOARDING_STEPS } from '@/types';
 import {
   OnboardingProgress,
   OnboardingStep1,
+  OnboardingStepUsername,
   OnboardingStep2,
   OnboardingStep3,
   OnboardingStep4,
@@ -18,10 +19,11 @@ import { useLocale } from '@/hooks/useLocale';
  *
  * Multi-step onboarding flow for new users
  * Steps:
- * 1. Welcome + Name
- * 2. Life Areas Selection
- * 3. Create First Habits
- * 4. Tutorial / Mechanics Overview
+ * 1. Welcome + Name + Avatar
+ * 2. Choose Username
+ * 3. Life Areas Selection
+ * 4. Create First Habits
+ * 5. Tutorial / Mechanics Overview
  */
 export function Onboarding() {
   const navigate = useNavigate();
@@ -110,6 +112,10 @@ export function Onboarding() {
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
           {currentStep === ONBOARDING_STEPS.WELCOME && (
             <OnboardingStep1 onNext={nextStep} />
+          )}
+
+          {currentStep === ONBOARDING_STEPS.USERNAME && (
+            <OnboardingStepUsername onNext={nextStep} onPrev={prevStep} />
           )}
 
           {currentStep === ONBOARDING_STEPS.LIFE_AREAS && (

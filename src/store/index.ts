@@ -7,6 +7,8 @@ import { createShopSlice, ShopSlice } from './shopSlice';
 import { createChatSlice, ChatSlice } from './chatSlice';
 import { createLifeAreasSlice, LifeAreasSlice } from './lifeAreasSlice';
 import { createOnboardingSlice, OnboardingSlice } from './onboardingSlice';
+import { createSocialSlice, SocialSlice } from './socialSlice';
+import { createLeaderboardSlice, LeaderboardSlice } from './leaderboardSlice';
 
 // Combined store type
 type AppStore = UserSlice &
@@ -15,7 +17,9 @@ type AppStore = UserSlice &
   ShopSlice &
   ChatSlice &
   LifeAreasSlice &
-  OnboardingSlice;
+  OnboardingSlice &
+  SocialSlice &
+  LeaderboardSlice;
 
 // Create the store with all slices
 export const useAppStore = create<AppStore>()((...a) => ({
@@ -26,6 +30,8 @@ export const useAppStore = create<AppStore>()((...a) => ({
   ...createChatSlice(...a),
   ...createLifeAreasSlice(...a),
   ...createOnboardingSlice(...a),
+  ...createSocialSlice(...a),
+  ...createLeaderboardSlice(...a),
 }));
 
 // Typed hooks for easier access
@@ -139,6 +145,43 @@ export function useOnboarding() {
     completeStep: state.completeStep,
     resetOnboarding: state.resetOnboarding,
     finalizeOnboarding: state.finalizeOnboarding,
+  }));
+  return useAppStore(selector);
+}
+
+export function useSocial() {
+  const selector = useShallow((state: AppStore) => ({
+    friends: state.friends,
+    pendingRequests: state.pendingRequests,
+    sentRequests: state.sentRequests,
+    searchResults: state.searchResults,
+    isLoading: state.isLoading,
+    error: state.error,
+    searchUsers: state.searchUsers,
+    sendFriendRequest: state.sendFriendRequest,
+    acceptFriendRequest: state.acceptFriendRequest,
+    rejectFriendRequest: state.rejectFriendRequest,
+    removeFriend: state.removeFriend,
+    loadFriends: state.loadFriends,
+    loadPendingRequests: state.loadPendingRequests,
+    loadSentRequests: state.loadSentRequests,
+    clearSearchResults: state.clearSearchResults,
+    clearError: state.clearError,
+  }));
+  return useAppStore(selector);
+}
+
+export function useLeaderboard() {
+  const selector = useShallow((state: AppStore) => ({
+    weeklyLeaderboard: state.weeklyLeaderboard,
+    userRank: state.userRank,
+    userWeeklyStats: state.userWeeklyStats,
+    isLoading: state.isLoading,
+    error: state.error,
+    loadWeeklyLeaderboard: state.loadWeeklyLeaderboard,
+    loadUserWeeklyStats: state.loadUserWeeklyStats,
+    refreshLeaderboard: state.refreshLeaderboard,
+    clearError: state.clearError,
   }));
   return useAppStore(selector);
 }

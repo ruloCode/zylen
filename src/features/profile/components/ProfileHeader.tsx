@@ -15,7 +15,7 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
   const { t } = useLocale();
 
   return (
-    <div className="bg-gradient-to-br from-charcoal-800 to-charcoal-700 rounded-2xl p-6 border border-charcoal-600 shadow-xl">
+    <div className="glass-card p-6 shadow-xl">
       {/* Avatar and Name - Always Centered */}
       <div className="flex flex-col items-center text-center mb-6">
         <div className="relative mb-4">
@@ -33,35 +33,35 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
             </div>
           )}
         </div>
-        <h1 className="text-2xl font-bold text-white">{user.name}</h1>
+        <h1 className="text-2xl font-bold text-gray-900">{user.name}</h1>
       </div>
 
       {/* Stats - Vertical Stack on Desktop (sidebar), Grid on Mobile */}
       <div className="grid grid-cols-3 lg:grid-cols-1 gap-3">
         {/* Level */}
-        <div className="flex items-center gap-2 px-3 py-2.5 bg-charcoal-900/50 rounded-lg border border-charcoal-600">
+        <div className="flex items-center gap-2 px-3 py-2.5 bg-white/50 rounded-lg border border-gray-200">
           <Star className="text-teal-400 flex-shrink-0" size={20} />
           <div className="min-w-0">
-            <p className="text-xs text-gray-400 truncate">{t('common.level')}</p>
-            <p className="font-bold text-white">{user.level}</p>
+            <p className="text-xs text-gray-600 truncate">{t('common.level')}</p>
+            <p className="font-bold text-gray-900">{user.level}</p>
           </div>
         </div>
 
         {/* Total XP */}
-        <div className="flex items-center gap-2 px-3 py-2.5 bg-charcoal-900/50 rounded-lg border border-charcoal-600">
+        <div className="flex items-center gap-2 px-3 py-2.5 bg-white/50 rounded-lg border border-gray-200">
           <TrendingUp className="text-purple-400 flex-shrink-0" size={20} />
           <div className="min-w-0">
-            <p className="text-xs text-gray-400 truncate">{t('common.totalXP')}</p>
-            <p className="font-bold text-white">{user.totalXPEarned.toLocaleString()}</p>
+            <p className="text-xs text-gray-600 truncate">{t('common.totalXP')}</p>
+            <p className="font-bold text-gray-900">{user.totalXPEarned.toLocaleString()}</p>
           </div>
         </div>
 
         {/* Points */}
-        <div className="flex items-center gap-2 px-3 py-2.5 bg-charcoal-900/50 rounded-lg border border-charcoal-600">
+        <div className="flex items-center gap-2 px-3 py-2.5 bg-white/50 rounded-lg border border-gray-200">
           <Coins className="text-gold-400 flex-shrink-0" size={20} />
           <div className="min-w-0">
-            <p className="text-xs text-gray-400 truncate">{t('common.points')}</p>
-            <p className="font-bold text-white">{user.points.toLocaleString()}</p>
+            <p className="text-xs text-gray-600 truncate">{t('common.points')}</p>
+            <p className="font-bold text-gray-900">{user.points.toLocaleString()}</p>
           </div>
         </div>
       </div>

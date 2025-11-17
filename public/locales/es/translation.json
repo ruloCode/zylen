@@ -25,6 +25,9 @@
     "habits": "Hábitos",
     "streaks": "Rachas",
     "shop": "Tienda",
+    "social": "Social",
+    "leaderboard": "Clasificación",
+    "profile": "Perfil",
     "chat": "Chat",
     "navigateTo": "Navegar a {{label}}"
   },
@@ -342,6 +345,102 @@
       "inputLabel": "Para confirmar, escribe \"{{text}}\" exactamente:",
       "inputError": "El texto no coincide. Escribe exactamente como se indica.",
       "confirmButton": "Eliminar Permanentemente"
+    }
+  },
+  "username": {
+    "title": "Nombre de Usuario",
+    "choose": "Elige tu nombre de usuario",
+    "description": "Este será tu identificador único en Zylen",
+    "placeholder": "tuNombreUsuario",
+    "available": "✓ Disponible",
+    "taken": "✗ No disponible",
+    "checking": "Verificando...",
+    "suggestions": "Sugerencias:",
+    "validation": {
+      "tooShort": "Mínimo 3 caracteres",
+      "tooLong": "Máximo 20 caracteres",
+      "invalidChars": "Solo letras, números y _"
+    },
+    "success": "¡Nombre de usuario guardado exitosamente!",
+    "error": "Error al guardar el nombre de usuario"
+  },
+  "social": {
+    "title": "Social",
+    "friends": "Amigos",
+    "findFriends": "Buscar Amigos",
+    "searchPlaceholder": "Buscar por nombre de usuario...",
+    "noFriends": "Aún no tienes amigos",
+    "noRequests": "No tienes solicitudes pendientes",
+    "noResults": "No se encontraron usuarios",
+    "addFriend": "Agregar Amigo",
+    "removeFriend": "Eliminar Amigo",
+    "acceptRequest": "Aceptar",
+    "rejectRequest": "Rechazar",
+    "cancelRequest": "Cancelar",
+    "requestSent": "Solicitud enviada",
+    "requestReceived": "Solicitud recibida",
+    "tabs": {
+      "friends": "Amigos",
+      "requests": "Solicitudes",
+      "search": "Buscar"
+    },
+    "requestsSent": "Enviadas",
+    "requestsReceived": "Recibidas",
+    "friendAdded": "¡{{username}} agregado a tus amigos!",
+    "friendRemoved": "{{username}} eliminado de tus amigos",
+    "requestAccepted": "Aceptaste la solicitud de {{username}}",
+    "requestRejected": "Solicitud rechazada",
+    "requestCancelled": "Solicitud cancelada",
+    "stats": {
+      "currentStreak": "Racha Actual",
+      "longestStreak": "Mejor Racha",
+      "totalXP": "XP Total",
+      "points": "Puntos",
+      "level": "Nivel"
+    },
+    "errors": {
+      "loadFriends": "Error al cargar la lista de amigos",
+      "sendRequest": "Error al enviar solicitud de amistad",
+      "acceptRequest": "Error al aceptar solicitud",
+      "rejectRequest": "Error al rechazar solicitud",
+      "removeFriend": "Error al eliminar amigo",
+      "searchUsers": "Error al buscar usuarios"
+    }
+  },
+  "leaderboard": {
+    "title": "Clasificación",
+    "weekly": "Semanal",
+    "viewHistory": "Ver Historial",
+    "thisWeek": "Esta Semana",
+    "weekOf": "Semana del {{date}}",
+    "rank": "Puesto",
+    "username": "Usuario",
+    "weeklyXP": "XP Semanal",
+    "weeklyPoints": "Puntos Semanales",
+    "habitsCompleted": "Hábitos",
+    "yourRank": "Tu Puesto",
+    "notRanked": "Completa hábitos para aparecer en el leaderboard",
+    "topPlayers": "Mejores Jugadores",
+    "you": "TÚ",
+    "medal": {
+      "first": "🥇",
+      "second": "🥈",
+      "third": "🥉"
+    },
+    "tabs": {
+      "rankings": "Clasificación",
+      "social": "Social",
+      "streaks": "Rachas"
+    },
+    "stats": {
+      "yourWeeklyXP": "Tu XP Semanal",
+      "yourWeeklyPoints": "Tus Puntos Semanales",
+      "yourHabitsCompleted": "Hábitos Completados",
+      "rank": "Puesto #{{rank}}"
+    },
+    "errors": {
+      "loadLeaderboard": "Error al cargar el leaderboard",
+      "loadStats": "Error al cargar tus estadísticas"
     }
   }
 }

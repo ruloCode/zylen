@@ -1,6 +1,7 @@
 import React from 'react';
 import { Coins, Candy, ShoppingCart, Moon, Coffee, Gift, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui';
+import { useLocale } from '@/hooks/useLocale';
 
 // Icon mapper for shop items
 const iconMap: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
@@ -54,6 +55,7 @@ export function ShopItem({
   category = 'other',
   onPurchase,
 }: ShopItemProps) {
+  const { t } = useLocale();
   const IconComponent = iconMap[iconName] || Gift;
   const categoryStyle = categoryColors[category] || categoryColors.other;
 
@@ -63,15 +65,6 @@ export function ShopItem({
       <div className="absolute inset-0 bg-gradient-to-br from-gold-100/30 to-teal-100/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl" />
 
       <div className="relative flex flex-col items-center text-center gap-3">
-        {/* Category Badge */}
-        {category && (
-          <div
-            className={`absolute -top-2 -right-2 px-2 py-0.5 rounded-full text-xs font-semibold category-badge ${categoryStyle.bg} ${categoryStyle.border} ${categoryStyle.text} border`}
-          >
-            {category.charAt(0).toUpperCase() + category.slice(1)}
-          </div>
-        )}
-
         {/* Icon with gradient background */}
         <div className="relative">
           <div className="icon-gradient-gold p-4 rounded-2xl shadow-glow-gold group-hover:shadow-glow-gold group-hover:scale-110 transition-all duration-300">
@@ -107,7 +100,7 @@ export function ShopItem({
           onClick={() => onPurchase(id)}
           className="w-full bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white font-semibold shadow-glow-teal hover:shadow-glow-teal transition-all duration-200 border-0"
         >
-          Purchase
+          {t('shop.buyNow')}
         </Button>
       </div>
     </div>

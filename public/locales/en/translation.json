@@ -26,6 +26,9 @@
     "streaks": "Streaks",
     "shop": "Shop",
     "chat": "Chat",
+    "social": "Social",
+    "leaderboard": "Leaderboard",
+    "profile": "Profile",
     "navigateTo": "Navigate to {{label}}"
   },
   "dashboard": {
@@ -342,6 +345,102 @@
       "inputLabel": "To confirm, type \"{{text}}\" exactly:",
       "inputError": "Text doesn't match. Type exactly as shown.",
       "confirmButton": "Delete Permanently"
+    }
+  },
+  "username": {
+    "title": "Username",
+    "choose": "Choose your username",
+    "placeholder": "yourUsername",
+    "available": "✓ Available",
+    "taken": "✗ Already taken",
+    "checking": "Checking...",
+    "suggestions": "Suggestions:",
+    "validation": {
+      "tooShort": "Minimum 3 characters",
+      "tooLong": "Maximum 20 characters",
+      "invalidChars": "Only letters, numbers and _"
+    },
+    "success": "Username set successfully!",
+    "error": "Failed to set username"
+  },
+  "social": {
+    "title": "Social",
+    "friends": "Friends",
+    "findFriends": "Find Friends",
+    "searchPlaceholder": "Search by username...",
+    "noFriends": "You haven't added friends yet",
+    "noRequests": "No pending requests",
+    "noResults": "No users found",
+    "addFriend": "Add Friend",
+    "removeFriend": "Remove Friend",
+    "acceptRequest": "Accept",
+    "rejectRequest": "Reject",
+    "cancelRequest": "Cancel",
+    "requestSent": "Request Sent",
+    "requestReceived": "Request Received",
+    "friends": "Friends",
+    "tabs": {
+      "friends": "Friends",
+      "requests": "Requests",
+      "search": "Find"
+    },
+    "requestsSent": "Sent",
+    "requestsReceived": "Received",
+    "friendAdded": "{{username}} added to your friends!",
+    "friendRemoved": "{{username}} removed from friends",
+    "requestAccepted": "You accepted {{username}}'s request",
+    "requestRejected": "Request rejected",
+    "requestCancelled": "Request cancelled",
+    "stats": {
+      "currentStreak": "Current Streak",
+      "longestStreak": "Best Streak",
+      "totalXP": "Total XP",
+      "points": "Points",
+      "level": "Level"
+    },
+    "errors": {
+      "loadFriends": "Failed to load friends list",
+      "sendRequest": "Failed to send friend request",
+      "acceptRequest": "Failed to accept request",
+      "rejectRequest": "Failed to reject request",
+      "removeFriend": "Failed to remove friend",
+      "searchUsers": "Failed to search users"
+    }
+  },
+  "leaderboard": {
+    "title": "Leaderboard",
+    "weekly": "Weekly",
+    "viewHistory": "View History",
+    "thisWeek": "This Week",
+    "weekOf": "Week of {{date}}",
+    "rank": "Rank",
+    "username": "User",
+    "weeklyXP": "Weekly XP",
+    "weeklyPoints": "Weekly Points",
+    "habitsCompleted": "Habits",
+    "yourRank": "Your Rank",
+    "notRanked": "Complete habits to appear on the leaderboard",
+    "topPlayers": "Top Players",
+    "you": "You",
+    "medal": {
+      "first": "🥇",
+      "second": "🥈",
+      "third": "🥉"
+    },
+    "tabs": {
+      "rankings": "Rankings",
+      "social": "Social",
+      "streaks": "Streaks"
+    },
+    "stats": {
+      "yourWeeklyXP": "Your Weekly XP",
+      "yourWeeklyPoints": "Your Weekly Points",
+      "yourHabitsCompleted": "Habits Completed",
+      "rank": "Rank #{{rank}}"
+    },
+    "errors": {
+      "loadLeaderboard": "Failed to load leaderboard",
+      "loadStats": "Failed to load your stats"
     }
   }
 }

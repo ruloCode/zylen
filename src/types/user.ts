@@ -1,6 +1,7 @@
 export interface User {
   id: string;
   name: string; // User name (now required)
+  username?: string; // Unique username for social features
   points: number; // Spendable currency for shop (separate from XP)
   totalXPEarned: number; // Total XP accumulated (for global level)
   level: number; // Global level (based on totalXPEarned)
@@ -17,4 +18,19 @@ export interface UserStats {
   currentBalance: number;
   currentStreak: number;
   longestStreak: number;
+}
+
+/**
+ * Public user profile data visible to other users for social features
+ */
+export interface PublicUserProfile {
+  id: string;
+  username: string;
+  level: number;
+  avatarUrl?: string;
+  currentStreak: number;
+  longestStreak: number;
+  totalXPEarned: number;
+  points: number;
+  createdAt: Date;
 }

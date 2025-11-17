@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Home, CheckSquare, Flame, ShoppingBag, MessageCircle } from 'lucide-react';
+import { Home, CheckSquare, ShoppingBag, MessageCircle, Trophy } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/utils';
 import { useLocale } from '@/hooks/useLocale';
@@ -24,41 +24,36 @@ export function Navigation() {
     {
       path: '/',
       icon: Home,
-      label: t('navigation.home'),
-      color: 'text-gold-600'
+      label: t('navigation.home')
     },
     {
       path: '/habits',
       icon: CheckSquare,
-      label: t('navigation.habits'),
-      color: 'text-teal-500'
+      label: t('navigation.habits')
     },
     {
-      path: '/streaks',
-      icon: Flame,
-      label: t('navigation.streaks'),
-      color: 'text-warning-500'
+      path: '/leaderboard',
+      icon: Trophy,
+      label: t('navigation.leaderboard')
     },
     {
       path: '/shop',
       icon: ShoppingBag,
-      label: t('navigation.shop'),
-      color: 'text-gold-700'
+      label: t('navigation.shop')
     },
     {
       path: '/chat',
       icon: MessageCircle,
-      label: t('navigation.chat'),
-      color: 'text-teal-600'
+      label: t('navigation.chat')
     }
   ];
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50" aria-label="Main navigation">
       {/* RPG HUD background with warm parchment glass */}
-      <div className="glass-card border-t-2 border-gold-200/40 px-4 py-3 shadow-soft-xl backdrop-blur-2xl">
-        <div className="max-w-md mx-auto flex justify-around items-center">
-          {navItems.map(({ path, icon: Icon, label, color }) => {
+      <div className="glass-card border-t-2 border-gold-200/40 px-2 py-3 shadow-soft-xl backdrop-blur-2xl">
+        <div className="max-w-2xl mx-auto flex justify-around items-center gap-1">
+          {navItems.map(({ path, icon: Icon, label }) => {
             const isActive = location.pathname === path;
 
             return (
@@ -69,11 +64,11 @@ export function Navigation() {
                 aria-label={`Navigate to ${label}`}
                 aria-current={isActive ? 'page' : undefined}
                 className={cn(
-                  'flex flex-col items-center gap-1.5 px-3 py-2 rounded-xl transition-all duration-300 relative',
+                  'flex flex-col items-center gap-1.5 px-2 py-2 rounded-xl transition-all duration-300 relative',
                   'font-body font-semibold',
                   'focus:outline-none focus-visible:ring-4 focus-visible:ring-gold-400/50 focus-visible:ring-offset-2',
                   isActive
-                    ? `${color} bg-gradient-to-br from-gold-100/80 to-gold-50/60 scale-110 shadow-soft-md border-2 border-gold-300/50`
+                    ? 'text-gold-700 bg-gradient-to-br from-gold-100/80 to-gold-50/60 scale-110 shadow-soft-md border-2 border-gold-300/50'
                     : 'text-gray-600 hover:text-gold-700 hover:bg-parchment-50/40 hover:scale-105'
                 )}
               >
@@ -88,7 +83,7 @@ export function Navigation() {
                   isActive && 'drop-shadow-lg'
                 )}>
                   <Icon
-                    size={24}
+                    size={22}
                     strokeWidth={isActive ? 2.5 : 2}
                     className="transition-all duration-200"
                   />

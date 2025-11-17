@@ -7,6 +7,7 @@ export interface OnboardingState {
 
 export interface OnboardingData {
   userName?: string;
+  username?: string; // Unique username for social features
   avatarUrl?: string; // Selected avatar URL (Rulo or Dani)
   selectedLifeAreaIds?: string[]; // IDs of selected life areas
   createdHabits?: Array<{
@@ -26,9 +27,10 @@ export interface OnboardingStep {
 
 export const ONBOARDING_STEPS = {
   WELCOME: 0,
-  LIFE_AREAS: 1,
-  HABITS: 2,
-  TUTORIAL: 3,
+  USERNAME: 1,
+  LIFE_AREAS: 2,
+  HABITS: 3,
+  TUTORIAL: 4,
 } as const;
 
-export const TOTAL_ONBOARDING_STEPS = 4;
+export const TOTAL_ONBOARDING_STEPS = 5;

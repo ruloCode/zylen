@@ -14,6 +14,7 @@ import type { Habit, HabitCompletion } from '@/types/habit';
 import { HabitsServiceError, HABIT_ERROR_CODES } from '@/types/errors';
 import { getAuthUserId, getTodayDateRange } from './utils';
 import { mapHabitRowToHabit, mapHabitCompletionRowToHabitCompletion } from './mappers';
+import { trackHabitCompletion } from './leaderboard.service';
 
 /**
  * Extended Habit type that includes today's completion status
@@ -227,6 +228,7 @@ export class HabitsService {
    * 3. Update user points and XP
    * 4. Update life area XP and level
    * 5. Update streak (via separate service call)
+   * 6. Track completion in weekly leaderboard
    *
    * @throws {HabitsServiceError} if already completed or operation fails
    */
@@ -248,6 +250,15 @@ export class HabitsService {
         }
         throw new HabitsServiceError(error.message);
       }
+
+      // Track completion in weekly leaderboard (non-blocking)
+      trackHabitCompletion(
+        userId,
+        data.xp_earned,
+        data.points_earned || Math.floor(data.xp_earned * 0.5)
+      ).catch((err) => {
+        console.warn('Failed to track habit completion in leaderboard:', err);
+      });
 
       return {
         habitId,
