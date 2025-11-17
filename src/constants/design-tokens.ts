@@ -1,229 +1,181 @@
 /**
- * MyWay (LifeQuest) Design System
- * Dark Fantasy RPG Visual Identity
- * Mystical + Modern | Dark Atmospheric | Neon Green Accents
+ * Zylen Design System
+ * Dark Fantasy MMORPG Visual Identity (Dofus-inspired)
+ * Deep Teal-Black | Lime Green Accents | Vibrant Character Cards
  */
 
 // ========================================
-// COLOR PALETTE - DARK FANTASY
+// COLOR PALETTE - DOFUS THEME
 // ========================================
 
 export const colors = {
-  // Primary Dark Charcoal (Main backgrounds)
+  // Deep backgrounds - Dark teal/charcoal theme
+  deepTeal: {
+    500: '#0B191D', // rgb(11, 25, 29) - Main body background
+  },
+
   charcoal: {
     50: '#F5F5F6',
     100: '#E8E9EA',
     200: '#D1D3D5',
-    300: '#A9ACAF',
-    400: '#6B6F73',
-    500: '#1A1E1F', // Primary dark charcoal
-    600: '#161A1B',
+    300: '#474341', // rgb(71, 65, 61) - Buttons, selector
+    400: '#2E2A27', // rgb(46, 42, 39) - UI elements
+    500: '#171412', // rgb(23, 20, 18) - Navigation, cards
+    600: '#0E0C0B', // rgb(14, 12, 11) - Very dark elements
     700: '#121516',
     800: '#0E1011',
-    900: '#0A0C0D',
+    900: '#000000', // Pure black
   },
 
-  // Primary Accent - Neon Green (Interactive elements, CTAs)
-  neon: {
-    50: '#F4FEF0',
-    100: '#E6FCDC',
-    200: '#D4FABD',
-    300: '#BBFF6A', // Soft lime (secondary accent)
-    400: '#9BEA63', // Primary neon green
-    500: '#7FD854',
-    600: '#66C042',
-    700: '#4FA332',
-    800: '#3D8527',
-    900: '#2E6B1D',
+  // Vibrant accent colors - Lime/Yellow-Green (Dofus primary)
+  lime: {
+    50: '#F9FDEC',
+    100: '#EFF9D2',
+    200: '#E0F5A5',
+    300: '#C8ED6E',
+    400: '#B2E448',
+    500: '#89B820', // rgb(137, 184, 32) - PRIMARY LIME GREEN
+    600: '#7AA51C',
+    700: '#689119',
+    800: '#567D16',
+    900: '#446913',
   },
 
-  // Deep Forest Green (Highlights, success states)
-  forest: {
-    50: '#F0F7F4',
-    100: '#D9EDE3',
-    200: '#B3DBC7',
-    300: '#8CC9AB',
-    400: '#66B78F',
-    500: '#3D9970', // Deep forest green
-    600: '#327D5C',
-    700: '#276148',
-    800: '#1C4534',
-    900: '#112920',
+  yellowGreen: {
+    400: '#B9C932', // Light yellow-green
+    500: '#AAB700', // rgb(170, 183, 0) - Yellow-green accent
+    600: '#97A800', // rgb(151, 168, 0) - Darker lime (hover)
+    700: '#808F00',
+    800: '#6A7600',
+    900: '#545D00',
   },
 
-  // Fantasy Silver/Steel (Icons, borders, dividers)
-  steel: {
-    50: '#F8F9FA',
-    100: '#E9ECEF',
-    200: '#DEE2E6',
-    300: '#CED4DA',
-    400: '#ADB5BD',
-    500: '#8B949E', // Fantasy steel
-    600: '#6C757D',
-    700: '#495057',
-    800: '#343A40',
-    900: '#212529',
+  // Text colors - White/Gray hierarchy (improved contrast)
+  text: {
+    primary: '#FFFFFF',     // Pure white rgb(255, 255, 255)
+    secondary: '#DEDEDE',   // Light gray rgb(222, 222, 222)
+    tertiary: '#BFBFBF',    // Light-medium gray rgb(191, 191, 191) - improved contrast
+    dark: '#333333',        // Dark gray rgb(51, 51, 51)
+    muted: '#BFBFBF',       // Light muted gray rgb(191, 191, 191) - improved contrast
   },
 
-  // Warm Pale Tones (For portrait headers, skin tones)
-  pale: {
-    50: '#FFF9F5',
-    100: '#FFF3EB',
-    200: '#FFE7D6',
-    300: '#FFD4B8',
-    400: '#FFC299',
-    500: '#FFAD7A', // Warm pale skin
-    600: '#E69565',
-    700: '#CC7E50',
-    800: '#B3663B',
-    900: '#994F26',
+  brown: {
+    light: '#362712',       // rgb(54, 39, 18) - Card titles
+    dark: '#5B360E',        // rgb(91, 54, 14) - Darker brown
   },
 
-  // Semantic Colors - Muted Dark Fantasy
-  success: {
-    50: '#F0FAF4',
-    100: '#D9F2E3',
-    200: '#B3E5C7',
-    300: '#8CD8AB',
-    400: '#66CB8F',
-    500: '#3FBE73', // Muted green success
-    600: '#33A05F',
-    700: '#26824B',
-    800: '#1A6437',
-    900: '#0D4623',
+  // Vibrant life area colors - Dofus character card style (saturated & bright)
+  vibrant: {
+    red: '#DC3232',         // Bright red rgb(220, 50, 50) - Health
+    green: '#32C850',       // Bright green rgb(50, 200, 80) - Finance
+    purple: '#B43CC8',      // Bright purple rgb(180, 60, 200) - Creativity
+    blue: '#3296FF',        // Bright blue rgb(50, 150, 255) - Social
+    orange: '#FF8C32',      // Bright orange rgb(255, 140, 50) - Family
+    cyan: '#32C8DC',        // Bright cyan rgb(50, 200, 220) - Career
+    pink: '#E752A3',        // Bright pink/magenta
+    yellow: '#FFE632',      // Bright yellow rgb(255, 230, 50)
   },
 
-  warning: {
-    50: '#FFFBEA',
-    100: '#FFF3C4',
-    200: '#FCE588',
-    300: '#FADB5F',
-    400: '#F7C948', // Amber glow
-    500: '#F0B429',
-    600: '#DE911D',
-    700: '#CB6E17',
-    800: '#B44D12',
-    900: '#8D2B0B',
-  },
-
-  danger: {
-    50: '#FFF5F5',
-    100: '#FED7D7',
-    200: '#FEB2B2',
-    300: '#FC8181',
-    400: '#F56565',
-    500: '#C53030', // Muted red danger
-    600: '#9B2C2C',
-    700: '#742A2A',
-    800: '#5F2121',
-    900: '#4A1818',
-  },
-
-  // Additional Mystical Accents
-  mystic: {
-    purple: '#8B5CF6',  // Soft purple for magic effects
-    cyan: '#22D3EE',    // Cyan for water/mana
-    amber: '#F59E0B',   // Amber for quest markers
-  },
+  // Semantic colors
+  success: '#42B381',       // Jade green (keep)
+  danger: '#E87481',        // Rose red (keep)
+  warning: '#FFC107',       // Amber (keep)
+  info: '#3296FF',          // Blue info
 };
 
 // ========================================
-// GRADIENTS - DARK FANTASY
+// GRADIENTS - DOFUS THEME
 // ========================================
 
 export const gradients = {
-  // Background gradients
-  darkAtmosphere: 'linear-gradient(180deg, #1A1E1F 0%, #0E1011 50%, #0A0C0D 100%)',
-  forestDepth: 'linear-gradient(135deg, #1A1E1F 0%, #1C4534 100%)',
-  charcoalVignette: 'radial-gradient(circle at center, #1A1E1F 0%, #0A0C0D 100%)',
+  // Background gradients (minimal - Dofus uses solid colors mostly)
+  darkAtmosphere: 'linear-gradient(180deg, #0B191D 0%, #000000 100%)',
 
-  // Neon glow gradients
-  neonGlow: 'linear-gradient(135deg, #9BEA63 0%, #BBFF6A 100%)',
-  forestGlow: 'linear-gradient(135deg, #3D9970 0%, #66B78F 100%)',
-  steelShine: 'linear-gradient(135deg, #8B949E 0%, #CED4DA 100%)',
+  // Lime green gradients
+  limeGradient: 'linear-gradient(135deg, #89B820 0%, #AAB700 100%)',
+  limeButton: 'linear-gradient(to bottom right, #89B820, #97A800)',
 
-  // Interactive element glows
-  ctaGlow: 'radial-gradient(circle, rgba(155, 234, 99, 0.4) 0%, transparent 70%)',
-  successGlow: 'radial-gradient(circle, rgba(63, 190, 115, 0.3) 0%, transparent 70%)',
-  warningGlow: 'radial-gradient(circle, rgba(247, 201, 72, 0.3) 0%, transparent 70%)',
-
-  // Rim light effects (anime-style)
-  neonRimLight: 'linear-gradient(135deg, transparent 0%, #9BEA63 100%)',
-  steelRimLight: 'linear-gradient(135deg, transparent 0%, #8B949E 100%)',
-
-  // Soft vignettes for portrait headers
-  portraitVignette: 'radial-gradient(ellipse at center, transparent 0%, rgba(26, 30, 31, 0.8) 100%)',
+  // Vibrant card gradients
+  vibrantRed: 'linear-gradient(135deg, #DC3232 0%, #B42828 100%)',
+  vibrantGreen: 'linear-gradient(135deg, #32C850 0%, #28A040 100%)',
+  vibrantPurple: 'linear-gradient(135deg, #B43CC8 0%, #9030A0 100%)',
+  vibrantBlue: 'linear-gradient(135deg, #3296FF 0%, #2878CC 100%)',
+  vibrantOrange: 'linear-gradient(135deg, #FF8C32 0%, #CC7028 100%)',
+  vibrantCyan: 'linear-gradient(135deg, #32C8DC 0%, #28A0B0 100%)',
 };
 
 // ========================================
-// TYPOGRAPHY
+// TYPOGRAPHY - DOFUS STYLE
 // ========================================
 
 export const typography = {
   // Font families
   fontFamily: {
-    // Clean sans for body (modern, readable)
-    sans: '"Inter", "Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+    // Body font (modern, readable)
+    sans: '"Nunito", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
 
-    // Display font for headings (can be fantasy-inspired)
+    // Display font for headings (bold, uppercase)
     display: '"Space Grotesk", "Inter", -apple-system, BlinkMacSystemFont, sans-serif',
 
-    // Optional fantasy accent for special UI elements
-    fantasy: '"Cinzel", "Cormorant", serif',
+    // Buttons - similar to lexend (bold, geometric)
+    button: '"Nunito", "Inter", -apple-system, BlinkMacSystemFont, sans-serif',
 
-    // Monospace for code/stats
+    // Monospace for stats
     mono: '"JetBrains Mono", "SF Mono", "Consolas", monospace',
   },
 
-  // Font sizes
+  // Font sizes - Dofus scale
   fontSize: {
-    xs: '0.75rem',      // 12px
-    sm: '0.875rem',     // 14px
-    base: '1rem',       // 16px
-    lg: '1.125rem',     // 18px
-    xl: '1.25rem',      // 20px
-    '2xl': '1.5rem',    // 24px
-    '3xl': '1.875rem',  // 30px
+    xs: '0.6875rem',    // 11px - Small text (footer, captions)
+    sm: '0.75rem',      // 12px - Footer links, small UI
+    base: '0.9375rem',  // 15px - Body text (Dofus default)
+    md: '1rem',         // 16px - Language selector
+    lg: '1.125rem',     // 18px - Navigation buttons, CTA buttons
+    xl: '1.25rem',      // 20px - Subheadings
+    '2xl': '1.5rem',    // 24px - Section headers
+    '3xl': '1.875rem',  // 30px - Large headers
     '4xl': '2.25rem',   // 36px
-    '5xl': '3rem',      // 48px
+    '5xl': '3rem',      // 48px - Hero title (CLASES)
     '6xl': '3.75rem',   // 60px
   },
 
-  // Font weights
+  // Font weights - Dofus is bold
   fontWeight: {
     normal: 400,
     medium: 500,
     semibold: 600,
-    bold: 700,
+    bold: 700,          // Primary weight for Dofus style
     extrabold: 800,
   },
 
   // Line heights
   lineHeight: {
-    tight: 1.25,
-    normal: 1.5,
+    tight: 1.25,        // Dofus has tight line height
+    normal: 1.43,       // 21.43/15 ratio from Dofus
     relaxed: 1.75,
   },
 
-  // Letter spacing
+  // Letter spacing - Dofus uses slight tracking
   letterSpacing: {
     tight: '-0.02em',
     normal: '0',
-    wide: '0.05em',
+    wide: '0.05em',     // For uppercase text
   },
 };
 
 // ========================================
-// SPACING SCALE
+// SPACING SCALE - DOFUS
 // ========================================
 
 export const spacing = {
   0: '0',
   1: '0.25rem',   // 4px
   2: '0.5rem',    // 8px
-  3: '0.75rem',   // 12px
+  2.5: '0.625rem', // 10px - Dofus button padding
+  3: '0.75rem',   // 12px - Dofus nav/footer padding
   4: '1rem',      // 16px
-  6: '1.5rem',    // 24px
+  4.5: '1.125rem', // 18px - Dofus button padding
+  6: '1.5rem',    // 24px - Dofus filter margin
   8: '2rem',      // 32px
   10: '2.5rem',   // 40px
   12: '3rem',     // 48px
@@ -233,72 +185,67 @@ export const spacing = {
 };
 
 // ========================================
-// BORDER RADIUS
+// BORDER RADIUS - DOFUS STYLE
 // ========================================
 
 export const borderRadius = {
-  none: '0',
-  sm: '0.5rem',    // 8px
-  md: '0.75rem',   // 12px
-  lg: '1rem',      // 16px
-  xl: '1.25rem',   // 20px
-  '2xl': '1.5rem', // 24px
-  '3xl': '2rem',   // 32px
+  none: '0',          // Sharp corners for cards (Dofus style)
+  sm: '0.375rem',     // 6px - Navigation
+  md: '0.625rem',     // 10px - Buttons, language selector
+  lg: '1rem',         // 16px
+  xl: '1.25rem',      // 20px
+  '2xl': '1.5rem',    // 24px
+  '3xl': '2rem',      // 32px
   full: '9999px',
 };
 
 // ========================================
-// SHADOWS - DARK FANTASY
+// SHADOWS - DOFUS STYLE
 // ========================================
 
 export const shadows = {
-  // Soft elevation shadows (20-30px blur)
-  soft: '0 10px 20px rgba(0, 0, 0, 0.3)',
-  softMd: '0 15px 25px rgba(0, 0, 0, 0.4)',
-  softLg: '0 20px 30px rgba(0, 0, 0, 0.5)',
-  softXl: '0 25px 40px rgba(0, 0, 0, 0.6)',
+  // Dofus shadows (simple black shadows)
+  dofusLight: '0px 0px 3px 0px rgba(0, 0, 0, 0.5)',
+  dofusMedium: '0px 0px 4px 0px rgb(0, 0, 0)',
+  dofusStrong: '0px 0px 5px 0px rgb(0, 0, 0)',
+  dofusHover: '0px 0px 8px 0px rgba(0, 0, 0, 0.8)',
 
-  // Neon glow effects
-  neonGlow: '0 0 20px rgba(155, 234, 99, 0.5), 0 0 40px rgba(155, 234, 99, 0.3)',
-  neonGlowStrong: '0 0 30px rgba(155, 234, 99, 0.7), 0 0 60px rgba(155, 234, 99, 0.4)',
-  forestGlow: '0 0 20px rgba(61, 153, 112, 0.4), 0 0 40px rgba(61, 153, 112, 0.2)',
-  amberGlow: '0 0 20px rgba(247, 201, 72, 0.4)',
+  // Lime green glows
+  limeGlow: '0px 0px 8px 0px rgba(137, 184, 32, 0.5)',
+  limeGlowStrong: '0px 0px 12px 0px rgba(137, 184, 32, 0.7)',
 
-  // Subtle inner glows (for interactive states)
-  innerNeon: 'inset 0 0 20px rgba(155, 234, 99, 0.2)',
-  innerForest: 'inset 0 0 20px rgba(61, 153, 112, 0.15)',
+  // Success glow
+  successGlow: '0px 0px 8px 0px rgba(66, 179, 129, 0.5)',
 
-  // Rim light shadows (anime-style edge highlights)
-  rimNeon: 'inset -1px -1px 0 rgba(155, 234, 99, 0.6)',
-  rimSteel: 'inset -1px -1px 0 rgba(139, 148, 158, 0.4)',
+  // Text shadows
+  textShadowLight: '0px 1px 1px rgb(51, 51, 51)',
+  textShadowDark: '0px 1px 1px rgb(0, 0, 0)',
 };
 
 // ========================================
-// ANIMATIONS
+// ANIMATIONS - DOFUS STYLE
 // ========================================
 
 export const animations = {
-  // Duration
+  // Duration - Dofus uses quick transitions
   duration: {
     fast: '150ms',
-    normal: '300ms',
-    slow: '500ms',
-    slower: '800ms',
+    normal: '200ms',    // Dofus standard: 0.2s
+    slow: '300ms',
+    slower: '500ms',
   },
 
-  // Easing
+  // Easing - Dofus uses ease-in-out
   easing: {
     easeIn: 'cubic-bezier(0.4, 0, 1, 1)',
     easeOut: 'cubic-bezier(0, 0, 0.2, 1)',
-    easeInOut: 'cubic-bezier(0.4, 0, 0.2, 1)',
+    easeInOut: 'ease-in-out',  // Dofus standard
   },
 
   // Keyframe names (defined in CSS)
   keyframes: {
-    neonPulse: 'neon-pulse',
-    glowBreath: 'glow-breath',
-    shimmerNeon: 'shimmer-neon',
-    floatGentle: 'float-gentle',
+    filterFade: 'filter-fade',
+    cardLift: 'card-lift',
     fadeIn: 'fade-in',
     slideUp: 'slide-up',
     scaleIn: 'scale-in',
@@ -306,16 +253,17 @@ export const animations = {
 };
 
 // ========================================
-// ICON SIZES
+// ICON SIZES - DOFUS
 // ========================================
 
 export const iconSizes = {
   xs: 16,
   sm: 20,
-  md: 24,
+  md: 24,         // Standard icon size
   lg: 32,
   xl: 48,
-  '2xl': 64,
+  '2xl': 64,      // Large life area icons
+  '3xl': 96,      // Hero icons
 };
 
 // ========================================
@@ -334,56 +282,73 @@ export const zIndex = {
 };
 
 // ========================================
-// COMPONENT-SPECIFIC TOKENS
+// COMPONENT-SPECIFIC TOKENS - DOFUS
 // ========================================
 
 export const components = {
-  // Button
+  // Button - Dofus style
   button: {
     height: {
-      sm: '2rem',    // 32px
-      md: '2.5rem',  // 40px
-      lg: '3rem',    // 48px
+      sm: '2rem',       // 32px
+      md: '2.5rem',     // 40px
+      lg: '3rem',       // 48px
     },
     padding: {
-      sm: '0.5rem 1rem',
-      md: '0.75rem 1.5rem',
-      lg: '1rem 2rem',
+      sm: '0.5rem 0.75rem',    // 8px 12px
+      md: '0.625rem 1.125rem',  // 10px 18px - Dofus CTA
+      lg: '0.75rem 1.5rem',     // 12px 24px
     },
+    borderRadius: '0.625rem',   // 10px
+    fontSize: '1.125rem',       // 18px
+    fontWeight: 700,
+    textTransform: 'uppercase' as const,
   },
 
-  // Card
+  // Card - Dofus style (sharp corners)
   card: {
     padding: {
-      sm: '1rem',
-      md: '1.5rem',
-      lg: '2rem',
+      sm: '0.75rem',    // 12px
+      md: '1rem',       // 16px
+      lg: '1.5rem',     // 24px
     },
-    borderWidth: '1px',
-    glowBorderWidth: '2px',
+    borderWidth: '0px',           // No borders in Dofus
+    borderRadius: '0px',          // Sharp corners
+    shadow: '0px 0px 4px 0px rgb(0, 0, 0)',
   },
 
-  // Chat Bubble (RPG dialogue)
-  chatBubble: {
-    maxWidth: '80%',
-    padding: '1rem 1.25rem',
-    borderRadius: '1.25rem',
+  // Filter button - Diamond shape
+  filterButton: {
+    size: '100px',               // 100px × 100px
+    inactiveOpacity: 0.6,
+    activeOpacity: 1,
+    transition: '0.2s ease-in-out',
   },
 
-  // Progress Bar (XP with glowing edges)
+  // Life area card - Dofus character card style
+  lifeAreaCard: {
+    imageSize: '256px × 250px',  // Dofus card dimensions
+    titleBarHeight: '60px',
+    iconSize: '64px',
+    borderRadius: '0px',         // Sharp corners
+  },
+
+  // Progress Bar - Simple for Dofus
   progressBar: {
     height: {
-      sm: '0.375rem',  // 6px
-      md: '0.625rem',  // 10px
-      lg: '1rem',      // 16px
+      sm: '0.25rem',    // 4px
+      md: '0.5rem',     // 8px
+      lg: '0.75rem',    // 12px
     },
-    glowHeight: '2px',
+    borderRadius: '0px', // Sharp edges
   },
 
-  // Navigation
+  // Navigation - Dofus style
   navigation: {
-    height: '4.5rem',    // 72px
-    iconSize: '1.5rem',  // 24px
+    height: '4.25rem',    // 68px - Dofus nav height
+    iconSize: '1.5rem',   // 24px
+    borderRadius: '0.375rem', // 6px
+    shadow: '0px 0px 3px 0px rgba(0, 0, 0, 0.5)',
+    background: 'rgba(23, 20, 18, 0.85)',
   },
 };
 

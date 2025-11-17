@@ -1,6 +1,6 @@
-/* MyWay (LifeQuest) - RPG-inspired Design System */
+/* Zylen - Dark Fantasy MMORPG Design System (Dofus-inspired) */
 
-/* Import Google Fonts - Nunito (body) & Space Grotesk (display) */
+/* Import Google Fonts - Nunito (body) & Space Grotesk (display/bold) */
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
@@ -9,115 +9,125 @@
 
 @layer base {
   :root {
-    /* Base semantic colors */
-    --background: 0 0% 100%;
-    --foreground: 222.2 47.4% 11.2%;
+    /* Base semantic colors - Dark Dofus theme */
+    --background: 191 45% 8%;      /* Deep teal-black rgb(11, 25, 29) */
+    --foreground: 0 0% 100%;       /* Pure white text */
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 20 6% 9%;             /* Dark brown muted */
+    --muted-foreground: 0 0% 75%;  /* Light gray text rgb(191, 191, 191) - improved contrast */
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 47.4% 11.2%;
+    --popover: 20 6% 9%;           /* Dark brown */
+    --popover-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
+    --border: 20 8% 10%;           /* Charcoal border */
+    --input: 20 8% 10%;            /* Charcoal input */
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 47.4% 11.2%;
+    --card: 20 8% 10%;             /* Dark charcoal cards */
+    --card-foreground: 0 0% 100%;
 
-    --primary: 45 100% 51%;        /* Warm gold primary */
+    --primary: 76 73% 62%;         /* Lime green rgb(137, 184, 32) */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 174 55% 41%;      /* Teal accent */
+    --secondary: 65 100% 36%;      /* Yellow-green rgb(170, 183, 0) */
     --secondary-foreground: 0 0% 100%;
 
-    --accent: 174 55% 41%;         /* Teal accent */
+    --accent: 76 73% 62%;          /* Lime green accent */
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 350 81% 71%;    /* Rose red */
+    --destructive: 350 81% 71%;    /* Rose red (keep for errors) */
     --destructive-foreground: 0 0% 100%;
 
-    --ring: 45 100% 51%;
+    --ring: 76 73% 62%;            /* Lime green ring */
 
-    --radius: 0.75rem;             /* Slightly more rounded default */
+    --radius: 0rem;                /* Sharp corners by default - Dofus style */
 
-    /* MyWay RPG Color System (HSL for consistency with Tailwind) */
-    /* Primary warm gold palette */
-    --gold-50: 48 100% 94%;        /* #FFF8E1 */
-    --gold-100: 48 100% 90%;       /* #FFF3CC */
-    --gold-200: 48 100% 80%;       /* #FFE699 */
-    --gold-300: 48 100% 70%;       /* #FFD966 */
-    --gold-400: 48 100% 60%;       /* #FFCC33 */
-    --gold-500: 45 100% 68%;       /* #FFC857 - Primary warm gold */
-    --gold-600: 36 100% 64%;       /* #FFB74D - Rich gold */
-    --gold-700: 29 100% 58%;       /* #FFA726 */
-    --gold-800: 45 100% 48%;       /* #F4B400 - Highlight gold */
-    --gold-900: 45 100% 46%;       /* #E89F00 */
+    /* ========================================
+       DOFUS COLOR PALETTE
+       ======================================== */
 
-    /* Primary teal palette */
-    --teal-50: 174 75% 94%;        /* #E0F7F5 */
-    --teal-100: 174 69% 81%;       /* #B2EBE6 */
-    --teal-200: 174 62% 68%;       /* #80DED6 */
-    --teal-300: 174 56% 56%;       /* #4DD1C6 */
-    --teal-400: 174 62% 44%;       /* #2AB7A9 - Primary teal */
-    --teal-500: 174 55% 41%;       /* #26A69A */
-    --teal-600: 174 100% 27%;      /* #00897B */
-    --teal-700: 174 100% 24%;      /* #00796B */
-    --teal-800: 174 100% 20%;      /* #00695C */
-    --teal-900: 174 100% 13%;      /* #004D40 */
+    /* Deep backgrounds - Dark teal/charcoal theme */
+    --dofus-deep-teal: 191 45% 8%;      /* rgb(11, 25, 29) - Main body background */
+    --dofus-charcoal: 20 8% 10%;        /* rgb(23, 20, 18) - Navigation, cards */
+    --dofus-charcoal-alpha: 20 8% 10%;  /* rgba(23, 20, 18, 0.85) - Semi-transparent nav */
+    --dofus-black: 0 0% 0%;             /* Pure black for depth */
+    --dofus-dark-brown: 15 8% 17%;      /* rgb(46, 42, 39) - UI elements */
+    --dofus-gray-brown: 20 7% 26%;      /* rgb(71, 65, 61) - Buttons, selector */
 
-    /* Deep navy palette */
-    --navy-500: 210 30% 25%;       /* #2D3E50 - Deep navy */
-    --navy-600: 210 28% 21%;       /* #263849 */
-    --navy-700: 210 30% 18%;       /* #1F2937 */
+    /* Vibrant accent colors - Lime/Yellow-Green */
+    --lime-50: 76 85% 95%;              /* Very light lime */
+    --lime-100: 76 80% 85%;             /* Light lime */
+    --lime-200: 76 75% 75%;             /* Soft lime */
+    --lime-300: 76 73% 65%;             /* Medium lime */
+    --lime-400: 76 73% 55%;             /* Standard lime */
+    --lime-500: 76 73% 62%;             /* rgb(137, 184, 32) - PRIMARY LIME */
+    --lime-600: 65 100% 36%;            /* rgb(170, 183, 0) - Yellow-green */
+    --lime-700: 65 100% 33%;            /* rgb(151, 168, 0) - Darker lime (hover) */
+    --lime-800: 65 100% 28%;            /* Deep lime */
+    --lime-900: 65 100% 23%;            /* Very deep lime */
 
-    /* Soft parchment palette */
-    --parchment-50: 40 100% 99%;   /* #FFFDFB */
-    --parchment-100: 40 67% 95%;   /* #FBF5E8 */
-    --parchment-200: 40 59% 91%;   /* #F7EEDB - Primary parchment */
-    --parchment-300: 40 48% 86%;   /* #F0E4C8 */
+    /* Text colors - White/Gray hierarchy (improved contrast) */
+    --text-primary: 0 0% 100%;          /* Pure white rgb(255, 255, 255) */
+    --text-secondary: 0 0% 87%;         /* Light gray rgb(222, 222, 222) */
+    --text-tertiary: 0 0% 75%;          /* Light-medium gray rgb(191, 191, 191) - improved contrast */
+    --text-dark: 0 0% 20%;              /* Dark gray rgb(51, 51, 51) */
+    --text-brown: 30 50% 14%;           /* Dark brown rgb(54, 39, 18) - Card titles */
+    --text-brown-dark: 31 74% 21%;      /* Darker brown rgb(91, 54, 14) */
 
-    /* Dark charcoal palette */
-    --charcoal-500: 210 10% 11%;   /* #1A1D1F - Dark charcoal */
-    --charcoal-600: 210 12% 7%;    /* #131517 */
+    /* Vibrant life area colors - Dofus card style (saturated & bright) */
+    --vibrant-red: 0 76% 53%;           /* Bright red rgb(220, 50, 50) */
+    --vibrant-green: 140 60% 49%;       /* Bright green rgb(50, 200, 80) */
+    --vibrant-purple: 285 54% 51%;      /* Bright purple rgb(180, 60, 200) */
+    --vibrant-blue: 210 100% 60%;       /* Bright blue rgb(50, 150, 255) */
+    --vibrant-orange: 28 100% 60%;      /* Bright orange rgb(255, 140, 50) */
+    --vibrant-cyan: 186 63% 53%;        /* Bright cyan rgb(50, 200, 220) */
+    --vibrant-pink: 327 73% 64%;        /* Bright pink/magenta */
+    --vibrant-yellow: 48 100% 60%;      /* Bright yellow rgb(255, 230, 50) */
 
-    /* Semantic colors */
-    --success: 156 48% 44%;        /* #42B381 - Jade green */
-    --danger: 350 81% 71%;         /* #E87481 - Rose red */
-    --warning: 45 100% 51%;        /* #FFC107 - Amber */
+    /* Semantic colors - Adjusted for dark theme */
+    --success: 156 48% 44%;             /* Jade green (keep) */
+    --danger: 350 81% 71%;              /* Rose red (keep) */
+    --warning: 45 100% 51%;             /* Amber (keep) */
+    --info: 210 100% 60%;               /* Blue info */
+
+    /* Shadow colors for Dofus effect */
+    --shadow-color: 0 0% 0%;            /* Pure black shadows */
+    --shadow-alpha-light: 0 0% 0% / 0.5;
+    --shadow-alpha-medium: 0 0% 0% / 1;
+    --shadow-alpha-strong: 0 0% 0% / 1;
   }
 
+  /* Dark mode variant (same as default since we're dark by default) */
   :root[class~="dark"] {
-    --background: 210 30% 18%;     /* Navy dark */
-    --foreground: 210 15% 89%;
+    --background: 191 45% 8%;      /* Deep teal-black */
+    --foreground: 0 0% 100%;       /* Pure white */
 
-    --muted: 210 30% 15%;
-    --muted-foreground: 215.4 16.3% 56.9%;
+    --muted: 20 6% 9%;
+    --muted-foreground: 0 0% 75%;
 
-    --accent: 174 62% 44%;         /* Teal in dark mode */
+    --accent: 76 73% 62%;          /* Lime green */
     --accent-foreground: 0 0% 100%;
 
-    --popover: 210 30% 18%;
-    --popover-foreground: 215 20.2% 85.1%;
+    --popover: 20 6% 9%;
+    --popover-foreground: 0 0% 100%;
 
-    --border: 210 30% 25%;
-    --input: 210 30% 25%;
+    --border: 20 8% 10%;
+    --input: 20 8% 10%;
 
-    --card: 210 30% 18%;
-    --card-foreground: 210 15% 89%;
+    --card: 20 8% 10%;
+    --card-foreground: 0 0% 100%;
 
-    --primary: 45 100% 68%;        /* Warm gold stays bright in dark */
-    --primary-foreground: 210 30% 18%;
+    --primary: 76 73% 62%;         /* Lime green */
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 30% 21%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 65 100% 36%;
+    --secondary-foreground: 0 0% 100%;
 
     --destructive: 350 81% 71%;
     --destructive-foreground: 0 0% 100%;
 
-    --ring: 174 62% 44%;
+    --ring: 76 73% 62%;
 
-    --radius: 0.75rem;
+    --radius: 0rem;                /* Sharp corners */
   }
 }
 
@@ -127,8 +137,9 @@
   }
 
   body {
-    /* Warm hero background gradient with parchment/teal tones */
-    @apply bg-gradient-hero-bg text-foreground min-h-screen;
+    /* Deep teal-black background - Dofus style */
+    background-color: rgb(11, 25, 29);
+    @apply text-foreground min-h-screen;
     font-feature-settings: "rlig" 1, "calt" 1;
     font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Inter', 'SF Pro Display', 'Segoe UI', sans-serif;
   }
@@ -136,6 +147,7 @@
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
     font-weight: 700;
+    text-transform: uppercase;  /* Dofus style - uppercase headers */
   }
 }
 
@@ -169,340 +181,173 @@
   }
 
   /* ==========================================
-     RPG CARD STYLES
+     DOFUS CARD STYLES - Dark theme with sharp corners
      ========================================== */
 
-  /* Warm parchment card with soft glass effect */
+  /* Dark charcoal card - Dofus style */
   .rpg-card {
-    @apply bg-parchment-50/90 backdrop-blur-xl border-2 border-parchment-300/40 shadow-soft-lg rounded-2xl;
+    background-color: rgb(23, 20, 18);
+    border: 0px;
+    box-shadow: 0px 0px 4px 0px rgb(0, 0, 0);
+    border-radius: 0px;  /* Sharp corners */
+    transition: all 0.2s ease-in-out;
   }
 
-  /* Glass card with warm tint (replaces old glass-card) */
+  /* Dark glass card - simplified for Dofus */
   .glass-card {
-    @apply bg-parchment-50/80 backdrop-blur-xl border border-parchment-200/30 shadow-soft-md rounded-2xl;
+    background-color: rgba(23, 20, 18, 0.85);
+    backdrop-filter: blur(8px);
+    border: 0px;
+    box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.5);
+    border-radius: 0px;  /* Sharp corners */
   }
 
-  /* Elevated card with isometric shadow */
-  .card-isometric {
-    @apply bg-white/95 border-2 border-gold-200 rounded-2xl shadow-isometric;
-    transition: all 0.2s ease;
+  /* Vibrant card for life areas - Dofus character card style */
+  .vibrant-card {
+    border-radius: 0px;  /* Sharp corners */
+    box-shadow: 0px 0px 4px 0px rgb(0, 0, 0);
+    transition: all 0.2s ease-in-out;
   }
 
-  .card-isometric:hover {
-    @apply shadow-isometric-hover;
-    transform: translate(-2px, -2px);
-  }
-
-  /* ==========================================
-     ANIME LIGHTING EFFECTS
-     ========================================== */
-
-  /* Golden rim light effect (anime edge highlight) */
-  .rim-light-gold {
-    box-shadow: inset 0 -2px 0 rgba(255, 215, 0, 0.5),
-                inset 2px 0 4px rgba(255, 215, 0, 0.3);
-  }
-
-  /* Adventure glow (warm radial highlight) */
-  .adventure-glow {
-    position: relative;
-  }
-
-  .adventure-glow::before {
-    content: '';
-    position: absolute;
-    top: -10%;
-    left: -10%;
-    right: -10%;
-    bottom: -10%;
-    background: radial-gradient(circle at center, rgba(255, 200, 87, 0.3) 0%, transparent 70%);
-    border-radius: inherit;
-    z-index: -1;
-    pointer-events: none;
-  }
-
-  /* Dramatic anime shadow */
-  .dramatic-shadow {
-    @apply shadow-dramatic;
+  .vibrant-card:hover {
+    box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.8);
+    transform: translateY(-2px);
   }
 
   /* ==========================================
-     GLOW EFFECTS
+     DOFUS GLOW EFFECTS - Simplified and clean
      ========================================== */
 
-  /* Gold glow (for XP, rewards, achievements) */
-  .glow-gold {
-    @apply shadow-glow-gold;
-  }
-
-  /* Teal glow (for actions, progress) */
-  .glow-teal {
-    @apply shadow-glow-teal;
+  /* Lime green glow (for XP, rewards, primary actions) */
+  .glow-lime {
+    box-shadow: 0px 0px 8px 0px rgba(137, 184, 32, 0.5);
   }
 
   /* Success glow (for completions) */
   .glow-success {
-    @apply shadow-glow-success;
+    box-shadow: 0px 0px 8px 0px rgba(66, 179, 129, 0.5);
   }
 
-  /* Pulsing glow animation */
-  .glow-pulse {
-    @apply animate-glow-pulse;
-  }
-
-  /* ==========================================
-     GRADIENT TEXT
-     ========================================== */
-
-  .text-gradient-gold {
-    @apply bg-gradient-golden-hour bg-clip-text text-transparent;
-  }
-
-  .text-gradient-warm {
-    @apply bg-gradient-warm-teal bg-clip-text text-transparent;
-  }
-
-  .text-gradient-sunrise {
-    @apply bg-gradient-sunrise bg-clip-text text-transparent;
+  /* Vibrant glow for cards */
+  .glow-vibrant {
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.6);
   }
 
   /* ==========================================
-     BUTTON EFFECTS
+     DOFUS TEXT STYLES
      ========================================== */
 
-  /* Button with rim light on hover */
-  .btn-rim-light:hover {
-    @apply rim-light-gold;
+  /* Lime green gradient text */
+  .text-gradient-lime {
+    background: linear-gradient(135deg, rgb(137, 184, 32), rgb(170, 183, 0));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Uppercase bold for Dofus style */
+  .text-dofus {
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.05em;
   }
 
   /* ==========================================
-     FLOATING ANIMATIONS
+     DOFUS SIMPLE ANIMATIONS
      ========================================== */
 
-  .float-gentle {
-    @apply animate-float-gentle;
+  /* Simple fade transition for filters */
+  .filter-fade {
+    transition: opacity 0.2s ease-in-out;
   }
 
-  .float-medium {
-    @apply animate-float-medium;
-  }
-
-  .float-energetic {
-    @apply animate-float-energetic;
+  /* Hover lift for cards */
+  .card-lift:hover {
+    transform: translateY(-2px);
+    transition: transform 0.2s ease-in-out;
   }
 
   /* ==========================================
-     PROGRESS & XP EFFECTS
+     DOFUS FILTER BUTTONS - Diamond Shape
      ========================================== */
 
-  /* Shimmer effect for progress bars */
-  .shimmer-gold {
-    @apply animate-shimmer-gold;
-    background-size: 200% 100%;
-    background-image: linear-gradient(
-      90deg,
-      transparent 0%,
-      rgba(255, 215, 0, 0.6) 50%,
-      transparent 100%
-    );
+  /* Diamond shape filter button */
+  .filter-diamond {
+    width: 100px;
+    height: 100px;
+    transform: rotate(45deg);
+    transition: opacity 0.2s ease-in-out;
+    cursor: pointer;
+  }
+
+  .filter-diamond-inner {
+    transform: rotate(-45deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Active/Inactive states */
+  .filter-diamond.inactive {
+    opacity: 0.6;
+  }
+
+  .filter-diamond.active {
+    opacity: 1;
   }
 
   /* ==========================================
-     PARTICLE & SPARKLE EFFECTS
+     DOFUS BUTTON STYLES
      ========================================== */
 
-  .sparkle-rise {
-    @apply animate-sparkle-rise;
+  /* Primary lime green button - Dofus CTA style */
+  .btn-dofus-primary {
+    background-color: rgb(137, 184, 32);
+    color: white;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 10px 18px;
+    border-radius: 10px;
+    border: 0px;
+    transition: 0.2s ease-in-out;
+    font-size: 18px;
+    letter-spacing: 0.05em;
   }
 
-  .sparkle {
-    @apply animate-sparkle;
+  .btn-dofus-primary:hover {
+    background-color: rgb(151, 168, 0);
+  }
+
+  /* Secondary button - Gray-brown */
+  .btn-dofus-secondary {
+    background-color: rgb(71, 65, 61);
+    color: white;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 0px;
+    transition: 0.2s ease-in-out;
+  }
+
+  .btn-dofus-secondary:hover {
+    background-color: rgb(91, 85, 81);
   }
 
   /* ==========================================
-     FIRE & STREAK EFFECTS
+     DOFUS UTILITY CLASSES
      ========================================== */
 
-  .fire-flicker {
-    @apply animate-fire-flicker;
-  }
-
-  /* ==========================================
-     CELEBRATION EFFECTS
-     ========================================== */
-
-  .level-up-burst {
-    @apply animate-level-up-burst;
-  }
-
-  /* ==========================================
-     ISOMETRIC 3D DEPTH
-     ========================================== */
-
-  .iso-shadow {
-    @apply shadow-isometric;
-  }
-
-  .iso-shadow-hover {
-    @apply shadow-isometric-hover;
-  }
-
-  /* ==========================================
-     HERO BACKGROUNDS (Isometric Patterns)
-     ========================================== */
-
-  /* Low-poly mountain peaks */
-  .bg-mountains {
-    background-image:
-      linear-gradient(135deg, #FFC857 0%, #FFA726 50%, #FF8A65 100%),
-      repeating-linear-gradient(45deg, transparent, transparent 50px, rgba(255, 200, 87, 0.1) 50px, rgba(255, 200, 87, 0.1) 100px);
-  }
-
-  /* Isometric cube grid */
-  .bg-iso-grid {
-    background-color: #FFF8E1;
-    background-image:
-      linear-gradient(30deg, #F7EEDB 12%, transparent 12.5%, transparent 87%, #F7EEDB 87.5%, #F7EEDB),
-      linear-gradient(150deg, #F7EEDB 12%, transparent 12.5%, transparent 87%, #F7EEDB 87.5%, #F7EEDB),
-      linear-gradient(30deg, #F7EEDB 12%, transparent 12.5%, transparent 87%, #F7EEDB 87.5%, #F7EEDB),
-      linear-gradient(150deg, #F7EEDB 12%, transparent 12.5%, transparent 87%, #F7EEDB 87.5%, #F7EEDB);
-    background-size: 80px 140px;
-    background-position: 0 0, 0 0, 40px 70px, 40px 70px;
-  }
-
-  /* Geometric node network */
-  .bg-nodes {
-    background-color: #FFF8E1;
-    background-image: radial-gradient(circle at 25% 25%, rgba(255, 200, 87, 0.1) 2%, transparent 0%),
-                      radial-gradient(circle at 75% 75%, rgba(42, 183, 169, 0.1) 2%, transparent 0%);
-    background-size: 100px 100px;
-  }
-
-  /* Layered horizon (adventure journey) */
-  .bg-horizon {
-    background: linear-gradient(180deg,
-      #FFF8E1 0%,
-      #FFD966 25%,
-      #FFA726 50%,
-      #E0F7F5 75%,
-      #2AB7A9 100%);
-    opacity: 0.3;
-  }
-
-  /* Floating islands */
-  .bg-islands {
-    background-color: #E0F7F5;
-    background-image:
-      radial-gradient(ellipse at top, rgba(255, 200, 87, 0.2) 0%, transparent 50%),
-      radial-gradient(ellipse at bottom, rgba(42, 183, 169, 0.2) 0%, transparent 50%);
-    background-size: 200px 150px, 250px 180px;
-    background-position: 0% 0%, 50% 100%;
-  }
-
-  /* ==========================================
-     SHOP-SPECIFIC ANIMATIONS
-     ========================================== */
-
-  /* Coin icon rotation on hover */
-  .coin-spin {
-    @apply transition-transform duration-500;
-  }
-
-  .coin-spin:hover {
-    @apply rotate-[360deg];
-  }
-
-  /* Purchase button pulse */
-  .btn-purchase-pulse {
-    @apply animate-pulse;
-    animation-duration: 1.5s;
-  }
-
-  /* Item card hover lift */
-  .shop-item-hover {
-    @apply transition-all duration-300 ease-out;
-  }
-
-  .shop-item-hover:hover {
-    @apply scale-105 shadow-glow-gold;
-    transform: translateY(-4px) scale(1.05);
-  }
-
-  /* Category badge glow */
-  .category-badge {
-    @apply transition-all duration-200;
-  }
-
-  .category-badge:hover {
-    @apply scale-110 shadow-sm;
-  }
-
-  /* Points counter animation */
-  @keyframes points-pop {
-    0%, 100% {
-      transform: scale(1);
-    }
-    50% {
-      transform: scale(1.1);
-    }
-  }
-
-  .points-pop {
-    animation: points-pop 0.3s ease-in-out;
-  }
-
-  /* Purchase success animation */
-  @keyframes purchase-success {
-    0% {
-      transform: scale(1);
-      opacity: 1;
-    }
-    50% {
-      transform: scale(1.2) rotate(5deg);
-      opacity: 0.8;
-    }
-    100% {
-      transform: scale(1);
-      opacity: 1;
-    }
-  }
-
-  .purchase-success {
-    animation: purchase-success 0.5s ease-out;
-  }
-
-  /* Icon gradient background */
-  .icon-gradient-gold {
-    @apply bg-gradient-to-br from-gold-400 to-gold-600;
-  }
-
-  .icon-gradient-teal {
-    @apply bg-gradient-to-br from-teal-400 to-teal-600;
-  }
-
-  /* Glass modal overlay */
+  /* Modal overlay - dark */
   .modal-overlay {
-    @apply bg-charcoal-500/40 backdrop-blur-sm;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(4px);
   }
 
-  /* Shimmer loading effect */
-  @keyframes shimmer {
-    0% {
-      background-position: -200% center;
-    }
-    100% {
-      background-position: 200% center;
-    }
-  }
-
-  .shimmer {
-    background: linear-gradient(
-      90deg,
-      transparent 0%,
-      rgba(255, 200, 87, 0.3) 50%,
-      transparent 100%
-    );
-    background-size: 200% 100%;
-    animation: shimmer 2s infinite;
+  /* Simple transition class */
+  .transition-dofus {
+    transition: all 0.2s ease-in-out;
   }
 }

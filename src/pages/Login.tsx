@@ -27,17 +27,17 @@ export function Login() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-parchment-50 via-gold-50 to-parchment-100">
+      <div className="min-h-screen flex items-center justify-center bg-[rgb(11,25,29)]">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-500 mx-auto"></div>
-          <p className="mt-4 text-navy-700">{t('common.loading')}</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[rgb(137,184,32)] mx-auto"></div>
+          <p className="mt-4 text-white font-medium">{t('common.loading')}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-parchment-50 via-gold-50 to-parchment-100 px-4">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-[rgb(11,25,29)] px-4">
       {/* Language Switcher - Top Right */}
       <div className="absolute top-6 right-6">
         <LanguageSwitcher variant="compact" />
@@ -47,20 +47,20 @@ export function Login() {
       <div className="w-full max-w-md">
         {/* Logo and Branding */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center mb-4 glow-gold">
+          <div className="inline-flex items-center justify-center mb-4">
             <Logo size="lg" />
           </div>
-          <h1 className="text-3xl font-bold text-gradient-gold mb-2">
+          <h1 className="text-3xl font-extrabold text-white mb-2 uppercase tracking-wide">
             {t('app.name')}
           </h1>
-          <p className="text-navy-600 text-lg font-medium">
+          <p className="text-white/85 text-lg font-semibold">
             {t('app.tagline')}
           </p>
         </div>
 
         {/* Login Card */}
-        <div className="rpg-card p-8 rounded-2xl shadow-2xl glow-effect">
-          <h2 className="text-xl font-semibold text-navy-800 mb-6 text-center">
+        <div className="bg-[rgb(23,20,18)] p-8 rounded-none shadow-[0px_0px_4px_0px_rgb(0,0,0)]">
+          <h2 className="text-xl font-extrabold text-white mb-6 text-center uppercase tracking-wide">
             {t('auth.welcomeBack')}
           </h2>
 
@@ -68,7 +68,7 @@ export function Login() {
           <OAuthButtons />
 
           {/* Privacy Notice */}
-          <p className="text-xs text-navy-500 text-center mt-6">
+          <p className="text-xs text-white/75 text-center mt-6 font-medium">
             {t('auth.privacyNotice')}
           </p>
         </div>
@@ -104,11 +104,11 @@ interface FeatureProps {
 
 function Feature({ icon, title, description }: FeatureProps) {
   return (
-    <div className="flex items-start gap-3 text-navy-700">
+    <div className="flex items-start gap-3">
       <span className="text-2xl flex-shrink-0">{icon}</span>
       <div>
-        <p className="font-medium text-navy-800">{title}</p>
-        <p className="text-sm text-navy-600">{description}</p>
+        <p className="font-bold text-white">{title}</p>
+        <p className="text-sm text-white/85 font-medium">{description}</p>
       </div>
     </div>
   );

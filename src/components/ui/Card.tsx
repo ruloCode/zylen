@@ -1,6 +1,6 @@
 /**
- * MyWay (LifeQuest) Card Component
- * Warm RPG-styled cards with parchment backgrounds and golden accents
+ * Zylen Card Component
+ * Dofus-styled cards with dark backgrounds and sharp corners
  */
 
 import React from 'react';
@@ -8,75 +8,69 @@ import { cn } from '@/lib/utils';
 
 interface CardProps {
   children: React.ReactNode;
-  variant?: 'glass' | 'parchment' | 'isometric' | 'elevated';
+  variant?: 'dark' | 'charcoal' | 'vibrant' | 'transparent';
   padding?: 'sm' | 'md' | 'lg';
   className?: string;
-  withGlow?: boolean;
-  withFloat?: boolean;
   onClick?: () => void;
 }
 
 export function Card({
   children,
-  variant = 'glass',
+  variant = 'charcoal',
   padding = 'md',
   className = '',
-  withGlow = false,
-  withFloat = false,
   onClick
 }: CardProps) {
   const variants = {
-    // Warm glass effect with parchment tint
-    glass: `
-      bg-parchment-50/80 backdrop-blur-xl
-      border border-parchment-200/30
-      shadow-soft-md
+    // Dark charcoal - Dofus standard card
+    dark: `
+      bg-[rgb(23,20,18)]
+      shadow-[0px_0px_4px_0px_rgb(0,0,0)]
     `,
 
-    // Solid parchment card with more opacity
-    parchment: `
-      bg-parchment-50/95 backdrop-blur-lg
-      border-2 border-parchment-300/40
-      shadow-soft-lg
+    // Charcoal with slight transparency - Dofus nav style
+    charcoal: `
+      bg-[rgba(23,20,18,0.85)]
+      backdrop-blur-sm
+      shadow-[0px_0px_3px_0px_rgba(0,0,0,0.5)]
     `,
 
-    // Isometric shadow depth effect
-    isometric: `
-      bg-white/95
-      border-2 border-gold-200
-      shadow-isometric
-      hover:shadow-isometric-hover
-      transition-all duration-200
-      hover:-translate-x-0.5 hover:-translate-y-0.5
+    // Vibrant for special cards (life areas, characters)
+    vibrant: `
+      shadow-[0px_0px_4px_0px_rgb(0,0,0)]
+      hover:shadow-[0px_0px_8px_0px_rgba(0,0,0,0.8)]
+      hover:-translate-y-0.5
+      transition-all
+      duration-200
+      ease-in-out
     `,
 
-    // Elevated card with dramatic shadow
-    elevated: `
-      bg-gradient-to-br from-parchment-50 to-parchment-100
-      border-2 border-gold-300/50
-      shadow-dramatic
+    // Transparent with subtle border
+    transparent: `
+      bg-transparent
+      border
+      border-white/10
+      hover:border-white/20
+      transition-colors
+      duration-200
     `
   };
 
   const paddings = {
-    sm: 'p-4',
-    md: 'p-6',
-    lg: 'p-8'
+    sm: 'p-3',
+    md: 'p-4',
+    lg: 'p-6'
   };
 
-  const glowClass = withGlow ? 'glow-gold' : '';
-  const floatClass = withFloat ? 'float-gentle' : '';
-  const interactiveClass = onClick ? 'cursor-pointer hover:scale-[1.02] transition-transform duration-200' : '';
+  const interactiveClass = onClick ? 'cursor-pointer hover:shadow-[0px_0px_6px_0px_rgba(0,0,0,0.7)] transition-shadow duration-200' : '';
 
   return (
     <div
       onClick={onClick}
       className={cn(
-        'rounded-2xl',
+        'rounded-none',  // Sharp corners - Dofus style
         variants[variant],
         paddings[padding],
-        glowClass,
-        floatClass,
         interactiveClass,
         className
       )}
@@ -112,10 +106,10 @@ interface CardTitleProps {
 }
 
 export function CardTitle({ children, className = '', gradient = false }: CardTitleProps) {
-  const gradientClass = gradient ? 'text-gradient-gold' : 'text-navy-700';
+  const gradientClass = gradient ? 'text-gradient-lime' : 'text-white';
 
   return (
-    <h3 className={cn('font-display text-xl font-bold', gradientClass, className)}>
+    <h3 className={cn('font-display text-xl font-bold uppercase tracking-wide', gradientClass, className)}>
       {children}
     </h3>
   );
@@ -131,7 +125,7 @@ interface CardDescriptionProps {
 
 export function CardDescription({ children, className = '' }: CardDescriptionProps) {
   return (
-    <p className={cn('text-sm text-navy-500 font-body', className)}>
+    <p className={cn('text-sm text-white/85 font-body font-medium', className)}>
       {children}
     </p>
   );
@@ -163,7 +157,7 @@ interface CardFooterProps {
 
 export function CardFooter({ children, className = '' }: CardFooterProps) {
   return (
-    <div className={cn('mt-6 pt-4 border-t border-parchment-300/40', className)}>
+    <div className={cn('mt-6 pt-4 border-t border-white/10', className)}>
       {children}
     </div>
   );

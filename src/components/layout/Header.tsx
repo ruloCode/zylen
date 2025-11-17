@@ -41,7 +41,7 @@ export function Header() {
           <div className="hidden md:flex items-center gap-6">
             {/* Points */}
             <div className="flex items-center gap-2 px-3 py-1.5 bg-charcoal-700/50 rounded-lg border border-charcoal-600">
-              <Coins size={18} className="text-gold-400" aria-hidden="true" />
+              <Coins size={18} className="text-[rgb(137,184,32)]" aria-hidden="true" />
               <span className="text-sm font-semibold text-white">
                 {user.points.toLocaleString()}
               </span>
@@ -50,7 +50,7 @@ export function Header() {
 
             {/* Level */}
             <div className="flex items-center gap-2 px-3 py-1.5 bg-charcoal-700/50 rounded-lg border border-charcoal-600">
-              <Star size={18} className="text-teal-400" aria-hidden="true" />
+              <Star size={18} className="text-[rgb(137,184,32)]" aria-hidden="true" />
               <span className="text-sm font-semibold text-white">
                 Nv. {user.level}
               </span>
@@ -68,9 +68,9 @@ export function Header() {
               className={cn(
                 'flex items-center gap-2 px-3 py-2 rounded-lg',
                 'transition-all duration-200',
-                'focus:outline-none focus:ring-2 focus:ring-teal-400',
+                'focus:outline-none focus:ring-2 focus:ring-[rgb(137,184,32)]',
                 location.pathname === ROUTES.PROFILE
-                  ? 'bg-teal-500/20 border border-teal-500/50'
+                  ? 'bg-[rgb(137,184,32)]/20 border border-[rgb(137,184,32)]/50'
                   : 'bg-white/10 border border-white/20 hover:bg-white/20'
               )}
               aria-label="View profile"

@@ -1,3 +1,8 @@
+/**
+ * Zylen LifeAreaCard Component
+ * Dofus-inspired character card style with vibrant backgrounds and sharp corners
+ */
+
 import React from 'react';
 import { Heart, DollarSign, Palette, Users, Home, Briefcase } from 'lucide-react';
 import { ProgressBar } from '@/components/ui';
@@ -10,6 +15,7 @@ interface LifeAreaCardProps {
   totalXP: number;
   onClick?: () => void;
 }
+
 const iconMap = {
   Health: Heart,
   Finance: DollarSign,
@@ -18,13 +24,15 @@ const iconMap = {
   Family: Home,
   Career: Briefcase
 };
-const colorMap = {
-  Health: 'text-red-500',
-  Finance: 'text-green-500',
-  Creativity: 'text-purple-500',
-  Social: 'text-blue-500',
-  Family: 'text-orange-500',
-  Career: 'text-indigo-500'
+
+// Vibrant backgrounds - Dofus character card style
+const bgColorMap = {
+  Health: 'bg-[#DC3232]',         // Bright red
+  Finance: 'bg-[#32C850]',        // Bright green
+  Creativity: 'bg-[#B43CC8]',     // Bright purple
+  Social: 'bg-[#3296FF]',         // Bright blue
+  Family: 'bg-[#FF8C32]',         // Bright orange
+  Career: 'bg-[#32C8DC]'          // Bright cyan
 };
 
 const translationKeyMap = {
@@ -44,33 +52,56 @@ export function LifeAreaCard({
 }: LifeAreaCardProps) {
   const { t } = useLocale();
   const Icon = iconMap[area];
-  const colorClass = colorMap[area];
+  const bgColor = bgColorMap[area];
   const translatedArea = t(translationKeyMap[area]);
 
   // Calculate progress to next level
   const progress = getAreaLevelProgress(totalXP, level);
 
-  return <div
-    className="glass-card rounded-2xl p-4 hover:scale-105 transition-transform duration-200 cursor-pointer"
-    onClick={onClick}
-    role="button"
-    tabIndex={0}
-    onKeyDown={(e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        onClick?.();
-      }
-    }}
-  >
-      <div className="flex items-center gap-3 mb-3">
-        <div className={`${colorClass} bg-white/50 p-2 rounded-xl`}>
-          <Icon size={20} />
+  return (
+    <div
+      className="group cursor-pointer rounded-none shadow-[0px_0px_4px_0px_rgb(0,0,0)] hover:shadow-[0px_0px_8px_0px_rgba(0,0,0,0.8)] hover:-translate-y-0.5 transition-all duration-200 ease-in-out overflow-hidden"
+      onClick={onClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick?.();
+        }
+      }}
+    >
+      {/* Vibrant background section with icon - Dofus character card style */}
+      <div className={`${bgColor} relative flex items-center justify-center py-12 px-4`}>
+        {/* Large centered icon - white */}
+        <div className="relative z-10">
+          <Icon size={64} className="text-white drop-shadow-lg" strokeWidth={2} />
         </div>
-        <div className="flex-1">
-          <h3 className="font-semibold text-sm text-gray-800">{translatedArea}</h3>
-          <p className="text-xs text-gray-500">{t('common.level')} {level}</p>
+
+        {/* Level badge in top-right corner */}
+        <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-sm rounded-md px-2 py-1 text-white font-bold text-xs uppercase shadow-lg">
+          {t('common.level')} {level}
         </div>
       </div>
-      <ProgressBar current={progress.current} max={progress.max} showLabel={false} size="sm" />
-    </div>;
+
+      {/* Dark title bar at bottom - Dofus style */}
+      <div className="bg-[rgb(23,20,18)] px-4 py-3">
+        {/* Area name - uppercase, white, bold */}
+        <h3 className="font-display font-extrabold uppercase text-white text-center text-sm tracking-wide mb-2">
+          {translatedArea}
+        </h3>
+
+        {/* Progress bar - integrated into title bar */}
+        <div className="w-full">
+          <ProgressBar
+            current={progress.current}
+            max={progress.max}
+            showLabel={false}
+            size="sm"
+            variant="success"
+          />
+        </div>
+      </div>
+    </div>
+  );
 }

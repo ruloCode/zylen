@@ -55,11 +55,11 @@ export function OnboardingStep1({ onNext }: OnboardingStep1Props) {
 
       {/* Welcome Message */}
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-white mb-3 flex items-center justify-center gap-2">
-          <Sparkles className="text-gold-400" size={32} />
+        <h1 className="text-3xl font-extrabold text-white mb-3 flex items-center justify-center gap-2 uppercase tracking-wide">
+          <Sparkles className="text-[rgb(137,184,32)]" size={32} />
           {t('onboarding.step1.title')}
         </h1>
-        <p className="text-gray-300 text-lg">
+        <p className="text-white/85 text-lg font-semibold">
           {t('onboarding.step1.description')}
         </p>
       </div>
@@ -67,7 +67,7 @@ export function OnboardingStep1({ onNext }: OnboardingStep1Props) {
       {/* Name Input Form */}
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
+          <label htmlFor="name" className="block text-sm font-bold text-white/90 mb-2 uppercase tracking-wide">
             {t('onboarding.step1.nameLabel')}
           </label>
           <input
@@ -80,14 +80,14 @@ export function OnboardingStep1({ onNext }: OnboardingStep1Props) {
             }}
             placeholder={t('onboarding.step1.namePlaceholder')}
             className={cn(
-              'w-full px-4 py-3 rounded-xl',
-              'bg-charcoal-700 border-2',
-              'text-white placeholder-gray-500',
-              'focus:outline-none focus:ring-2 focus:ring-gold-400',
+              'w-full px-4 py-3 rounded-none',
+              'bg-[rgb(23,20,18)] border-2',
+              'text-white placeholder-white/50 font-medium',
+              'focus:outline-none focus:ring-2 focus:ring-[rgb(137,184,32)]',
               'transition-all duration-200',
               error
                 ? 'border-red-500 focus:border-red-500'
-                : 'border-charcoal-600 focus:border-gold-400'
+                : 'border-white/20 focus:border-[rgb(137,184,32)]'
             )}
             autoFocus
             maxLength={30}
@@ -101,7 +101,7 @@ export function OnboardingStep1({ onNext }: OnboardingStep1Props) {
 
         {/* Avatar Selection */}
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-3">
+          <label className="block text-sm font-bold text-white/90 mb-3 uppercase tracking-wide">
             {t('onboarding.step1.avatarLabel')}
           </label>
           <div className="grid grid-cols-2 gap-4">

@@ -51,7 +51,7 @@ export function Navigation() {
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50" aria-label="Main navigation">
       {/* RPG HUD background with warm parchment glass */}
-      <div className="glass-card border-t-2 border-gold-200/40 px-2 py-3 shadow-soft-xl backdrop-blur-2xl">
+      <div className="glass-card border-t-2 border-[rgb(137,184,32)]/40 px-2 py-3 shadow-soft-xl backdrop-blur-2xl">
         <div className="max-w-2xl mx-auto flex justify-around items-center gap-1">
           {navItems.map(({ path, icon: Icon, label }) => {
             const isActive = location.pathname === path;
@@ -66,10 +66,10 @@ export function Navigation() {
                 className={cn(
                   'flex flex-col items-center gap-1.5 px-2 py-2 rounded-xl transition-all duration-300 relative',
                   'font-body font-semibold',
-                  'focus:outline-none focus-visible:ring-4 focus-visible:ring-gold-400/50 focus-visible:ring-offset-2',
+                  'focus:outline-none focus-visible:ring-4 focus-visible:ring-[rgb(137,184,32)]/50 focus-visible:ring-offset-2',
                   isActive
-                    ? 'text-gold-700 bg-gradient-to-br from-gold-100/80 to-gold-50/60 scale-110 shadow-soft-md border-2 border-gold-300/50'
-                    : 'text-gray-600 hover:text-gold-700 hover:bg-parchment-50/40 hover:scale-105'
+                    ? 'text-[rgb(137,184,32)] bg-gradient-to-br from-[rgb(137,184,32)]/20 to-[rgb(137,184,32)]/10 scale-110 shadow-soft-md border-2 border-[rgb(137,184,32)]/50'
+                    : 'text-gray-600 hover:text-[rgb(137,184,32)] hover:bg-[rgb(137,184,32)]/10 hover:scale-105'
                 )}
               >
                 {/* Active indicator glow */}
@@ -90,7 +90,7 @@ export function Navigation() {
 
                   {/* Sparkle effect on active */}
                   {isActive && (
-                    <div className="absolute -top-1 -right-1 w-2 h-2 bg-gold-500 rounded-full animate-sparkle" />
+                    <div className="absolute -top-1 -right-1 w-2 h-2 bg-[rgb(137,184,32)] rounded-full animate-sparkle" />
                   )}
                 </div>
 
@@ -102,9 +102,9 @@ export function Navigation() {
                   {label}
                 </span>
 
-                {/* Golden underline on active */}
+                {/* Lime green underline on active */}
                 {isActive && (
-                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-gradient-to-r from-transparent via-gold-500 to-transparent rounded-full" />
+                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-gradient-to-r from-transparent via-[rgb(137,184,32)] to-transparent rounded-full" />
                 )}
               </button>
             );
@@ -113,7 +113,7 @@ export function Navigation() {
       </div>
 
       {/* Subtle top rim light */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold-400/50 to-transparent" />
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[rgb(137,184,32)]/50 to-transparent" />
     </nav>
   );
 }
