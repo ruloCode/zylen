@@ -105,7 +105,7 @@ export function OnboardingStep3({ onNext, onPrev }: OnboardingStep3Props) {
             {t('onboarding.step3.noHabits')}
           </p>
         )}
-      </div>
+      </ul>
 
       {/* Add Habit Form */}
       {showForm ? (
