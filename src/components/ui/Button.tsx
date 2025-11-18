@@ -8,6 +8,7 @@
  */
 
 import React from 'react';
+import { Loader2 } from 'lucide-react';
 
 interface ButtonProps {
   children: React.ReactNode;
@@ -16,6 +17,7 @@ interface ButtonProps {
   onClick?: () => void;
   className?: string;
   disabled?: boolean;
+  isLoading?: boolean;
   type?: 'button' | 'submit' | 'reset';
   'aria-label'?: string;
 }
@@ -27,6 +29,7 @@ export function Button({
   onClick,
   className = '',
   disabled = false,
+  isLoading = false,
   type = 'button',
   'aria-label': ariaLabel
 }: ButtonProps) {
@@ -96,19 +99,21 @@ export function Button({
   };
 
   const sizes = {
-    sm: 'px-3 py-2 text-sm h-8',               // Small buttons
-    md: 'px-[34px] py-[12px] text-[23px] h-auto',  // DOFUS standard: 12px 34px, 23px text
-    lg: 'px-[34px] py-[12px] text-[23px] h-auto'   // DOFUS large: same as md
+    sm: 'px-3 py-2.5 text-sm min-h-[44px]',               // Small buttons - WCAG compliant
+    md: 'px-[34px] py-[12px] text-[23px] min-h-[44px]',   // DOFUS standard: 12px 34px, 23px text
+    lg: 'px-[34px] py-[12px] text-[23px] min-h-[48px]'    // DOFUS large: slightly larger
   };
 
   return (
     <button
       type={type}
       onClick={onClick}
-      disabled={disabled}
+      disabled={disabled || isLoading}
       aria-label={ariaLabel}
+      aria-busy={isLoading}
       className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`.trim().replace(/\s+/g, ' ')}
     >
+      {isLoading && <Loader2 className="animate-spin" size={size === 'sm' ? 16 : 20} aria-hidden="true" />}
       {children}
     </button>
   );

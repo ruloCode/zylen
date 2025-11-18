@@ -32,7 +32,7 @@ export function Streaks() {
   const streakAchievements = achievementsWithProgress
     .filter(a => a.category === 'streak')
     .slice(0, 6); // Show top 6
-  return <div className="min-h-screen pb-24 px-4 pt-8">
+  return <div className="min-h-screen pb-24 px-2 pt-4">
       <div className="max-w-md mx-auto">
         {/* Header */}
         <div className="mb-6">

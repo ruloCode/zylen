@@ -80,7 +80,7 @@ export function Chat() {
   };
 
   return (
-    <div className="h-[calc(100vh-10rem)] px-4 flex flex-col">
+    <div className="h-[calc(100vh-10rem)] px-2 pt-4 flex flex-col">
       <div className="max-w-md mx-auto w-full h-full flex flex-col">
         {/* Header */}
         <header className="pt-6 pb-4 flex-shrink-0">

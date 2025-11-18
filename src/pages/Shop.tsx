@@ -92,7 +92,7 @@ export function Shop() {
   }
 
   return (
-    <div className="min-h-screen pb-24 px-4 pt-8">
+    <div className="min-h-screen pb-24 px-2 pt-4">
       <div className="max-w-md mx-auto">
         {/* Header */}
         <header className="mb-8">

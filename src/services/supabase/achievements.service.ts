@@ -11,6 +11,7 @@ import type {
   UserAchievement,
   AchievementWithProgress,
   AchievementUnlockResult,
+  AchievementClaimResult,
 } from '@/types/achievement';
 import { getAuthUserId } from './utils';
 
@@ -77,6 +78,7 @@ export class AchievementsService {
         userId: row.user_id,
         achievementId: row.achievement_id,
         unlockedAt: row.unlocked_at,
+        claimedAt: row.claimed_at,
         progress: row.progress,
         achievement: row.achievement ? {
           id: row.achievement.id,
@@ -117,7 +119,7 @@ export class AchievementsService {
       const unlockedMap = new Map(
         userAchievements.map((ua) => [
           ua.achievementId,
-          { unlockedAt: ua.unlockedAt, progress: ua.progress },
+          { unlockedAt: ua.unlockedAt, claimedAt: ua.claimedAt, progress: ua.progress },
         ])
       );
 
@@ -128,6 +130,7 @@ export class AchievementsService {
           ...achievement,
           unlocked: !!unlockData,
           unlockedAt: unlockData?.unlockedAt,
+          claimedAt: unlockData?.claimedAt,
           progress: unlockData?.progress || 0,
         };
       });
@@ -227,6 +230,7 @@ export class AchievementsService {
         userId: row.user_id,
         achievementId: row.achievement_id,
         unlockedAt: row.unlocked_at,
+        claimedAt: row.claimed_at,
         progress: row.progress,
         achievement: row.achievement ? {
           id: row.achievement.id,
@@ -247,6 +251,88 @@ export class AchievementsService {
     } catch (error) {
       console.error('Error in AchievementsService.getRecentlyUnlocked:', error);
       return [];
+    }
+  }
+
+  /**
+   * Claim an unlocked achievement and receive rewards
+   */
+  static async claimAchievement(achievementId: string): Promise<AchievementClaimResult> {
+    try {
+      const userId = await getAuthUserId();
+
+      const { data, error } = await supabase
+        .rpc('claim_achievement_reward', {
+          p_user_id: userId,
+          p_achievement_id: achievementId,
+        })
+        .single();
+
+      if (error) {
+        console.error('Error in AchievementsService.claimAchievement:', error);
+        return {
+          success: false,
+          error: error.message || 'Failed to claim achievement',
+        };
+      }
+
+      return data;
+    } catch (error) {
+      console.error('Error in AchievementsService.claimAchievement:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to claim achievement',
+      };
+    }
+  }
+
+  /**
+   * Get available achievements count (unlocked but not claimed)
+   */
+  static async getAvailableCount(): Promise<number> {
+    try {
+      const userId = await getAuthUserId();
+
+      const { count, error } = await supabase
+        .from('user_achievements')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', userId)
+        .is('claimed_at', null);
+
+      if (error) {
+        console.error('Error in AchievementsService.getAvailableCount:', error);
+        return 0;
+      }
+
+      return count || 0;
+    } catch (error) {
+      console.error('Error in AchievementsService.getAvailableCount:', error);
+      return 0;
+    }
+  }
+
+  /**
+   * Get claimed achievements count
+   */
+  static async getClaimedCount(): Promise<number> {
+    try {
+      const userId = await getAuthUserId();
+
+      const { count, error } = await supabase
+        .from('user_achievements')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', userId)
+        .not('claimed_at', 'is', null);
+
+      if (error) {
+        console.error('Error in AchievementsService.getClaimedCount:', error);
+        return 0;
+      }
+
+      return count || 0;
+    } catch (error) {
+      console.error('Error in AchievementsService.getClaimedCount:', error);
+      return 0;
     }
   }
 }

@@ -173,19 +173,19 @@ export function UsernameSelector({
   // Status message
   const getStatusMessage = () => {
     if (isChecking) {
-      return <p className="text-sm text-teal-400">{t('username.checking')}</p>;
+      return <p className="text-sm text-teal-400" role="status" aria-live="polite">{t('username.checking')}</p>;
     }
 
     if (error) {
-      return <p className="text-sm text-danger-400">{error}</p>;
+      return <p className="text-sm text-danger-400" role="alert" aria-live="assertive">{error}</p>;
     }
 
     if (isAvailable === true) {
-      return <p className="text-sm text-success-400">{t('username.available')}</p>;
+      return <p className="text-sm text-success-400" role="status" aria-live="polite">{t('username.available')}</p>;
     }
 
     if (isAvailable === false) {
-      return <p className="text-sm text-danger-400">{t('username.taken')}</p>;
+      return <p className="text-sm text-danger-400" role="alert" aria-live="assertive">{t('username.taken')}</p>;
     }
 
     return null;
@@ -212,10 +212,14 @@ export function UsernameSelector({
         <div className="relative">
           <input
             type="text"
+            inputMode="text"
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck="false"
             value={username}
             onChange={(e) => handleUsernameChange(e.target.value)}
             placeholder={t('username.placeholder')}
-            className="w-full px-4 py-3 pr-12 bg-charcoal-800 border border-charcoal-600 rounded-xl text-pale-50 placeholder-charcoal-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
+            className="w-full px-4 py-3 pr-12 min-h-[44px] bg-charcoal-800 border border-charcoal-600 rounded-xl text-pale-50 placeholder-charcoal-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
             maxLength={20}
             disabled={isSubmitting}
           />

@@ -63,11 +63,84 @@
     "achievements": "Logros",
     "onFire": "¡Estás en llamas! 🔥",
     "motivation": "El éxito es la suma de pequeños esfuerzos repetidos día tras día.",
+    "streakAchievements": "🏆 Logros de Rachas",
+    "achievementsUnlocked": "desbloqueados",
+    "noAchievementsAvailable": "No hay logros disponibles",
+    "progress": "Progreso",
+    "unlocked": "✓ Desbloqueado",
     "badges": {
       "weekWarrior": "Guerrero Semanal",
       "consistencyKing": "Rey de la Consistencia",
       "unstoppable": "Imparable"
     }
+  },
+  "achievements": {
+    "title": "Logros",
+    "subtitle": "Desbloquea insignias y gana recompensas",
+    "locked": "Bloqueado",
+    "available": "¡Disponible!",
+    "claimed": "✓ Reclamado",
+    "claimReward": "Reclamar Recompensa",
+    "claimNow": "Reclamar Ahora",
+    "viewDetails": "Ver Detalles",
+    "progress": "Progreso",
+    "requirement": "Requisito",
+    "requirements": "Requisitos",
+    "rewards": "Recompensas",
+    "unlockedOn": "Desbloqueado el {{date}}",
+    "claimedOn": "Reclamado el {{date}}",
+    "availableCount": "{{count}} disponibles",
+    "claimedCount": "{{count}} reclamados",
+    "totalCount": "{{count}} totales",
+    "categories": {
+      "all": "Todos",
+      "streak": "Rachas",
+      "habit": "Hábitos",
+      "xp": "Experiencia",
+      "social": "Social",
+      "special": "Especiales"
+    },
+    "tiers": {
+      "bronze": "Bronce",
+      "silver": "Plata",
+      "gold": "Oro",
+      "platinum": "Platino"
+    },
+    "states": {
+      "locked": "Bloqueado",
+      "available": "Disponible",
+      "claimed": "Reclamado"
+    },
+    "modal": {
+      "title": "Detalles del Logro",
+      "description": "Descripción",
+      "category": "Categoría",
+      "tier": "Nivel",
+      "status": "Estado",
+      "yourProgress": "Tu Progreso",
+      "requirementsMet": "¡Requisitos cumplidos!",
+      "keepGoing": "¡Sigue así para desbloquear!",
+      "close": "Cerrar"
+    },
+    "requirementTypes": {
+      "current_streak": "Mantén una racha de {{value}} días consecutivos",
+      "total_habit_completions": "Completa {{value}} hábitos en total",
+      "total_xp": "Gana {{value}} XP en total",
+      "friends_count": "Agrega {{value}} amigos",
+      "root_habit_complete": "Completa el desafío de 30 días",
+      "early_completion": "Completa un hábito antes de las 8 AM",
+      "late_completion": "Completa un hábito después de las 10 PM",
+      "perfect_day": "Completa todos tus hábitos en un día"
+    },
+    "toast": {
+      "unlocked": "🎉 ¡Nuevo logro desbloqueado: {{name}}!",
+      "claimed": "✨ ¡Has reclamado {{name}}! +{{xp}} XP, +{{points}} pts",
+      "error": "❌ Error al reclamar logro: {{error}}",
+      "alreadyClaimed": "⚠️ Ya reclamaste este logro"
+    },
+    "noAchievements": "No hay logros disponibles",
+    "loadingAchievements": "Cargando logros...",
+    "errorLoading": "Error al cargar logros"
   },
   "habits": {
     "title": "Registro de Hábitos",
@@ -126,7 +199,7 @@
     "title": "Tienda de Indulgencias",
     "subtitle": "Date un gusto (ocasionalmente)",
     "balance": "Saldo",
-    "buyNow": "Comprar Ahora",
+    "buyNow": "Comprar",
     "purchased": "Comprado",
     "notEnoughPoints": "No tienes suficientes puntos! Completa más hábitos para ganar puntos.",
     "confirmPurchase": "¿Confirmar compra?",
@@ -248,7 +321,9 @@
     "previous": "Anterior",
     "close": "Cerrar",
     "create": "Crear",
-    "saveChanges": "Guardar Cambios"
+    "saveChanges": "Guardar Cambios",
+    "skip": "Omitir",
+    "select": "Seleccionar"
   },
   "onboarding": {
     "prevButton": "Anterior",

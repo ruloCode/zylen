@@ -383,4 +383,34 @@
   .transition-dofus {
     transition: all 0.2s ease-in-out;
   }
+
+  /* ==========================================
+     SAFE AREA UTILITIES - For mobile devices with notches
+     ========================================== */
+
+  /* Safe area insets for devices with notches/home indicators */
+  .safe-area-inset {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+    padding-top: max(1rem, env(safe-area-inset-top));
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+
+  @media (min-width: 640px) {
+    .safe-area-inset {
+      padding-left: max(1.5rem, env(safe-area-inset-left));
+      padding-right: max(1.5rem, env(safe-area-inset-right));
+      padding-top: max(1.5rem, env(safe-area-inset-top));
+      padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+    }
+  }
+
+  @media (min-width: 768px) {
+    .safe-area-inset {
+      padding-left: max(2rem, env(safe-area-inset-left));
+      padding-right: max(2rem, env(safe-area-inset-right));
+      padding-top: max(2rem, env(safe-area-inset-top));
+      padding-bottom: max(2rem, env(safe-area-inset-bottom));
+    }
+  }
 }

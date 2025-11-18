@@ -74,11 +74,11 @@ export function OnboardingStep3({ onNext, onPrev }: OnboardingStep3Props) {
       </div>
 
       {/* Habits List */}
-      <div className="space-y-3 mb-6">
+      <ul className="space-y-3 mb-6" role="list">
         {habits.map((habit, index) => {
           const area = lifeAreas.find((a) => a.id === habit.lifeArea);
           return (
-            <div
+            <li
               key={index}
               className="flex items-center justify-between p-4 bg-charcoal-700/50 rounded-xl border border-charcoal-600"
             >
@@ -91,11 +91,12 @@ export function OnboardingStep3({ onNext, onPrev }: OnboardingStep3Props) {
               <button
                 type="button"
                 onClick={() => removeHabit(index)}
-                className="p-2 text-red-400 hover:bg-red-500/20 rounded-lg transition-colors"
+                aria-label={`${t('actions.delete')} ${habit.name}`}
+                className="p-2 text-red-400 hover:bg-red-500/20 rounded-lg transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
               >
-                <Trash2 size={18} />
+                <Trash2 size={18} aria-hidden="true" />
               </button>
-            </div>
+            </li>
           );
         })}
 
@@ -114,13 +115,14 @@ export function OnboardingStep3({ onNext, onPrev }: OnboardingStep3Props) {
             value={newHabit.name}
             onChange={(e) => setNewHabit({ ...newHabit, name: e.target.value })}
             placeholder={t('onboarding.step3.habitNamePlaceholder')}
-            className="w-full px-4 py-2 rounded-lg bg-charcoal-800 border border-charcoal-600 text-white"
+            aria-label={t('onboarding.step3.habitNamePlaceholder')}
+            className="w-full px-4 py-3 min-h-[44px] rounded-lg bg-charcoal-800 border border-charcoal-600 text-white"
             autoFocus
           />
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm text-gray-400 mb-2">XP</label>
+              <label id="xp-slider-label" className="block text-sm text-gray-400 mb-2">XP</label>
               <input
                 type="range"
                 min="10"
@@ -130,9 +132,14 @@ export function OnboardingStep3({ onNext, onPrev }: OnboardingStep3Props) {
                 onChange={(e) =>
                   setNewHabit({ ...newHabit, xp: parseInt(e.target.value) })
                 }
-                className="w-full"
+                aria-labelledby="xp-slider-label"
+                aria-valuemin={10}
+                aria-valuemax={100}
+                aria-valuenow={newHabit.xp}
+                aria-valuetext={`${newHabit.xp} XP`}
+                className="w-full h-2 accent-teal-500"
               />
-              <p className="text-center text-white font-semibold mt-1">{newHabit.xp}</p>
+              <p className="text-center text-white font-semibold mt-1" aria-live="polite">{newHabit.xp}</p>
             </div>
 
             <div>
@@ -142,7 +149,8 @@ export function OnboardingStep3({ onNext, onPrev }: OnboardingStep3Props) {
               <select
                 value={newHabit.lifeArea}
                 onChange={(e) => setNewHabit({ ...newHabit, lifeArea: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg bg-charcoal-800 border border-charcoal-600 text-white"
+                aria-label={t('onboarding.step3.lifeAreaLabel')}
+                className="w-full px-4 py-3 min-h-[44px] rounded-lg bg-charcoal-800 border border-charcoal-600 text-white"
               >
                 {selectedAreas.map((area) => (
                   <option key={area.id} value={area.id}>

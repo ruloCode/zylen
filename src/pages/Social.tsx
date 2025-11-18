@@ -4,7 +4,7 @@
  */
 
 import { useEffect, useState } from 'react';
-import { Users, Search, UserPlus, UserCheck, X, Check } from 'lucide-react';
+import { Users, Search, UserPlus, UserCheck, X, Check, UserMinus } from 'lucide-react';
 import { useLocale } from '@/hooks/useLocale';
 import { useSocial } from '@/store';
 import { Card } from '@/components/ui/Card';
@@ -93,7 +93,7 @@ export function Social() {
   };
 
   return (
-    <div className="min-h-screen bg-charcoal-900 pt-20 pb-24 px-4">
+    <div className="min-h-screen bg-charcoal-900 px-2 pt-4 pb-24">
       <div className="container mx-auto max-w-4xl">
         {/* Header */}
         <div className="mb-8">
@@ -169,13 +169,13 @@ export function Social() {
                           </p>
                         </div>
                       </div>
-                      <Button
-                        variant="danger"
-                        size="sm"
+                      <button
                         onClick={() => handleRemoveFriend(friend.friendshipId!, friend.username)}
+                        aria-label={t('social.removeFriend')}
+                        className="p-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 border border-red-400/50 transition-colors"
                       >
-                        {t('social.removeFriend')}
-                      </Button>
+                        <UserMinus size={18} />
+                      </button>
                     </div>
                   </Card>
                 ))

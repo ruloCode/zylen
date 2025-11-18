@@ -38,7 +38,7 @@ export function Dashboard() {
     );
   }
 
-  return <div className="min-h-screen pb-24 px-4 pt-16">
+  return <div className="min-h-screen pb-24 px-2 pt-4">
       <div className="max-w-md mx-auto">
         {/* Header */}
         <header className="text-center mb-8">

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Settings, Edit2, Save, X, LogOut, User as UserIcon } from 'lucide-react';
+import { Settings, Edit2, Save, X, LogOut, User as UserIcon, Pencil, Trash2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { supabase } from '@/lib/supabase';
 import { useUser, useLifeAreas, useHabits } from '@/store';
@@ -179,23 +179,23 @@ export function Profile() {
   );
 
   return (
-    <div className="min-h-screen pt-20 pb-24 px-4">
-      <div className="container mx-auto max-w-7xl">
+    <div className="min-h-screen pt-4 pb-24">
+      <div className="mx-auto max-w-7xl px-4 md:px-6">
         {/* 2 Column Grid Layout (Desktop) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-6">
           {/* LEFT SIDEBAR - Profile Header + Stats */}
-          <aside className="lg:col-span-4 space-y-6">
+          <aside className="lg:col-span-4 space-y-4 md:space-y-6">
             {/* Profile Header */}
-            <div className="lg:sticky lg:top-24 space-y-6">
+            <div className="lg:sticky lg:top-24 space-y-4 md:space-y-6">
               <ProfileHeader user={user} />
               <AdvancedStats />
             </div>
           </aside>
 
           {/* RIGHT MAIN PANEL - Configuration Sections */}
-          <main className="lg:col-span-8 space-y-6">
+          <main className="lg:col-span-8 space-y-4 md:space-y-6">
             {/* Edit Name Section */}
-            <section className="glass-card p-6">
+            <section className="glass-card p-4 md:p-6">
               <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
                 <Edit2 size={20} />
                 {t('profile.editProfile')}
@@ -212,16 +212,19 @@ export function Profile() {
                   />
                   <button
                     onClick={handleSaveName}
-                    className="px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600"
+                    aria-label={t('actions.save')}
+                    className="p-2 md:px-4 md:py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 flex items-center justify-center gap-2"
                   >
                     <Save size={18} />
+                    <span className="hidden md:inline">{t('actions.save')}</span>
                   </button>
                   <button
                     onClick={() => {
                       setNewName(user.name);
                       setIsEditingName(false);
                     }}
-                    className="px-4 py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-colors"
+                    aria-label={t('common.cancel')}
+                    className="p-2 md:px-4 md:py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-colors flex items-center justify-center"
                   >
                     <X size={18} />
                   </button>
@@ -229,23 +232,25 @@ export function Profile() {
               ) : (
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-white">
+                    <p className="text-sm text-white/70">
                       {t('profile.nameLabel')}
                     </p>
                     <p className="text-white font-semibold">{user.name}</p>
                   </div>
                   <button
                     onClick={() => setIsEditingName(true)}
-                    className="px-4 py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 border border-white/20 transition-colors"
+                    aria-label={t('common.edit')}
+                    className="p-2 md:px-4 md:py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 border border-white/20 transition-colors flex items-center justify-center gap-2"
                   >
-                    {t('common.edit')}
+                    <Edit2 size={18} />
+                    <span className="hidden md:inline">{t('common.edit')}</span>
                   </button>
                 </div>
               )}
             </section>
 
             {/* Username Section */}
-            <section className="glass-card p-6">
+            <section className="glass-card p-4 md:p-6">
               <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
                 <UserIcon size={20} />
                 {t('username.title')}
@@ -271,18 +276,20 @@ export function Profile() {
                     <p className="text-sm text-teal-400">{t('username.checking')}</p>
                   )}
                   {!isCheckingUsername && usernameAvailable === true && (
-                    <p className="text-sm text-success-400">{t('username.available')}</p>
+                    <p className="text-sm text-green-400">{t('username.available')}</p>
                   )}
                   {!isCheckingUsername && usernameAvailable === false && (
-                    <p className="text-sm text-danger-400">{t('username.taken')}</p>
+                    <p className="text-sm text-red-400">{t('username.taken')}</p>
                   )}
                   <div className="flex gap-2">
                     <button
                       onClick={handleSaveUsername}
                       disabled={!usernameAvailable}
-                      className="px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                      aria-label={t('actions.save')}
+                      className="p-2 md:px-4 md:py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
                       <Save size={18} />
+                      <span className="hidden md:inline">{t('actions.save')}</span>
                     </button>
                     <button
                       onClick={() => {
@@ -290,7 +297,8 @@ export function Profile() {
                         setUsernameAvailable(null);
                         setIsEditingUsername(false);
                       }}
-                      className="px-4 py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-colors"
+                      aria-label={t('common.cancel')}
+                      className="p-2 md:px-4 md:py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-colors flex items-center justify-center"
                     >
                       <X size={18} />
                     </button>
@@ -299,7 +307,7 @@ export function Profile() {
               ) : (
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-white">
+                    <p className="text-sm text-white/70">
                       {t('username.title')}
                     </p>
                     <p className="text-white font-semibold">
@@ -311,16 +319,18 @@ export function Profile() {
                       setNewUsername(currentUsername || '');
                       setIsEditingUsername(true);
                     }}
-                    className="px-4 py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 border border-white/20 transition-colors"
+                    aria-label={t('common.edit')}
+                    className="p-2 md:px-4 md:py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 border border-white/20 transition-colors flex items-center justify-center gap-2"
                   >
-                    {t('common.edit')}
+                    <Edit2 size={18} />
+                    <span className="hidden md:inline">{t('common.edit')}</span>
                   </button>
                 </div>
               )}
             </section>
 
             {/* Avatar Selection Section */}
-            <section className="glass-card p-6">
+            <section className="glass-card p-4 md:p-6">
               <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
                 <Edit2 size={20} />
                 {t('profile.changeAvatar')}
@@ -328,7 +338,7 @@ export function Profile() {
 
               {isEditingAvatar ? (
                 <div>
-                  <div className="grid grid-cols-2 gap-4 mb-4">
+                  <div className="grid grid-cols-2 gap-3 md:gap-4 mb-4">
                     {/* Rulo Avatar (Male) */}
                     <button
                       type="button"
@@ -445,17 +455,19 @@ export function Profile() {
                   <div className="flex gap-2">
                     <button
                       onClick={handleSaveAvatar}
-                      className="flex-1 px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 flex items-center justify-center gap-2"
+                      aria-label={t('actions.save')}
+                      className="flex-1 bg-teal-500 text-white rounded-lg hover:bg-teal-600 flex items-center justify-center gap-2 p-2 md:px-4 md:py-2"
                     >
                       <Save size={18} />
-                      {t('actions.save')}
+                      <span className="hidden md:inline">{t('actions.save')}</span>
                     </button>
                     <button
                       onClick={() => {
                         setSelectedAvatar(user.avatarUrl || AVATARS.RULO);
                         setIsEditingAvatar(false);
                       }}
-                      className="px-4 py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-colors"
+                      aria-label={t('common.cancel')}
+                      className="p-2 md:px-4 md:py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-colors flex items-center justify-center"
                     >
                       <X size={18} />
                     </button>
@@ -480,7 +492,7 @@ export function Profile() {
                       )}
                     </div>
                     <div>
-                      <p className="text-sm text-white">
+                      <p className="text-sm text-white/70">
                         {t('profile.avatarLabel')}
                       </p>
                       <p className="text-white font-semibold">
@@ -494,16 +506,18 @@ export function Profile() {
                   </div>
                   <button
                     onClick={() => setIsEditingAvatar(true)}
-                    className="px-4 py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 border border-white/20 transition-colors"
+                    aria-label={t('common.edit')}
+                    className="p-2 md:px-4 md:py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 border border-white/20 transition-colors flex items-center justify-center gap-2"
                   >
-                    {t('common.edit')}
+                    <Edit2 size={18} />
+                    <span className="hidden md:inline">{t('common.edit')}</span>
                   </button>
                 </div>
               )}
             </section>
 
             {/* Life Areas Section */}
-            <section className="glass-card p-6">
+            <section className="glass-card p-4 md:p-6">
               <h2 className="text-lg font-bold text-white mb-4">
                 {t('profile.lifeAreasTitle')}
               </h2>
@@ -521,11 +535,11 @@ export function Profile() {
                   return (
                     <div
                       key={area.id}
-                      className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/20"
+                      className="flex items-center justify-between p-3 md:p-4 bg-white/5 rounded-lg border border-white/20"
                     >
                       <div>
                         <p className="font-semibold text-white">{areaName}</p>
-                        <p className="text-sm text-white">
+                        <p className="text-sm text-white/70">
                           {t('common.level')} {area.level} • {area.totalXP} XP
                         </p>
                       </div>
@@ -552,14 +566,14 @@ export function Profile() {
             </section>
 
             {/* Habits Section */}
-            <section className="glass-card p-6">
+            <section className="glass-card p-4 md:p-6">
               <h2 className="text-lg font-bold text-white mb-4">
                 {t('profile.habitsTitle')}
               </h2>
 
               <div className="grid gap-3">
                 {habits.length === 0 ? (
-                  <p className="text-center text-white py-6">
+                  <p className="text-center text-white/70 py-6">
                     {t('profile.noHabits')}
                   </p>
                 ) : (
@@ -576,22 +590,24 @@ export function Profile() {
                     return (
                       <div
                         key={habit.id}
-                        className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/20"
+                        className="flex items-center justify-between p-3 md:p-4 bg-white/5 rounded-lg border border-white/20"
                       >
-                        <div>
-                          <p className="font-semibold text-white">
+                        <div className="flex-1 min-w-0 mr-2">
+                          <p className="font-semibold text-white truncate">
                             {habit.name}
                           </p>
-                          <p className="text-sm text-white">
+                          <p className="text-sm text-white/70">
                             {habit.xp} XP • {habit.points} {t('common.pts')} • {areaName}
                           </p>
                         </div>
                         <div className="flex gap-2">
                           <button
                             onClick={() => handleOpenEditHabit(habit)}
-                            className="px-3 py-2 bg-teal-50 text-teal-600 rounded-lg hover:bg-teal-100 border border-teal-200 transition-colors"
+                            aria-label={t('common.edit')}
+                            className="p-2 md:px-3 md:py-2 bg-teal-500/20 text-teal-400 rounded-lg hover:bg-teal-500/30 border border-teal-400/50 transition-colors flex items-center justify-center gap-2"
                           >
-                            {t('common.edit')}
+                            <Pencil size={18} />
+                            <span className="hidden md:inline">{t('common.edit')}</span>
                           </button>
                           <button
                             onClick={() => {
@@ -599,9 +615,11 @@ export function Profile() {
                                 deleteHabit(habit.id);
                               }
                             }}
-                            className="px-3 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 border border-red-200 transition-colors"
+                            aria-label={t('common.delete')}
+                            className="p-2 md:px-3 md:py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 border border-red-400/50 transition-colors flex items-center justify-center gap-2"
                           >
-                            {t('common.delete')}
+                            <Trash2 size={18} />
+                            <span className="hidden md:inline">{t('common.delete')}</span>
                           </button>
                         </div>
                       </div>
@@ -612,14 +630,14 @@ export function Profile() {
             </section>
 
             {/* Settings Section */}
-            <section className="glass-card p-6">
+            <section className="glass-card p-4 md:p-6">
               <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
                 <Settings size={20} />
                 {t('profile.settingsTitle')}
               </h2>
 
               <div className="space-y-4">
-                <p className="text-sm text-white">
+                <p className="text-sm text-white/70">
                   {t('profile.languageHint')}
                 </p>
 
@@ -627,10 +645,11 @@ export function Profile() {
                 <div className="pt-4 border-t border-white/20">
                   <button
                     onClick={handleSignOut}
+                    aria-label={t('auth.signOut')}
                     className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 border border-red-500/50 transition-all duration-200 font-semibold"
                   >
                     <LogOut size={18} />
-                    {t('auth.signOut')}
+                    <span>{t('auth.signOut')}</span>
                   </button>
                 </div>
               </div>

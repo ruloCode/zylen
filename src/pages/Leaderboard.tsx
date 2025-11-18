@@ -6,14 +6,15 @@
 import { useEffect, useState } from 'react';
 import {
   Trophy, TrendingUp, Flame, Target, Users, Search,
-  UserPlus, UserCheck, X, Check, Award, Zap
+  UserPlus, UserCheck, X, Check, Award, Zap, UserMinus
 } from 'lucide-react';
 import { useLocale } from '@/hooks/useLocale';
 import { useLeaderboard, useUser, useSocial, useAppStore, useAchievements } from '@/store';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { StreakDisplay } from '@/features/streaks/components';
-import { AchievementCard } from '@/features/achievements/components';
+import { AchievementCard, AchievementDetailModal } from '@/features/achievements/components';
+import type { AchievementWithProgress } from '@/types/achievement';
 import toast from 'react-hot-toast';
 
 type TabType = 'rankings' | 'social' | 'streaks';
@@ -63,6 +64,20 @@ export function Leaderboard() {
   const [activeTab, setActiveTab] = useState<TabType>('rankings');
   const [socialSubTab, setSocialSubTab] = useState<SocialSubTab>('friends');
   const [searchTerm, setSearchTerm] = useState('');
+
+  // Achievement modal state
+  const [selectedAchievement, setSelectedAchievement] = useState<AchievementWithProgress | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleAchievementClick = (achievement: AchievementWithProgress) => {
+    setSelectedAchievement(achievement);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setTimeout(() => setSelectedAchievement(null), 300); // Wait for animation
+  };
 
   // Load leaderboard data
   useEffect(() => {
@@ -147,7 +162,7 @@ export function Leaderboard() {
     .sort((a, b) => a.requirementValue - b.requirementValue);
 
   return (
-    <div className="min-h-screen pb-24 px-4 pt-8">
+    <div className="min-h-screen pb-24 px-2 pt-4">
       <div className="container mx-auto max-w-4xl">
         {/* Header */}
         <div className="mb-8">
@@ -158,33 +173,33 @@ export function Leaderboard() {
         </div>
 
         {/* Main Tabs */}
-        <div className="flex gap-2 mb-6 border-b border-white/20">
+        <div className="flex gap-1 sm:gap-2 mb-6 border-b border-white/20">
           <button
             onClick={() => setActiveTab('rankings')}
-            className={`px-4 py-3 font-semibold transition-colors ${
+            className={`flex-1 sm:flex-initial px-3 sm:px-4 py-2 sm:py-3 font-semibold transition-colors ${
               activeTab === 'rankings'
-                ? 'text-gold-600 border-b-2 border-gold-600'
+                ? 'text-green-500 border-b-2 border-green-500'
                 : 'text-white hover:text-white'
             }`}
           >
-            <div className="flex items-center gap-2">
+            <div className="flex items-center justify-center sm:justify-start gap-2">
               <Trophy className="w-5 h-5" />
-              {t('leaderboard.tabs.rankings')}
+              <span className="hidden sm:inline">{t('leaderboard.tabs.rankings')}</span>
             </div>
           </button>
           <button
             onClick={() => setActiveTab('social')}
-            className={`px-4 py-3 font-semibold transition-colors relative ${
+            className={`flex-1 sm:flex-initial px-3 sm:px-4 py-2 sm:py-3 font-semibold transition-colors relative ${
               activeTab === 'social'
-                ? 'text-teal-600 border-b-2 border-teal-600'
+                ? 'text-green-500 border-b-2 border-green-500'
                 : 'text-white hover:text-white'
             }`}
           >
-            <div className="flex items-center gap-2">
+            <div className="flex items-center justify-center sm:justify-start gap-2">
               <Users className="w-5 h-5" />
-              {t('leaderboard.tabs.social')}
+              <span className="hidden sm:inline">{t('leaderboard.tabs.social')}</span>
               {pendingRequests.length > 0 && (
-                <span className="w-5 h-5 bg-danger-500 rounded-full text-xs text-white flex items-center justify-center">
+                <span className="absolute top-1 right-1 sm:static w-4 h-4 sm:w-5 sm:h-5 bg-danger-500 rounded-full text-xs text-white flex items-center justify-center">
                   {pendingRequests.length}
                 </span>
               )}
@@ -192,15 +207,15 @@ export function Leaderboard() {
           </button>
           <button
             onClick={() => setActiveTab('streaks')}
-            className={`px-4 py-3 font-semibold transition-colors ${
+            className={`flex-1 sm:flex-initial px-3 sm:px-4 py-2 sm:py-3 font-semibold transition-colors ${
               activeTab === 'streaks'
-                ? 'text-gold-600 border-b-2 border-gold-600'
+                ? 'text-green-500 border-b-2 border-green-500'
                 : 'text-white hover:text-white'
             }`}
           >
-            <div className="flex items-center gap-2">
+            <div className="flex items-center justify-center sm:justify-start gap-2">
               <Flame className="w-5 h-5" />
-              {t('leaderboard.tabs.streaks')}
+              <span className="hidden sm:inline">{t('leaderboard.tabs.streaks')}</span>
             </div>
           </button>
         </div>
@@ -219,7 +234,7 @@ export function Leaderboard() {
                         <Trophy className="w-5 h-5 text-gold-500" />
                         <p className="text-sm text-white">{t('leaderboard.yourRank')}</p>
                       </div>
-                      <p className="text-2xl font-bold text-gold-600">
+                      <p className="text-2xl font-bold text-white">
                         {userRank > 0 ? `#${userRank}` : '-'}
                       </p>
                     </div>
@@ -237,7 +252,7 @@ export function Leaderboard() {
                         <Flame className="w-5 h-5 text-gold-500" />
                         <p className="text-sm text-white">{t('leaderboard.weeklyPoints')}</p>
                       </div>
-                      <p className="text-2xl font-bold text-gold-600">
+                      <p className="text-2xl font-bold text-white">
                         {userWeeklyStats.weeklyPointsEarned}
                       </p>
                     </div>
@@ -324,7 +339,7 @@ export function Leaderboard() {
                               </div>
                               <div className="text-right">
                                 <p className="text-sm text-white">{t('leaderboard.weeklyPoints')}</p>
-                                <p className="font-semibold text-gold-600">{entry.weeklyPointsEarned}</p>
+                                <p className="font-semibold text-white">{entry.weeklyPointsEarned}</p>
                               </div>
                               <div className="text-right">
                                 <p className="text-sm text-white">{t('leaderboard.habitsCompleted')}</p>
@@ -350,41 +365,54 @@ export function Leaderboard() {
           {activeTab === 'social' && (
             <>
               {/* Social Sub-Tabs */}
-              <div className="flex gap-2 mb-6 border-b border-white/20">
+              <div className="flex gap-1 sm:gap-2 mb-6 border-b border-white/20">
                 <button
                   onClick={() => setSocialSubTab('friends')}
-                  className={`px-4 py-3 font-semibold transition-colors ${
+                  className={`flex-1 sm:flex-initial px-3 sm:px-4 py-2 sm:py-3 font-semibold transition-colors ${
                     socialSubTab === 'friends'
-                      ? 'text-teal-600 border-b-2 border-teal-600'
+                      ? 'text-green-500 border-b-2 border-green-500'
                       : 'text-white hover:text-white'
                   }`}
                 >
-                  {t('social.tabs.friends')} ({friends.length})
+                  <div className="flex items-center justify-center sm:justify-start gap-2">
+                    <Users className="w-5 h-5 sm:hidden" />
+                    <span className="hidden sm:inline">{t('social.tabs.friends')} ({friends.length})</span>
+                    <span className="sm:hidden">{friends.length}</span>
+                  </div>
                 </button>
                 <button
                   onClick={() => setSocialSubTab('requests')}
-                  className={`px-4 py-3 font-semibold transition-colors relative ${
+                  className={`flex-1 sm:flex-initial px-3 sm:px-4 py-2 sm:py-3 font-semibold transition-colors relative ${
                     socialSubTab === 'requests'
-                      ? 'text-teal-600 border-b-2 border-teal-600'
+                      ? 'text-green-500 border-b-2 border-green-500'
                       : 'text-white hover:text-white'
                   }`}
                 >
-                  {t('social.tabs.requests')}
-                  {pendingRequests.length > 0 && (
-                    <span className="absolute -top-1 -right-1 w-5 h-5 bg-danger-500 rounded-full text-xs text-white flex items-center justify-center">
-                      {pendingRequests.length}
+                  <div className="flex items-center justify-center sm:justify-start gap-2">
+                    <UserPlus className="w-5 h-5 sm:hidden" />
+                    <span className="hidden sm:inline">{t('social.tabs.requests')}</span>
+                    <span className="sm:hidden text-sm">
+                      {pendingRequests.length > 0 ? pendingRequests.length : ''}
                     </span>
-                  )}
+                    {pendingRequests.length > 0 && (
+                      <span className="hidden sm:flex absolute -top-1 -right-1 w-5 h-5 bg-danger-500 rounded-full text-xs text-white items-center justify-center">
+                        {pendingRequests.length}
+                      </span>
+                    )}
+                  </div>
                 </button>
                 <button
                   onClick={() => setSocialSubTab('search')}
-                  className={`px-4 py-3 font-semibold transition-colors ${
+                  className={`flex-1 sm:flex-initial px-3 sm:px-4 py-2 sm:py-3 font-semibold transition-colors ${
                     socialSubTab === 'search'
-                      ? 'text-teal-600 border-b-2 border-teal-600'
+                      ? 'text-green-500 border-b-2 border-green-500'
                       : 'text-white hover:text-white'
                   }`}
                 >
-                  {t('social.tabs.search')}
+                  <div className="flex items-center justify-center sm:justify-start gap-2">
+                    <Search className="w-5 h-5" />
+                    <span className="hidden sm:inline">{t('social.tabs.search')}</span>
+                  </div>
                 </button>
               </div>
 
@@ -415,13 +443,13 @@ export function Leaderboard() {
                                 </p>
                               </div>
                             </div>
-                            <Button
-                              variant="danger"
-                              size="sm"
+                            <button
                               onClick={() => handleRemoveFriend(friend.friendshipId!, friend.username)}
+                              aria-label={t('social.removeFriend')}
+                              className="p-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 border border-red-400/50 transition-colors"
                             >
-                              {t('social.removeFriend')}
-                            </Button>
+                              <UserMinus size={18} />
+                            </button>
                           </div>
                         </div>
                       ))
@@ -627,10 +655,15 @@ export function Leaderboard() {
               <div className="mb-6">
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-2xl font-bold text-white">
-                    🏆 Logros de Rachas
+                    {t('streaks.streakAchievements')}
                   </h2>
-                  <div className="text-sm text-white/70">
-                    {streakAchievements.filter(a => a.unlocked).length} / {streakAchievements.length} desbloqueados
+                  <div className="flex items-center gap-3 text-sm">
+                    <span className="px-3 py-1 rounded-full bg-green-600/20 text-green-400 font-medium">
+                      {streakAchievements.filter(a => a.unlocked && !a.claimedAt).length} {t('achievements.available').toLowerCase()}
+                    </span>
+                    <span className="px-3 py-1 rounded-full bg-white/10 text-white/70 font-medium">
+                      {streakAchievements.filter(a => a.claimedAt).length} / {streakAchievements.length}
+                    </span>
                   </div>
                 </div>
 
@@ -645,14 +678,14 @@ export function Leaderboard() {
                       <AchievementCard
                         key={achievement.id}
                         achievement={achievement}
-                        currentStreak={streak?.currentStreak || 0}
+                        onClick={() => handleAchievementClick(achievement)}
                       />
                     ))}
                   </div>
                 ) : (
                   <div className="glass-card p-12 text-center">
                     <Trophy className="w-16 h-16 text-white/30 mx-auto mb-4" />
-                    <p className="text-white/70">No hay logros disponibles</p>
+                    <p className="text-white/70">{t('streaks.noAchievementsAvailable')}</p>
                   </div>
                 )}
               </div>
@@ -667,6 +700,15 @@ export function Leaderboard() {
           )}
         </div>
       </div>
+
+      {/* Achievement Detail Modal */}
+      {selectedAchievement && (
+        <AchievementDetailModal
+          achievement={selectedAchievement}
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+        />
+      )}
     </div>
   );
 }

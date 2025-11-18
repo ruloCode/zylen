@@ -39,7 +39,7 @@ export function RootHabit() {
 
   const currentDay = progress?.current_day || 0;
   const completionPercentage = Math.round(progress?.completion_percentage || 0);
-  return <div className="min-h-screen pb-24 px-4 pt-8 bg-gradient-to-b from-charcoal-600 to-charcoal-700">
+  return <div className="min-h-screen pb-24 px-2 pt-4 bg-gradient-to-b from-charcoal-600 to-charcoal-700">
       <div className="max-w-md mx-auto">
         {/* Epic Header */}
         <div className="text-center mb-8">

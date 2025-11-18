@@ -55,7 +55,7 @@ export function OnboardingStep1({ onNext }: OnboardingStep1Props) {
 
       {/* Welcome Message */}
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-extrabold text-white mb-3 flex items-center justify-center gap-2 uppercase tracking-wide">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-white mb-3 flex items-center justify-center gap-2 uppercase tracking-wide">
           <Sparkles className="text-[rgb(137,184,32)]" size={32} />
           {t('onboarding.step1.title')}
         </h1>
@@ -79,8 +79,10 @@ export function OnboardingStep1({ onNext }: OnboardingStep1Props) {
               setError('');
             }}
             placeholder={t('onboarding.step1.namePlaceholder')}
+            aria-describedby={error ? "name-error" : undefined}
+            aria-invalid={error ? "true" : "false"}
             className={cn(
-              'w-full px-4 py-3 rounded-none',
+              'w-full px-4 py-3 rounded-none min-h-[44px]',
               'bg-[rgb(23,20,18)] border-2',
               'text-white placeholder-white/50 font-medium',
               'focus:outline-none focus:ring-2 focus:ring-[rgb(137,184,32)]',
@@ -93,7 +95,7 @@ export function OnboardingStep1({ onNext }: OnboardingStep1Props) {
             maxLength={30}
           />
           {error && (
-            <p className="mt-2 text-sm text-red-400 animate-in fade-in slide-in-from-top-1">
+            <p id="name-error" className="mt-2 text-sm text-red-400 animate-in fade-in slide-in-from-top-1" role="alert">
               {error}
             </p>
           )}
@@ -104,13 +106,15 @@ export function OnboardingStep1({ onNext }: OnboardingStep1Props) {
           <label className="block text-sm font-bold text-white/90 mb-3 uppercase tracking-wide">
             {t('onboarding.step1.avatarLabel')}
           </label>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 md:gap-6">
             {/* Rulo Avatar (Male) */}
             <button
               type="button"
               onClick={() => setSelectedAvatar(AVATARS.RULO)}
+              aria-label={`${t('actions.select')} ${t('onboarding.step1.avatarMale')} avatar`}
+              aria-pressed={selectedAvatar === AVATARS.RULO}
               className={cn(
-                'relative p-4 rounded-xl transition-all duration-200',
+                'relative p-4 rounded-xl transition-all duration-200 min-h-[120px]',
                 'border-2 hover:scale-105',
                 'focus:outline-none focus:ring-2 focus:ring-gold-400',
                 selectedAvatar === AVATARS.RULO
@@ -120,10 +124,10 @@ export function OnboardingStep1({ onNext }: OnboardingStep1Props) {
             >
               <div className="flex flex-col items-center gap-3">
                 <div className={cn(
-                  'w-20 h-20 rounded-full overflow-hidden border-2',
+                  'w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2',
                   selectedAvatar === AVATARS.RULO ? 'border-gold-400' : 'border-charcoal-500'
                 )}>
-                  <img src={AVATARS.RULO} alt="Rulo" className="w-full h-full object-cover" />
+                  <img src={AVATARS.RULO} alt={t('onboarding.step1.avatarMale')} className="w-full h-full object-cover" />
                 </div>
                 <span className={cn(
                   'text-sm font-medium',
@@ -145,8 +149,10 @@ export function OnboardingStep1({ onNext }: OnboardingStep1Props) {
             <button
               type="button"
               onClick={() => setSelectedAvatar(AVATARS.DANI)}
+              aria-label={`${t('actions.select')} ${t('onboarding.step1.avatarFemale')} avatar`}
+              aria-pressed={selectedAvatar === AVATARS.DANI}
               className={cn(
-                'relative p-4 rounded-xl transition-all duration-200',
+                'relative p-4 rounded-xl transition-all duration-200 min-h-[120px]',
                 'border-2 hover:scale-105',
                 'focus:outline-none focus:ring-2 focus:ring-gold-400',
                 selectedAvatar === AVATARS.DANI
@@ -156,10 +162,10 @@ export function OnboardingStep1({ onNext }: OnboardingStep1Props) {
             >
               <div className="flex flex-col items-center gap-3">
                 <div className={cn(
-                  'w-20 h-20 rounded-full overflow-hidden border-2',
+                  'w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2',
                   selectedAvatar === AVATARS.DANI ? 'border-gold-400' : 'border-charcoal-500'
                 )}>
-                  <img src={AVATARS.DANI} alt="Dani" className="w-full h-full object-cover" />
+                  <img src={AVATARS.DANI} alt={t('onboarding.step1.avatarFemale')} className="w-full h-full object-cover" />
                 </div>
                 <span className={cn(
                   'text-sm font-medium',

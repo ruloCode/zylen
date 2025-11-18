@@ -37,7 +37,7 @@ export function Login() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-[rgb(11,25,29)] px-4">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-[rgb(11,25,29)] px-2">
       {/* Language Switcher - Top Right */}
       <div className="absolute top-6 right-6">
         <LanguageSwitcher variant="compact" />

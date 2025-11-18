@@ -17,8 +17,8 @@ export function OnboardingProgress({ currentStep, completedSteps }: OnboardingPr
   const steps = Array.from({ length: TOTAL_ONBOARDING_STEPS }, (_, i) => i);
 
   return (
-    <div className="w-full max-w-md mx-auto">
-      <div className="flex items-center justify-between">
+    <nav aria-label="Onboarding progress" className="w-full max-w-md mx-auto">
+      <ol className="flex items-center justify-between">
         {steps.map((step, index) => {
           const isCompleted = completedSteps.includes(step);
           const isCurrent = step === currentStep;
@@ -27,10 +27,10 @@ export function OnboardingProgress({ currentStep, completedSteps }: OnboardingPr
           return (
             <React.Fragment key={step}>
               {/* Step Circle */}
-              <div className="flex flex-col items-center gap-2">
+              <li className="flex flex-col items-center gap-2">
                 <div
                   className={cn(
-                    'w-10 h-10 rounded-full flex items-center justify-center',
+                    'w-11 h-11 sm:w-12 sm:h-12 rounded-full flex items-center justify-center',
                     'border-2 transition-all duration-300',
                     isCompleted
                       ? 'bg-teal-500 border-teal-500 text-white'
@@ -38,9 +38,10 @@ export function OnboardingProgress({ currentStep, completedSteps }: OnboardingPr
                       ? 'bg-gold-500 border-gold-500 text-white scale-110'
                       : 'bg-charcoal-700 border-charcoal-600 text-gray-400'
                   )}
+                  aria-current={isCurrent ? 'step' : undefined}
                 >
                   {isCompleted ? (
-                    <Check size={20} className="animate-in fade-in zoom-in duration-300" />
+                    <Check size={20} className="animate-in fade-in zoom-in duration-300" aria-hidden="true" />
                   ) : (
                     <span className="text-sm font-bold">{step + 1}</span>
                   )}
@@ -55,7 +56,7 @@ export function OnboardingProgress({ currentStep, completedSteps }: OnboardingPr
                 >
                   Paso {step + 1}
                 </span>
-              </div>
+              </li>
 
               {/* Connector Line */}
               {!isLast && (
@@ -70,15 +71,15 @@ export function OnboardingProgress({ currentStep, completedSteps }: OnboardingPr
             </React.Fragment>
           );
         })}
-      </div>
+      </ol>
 
       {/* Progress Text */}
       <div className="mt-4 text-center">
-        <p className="text-sm text-gray-400">
+        <p className="text-sm text-gray-400" aria-live="polite">
           Paso {currentStep + 1} de {TOTAL_ONBOARDING_STEPS}
         </p>
       </div>
-    </div>
+    </nav>
   );
 }
 

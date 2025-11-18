@@ -63,11 +63,84 @@
     "achievements": "Achievements",
     "onFire": "You're on fire! 🔥",
     "motivation": "Success is the sum of small efforts repeated day in and day out.",
+    "streakAchievements": "🏆 Streak Achievements",
+    "achievementsUnlocked": "unlocked",
+    "noAchievementsAvailable": "No achievements available",
+    "progress": "Progress",
+    "unlocked": "✓ Unlocked",
     "badges": {
       "weekWarrior": "Week Warrior",
       "consistencyKing": "Consistency King",
       "unstoppable": "Unstoppable"
     }
+  },
+  "achievements": {
+    "title": "Achievements",
+    "subtitle": "Unlock badges and earn rewards",
+    "locked": "Locked",
+    "available": "Available!",
+    "claimed": "✓ Claimed",
+    "claimReward": "Claim Reward",
+    "claimNow": "Claim Now",
+    "viewDetails": "View Details",
+    "progress": "Progress",
+    "requirement": "Requirement",
+    "requirements": "Requirements",
+    "rewards": "Rewards",
+    "unlockedOn": "Unlocked on {{date}}",
+    "claimedOn": "Claimed on {{date}}",
+    "availableCount": "{{count}} available",
+    "claimedCount": "{{count}} claimed",
+    "totalCount": "{{count}} total",
+    "categories": {
+      "all": "All",
+      "streak": "Streaks",
+      "habit": "Habits",
+      "xp": "Experience",
+      "social": "Social",
+      "special": "Special"
+    },
+    "tiers": {
+      "bronze": "Bronze",
+      "silver": "Silver",
+      "gold": "Gold",
+      "platinum": "Platinum"
+    },
+    "states": {
+      "locked": "Locked",
+      "available": "Available",
+      "claimed": "Claimed"
+    },
+    "modal": {
+      "title": "Achievement Details",
+      "description": "Description",
+      "category": "Category",
+      "tier": "Tier",
+      "status": "Status",
+      "yourProgress": "Your Progress",
+      "requirementsMet": "Requirements met!",
+      "keepGoing": "Keep going to unlock!",
+      "close": "Close"
+    },
+    "requirementTypes": {
+      "current_streak": "Maintain a streak of {{value}} consecutive days",
+      "total_habit_completions": "Complete {{value}} total habits",
+      "total_xp": "Earn {{value}} total XP",
+      "friends_count": "Add {{value}} friends",
+      "root_habit_complete": "Complete the 30-day challenge",
+      "early_completion": "Complete a habit before 8 AM",
+      "late_completion": "Complete a habit after 10 PM",
+      "perfect_day": "Complete all your habits in one day"
+    },
+    "toast": {
+      "unlocked": "🎉 New achievement unlocked: {{name}}!",
+      "claimed": "✨ You claimed {{name}}! +{{xp}} XP, +{{points}} pts",
+      "error": "❌ Error claiming achievement: {{error}}",
+      "alreadyClaimed": "⚠️ You already claimed this achievement"
+    },
+    "noAchievements": "No achievements available",
+    "loadingAchievements": "Loading achievements...",
+    "errorLoading": "Error loading achievements"
   },
   "habits": {
     "title": "Habit Log",
@@ -126,7 +199,7 @@
     "title": "Indulgence Shop",
     "subtitle": "Treat yourself (occasionally)",
     "balance": "Balance",
-    "buyNow": "Buy Now",
+    "buyNow": "Buy",
     "purchased": "Purchased",
     "notEnoughPoints": "Not enough points! Complete more habits to earn points.",
     "confirmPurchase": "Confirm purchase?",
@@ -248,7 +321,9 @@
     "previous": "Previous",
     "close": "Close",
     "create": "Create",
-    "saveChanges": "Save Changes"
+    "saveChanges": "Save Changes",
+    "skip": "Skip",
+    "select": "Select"
   },
   "onboarding": {
     "prevButton": "Previous",

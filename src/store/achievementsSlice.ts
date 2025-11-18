@@ -10,6 +10,7 @@ import type {
   UserAchievement,
   AchievementWithProgress,
   AchievementUnlockResult,
+  AchievementClaimResult,
 } from '@/types/achievement';
 import { AchievementsService } from '@/services/supabase/achievements.service';
 
@@ -18,6 +19,8 @@ export interface AchievementsSlice {
   userAchievements: UserAchievement[];
   achievementsWithProgress: AchievementWithProgress[];
   unlockedCount: number;
+  availableCount: number; // Unlocked but not claimed
+  claimedCount: number; // Already claimed
   isLoading: boolean;
   error: string | null;
 
@@ -25,6 +28,7 @@ export interface AchievementsSlice {
   loadAchievements: () => Promise<void>;
   loadAchievementsWithProgress: () => Promise<void>;
   checkAndUnlockAchievements: () => Promise<AchievementUnlockResult>;
+  claimAchievement: (achievementId: string) => Promise<AchievementClaimResult>;
   getAchievementsByCategory: (category: string) => Promise<AchievementWithProgress[]>;
   refreshAchievements: () => Promise<void>;
 }
@@ -34,6 +38,8 @@ export const createAchievementsSlice: StateCreator<AchievementsSlice> = (set) =>
   userAchievements: [],
   achievementsWithProgress: [],
   unlockedCount: 0,
+  availableCount: 0,
+  claimedCount: 0,
   isLoading: false,
   error: null,
 
@@ -41,16 +47,20 @@ export const createAchievementsSlice: StateCreator<AchievementsSlice> = (set) =>
     try {
       set({ isLoading: true, error: null });
 
-      const [achievements, userAchievements, unlockedCount] = await Promise.all([
+      const [achievements, userAchievements, unlockedCount, availableCount, claimedCount] = await Promise.all([
         AchievementsService.getAllAchievements(),
         AchievementsService.getUserAchievements(),
         AchievementsService.getUnlockedCount(),
+        AchievementsService.getAvailableCount(),
+        AchievementsService.getClaimedCount(),
       ]);
 
       set({
         achievements,
         userAchievements,
         unlockedCount,
+        availableCount,
+        claimedCount,
         isLoading: false,
       });
     } catch (error) {
@@ -66,14 +76,18 @@ export const createAchievementsSlice: StateCreator<AchievementsSlice> = (set) =>
     try {
       set({ isLoading: true, error: null });
 
-      const [achievementsWithProgress, unlockedCount] = await Promise.all([
+      const [achievementsWithProgress, unlockedCount, availableCount, claimedCount] = await Promise.all([
         AchievementsService.getAchievementsWithProgress(),
         AchievementsService.getUnlockedCount(),
+        AchievementsService.getAvailableCount(),
+        AchievementsService.getClaimedCount(),
       ]);
 
       set({
         achievementsWithProgress,
         unlockedCount,
+        availableCount,
+        claimedCount,
         isLoading: false,
       });
     } catch (error) {
@@ -91,17 +105,21 @@ export const createAchievementsSlice: StateCreator<AchievementsSlice> = (set) =>
 
       // If achievements were unlocked, refresh the data
       if (result.newly_unlocked > 0) {
-        const [achievementsWithProgress, userAchievements, unlockedCount] =
+        const [achievementsWithProgress, userAchievements, unlockedCount, availableCount, claimedCount] =
           await Promise.all([
             AchievementsService.getAchievementsWithProgress(),
             AchievementsService.getUserAchievements(),
             AchievementsService.getUnlockedCount(),
+            AchievementsService.getAvailableCount(),
+            AchievementsService.getClaimedCount(),
           ]);
 
         set({
           achievementsWithProgress,
           userAchievements,
           unlockedCount,
+          availableCount,
+          claimedCount,
         });
       }
 
@@ -122,16 +140,52 @@ export const createAchievementsSlice: StateCreator<AchievementsSlice> = (set) =>
     }
   },
 
+  claimAchievement: async (achievementId: string) => {
+    try {
+      const result = await AchievementsService.claimAchievement(achievementId);
+
+      // If claim was successful, refresh the data
+      if (result.success) {
+        const [achievementsWithProgress, userAchievements, unlockedCount, availableCount, claimedCount] =
+          await Promise.all([
+            AchievementsService.getAchievementsWithProgress(),
+            AchievementsService.getUserAchievements(),
+            AchievementsService.getUnlockedCount(),
+            AchievementsService.getAvailableCount(),
+            AchievementsService.getClaimedCount(),
+          ]);
+
+        set({
+          achievementsWithProgress,
+          userAchievements,
+          unlockedCount,
+          availableCount,
+          claimedCount,
+        });
+      }
+
+      return result;
+    } catch (error) {
+      console.error('Error claiming achievement:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to claim achievement',
+      };
+    }
+  },
+
   refreshAchievements: async () => {
     try {
       set({ isLoading: true, error: null });
 
-      const [achievements, userAchievements, achievementsWithProgress, unlockedCount] =
+      const [achievements, userAchievements, achievementsWithProgress, unlockedCount, availableCount, claimedCount] =
         await Promise.all([
           AchievementsService.getAllAchievements(),
           AchievementsService.getUserAchievements(),
           AchievementsService.getAchievementsWithProgress(),
           AchievementsService.getUnlockedCount(),
+          AchievementsService.getAvailableCount(),
+          AchievementsService.getClaimedCount(),
         ]);
 
       set({
@@ -139,6 +193,8 @@ export const createAchievementsSlice: StateCreator<AchievementsSlice> = (set) =>
         userAchievements,
         achievementsWithProgress,
         unlockedCount,
+        availableCount,
+        claimedCount,
         isLoading: false,
       });
     } catch (error) {

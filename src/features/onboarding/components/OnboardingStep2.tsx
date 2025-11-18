@@ -75,7 +75,7 @@ export function OnboardingStep2({ onNext, onPrev }: OnboardingStep2Props) {
       </div>
 
       {/* Life Areas Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 gap-3 sm:gap-4 mb-8">
         {predefinedAreas.map((area) => {
           const isSelected = selectedAreaIds.includes(area.id);
           const Icon = AREA_ICONS[area.area as LifeAreaType] || Heart;
@@ -85,8 +85,10 @@ export function OnboardingStep2({ onNext, onPrev }: OnboardingStep2Props) {
               key={area.id}
               type="button"
               onClick={() => toggleArea(area.id)}
+              aria-pressed={isSelected}
+              aria-label={`${isSelected ? 'Deselect' : 'Select'} ${t(`lifeAreas.${area.area.toLowerCase()}`)}`}
               className={cn(
-                'p-4 rounded-xl border-2 transition-all duration-200',
+                'p-4 rounded-xl border-2 transition-all duration-200 min-h-[120px]',
                 'flex flex-col items-center gap-3',
                 'focus:outline-none focus:ring-2 focus:ring-gold-400',
                 isSelected

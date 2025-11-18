@@ -6,6 +6,7 @@
 import React from 'react';
 import { Flame } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useLocale } from '@/hooks/useLocale';
 
 interface StreakDisplayProps {
   streak: number; // Total consecutive days
@@ -32,6 +33,7 @@ export function StreakDisplay({
   size = 'md'
 }: StreakDisplayProps) {
   const dayLabels = getDayLabels();
+  const { t } = useLocale();
 
   return (
     <div className="w-full p-6">
@@ -44,7 +46,7 @@ export function StreakDisplay({
 
       </div>
       <div className="text-center text-white">
-          Keep it up!
+          {t('rootHabit.keepGoing')}
         </div>
 
      

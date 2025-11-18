@@ -37,13 +37,17 @@ export interface UserAchievement {
   userId: string;
   achievementId: string;
   unlockedAt: string;
+  claimedAt?: string; // NULL = available to claim, TIMESTAMP = already claimed
   progress: number;
   achievement?: Achievement; // Populated via join
 }
 
+export type AchievementState = 'locked' | 'available' | 'claimed';
+
 export interface AchievementWithProgress extends Achievement {
   unlocked: boolean;
   unlockedAt?: string;
+  claimedAt?: string;
   progress: number;
 }
 
@@ -64,3 +68,31 @@ export interface AchievementsState {
   isLoading: boolean;
   error: string | null;
 }
+
+export interface AchievementClaimResult {
+  success: boolean;
+  error?: string;
+  achievement_key?: string;
+  achievement_name?: string;
+  xp_reward?: number;
+  points_reward?: number;
+}
+
+// Helper functions for achievement states
+export const isAchievementLocked = (achievement: AchievementWithProgress): boolean => {
+  return !achievement.unlocked;
+};
+
+export const isAchievementAvailable = (achievement: AchievementWithProgress): boolean => {
+  return achievement.unlocked && !achievement.claimedAt;
+};
+
+export const isAchievementClaimed = (achievement: AchievementWithProgress): boolean => {
+  return achievement.unlocked && !!achievement.claimedAt;
+};
+
+export const getAchievementState = (achievement: AchievementWithProgress): AchievementState => {
+  if (!achievement.unlocked) return 'locked';
+  if (!achievement.claimedAt) return 'available';
+  return 'claimed';
+};

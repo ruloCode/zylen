@@ -130,7 +130,7 @@ export function HabitLog() {
 
   return (
     <>
-      <div className="min-h-screen pb-24 px-3 sm:px-4 pt-6 sm:pt-8">
+      <div className="min-h-screen pb-24 px-2 pt-4">
         <div className="max-w-md mx-auto">
           {/* Header */}
           <header className="mb-6 sm:mb-8">
