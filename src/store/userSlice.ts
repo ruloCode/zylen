@@ -15,7 +15,7 @@ export interface UserSlice {
   updateXP: (xp: number) => Promise<void>;
   setUser: (user: User) => void;
   completeOnboarding: () => Promise<void>;
-  updateUserProfile: (name: string, avatarUrl?: string) => Promise<void>;
+  updateUserProfile: (username: string, avatarUrl?: string) => Promise<void>;
   updateSelectedLifeAreas: (areaIds: string[]) => Promise<void>;
 }
 
@@ -134,14 +134,14 @@ export const createUserSlice: StateCreator<UserSlice> = (set, get) => ({
     }
   },
 
-  updateUserProfile: async (name: string, avatarUrl?: string) => {
+  updateUserProfile: async (username: string, avatarUrl?: string) => {
     try {
       const currentUser = get().user;
       if (!currentUser) return;
 
       set({ isLoading: true, error: null });
 
-      const updates: Partial<User> = { name };
+      const updates: Partial<User> = { username };
       if (avatarUrl !== undefined) {
         updates.avatarUrl = avatarUrl;
       }

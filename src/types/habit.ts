@@ -18,7 +18,12 @@ export type LifeAreaType =
   | 'Creativity'
   | 'Social'
   | 'Family'
-  | 'Career';
+  | 'Career'
+  | 'Education'
+  | 'Mindfulness'
+  | 'Spiritual'
+  | 'Environment'
+  | 'Fun';
 
 export interface HabitFormData {
   name: string;

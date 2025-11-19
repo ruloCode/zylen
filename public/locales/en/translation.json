@@ -43,7 +43,12 @@
     "creativity": "Creativity",
     "social": "Social",
     "family": "Family",
-    "career": "Career"
+    "career": "Career",
+    "education": "Education",
+    "mindfulness": "Mindfulness",
+    "spiritual": "Spiritual",
+    "environment": "Environment",
+    "fun": "Fun"
   },
   "lifeAreaModal": {
     "title": "Life Area Details",
@@ -329,14 +334,15 @@
     "prevButton": "Previous",
     "nextButton": "Next",
     "finishButton": "Get Started",
+    "completedSuccess": "Onboarding completed successfully!",
     "step1": {
       "title": "Welcome to Zylen!",
       "description": "Your journey to a better version of yourself starts here",
-      "nameLabel": "What's your name?",
-      "namePlaceholder": "Enter your name",
-      "nameError": "Name must be at least 2 characters",
+      "nameLabel": "Choose your username",
+      "namePlaceholder": "yourUsername",
+      "nameError": "Username must be at least 3 characters",
       "nextButton": "Continue",
-      "helperText": "This name will be shown on your profile",
+      "helperText": "This will be your unique identifier in Zylen",
       "avatarLabel": "Choose your avatar",
       "avatarMale": "Male",
       "avatarFemale": "Female"

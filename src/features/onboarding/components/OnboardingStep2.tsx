@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Heart, DollarSign, Palette, Users, Home as HomeIcon, Briefcase, Plus, ArrowLeft, ArrowRight } from 'lucide-react';
+import { Heart, DollarSign, Palette, Users, Home as HomeIcon, Briefcase, BookOpen, Brain, Sparkles, Home, Gamepad2, ArrowLeft, ArrowRight } from 'lucide-react';
 import { useOnboarding, useLifeAreas } from '@/store';
 import { useLocale } from '@/hooks/useLocale';
 import { cn } from '@/utils';
@@ -18,6 +18,11 @@ const AREA_ICONS: Record<LifeAreaType, React.ComponentType<{ size?: number; clas
   Social: Users,
   Family: HomeIcon,
   Career: Briefcase,
+  Education: BookOpen,
+  Mindfulness: Brain,
+  Spiritual: Sparkles,
+  Environment: Home,
+  Fun: Gamepad2,
 };
 
 /**
@@ -63,19 +68,19 @@ export function OnboardingStep2({ onNext, onPrev }: OnboardingStep2Props) {
   const predefinedAreas = lifeAreas.filter((area) => !area.isCustom);
 
   return (
-    <div className="w-full max-w-2xl mx-auto">
+    <div className="w-full max-w-3xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
       {/* Title */}
-      <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-white mb-3">
+      <div className="text-center mb-6 md:mb-10">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 uppercase">
           {t('onboarding.step2.title')}
         </h2>
-        <p className="text-gray-300">
+        <p className="text-white/70 text-sm sm:text-base max-w-xl mx-auto">
           {t('onboarding.step2.description')}
         </p>
       </div>
 
       {/* Life Areas Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 gap-3 sm:gap-4 mb-8">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
         {predefinedAreas.map((area) => {
           const isSelected = selectedAreaIds.includes(area.id);
           const Icon = AREA_ICONS[area.area as LifeAreaType] || Heart;
@@ -88,31 +93,32 @@ export function OnboardingStep2({ onNext, onPrev }: OnboardingStep2Props) {
               aria-pressed={isSelected}
               aria-label={`${isSelected ? 'Deselect' : 'Select'} ${t(`lifeAreas.${area.area.toLowerCase()}`)}`}
               className={cn(
-                'p-4 rounded-xl border-2 transition-all duration-200 min-h-[120px]',
-                'flex flex-col items-center gap-3',
-                'focus:outline-none focus:ring-2 focus:ring-gold-400',
+                'p-4 md:p-5 rounded-none border-2 transition-all duration-300 min-h-[100px] md:min-h-[120px]',
+                'flex flex-col items-center justify-center gap-2',
+                'focus:outline-none focus:ring-2 focus:ring-[rgb(137,184,32)]',
+                'hover:scale-105',
                 isSelected
-                  ? 'bg-teal-500/20 border-teal-500 scale-105 shadow-lg shadow-teal-500/20'
-                  : 'bg-charcoal-700/50 border-charcoal-600 hover:border-charcoal-500'
+                  ? 'bg-[rgb(137,184,32)]/20 border-[rgb(137,184,32)] shadow-2xl shadow-[rgb(137,184,32)]/30'
+                  : 'bg-charcoal-800/80 border-charcoal-600 hover:border-[rgb(137,184,32)]/50'
               )}
             >
               <Icon
-                size={32}
+                size={28}
                 className={cn(
                   'transition-colors duration-200',
-                  isSelected ? 'text-teal-400' : 'text-gray-400'
+                  isSelected ? 'text-[rgb(137,184,32)]' : 'text-gray-400'
                 )}
               />
               <span
                 className={cn(
-                  'font-semibold text-sm transition-colors duration-200',
+                  'font-semibold text-xs sm:text-sm transition-colors duration-200',
                   isSelected ? 'text-white' : 'text-gray-300'
                 )}
               >
                 {t(`lifeAreas.${area.area.toLowerCase()}`)}
               </span>
               {isSelected && (
-                <div className="w-2 h-2 rounded-full bg-teal-400 animate-in zoom-in duration-200" />
+                <div className="w-2 h-2 rounded-none bg-[rgb(137,184,32)] animate-in zoom-in duration-200" />
               )}
             </button>
           );
@@ -120,26 +126,28 @@ export function OnboardingStep2({ onNext, onPrev }: OnboardingStep2Props) {
       </div>
 
       {/* Selected Count */}
-      <p className="text-center text-sm text-gray-400 mb-6">
-        {selectedAreaIds.length} {t('onboarding.step2.areasSelected')}
-      </p>
+      {selectedAreaIds.length > 0 && (
+        <p className="text-center text-xs sm:text-sm text-[rgb(137,184,32)] mb-4 font-medium animate-in fade-in zoom-in duration-300">
+          {selectedAreaIds.length} {t('onboarding.step2.areasSelected')}
+        </p>
+      )}
 
       {/* Navigation Buttons */}
-      <div className="flex gap-4">
+      <div className="flex gap-3 mt-4">
         <button
           type="button"
           onClick={onPrev}
           className={cn(
-            'flex-1 py-3 px-6 rounded-xl font-semibold',
+            'px-4 py-2 md:py-3 rounded-none font-medium text-sm',
             'flex items-center justify-center gap-2',
-            'bg-charcoal-700 text-white border-2 border-charcoal-600',
-            'hover:bg-charcoal-600 hover:border-charcoal-500',
-            'transition-all duration-200',
-            'focus:outline-none focus:ring-2 focus:ring-gold-400'
+            'bg-charcoal-800/50 text-white/70 border border-charcoal-600',
+            'hover:bg-charcoal-700 hover:text-white',
+            'transition-all duration-300',
+            'focus:outline-none focus:ring-2 focus:ring-[rgb(137,184,32)]'
           )}
         >
-          <ArrowLeft size={20} />
-          {t('onboarding.prevButton')}
+          <ArrowLeft size={16} />
+          <span className="hidden sm:inline">{t('onboarding.prevButton')}</span>
         </button>
 
         <button
@@ -147,13 +155,13 @@ export function OnboardingStep2({ onNext, onPrev }: OnboardingStep2Props) {
           onClick={handleNext}
           disabled={selectedAreaIds.length === 0}
           className={cn(
-            'flex-1 py-3 px-6 rounded-xl font-semibold',
+            'flex-1 py-3 md:py-4 px-6 rounded-none font-bold text-base md:text-lg uppercase',
             'flex items-center justify-center gap-2',
-            'transition-all duration-200',
-            'focus:outline-none focus:ring-2 focus:ring-gold-400',
+            'transition-all duration-300',
+            'focus:outline-none focus:ring-2 focus:ring-[rgb(137,184,32)]',
             selectedAreaIds.length === 0
-              ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
-              : 'bg-gradient-to-r from-gold-500 to-gold-600 text-white hover:from-gold-600 hover:to-gold-700 shadow-lg hover:shadow-gold-500/50'
+              ? 'bg-charcoal-700 text-charcoal-500 cursor-not-allowed'
+              : 'bg-[rgb(137,184,32)] text-charcoal-900 hover:bg-[rgb(120,160,28)] shadow-xl hover:shadow-[rgb(137,184,32)]/40 hover:scale-[1.02] active:scale-[0.98]'
           )}
         >
           {t('onboarding.nextButton')}

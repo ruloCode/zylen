@@ -86,7 +86,7 @@ export function Header() {
                 <UserIcon size={18} className="text-white" aria-hidden="true" />
               )}
               <span className="hidden sm:inline text-sm font-medium text-white">
-                {user.name || 'Perfil'}
+                {user.username ? `@${user.username}` : 'Perfil'}
               </span>
             </Link>
           </div>

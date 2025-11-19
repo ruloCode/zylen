@@ -64,6 +64,13 @@ export function Dashboard() {
             </div>
           )}
 
+          {/* Username */}
+          {user?.username && (
+            <h2 className="text-xl font-bold text-white mb-3">
+              @{user.username}
+            </h2>
+          )}
+
           {/* Global Level */}
           <div className="flex items-center justify-center gap-3 mb-4">
             <LevelBadge level={user?.level || 1} size="lg" />

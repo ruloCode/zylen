@@ -65,16 +65,16 @@ export function OnboardingStep3({ onNext, onPrev }: OnboardingStep3Props) {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto">
-      <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-white mb-3">
+    <div className="w-full max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <div className="text-center mb-6 md:mb-10">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 uppercase">
           {t('onboarding.step3.title')}
         </h2>
-        <p className="text-gray-300">{t('onboarding.step3.description')}</p>
+        <p className="text-white/70 text-sm sm:text-base max-w-xl mx-auto">{t('onboarding.step3.description')}</p>
       </div>
 
       {/* Habits List */}
-      <ul className="space-y-3 mb-6" role="list">
+      <ul className="space-y-2 mb-4 max-h-[200px] md:max-h-[300px] overflow-y-auto" role="list">
         {habits.map((habit, index) => {
           const area = lifeAreas.find((a) => a.id === habit.lifeArea);
           return (
@@ -85,7 +85,7 @@ export function OnboardingStep3({ onNext, onPrev }: OnboardingStep3Props) {
               <div className="flex-1">
                 <h3 className="font-semibold text-white">{habit.name}</h3>
                 <p className="text-sm text-gray-400">
-                  {habit.xp} XP • {area?.area || 'Sin área'}
+                  {habit.xp} XP • {area ? t(`lifeAreas.${area.area.toLowerCase()}`) : 'Sin área'}
                 </p>
               </div>
               <button
@@ -154,7 +154,7 @@ export function OnboardingStep3({ onNext, onPrev }: OnboardingStep3Props) {
               >
                 {selectedAreas.map((area) => (
                   <option key={area.id} value={area.id}>
-                    {area.area}
+                    {t(`lifeAreas.${area.area.toLowerCase()}`)}
                   </option>
                 ))}
               </select>
@@ -196,14 +196,21 @@ export function OnboardingStep3({ onNext, onPrev }: OnboardingStep3Props) {
       )}
 
       {/* Navigation */}
-      <div className="flex gap-4">
+      <div className="flex gap-3 mt-4">
         <button
           type="button"
           onClick={onPrev}
-          className="flex-1 py-3 px-6 rounded-xl font-semibold bg-charcoal-700 text-white border-2 border-charcoal-600 hover:bg-charcoal-600 flex items-center justify-center gap-2"
+          className={cn(
+            'px-4 py-2 md:py-3 rounded-none font-medium text-sm',
+            'flex items-center justify-center gap-2',
+            'bg-charcoal-800/50 text-white/70 border border-charcoal-600',
+            'hover:bg-charcoal-700 hover:text-white',
+            'transition-all duration-300',
+            'focus:outline-none focus:ring-2 focus:ring-[rgb(137,184,32)]'
+          )}
         >
-          <ArrowLeft size={20} />
-          {t('onboarding.prevButton')}
+          <ArrowLeft size={16} />
+          <span className="hidden sm:inline">{t('onboarding.prevButton')}</span>
         </button>
 
         <button
@@ -211,13 +218,16 @@ export function OnboardingStep3({ onNext, onPrev }: OnboardingStep3Props) {
           onClick={handleNext}
           disabled={habits.length === 0}
           className={cn(
-            'flex-1 py-3 px-6 rounded-xl font-semibold flex items-center justify-center gap-2',
+            'flex-1 py-3 md:py-4 px-6 rounded-none font-bold text-base md:text-lg uppercase',
+            'flex items-center justify-center gap-2',
+            'transition-all duration-300',
+            'focus:outline-none focus:ring-2 focus:ring-[rgb(137,184,32)]',
             habits.length === 0
-              ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
-              : 'bg-gradient-to-r from-gold-500 to-gold-600 text-white hover:from-gold-600 hover:to-gold-700'
+              ? 'bg-charcoal-700 text-charcoal-500 cursor-not-allowed'
+              : 'bg-[rgb(137,184,32)] text-charcoal-900 hover:bg-[rgb(120,160,28)] shadow-xl hover:shadow-[rgb(137,184,32)]/40 hover:scale-[1.02] active:scale-[0.98]'
           )}
         >
-          {t('onboarding.nextButton')}
+          {t('onboarding.finishButton')}
           <ArrowRight size={20} />
         </button>
       </div>

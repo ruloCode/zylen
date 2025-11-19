@@ -5,25 +5,20 @@ import { useOnboarding, useUser, useHabits, useLifeAreas } from '@/store';
 import { ROUTES } from '@/constants/routes';
 import { ONBOARDING_STEPS } from '@/types';
 import {
-  OnboardingProgress,
   OnboardingStep1,
-  OnboardingStepUsername,
   OnboardingStep2,
   OnboardingStep3,
-  OnboardingStep4,
 } from '@/features/onboarding/components';
 import { useLocale } from '@/hooks/useLocale';
 
 /**
  * Onboarding Page
  *
- * Multi-step onboarding flow for new users
+ * Simplified 3-step onboarding flow for new users
  * Steps:
- * 1. Welcome + Name + Avatar
- * 2. Choose Username
- * 3. Life Areas Selection
- * 4. Create First Habits
- * 5. Tutorial / Mechanics Overview
+ * 1. Welcome + Username + Avatar
+ * 2. Life Areas Selection
+ * 3. Create First Habits
  */
 export function Onboarding() {
   const navigate = useNavigate();
@@ -53,9 +48,9 @@ export function Onboarding() {
     try {
       setIsSubmitting(true);
 
-      // 1. Update user profile with name and avatar
-      if (temporaryData.userName) {
-        await updateUserProfile(temporaryData.userName, temporaryData.avatarUrl);
+      // 1. Update user profile with username and avatar
+      if (temporaryData.username) {
+        await updateUserProfile(temporaryData.username, temporaryData.avatarUrl);
       }
 
       // 2. Enable/disable selected life areas
@@ -101,21 +96,12 @@ export function Onboarding() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-charcoal-900 via-charcoal-800 to-charcoal-900 flex items-center justify-center p-4 sm:p-6 md:p-8 safe-area-inset">
-      <div className="w-full max-w-4xl">
-        {/* Progress Indicator */}
-        <div className="mb-12">
-          <OnboardingProgress currentStep={currentStep} completedSteps={completedSteps} />
-        </div>
-
+    <div className="min-h-screen bg-gradient-to-br from-charcoal-900 via-charcoal-800 to-charcoal-900 flex items-start md:items-center justify-center p-3 sm:p-4 md:p-8 pt-4 md:pt-8 safe-area-inset">
+      <div className="w-full max-w-5xl">
         {/* Step Content */}
-        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div>
           {currentStep === ONBOARDING_STEPS.WELCOME && (
             <OnboardingStep1 onNext={nextStep} />
-          )}
-
-          {currentStep === ONBOARDING_STEPS.USERNAME && (
-            <OnboardingStepUsername onNext={nextStep} onPrev={prevStep} />
           )}
 
           {currentStep === ONBOARDING_STEPS.LIFE_AREAS && (
@@ -123,15 +109,7 @@ export function Onboarding() {
           )}
 
           {currentStep === ONBOARDING_STEPS.HABITS && (
-            <OnboardingStep3 onNext={nextStep} onPrev={prevStep} />
-          )}
-
-          {currentStep === ONBOARDING_STEPS.TUTORIAL && (
-            <OnboardingStep4
-              onFinish={handleFinishOnboarding}
-              onPrev={prevStep}
-              isSubmitting={isSubmitting}
-            />
+            <OnboardingStep3 onNext={handleFinishOnboarding} onPrev={prevStep} />
           )}
         </div>
       </div>

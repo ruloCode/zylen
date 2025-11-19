@@ -33,7 +33,7 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
             </div>
           )}
         </div>
-        <h1 className="text-2xl font-bold text-white">{user.name}</h1>
+        <h1 className="text-2xl font-bold text-white">@{user.username}</h1>
       </div>
 
       {/* Stats - Vertical Stack on Desktop (sidebar), Grid on Mobile */}

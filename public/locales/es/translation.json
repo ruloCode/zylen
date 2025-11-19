@@ -35,7 +35,7 @@
     "title": "Panel",
     "lifeAreas": "Áreas de Vida",
     "logHabits": "Registrar Hábitos del Día",
-    "keepGoing": "¡Sigue adelante, Campeón! 💪"
+    "keepGoing": "¡Sigue adelante! 💪"
   },
   "lifeAreas": {
     "health": "Salud",
@@ -43,7 +43,12 @@
     "creativity": "Creatividad",
     "social": "Social",
     "family": "Familia",
-    "career": "Carrera"
+    "career": "Carrera",
+    "education": "Educación",
+    "mindfulness": "Mindfulness",
+    "spiritual": "Espiritual",
+    "environment": "Entorno",
+    "fun": "Diversión"
   },
   "lifeAreaModal": {
     "title": "Detalles del Área de Vida",
@@ -276,7 +281,7 @@
     "typeMessage": "Pregúntale lo que sea a tu coach...",
     "send": "Enviar",
     "thinking": "Pensando...",
-    "welcomeMessage": "¡Hola campeón! 💪 Estoy aquí para apoyarte en tu camino. ¿Cómo te sientes hoy?",
+    "welcomeMessage": "¡Hola! 💪 Estoy aquí para apoyarte en tu camino. ¿Cómo te sientes hoy?",
     "responses": {
       "1": "¡Qué bueno escuchar eso! Recuerda, cada pequeño paso cuenta. ¡Sigue con el increíble trabajo!",
       "2": "¡Estoy orgulloso de tu progreso! La consistencia es la clave del éxito. 🌟",
@@ -329,14 +334,15 @@
     "prevButton": "Anterior",
     "nextButton": "Siguiente",
     "finishButton": "Comenzar",
+    "completedSuccess": "¡Onboarding completado exitosamente!",
     "step1": {
       "title": "¡Bienvenido a Zylen!",
       "description": "Tu viaje hacia una mejor versión de ti mismo comienza aquí",
-      "nameLabel": "¿Cómo te llamas?",
-      "namePlaceholder": "Ingresa tu nombre",
-      "nameError": "El nombre debe tener al menos 2 caracteres",
+      "nameLabel": "Elige tu nombre de usuario",
+      "namePlaceholder": "tuNombreUsuario",
+      "nameError": "El nombre de usuario debe tener al menos 3 caracteres",
       "nextButton": "Continuar",
-      "helperText": "Este nombre se mostrará en tu perfil",
+      "helperText": "Este será tu identificador único en Zylen",
       "avatarLabel": "Elige tu avatar",
       "avatarMale": "Hombre",
       "avatarFemale": "Mujer"

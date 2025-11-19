@@ -4,14 +4,14 @@
 -- This trigger automatically creates:
 -- 1. Profile
 -- 2. Streak record
--- 3. 6 predefined life areas
+-- 3. 11 predefined life areas
 -- 4. 4 default shop items
 -- ===========================================================================
 
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 DECLARE
-  area_types TEXT[] := ARRAY['health', 'finance', 'creativity', 'social', 'family', 'career'];
+  area_types TEXT[] := ARRAY['health', 'finance', 'creativity', 'social', 'family', 'career', 'education', 'mindfulness', 'spiritual', 'environment', 'fun'];
   area_type TEXT;
 BEGIN
   -- 1. Create profile
@@ -28,7 +28,7 @@ BEGIN
   INSERT INTO public.streaks (user_id)
   VALUES (NEW.id);
 
-  -- 3. Create 6 predefined life areas (disabled by default - user selects in onboarding)
+  -- 3. Create 11 predefined life areas (disabled by default - user selects in onboarding)
   FOREACH area_type IN ARRAY area_types
   LOOP
     INSERT INTO public.life_areas (

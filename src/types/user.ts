@@ -1,7 +1,7 @@
 export interface User {
   id: string;
-  name: string; // User name (now required)
-  username?: string; // Unique username for social features
+  name: string; // User full name (from OAuth metadata)
+  username: string; // Unique username for social features (REQUIRED)
   points: number; // Spendable currency for shop (separate from XP)
   totalXPEarned: number; // Total XP accumulated (for global level)
   level: number; // Global level (based on totalXPEarned)

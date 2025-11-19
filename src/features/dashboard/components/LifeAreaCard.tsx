@@ -4,13 +4,13 @@
  */
 
 import React from 'react';
-import { Heart, DollarSign, Palette, Users, Home, Briefcase } from 'lucide-react';
+import { Heart, DollarSign, Palette, Users, Home, Briefcase, BookOpen, Brain, Sparkles, Home as HomeIcon, Gamepad2 } from 'lucide-react';
 import { ProgressBar } from '@/components/ui';
 import { useLocale } from '@/hooks/useLocale';
 import { getAreaLevelProgress } from '@/utils/xp';
 
 interface LifeAreaCardProps {
-  area: 'Health' | 'Finance' | 'Creativity' | 'Social' | 'Family' | 'Career';
+  area: 'Health' | 'Finance' | 'Creativity' | 'Social' | 'Family' | 'Career' | 'Education' | 'Mindfulness' | 'Spiritual' | 'Environment' | 'Fun';
   level: number;
   totalXP: number;
   onClick?: () => void;
@@ -21,8 +21,13 @@ const iconMap = {
   Finance: DollarSign,
   Creativity: Palette,
   Social: Users,
-  Family: Home,
-  Career: Briefcase
+  Family: HomeIcon,
+  Career: Briefcase,
+  Education: BookOpen,
+  Mindfulness: Brain,
+  Spiritual: Sparkles,
+  Environment: Home,
+  Fun: Gamepad2
 };
 
 // Vibrant backgrounds - Dofus character card style
@@ -32,7 +37,12 @@ const bgColorMap = {
   Creativity: 'bg-[#B43CC8]',     // Bright purple
   Social: 'bg-[#3296FF]',         // Bright blue
   Family: 'bg-[#FF8C32]',         // Bright orange
-  Career: 'bg-[#32C8DC]'          // Bright cyan
+  Career: 'bg-[#32C8DC]',         // Bright cyan
+  Education: 'bg-[#FFD700]',      // Bright gold
+  Mindfulness: 'bg-[#9B59B6]',    // Deep purple
+  Spiritual: 'bg-[#E91E63]',      // Pink
+  Environment: 'bg-[#27AE60]',    // Forest green
+  Fun: 'bg-[#FF6B6B]'             // Coral red
 };
 
 const translationKeyMap = {
@@ -41,7 +51,12 @@ const translationKeyMap = {
   Creativity: 'lifeAreas.creativity',
   Social: 'lifeAreas.social',
   Family: 'lifeAreas.family',
-  Career: 'lifeAreas.career'
+  Career: 'lifeAreas.career',
+  Education: 'lifeAreas.education',
+  Mindfulness: 'lifeAreas.mindfulness',
+  Spiritual: 'lifeAreas.spiritual',
+  Environment: 'lifeAreas.environment',
+  Fun: 'lifeAreas.fun'
 };
 
 export function LifeAreaCard({

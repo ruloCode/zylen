@@ -1,13 +1,12 @@
 export interface OnboardingState {
-  currentStep: number; // Current step index (0-3)
+  currentStep: number; // Current step index (0-2)
   completedSteps: number[]; // Array of completed step indices
   isOnboardingComplete: boolean;
   temporaryData: OnboardingData;
 }
 
 export interface OnboardingData {
-  userName?: string;
-  username?: string; // Unique username for social features
+  username?: string;
   avatarUrl?: string; // Selected avatar URL (Rulo or Dani)
   selectedLifeAreaIds?: string[]; // IDs of selected life areas
   createdHabits?: Array<{
@@ -27,10 +26,8 @@ export interface OnboardingStep {
 
 export const ONBOARDING_STEPS = {
   WELCOME: 0,
-  USERNAME: 1,
-  LIFE_AREAS: 2,
-  HABITS: 3,
-  TUTORIAL: 4,
+  LIFE_AREAS: 1,
+  HABITS: 2,
 } as const;
 
-export const TOTAL_ONBOARDING_STEPS = 5;
+export const TOTAL_ONBOARDING_STEPS = 3;
