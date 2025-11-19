@@ -64,7 +64,7 @@ export async function trackHabitCompletion(
 }
 
 /**
- * Get weekly leaderboard with user position
+ * Get weekly leaderboard with user position (friends only)
  */
 export async function getWeeklyLeaderboard(
   userId: string,
@@ -72,7 +72,7 @@ export async function getWeeklyLeaderboard(
   weekStartDate?: Date
 ): Promise<WeeklyLeaderboard> {
   try {
-    const { data, error } = await supabase.rpc('get_weekly_leaderboard', {
+    const { data, error } = await supabase.rpc('get_friends_weekly_leaderboard', {
       p_user_id: userId,
       p_limit: limit,
       p_week_start: weekStartDate ? weekStartDate.toISOString().split('T')[0] : null,
@@ -99,11 +99,13 @@ export async function getWeeklyLeaderboard(
     // Get week range
     const { weekStart, weekEnd } = await getCurrentWeekRange();
 
-    // Count total participants (users with at least 1 habit completed this week)
+    // Count total friends who have completed at least 1 habit this week
     const { count: totalParticipants } = await supabase
       .from('weekly_leaderboard')
-      .select('*', { count: 'exact', head: true })
+      .select('user_id, friendships!inner(user_id)', { count: 'exact', head: true })
       .eq('week_start_date', weekStart.toISOString().split('T')[0])
+      .eq('friendships.user_id', userId)
+      .eq('friendships.status', 'accepted')
       .gt('habits_completed', 0);
 
     return {

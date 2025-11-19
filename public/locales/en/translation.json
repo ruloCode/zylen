@@ -175,6 +175,7 @@
   "habitForm": {
     "createHabit": "Create Habit",
     "editHabit": "Edit Habit",
+    "description": "Form to create or edit a daily habit",
     "habitName": "Habit Name",
     "habitNamePlaceholder": "E.g., Meditate 10 minutes",
     "lifeArea": "Life Area",
@@ -502,6 +503,11 @@
     "yourRank": "Your Rank",
     "notRanked": "Complete habits to appear on the leaderboard",
     "topPlayers": "Top Players",
+    "topFriends": "Friends Rankings",
+    "friendsOnlyDesc": "Compete with your friends this week",
+    "noFriends": "No friends added yet",
+    "noFriendsDesc": "Add friends to compete in weekly rankings and motivate each other to improve.",
+    "addFriends": "Add Friends",
     "you": "You",
     "medal": {
       "first": "🥇",

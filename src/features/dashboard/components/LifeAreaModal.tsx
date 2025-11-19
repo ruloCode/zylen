@@ -79,7 +79,21 @@ export function LifeAreaModal({ lifeAreaId, isOpen, onClose }: LifeAreaModalProp
   const xpForNextLevel = getXPForAreaLevel(lifeArea.level + 1);
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} maxWidth="lg" showCloseButton={false}>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      maxWidth="lg"
+      showCloseButton={false}
+      description={t('lifeAreaModal.title')}
+      footer={
+        <button
+          onClick={onClose}
+          className="w-full py-4 px-6 bg-green-500 text-black font-bold hover:bg-green-400 transition-dofus uppercase touch-manipulation min-h-[44px] rounded-xl"
+        >
+          {t('lifeAreaModal.close')}
+        </button>
+      }
+    >
       {/* Header with Icon and Title */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
@@ -182,16 +196,6 @@ export function LifeAreaModal({ lifeAreaId, isOpen, onClose }: LifeAreaModalProp
             })}
           </div>
         )}
-      </div>
-
-      {/* Footer */}
-      <div className="mt-6 pt-6 border-t border-white/10 flex justify-end">
-        <button
-          onClick={onClose}
-          className="px-6 py-2 bg-green-500 text-black font-bold hover:bg-green-400 transition-dofus uppercase"
-        >
-          {t('lifeAreaModal.close')}
-        </button>
       </div>
     </Modal>
   );

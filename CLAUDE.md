@@ -33,6 +33,7 @@ pnpm run preview
 - **State Management**: Zustand
 - **Data Persistence**: localStorage via custom service layer
 - **Styling**: Tailwind CSS with custom design system
+- **UI Components**: Headless UI (modals/dialogs with built-in accessibility)
 - **Icons**: Lucide React
 - **Internationalization**: i18next + react-i18next (Spanish default, English alternative)
 
@@ -264,6 +265,62 @@ Utility classes:
 - `.float-animation` - Floating animation keyframes
 
 Design tokens are also available in `src/constants/design-tokens.ts`.
+
+#### Modal Components
+
+The app uses **Headless UI Dialog** for all modal/dialog components, providing enterprise-grade accessibility and UX:
+
+**Base Modal Component** (`src/components/ui/Modal.tsx`):
+- Built on @headlessui/react Dialog primitive
+- Automatic focus trapping and scroll locking
+- ESC key support and backdrop click to close
+- **Mobile-first**: Fullscreen on mobile (<768px), centered on desktop (≥768px)
+- Touch-friendly close buttons (header + footer on mobile)
+- Smooth fade + scale animations via Headless UI Transition
+
+**API:**
+```tsx
+import { Modal } from '@/components/ui/Modal';
+
+<Modal
+  isOpen={isOpen}
+  onClose={() => setIsOpen(false)}
+  title="Modal Title"                    // Optional, shown in header
+  description="Screen reader description" // Optional, for a11y
+  maxWidth="lg"                           // sm | md | lg | xl | 2xl | full
+  showCloseButton={true}                  // Default true
+  fullscreenOnMobile={true}               // Default true
+  className="custom-classes"              // Optional
+  footer={                                // Optional, sticky footer with actions
+    <button className="w-full py-4 px-6">
+      Action Button
+    </button>
+  }
+>
+  {/* Modal content */}
+</Modal>
+```
+
+**Accessibility Features** (automatic with Headless UI):
+- Focus trap: Focus stays within modal, returns to trigger on close
+- ARIA attributes: `role="dialog"`, `aria-modal="true"`, `aria-labelledby`
+- Screen reader announcements via Dialog.Title and Dialog.Description
+- Keyboard navigation: Tab/Shift+Tab, ESC to close
+- Body scroll locking while modal is open
+
+**Existing Modal Implementations:**
+1. **LifeAreaModal** (`src/features/dashboard/components/LifeAreaModal.tsx`) - Used on Dashboard
+2. **AchievementDetailModal** (`src/features/achievements/components/AchievementDetailModal.tsx`) - Used on Leaderboard
+
+**Best Practices:**
+- Always provide a `title` and `description` for accessibility
+- Use `maxWidth` to control desktop width (mobile is always fullscreen)
+- For custom styling, pass `className` to override border/shadow
+- Mobile touch targets should be min 44x44px (already built-in)
+- **Use `footer` prop for primary actions**: Sticky bottom, full-width buttons
+  - Automatically sticky on both mobile and desktop
+  - Full-width buttons for better touch accessibility
+  - Replaces default close button when provided
 
 ### Path Aliases
 

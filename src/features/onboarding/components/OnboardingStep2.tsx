@@ -33,13 +33,8 @@ export function OnboardingStep2({ onNext, onPrev }: OnboardingStep2Props) {
   const { lifeAreas } = useLifeAreas();
   const { t } = useLocale();
 
-  // Get predefined area IDs
-  const predefinedAreaIds = lifeAreas
-    .filter((area) => !area.isCustom)
-    .map((area) => area.id);
-
   const [selectedAreaIds, setSelectedAreaIds] = useState<string[]>(
-    temporaryData.selectedLifeAreaIds || predefinedAreaIds
+    temporaryData.selectedLifeAreaIds || []
   );
 
   useEffect(() => {

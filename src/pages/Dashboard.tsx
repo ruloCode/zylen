@@ -117,7 +117,7 @@ export function Dashboard() {
         <section aria-labelledby="life-areas-heading" className="mb-8">
           <h2 id="life-areas-heading" className="text-2xl font-bold text-white mb-5">{t('dashboard.lifeAreas')}</h2>
           <div className="grid grid-cols-2 gap-4">
-            {lifeAreas.map(area => <LifeAreaCard key={area.area} {...area} onClick={() => setSelectedAreaId(area.id)} />)}
+            {lifeAreas.filter(area => area.enabled).map(area => <LifeAreaCard key={area.area} {...area} onClick={() => setSelectedAreaId(area.id)} />)}
           </div>
         </section>
 

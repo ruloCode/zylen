@@ -175,6 +175,7 @@
   "habitForm": {
     "createHabit": "Crear Hábito",
     "editHabit": "Editar Hábito",
+    "description": "Formulario para crear o editar un hábito diario",
     "habitName": "Nombre del Hábito",
     "habitNamePlaceholder": "Ej: Meditar 10 minutos",
     "lifeArea": "Área de Vida",
@@ -502,6 +503,11 @@
     "yourRank": "Tu Puesto",
     "notRanked": "Completa hábitos para aparecer en el leaderboard",
     "topPlayers": "Mejores Jugadores",
+    "topFriends": "Ranking de Amigos",
+    "friendsOnlyDesc": "Compite con tus amigos esta semana",
+    "noFriends": "No tienes amigos agregados",
+    "noFriendsDesc": "Agrega amigos para competir en el ranking semanal y motivarse mutuamente a mejorar.",
+    "addFriends": "Agregar Amigos",
     "you": "TÚ",
     "medal": {
       "first": "🥇",

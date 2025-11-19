@@ -149,6 +149,14 @@ export const createLifeAreasSlice: StateCreator<LifeAreasSlice> = (set, get) => 
         area.id === id ? updatedArea : area
       );
       set({ lifeAreas: areas, lifeAreasLoading: false });
+
+      // Sync user.selectedLifeAreas with enabled areas
+      const enabledAreaIds = areas.filter(a => a.enabled).map(a => a.id);
+      set((state) => ({
+        user: state.user
+          ? { ...state.user, selectedLifeAreas: enabledAreaIds }
+          : null
+      }));
     } catch (error) {
       console.error('Error toggling life area:', error);
       set({
