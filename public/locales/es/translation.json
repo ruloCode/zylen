@@ -323,7 +323,10 @@
     "create": "Crear",
     "saveChanges": "Guardar Cambios",
     "skip": "Omitir",
-    "select": "Seleccionar"
+    "select": "Seleccionar",
+    "add": "Agregar",
+    "retry": "Reintentar",
+    "clear": "Limpiar"
   },
   "onboarding": {
     "prevButton": "Anterior",
@@ -480,6 +483,93 @@
       "rejectRequest": "Error al rechazar solicitud",
       "removeFriend": "Error al eliminar amigo",
       "searchUsers": "Error al buscar usuarios"
+    }
+  },
+  "templates": {
+    "title": "Plantillas de Hábitos",
+    "subtitle": "Elige un hábito predefinido para comenzar",
+    "browseTemplates": "Ver Plantillas",
+    "searchPlaceholder": "Buscar plantillas...",
+    "featured": "Destacado",
+    "noResults": "No se encontraron plantillas",
+    "tryDifferentFilters": "Intenta con otros filtros o busca algo diferente",
+    "clearFilters": "Limpiar filtros",
+    "addToMyHabits": "Agregar a Mis Hábitos",
+    "footerHint": "Selecciona una plantilla y personalízala según tus necesidades",
+    "filters": {
+      "all": "Todos"
+    },
+    "health": {
+      "meditate": "Meditar 10 minutos",
+      "meditate_desc": "Despeja tu mente con una sesión corta de meditación",
+      "exercise": "Ejercicio 30 minutos",
+      "exercise_desc": "Muévete con cualquier actividad física",
+      "water": "Beber 8 vasos de agua",
+      "water_desc": "Mantente hidratado durante el día",
+      "sleep": "Dormir 8 horas",
+      "sleep_desc": "Descansa bien para recuperarte",
+      "breakfast": "Desayuno saludable",
+      "breakfast_desc": "Empieza el día con comida nutritiva",
+      "walk": "Caminar 15-30 minutos",
+      "walk_desc": "Camina al aire libre",
+      "stretch": "Rutina de estiramientos",
+      "stretch_desc": "10 minutos de estiramientos"
+    },
+    "finance": {
+      "expenses": "Revisar gastos",
+      "expenses_desc": "Revisa y categoriza tus gastos diarios",
+      "save": "Ahorrar dinero",
+      "save_desc": "Transfiere a tu cuenta de ahorros",
+      "no_impulse": "Sin compras impulsivas",
+      "no_impulse_desc": "Evita gastos no planeados hoy",
+      "news": "Leer noticias financieras",
+      "news_desc": "Mantente informado sobre mercados"
+    },
+    "creativity": {
+      "write": "Escribir 500 palabras",
+      "write_desc": "Diario, blog o escritura creativa",
+      "music": "Practicar instrumento",
+      "music_desc": "30 minutos de práctica musical",
+      "draw": "Dibujar o bocetear",
+      "draw_desc": "Crea arte visual por 20 minutos",
+      "photos": "Tomar fotos",
+      "photos_desc": "Practica fotografía",
+      "learn": "Aprender algo nuevo",
+      "learn_desc": "Dedica 30 min a aprender una habilidad",
+      "code": "Programar 1 hora",
+      "code_desc": "Trabaja en un proyecto personal"
+    },
+    "social": {
+      "call_friend": "Llamar a un amigo",
+      "call_friend_desc": "Conecta con alguien que te importa",
+      "meet_new": "Conocer alguien nuevo",
+      "meet_new_desc": "Preséntate a alguien",
+      "compliment": "Hacer un cumplido",
+      "compliment_desc": "Difunde positividad con palabras amables",
+      "help": "Ayudar a alguien",
+      "help_desc": "Ofrece asistencia a otros"
+    },
+    "family": {
+      "dinner": "Cena familiar",
+      "dinner_desc": "Comparte una comida con la familia",
+      "kids": "Tiempo de calidad con hijos",
+      "kids_desc": "30 minutos de atención plena",
+      "call_parents": "Llamar a los padres",
+      "call_parents_desc": "Comunícate con tus padres",
+      "plan": "Planear actividad familiar",
+      "plan_desc": "Organiza algo divertido juntos"
+    },
+    "career": {
+      "deep_work": "Sesión de trabajo profundo",
+      "deep_work_desc": "2 horas de trabajo enfocado sin distracciones",
+      "read": "Leer contenido profesional",
+      "read_desc": "30 minutos de lectura profesional",
+      "resume": "Actualizar CV/portafolio",
+      "resume_desc": "Mantén tu perfil profesional actualizado",
+      "linkedin": "Networking en LinkedIn",
+      "linkedin_desc": "Interactúa con tu comunidad profesional",
+      "plan": "Planear el día siguiente",
+      "plan_desc": "Establece prioridades para mañana"
     }
   },
   "leaderboard": {

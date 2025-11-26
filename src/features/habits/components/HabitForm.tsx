@@ -10,35 +10,42 @@ import { XP_CONFIG } from '@/constants/config';
 interface HabitFormProps {
   /** Habit to edit (if editing), undefined for new habit */
   habit?: Habit;
+  /** Initial data to pre-fill form (e.g., from template) */
+  initialData?: Partial<HabitFormData>;
   /** Called when form is submitted with valid data */
   onSubmit: (data: HabitFormData) => void;
   /** Called when user cancels the form */
   onCancel: () => void;
 }
 
-export function HabitForm({ habit, onSubmit, onCancel }: HabitFormProps) {
+export function HabitForm({ habit, initialData, onSubmit, onCancel }: HabitFormProps) {
   const { t } = useLocale();
   const { lifeAreas } = useLifeAreas();
 
-  // Form state
-  const [name, setName] = useState(habit?.name || '');
-  const [lifeArea, setLifeArea] = useState(habit?.lifeArea || '');
-  const [iconName, setIconName] = useState(habit?.iconName || 'Target');
-  const [xp, setXp] = useState(habit?.xp || 30);
+  // Form state - prioritize habit (editing) over initialData (from template)
+  const [name, setName] = useState(habit?.name || initialData?.name || '');
+  const [lifeArea, setLifeArea] = useState(habit?.lifeArea || initialData?.lifeArea || '');
+  const [iconName, setIconName] = useState(habit?.iconName || initialData?.iconName || 'Target');
+  const [xp, setXp] = useState(habit?.xp || initialData?.xp || 30);
 
   // Validation state
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
-  // Reset form when habit prop changes
+  // Reset form when habit or initialData prop changes
   useEffect(() => {
     if (habit) {
       setName(habit.name);
       setLifeArea(habit.lifeArea);
       setIconName(habit.iconName);
       setXp(habit.xp);
+    } else if (initialData) {
+      if (initialData.name) setName(initialData.name);
+      if (initialData.lifeArea) setLifeArea(initialData.lifeArea);
+      if (initialData.iconName) setIconName(initialData.iconName);
+      if (initialData.xp) setXp(initialData.xp);
     }
-  }, [habit]);
+  }, [habit, initialData]);
 
   /**
    * Validate form fields

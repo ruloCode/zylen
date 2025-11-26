@@ -11,6 +11,7 @@ import { createSocialSlice, SocialSlice } from './socialSlice';
 import { createLeaderboardSlice, LeaderboardSlice } from './leaderboardSlice';
 import { createRootHabitSlice, RootHabitSlice } from './rootHabitSlice';
 import { createAchievementsSlice, AchievementsSlice } from './achievementsSlice';
+import { createHabitTemplatesSlice, HabitTemplatesSlice } from './habitTemplatesSlice';
 
 // Combined store type
 type AppStore = UserSlice &
@@ -23,7 +24,8 @@ type AppStore = UserSlice &
   SocialSlice &
   LeaderboardSlice &
   RootHabitSlice &
-  AchievementsSlice;
+  AchievementsSlice &
+  HabitTemplatesSlice;
 
 // Create the store with all slices
 export const useAppStore = create<AppStore>()((...a) => ({
@@ -38,6 +40,7 @@ export const useAppStore = create<AppStore>()((...a) => ({
   ...createLeaderboardSlice(...a),
   ...createRootHabitSlice(...a),
   ...createAchievementsSlice(...a),
+  ...createHabitTemplatesSlice(...a),
 }));
 
 // Typed hooks for easier access
@@ -222,6 +225,24 @@ export function useAchievements() {
     checkAndUnlockAchievements: state.checkAndUnlockAchievements,
     getAchievementsByCategory: state.getAchievementsByCategory,
     refreshAchievements: state.refreshAchievements,
+  }));
+  return useAppStore(selector);
+}
+
+export function useHabitTemplates() {
+  const selector = useShallow((state: AppStore) => ({
+    templates: state.templates,
+    filteredTemplates: state.filteredTemplates,
+    templatesLoading: state.templatesLoading,
+    templatesError: state.templatesError,
+    selectedLifeArea: state.selectedLifeArea,
+    searchQuery: state.searchQuery,
+    loadTemplates: state.loadTemplates,
+    filterByLifeArea: state.filterByLifeArea,
+    setSearchQuery: state.setSearchQuery,
+    clearFilters: state.clearFilters,
+    getTemplateById: state.getTemplateById,
+    incrementTemplatePopularity: state.incrementTemplatePopularity,
   }));
   return useAppStore(selector);
 }

@@ -4,19 +4,26 @@
  */
 
 import React from 'react';
-import { Heart, DollarSign, Palette, Users, Home, Briefcase } from 'lucide-react';
-import { ProgressBar } from '@/components/ui';
+import { Heart, DollarSign, Palette, Users, Home, Briefcase, Star } from 'lucide-react';
 import { useLocale } from '@/hooks/useLocale';
 import { getAreaLevelProgress } from '@/utils/xp';
 
+type PredefinedArea = 'Health' | 'Finance' | 'Creativity' | 'Social' | 'Family' | 'Career';
+
 interface LifeAreaCardProps {
-  area: 'Health' | 'Finance' | 'Creativity' | 'Social' | 'Family' | 'Career';
+  area: PredefinedArea | string;
   level: number;
   totalXP: number;
   onClick?: () => void;
+  // Allow additional props from LifeArea spread
+  id?: string;
+  isCustom?: boolean;
+  enabled?: boolean;
+  iconName?: string;
+  color?: string;
 }
 
-const iconMap = {
+const iconMap: Record<string, React.ComponentType<{ size?: number; className?: string; strokeWidth?: number }>> = {
   Health: Heart,
   Finance: DollarSign,
   Creativity: Palette,
@@ -26,7 +33,7 @@ const iconMap = {
 };
 
 // Vibrant backgrounds - Dofus character card style
-const bgColorMap = {
+const bgColorMap: Record<string, string> = {
   Health: 'bg-[#DC3232]',         // Bright red
   Finance: 'bg-[#32C850]',        // Bright green
   Creativity: 'bg-[#B43CC8]',     // Bright purple
@@ -35,7 +42,7 @@ const bgColorMap = {
   Career: 'bg-[#32C8DC]'          // Bright cyan
 };
 
-const translationKeyMap = {
+const translationKeyMap: Record<string, string> = {
   Health: 'lifeAreas.health',
   Finance: 'lifeAreas.finance',
   Creativity: 'lifeAreas.creativity',
@@ -48,12 +55,14 @@ export function LifeAreaCard({
   area,
   level,
   totalXP,
-  onClick
+  onClick,
+  color
 }: LifeAreaCardProps) {
   const { t } = useLocale();
-  const Icon = iconMap[area];
-  const bgColor = bgColorMap[area];
-  const translatedArea = t(translationKeyMap[area]);
+  const Icon = iconMap[area] || Star;
+  const bgColor = bgColorMap[area] || color || 'bg-[#6366F1]';
+  const translationKey = translationKeyMap[area];
+  const translatedArea = translationKey ? t(translationKey) : area;
 
   // Calculate progress to next level
   const progress = getAreaLevelProgress(totalXP, level);
@@ -93,13 +102,12 @@ export function LifeAreaCard({
 
         {/* Progress bar - integrated into title bar */}
         <div className="w-full">
-          <ProgressBar
-            current={progress.current}
-            max={progress.max}
-            showLabel={false}
-            size="sm"
-            variant="success"
-          />
+          <div className="h-1.5 bg-charcoal-500/30 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-gradient-to-r from-success-400 via-success-500 to-success-600 rounded-full"
+              style={{ width: `${Math.min((progress.current / progress.max) * 100, 100)}%` }}
+            />
+          </div>
         </div>
       </div>
     </div>

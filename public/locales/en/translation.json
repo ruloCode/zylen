@@ -323,7 +323,10 @@
     "create": "Create",
     "saveChanges": "Save Changes",
     "skip": "Skip",
-    "select": "Select"
+    "select": "Select",
+    "add": "Add",
+    "retry": "Retry",
+    "clear": "Clear"
   },
   "onboarding": {
     "prevButton": "Previous",
@@ -480,6 +483,93 @@
       "rejectRequest": "Failed to reject request",
       "removeFriend": "Failed to remove friend",
       "searchUsers": "Failed to search users"
+    }
+  },
+  "templates": {
+    "title": "Habit Templates",
+    "subtitle": "Choose a predefined habit to get started",
+    "browseTemplates": "Browse Templates",
+    "searchPlaceholder": "Search templates...",
+    "featured": "Featured",
+    "noResults": "No templates found",
+    "tryDifferentFilters": "Try different filters or search for something else",
+    "clearFilters": "Clear filters",
+    "addToMyHabits": "Add to My Habits",
+    "footerHint": "Select a template and customize it to fit your needs",
+    "filters": {
+      "all": "All"
+    },
+    "health": {
+      "meditate": "Meditate 10 minutes",
+      "meditate_desc": "Clear your mind with a short meditation session",
+      "exercise": "Exercise 30 minutes",
+      "exercise_desc": "Get moving with any physical activity",
+      "water": "Drink 8 glasses of water",
+      "water_desc": "Stay hydrated throughout the day",
+      "sleep": "Sleep 8 hours",
+      "sleep_desc": "Get quality rest for recovery",
+      "breakfast": "Healthy breakfast",
+      "breakfast_desc": "Start your day with nutritious food",
+      "walk": "Walk 15-30 minutes",
+      "walk_desc": "Take a walk outdoors",
+      "stretch": "Stretching routine",
+      "stretch_desc": "10 minutes of stretching"
+    },
+    "finance": {
+      "expenses": "Review expenses",
+      "expenses_desc": "Check and categorize daily spending",
+      "save": "Save money",
+      "save_desc": "Transfer to savings account",
+      "no_impulse": "No impulse purchases",
+      "no_impulse_desc": "Avoid unplanned spending today",
+      "news": "Read financial news",
+      "news_desc": "Stay informed about markets"
+    },
+    "creativity": {
+      "write": "Write 500 words",
+      "write_desc": "Journal, blog, or creative writing",
+      "music": "Practice instrument",
+      "music_desc": "30 minutes of music practice",
+      "draw": "Draw or sketch",
+      "draw_desc": "Create visual art for 20 minutes",
+      "photos": "Take photos",
+      "photos_desc": "Practice photography",
+      "learn": "Learn something new",
+      "learn_desc": "Spend 30 min learning a skill",
+      "code": "Code for 1 hour",
+      "code_desc": "Work on a personal coding project"
+    },
+    "social": {
+      "call_friend": "Call a friend",
+      "call_friend_desc": "Connect with someone you care about",
+      "meet_new": "Meet someone new",
+      "meet_new_desc": "Introduce yourself to someone",
+      "compliment": "Give a compliment",
+      "compliment_desc": "Spread positivity with kind words",
+      "help": "Help someone",
+      "help_desc": "Offer assistance to others"
+    },
+    "family": {
+      "dinner": "Family dinner",
+      "dinner_desc": "Share a meal with family",
+      "kids": "Quality time with kids",
+      "kids_desc": "30 minutes of undivided attention",
+      "call_parents": "Call parents",
+      "call_parents_desc": "Check in with your parents",
+      "plan": "Plan family activity",
+      "plan_desc": "Organize something fun together"
+    },
+    "career": {
+      "deep_work": "Deep work session",
+      "deep_work_desc": "2 hours of focused work without distractions",
+      "read": "Read professional content",
+      "read_desc": "30 minutes of professional reading",
+      "resume": "Update resume/portfolio",
+      "resume_desc": "Keep your professional profile current",
+      "linkedin": "Network on LinkedIn",
+      "linkedin_desc": "Engage with professional community",
+      "plan": "Plan tomorrow",
+      "plan_desc": "Set priorities for the next day"
     }
   },
   "leaderboard": {

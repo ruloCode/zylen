@@ -2,3 +2,6 @@
 export * from './HabitItem';
 export * from './IconSelector';
 export * from './HabitForm';
+export * from './TemplateCard';
+export * from './TemplateFilters';
+export * from './TemplateLibrary';

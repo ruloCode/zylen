@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Plus, Loader2 } from 'lucide-react';
+import { Plus, Loader2, BookOpen } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { HabitItem, HabitForm } from '@/features/habits/components';
+import { HabitItem, HabitForm, TemplateLibrary } from '@/features/habits/components';
 import { LevelUpNotification } from '@/components/ui';
 import { useUser, useLifeAreas, useHabits } from '@/store';
 import { calculateGlobalLevelUpReward, calculateAreaLevelUpReward } from '@/utils/xp';
 import { useLocale } from '@/hooks/useLocale';
-import type { HabitFormData } from '@/types';
+import type { HabitFormData, HabitTemplate } from '@/types';
 
 interface LevelUpState {
   type: 'global' | 'area';
@@ -28,6 +28,12 @@ export function HabitLog() {
 
   // State for habit form (only for creation)
   const [isFormOpen, setIsFormOpen] = useState(false);
+
+  // State for template library
+  const [isTemplateLibraryOpen, setIsTemplateLibraryOpen] = useState(false);
+
+  // State for initial data from template
+  const [templateInitialData, setTemplateInitialData] = useState<Partial<HabitFormData> | undefined>(undefined);
 
   // Load habits on mount
   useEffect(() => {
@@ -88,6 +94,23 @@ export function HabitLog() {
    * Open form to create new habit
    */
   const handleCreateHabit = () => {
+    setTemplateInitialData(undefined); // Clear any template data
+    setIsFormOpen(true);
+  };
+
+  /**
+   * Open template library
+   */
+  const handleOpenTemplateLibrary = () => {
+    setIsTemplateLibraryOpen(true);
+  };
+
+  /**
+   * Handle template selection from library
+   */
+  const handleSelectTemplate = (data: Partial<HabitFormData>, template: HabitTemplate) => {
+    setIsTemplateLibraryOpen(false);
+    setTemplateInitialData(data);
     setIsFormOpen(true);
   };
 
@@ -100,8 +123,9 @@ export function HabitLog() {
 
       toast.success(t('habits.habitCreated'));
 
-      // Close form
+      // Close form and clear template data
       setIsFormOpen(false);
+      setTemplateInitialData(undefined);
     } catch (error) {
       console.error('Error creating habit:', error);
       toast.error(t('errors.habitCreateFailed'));
@@ -113,6 +137,7 @@ export function HabitLog() {
    */
   const handleFormCancel = () => {
     setIsFormOpen(false);
+    setTemplateInitialData(undefined);
   };
 
   const completedCount = habits.filter((h) => h.completedToday).length;
@@ -138,14 +163,27 @@ export function HabitLog() {
               <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
                 {t('habits.dailyQuests')}
               </h1>
-              <button
-                onClick={handleCreateHabit}
-                disabled={isLoading}
-                className="flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-teal-500 text-white hover:bg-teal-600 transition-colors shadow-lg hover:shadow-xl hover:scale-110 flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
-                aria-label={t('habitForm.createHabit')}
-              >
-                <Plus className="w-5 h-5 sm:w-6 sm:h-6" />
-              </button>
+              <div className="flex items-center gap-2">
+                {/* Browse Templates Button */}
+                <button
+                  onClick={handleOpenTemplateLibrary}
+                  disabled={isLoading}
+                  className="flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-white/10 text-white hover:bg-white/20 transition-colors shadow-lg hover:shadow-xl hover:scale-110 flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
+                  aria-label={t('templates.browseTemplates')}
+                  title={t('templates.browseTemplates')}
+                >
+                  <BookOpen className="w-5 h-5 sm:w-6 sm:h-6" />
+                </button>
+                {/* Create Habit Button */}
+                <button
+                  onClick={handleCreateHabit}
+                  disabled={isLoading}
+                  className="flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-teal-500 text-white hover:bg-teal-600 transition-colors shadow-lg hover:shadow-xl hover:scale-110 flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
+                  aria-label={t('habitForm.createHabit')}
+                >
+                  <Plus className="w-5 h-5 sm:w-6 sm:h-6" />
+                </button>
+              </div>
             </div>
             <p className="text-sm sm:text-base text-white font-semibold">
               {t('habits.completeHabitsToEarnXP')}
@@ -263,7 +301,19 @@ export function HabitLog() {
 
       {/* Habit Form (Create only) */}
       {isFormOpen && (
-        <HabitForm onSubmit={handleFormSubmit} onCancel={handleFormCancel} />
+        <HabitForm
+          initialData={templateInitialData}
+          onSubmit={handleFormSubmit}
+          onCancel={handleFormCancel}
+        />
+      )}
+
+      {/* Template Library Modal */}
+      {isTemplateLibraryOpen && (
+        <TemplateLibrary
+          onSelectTemplate={handleSelectTemplate}
+          onClose={() => setIsTemplateLibraryOpen(false)}
+        />
       )}
     </>
   );
