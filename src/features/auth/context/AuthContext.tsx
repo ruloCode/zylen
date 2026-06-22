@@ -9,6 +9,30 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session, AuthError } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
 
+const shouldSkipAuth =
+  import.meta.env.DEV && import.meta.env.VITE_SKIP_AUTH === 'true';
+
+const devUser = {
+  id: 'local-dev-user',
+  aud: 'authenticated',
+  role: 'authenticated',
+  email: 'local@zylen.dev',
+  email_confirmed_at: new Date().toISOString(),
+  phone: '',
+  confirmed_at: new Date().toISOString(),
+  last_sign_in_at: new Date().toISOString(),
+  app_metadata: {
+    provider: 'local-dev',
+    providers: ['local-dev'],
+  },
+  user_metadata: {
+    name: 'Local Dev',
+  },
+  identities: [],
+  created_at: new Date().toISOString(),
+  updated_at: new Date().toISOString(),
+} as User;
+
 interface AuthContextType {
   user: User | null;
   session: Session | null;
@@ -31,6 +55,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [error, setError] = useState<AuthError | null>(null);
 
   useEffect(() => {
+    if (shouldSkipAuth) {
+      setSession(null);
+      setUser(devUser);
+      setLoading(false);
+      return;
+    }
+
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
@@ -51,6 +82,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, []);
 
   const signInWithOAuth = async (provider: 'google' | 'github') => {
+    if (shouldSkipAuth) {
+      setUser(devUser);
+      setSession(null);
+      setLoading(false);
+      return;
+    }
+
     try {
       setError(null);
       setLoading(true);
@@ -76,6 +114,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   const signOut = async () => {
+    if (shouldSkipAuth) {
+      setUser(devUser);
+      setSession(null);
+      setLoading(false);
+      return;
+    }
+
     try {
       setError(null);
       setLoading(true);

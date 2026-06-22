@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { Plus, Trash2, ArrowLeft, ArrowRight } from 'lucide-react';
-import { useOnboarding, useLifeAreas } from '@/store';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Plus, Trash2, ArrowLeft, ArrowRight, Check } from 'lucide-react';
+import { useOnboarding, useLifeAreas, useHabitTemplates } from '@/store';
+import { HABIT_ICONS } from '@/features/habits/components/IconSelector';
 import { useLocale } from '@/hooks/useLocale';
 import { cn } from '@/utils';
 
@@ -22,6 +23,7 @@ interface TempHabit {
 export function OnboardingStep3({ onNext, onPrev }: OnboardingStep3Props) {
   const { temporaryData, saveStepData, completeStep } = useOnboarding();
   const { lifeAreas } = useLifeAreas();
+  const { templates, templatesLoading, loadTemplates } = useHabitTemplates();
   const { t } = useLocale();
 
   const [habits, setHabits] = useState<TempHabit[]>(
@@ -35,9 +37,49 @@ export function OnboardingStep3({ onNext, onPrev }: OnboardingStep3Props) {
     lifeArea: temporaryData.selectedLifeAreaIds?.[0] || '',
   });
 
+  // Load global habit templates once (used to suggest common habits)
+  useEffect(() => {
+    if (templates.length === 0 && !templatesLoading) {
+      loadTemplates();
+    }
+  }, [templates.length, templatesLoading, loadTemplates]);
+
   const selectedAreas = lifeAreas.filter((area) =>
     temporaryData.selectedLifeAreaIds?.includes(area.id)
   );
+
+  // Build suggestions from templates that match the user's selected life areas
+  const suggestions = useMemo(() => {
+    return templates
+      .map((tpl) => {
+        const area = selectedAreas.find((a) => a.area === tpl.lifeAreaType);
+        return area ? { tpl, areaId: area.id } : null;
+      })
+      .filter(
+        (s): s is { tpl: (typeof templates)[number]; areaId: string } => s !== null
+      );
+  }, [templates, selectedAreas]);
+
+  const templateDisplayName = (tpl: (typeof templates)[number]) =>
+    tpl.nameKey ? t(tpl.nameKey, tpl.name) : tpl.name;
+
+  const isHabitAdded = (name: string, areaId: string) =>
+    habits.some((h) => h.name === name && h.lifeArea === areaId);
+
+  const toggleTemplate = (
+    tpl: (typeof templates)[number],
+    areaId: string
+  ) => {
+    const name = templateDisplayName(tpl);
+    if (isHabitAdded(name, areaId)) {
+      setHabits(habits.filter((h) => !(h.name === name && h.lifeArea === areaId)));
+      return;
+    }
+    setHabits([
+      ...habits,
+      { name, iconName: tpl.iconName, xp: tpl.suggestedXp, lifeArea: areaId },
+    ]);
+  };
 
   const addHabit = () => {
     if (!newHabit.name.trim() || !newHabit.lifeArea) return;
@@ -72,6 +114,46 @@ export function OnboardingStep3({ onNext, onPrev }: OnboardingStep3Props) {
         </h2>
         <p className="text-gray-300">{t('onboarding.step3.description')}</p>
       </div>
+
+      {/* Common habit suggestions (from templates) */}
+      {suggestions.length > 0 && (
+        <div className="mb-6">
+          <p className="text-sm font-medium text-gray-300 mb-3">
+            {t('onboarding.step3.suggestionsTitle', 'Hábitos comunes')}
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {suggestions.map(({ tpl, areaId }) => {
+              const name = templateDisplayName(tpl);
+              const added = isHabitAdded(name, areaId);
+              const Icon = HABIT_ICONS[tpl.iconName] || HABIT_ICONS['Target'];
+              return (
+                <button
+                  key={`${tpl.id}-${areaId}`}
+                  type="button"
+                  onClick={() => toggleTemplate(tpl, areaId)}
+                  aria-pressed={added}
+                  className={cn(
+                    'flex items-center gap-2 px-3 py-2 rounded-xl border text-sm transition-all',
+                    added
+                      ? 'bg-teal-500/20 border-teal-500 text-teal-300'
+                      : 'bg-charcoal-700/50 border-charcoal-600 text-gray-200 hover:border-teal-500/60 hover:text-white'
+                  )}
+                >
+                  {added ? (
+                    <Check size={16} className="text-teal-400" aria-hidden="true" />
+                  ) : (
+                    <Icon size={16} aria-hidden="true" />
+                  )}
+                  <span>{name}</span>
+                  <span className="text-xs text-gold-400 font-semibold">
+                    +{tpl.suggestedXp}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Habits List */}
       <ul className="space-y-3 mb-6" role="list">
