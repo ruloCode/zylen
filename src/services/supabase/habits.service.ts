@@ -123,6 +123,10 @@ export class HabitsService {
           icon_name: habit.iconName!,
           xp: habit.xp!,
           life_area_id: habit.lifeArea!, // Now a UUID
+          habit_type: habit.habitType || 'check',
+          unit: habit.unit || null,
+          daily_goal: habit.dailyGoal ?? null,
+          color: habit.color || null,
           // points is auto-calculated by trigger (xp * 0.5)
         })
         .select()
@@ -161,6 +165,10 @@ export class HabitsService {
         // points will be auto-recalculated by trigger
       }
       if (updates.lifeArea !== undefined) dbUpdates.life_area_id = updates.lifeArea;
+      if (updates.habitType !== undefined) dbUpdates.habit_type = updates.habitType;
+      if (updates.unit !== undefined) dbUpdates.unit = updates.unit || null;
+      if (updates.dailyGoal !== undefined) dbUpdates.daily_goal = updates.dailyGoal ?? null;
+      if (updates.color !== undefined) dbUpdates.color = updates.color || null;
 
       const { data, error } = await supabase
         .from('habits')
@@ -232,14 +240,18 @@ export class HabitsService {
    *
    * @throws {HabitsServiceError} if already completed or operation fails
    */
-  static async completeHabit(habitId: string): Promise<HabitCompletion> {
+  static async completeHabit(
+    habitId: string,
+    value?: number
+  ): Promise<HabitCompletion> {
     try {
       const userId = await getAuthUserId();
 
       // Use RPC function for atomic transaction
       const { data, error } = await supabase.rpc('complete_habit', {
         p_habit_id: habitId,
-      });
+        ...(value !== undefined ? { p_value: value } : {}),
+      } as any);
 
       if (error) {
         if (error.message.includes('already completed')) {
@@ -376,6 +388,57 @@ export class HabitsService {
       return data.map(mapHabitCompletionRowToHabitCompletion);
     } catch (error) {
       console.error('Error in HabitsService.getCompletionsByDate:', error);
+      return [];
+    }
+  }
+
+  /**
+   * Get a habit's completion history grouped by local day.
+   * Powers the contribution heatmap and per-habit analytics.
+   *
+   * @param habitId  the habit to fetch
+   * @param days     how far back to look (default 365)
+   */
+  static async getHabitHistory(
+    habitId: string,
+    days: number = 365
+  ): Promise<import('@/types/habit').HabitDayLog[]> {
+    try {
+      const userId = await getAuthUserId();
+      const since = new Date();
+      since.setDate(since.getDate() - days);
+
+      const { data, error } = await supabase
+        .from('habit_completions')
+        .select('completed_at, value')
+        .eq('user_id', userId)
+        .eq('habit_id', habitId)
+        .gte('completed_at', since.toISOString())
+        .order('completed_at');
+
+      if (error) {
+        console.error('Error getting habit history:', error);
+        return [];
+      }
+
+      // Aggregate by local YYYY-MM-DD
+      const map = new Map<string, { count: number; value: number }>();
+      for (const row of data) {
+        const d = new Date(row.completed_at);
+        const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(
+          d.getDate()
+        ).padStart(2, '0')}`;
+        const cur = map.get(key) || { count: 0, value: 0 };
+        cur.count += 1;
+        cur.value += Number(row.value || 0);
+        map.set(key, cur);
+      }
+
+      return Array.from(map.entries())
+        .map(([date, v]) => ({ date, count: v.count, value: v.value }))
+        .sort((a, b) => a.date.localeCompare(b.date));
+    } catch (error) {
+      console.error('Error in HabitsService.getHabitHistory:', error);
       return [];
     }
   }

@@ -29,7 +29,8 @@
     "social": "Social",
     "leaderboard": "Leaderboard",
     "profile": "Profile",
-    "navigateTo": "Navigate to {{label}}"
+    "navigateTo": "Navigate to {{label}}",
+    "mood": "Mood"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -165,7 +166,15 @@
     "greatProgress": "💪 Great progress! Keep it up!",
     "everyStepCounts": "🌟 Every step counts. You've got this!",
     "addYourFirstHabit": "Add your first habit to get started",
-    "coachBelievesInYou": "Your AI coach believes in you"
+    "coachBelievesInYou": "Your AI coach believes in you",
+    "quitBadge": "Quit",
+    "resisted": "Resisted",
+    "relapse": "Relapse",
+    "logValue": "Log",
+    "streakLabel": "Streak",
+    "relapseConfirm": "Record a relapse? This will reset your streak.",
+    "relapseRecorded": "Relapse recorded. Tomorrow is a fresh start 💪",
+    "viewAnalytics": "View analytics"
   },
   "habitForm": {
     "createHabit": "Create Habit",
@@ -186,7 +195,25 @@
       "iconRequired": "You must select an icon",
       "xpTooLow": "Minimum XP is {{min}}",
       "xpTooHigh": "Maximum XP is {{max}}"
-    }
+    },
+    "whatType": "What type of habit?",
+    "typeCheck": "Check",
+    "typeCheckDesc": "Yes/no tracking per day",
+    "typeMeasurable": "Measurable",
+    "typeMeasurableDesc": "Track numbers, distance or time",
+    "typeQuit": "Quit a habit",
+    "typeQuitDesc": "Break a pattern. Resist daily; relapses reset your streak",
+    "createGood": "Build a habit",
+    "quitBad": "Quit a habit",
+    "howTrack": "How do you track it?",
+    "unit": "Unit",
+    "custom": "Custom…",
+    "dailyGoal": "Daily goal",
+    "dailyGoalOptional": "Daily goal (optional)",
+    "dailyGoalHint": "Leave blank to log any positive value.",
+    "selectColor": "Select color",
+    "next": "Continue",
+    "back": "Back"
   },
   "rootHabit": {
     "title": "30-Day Challenge",
@@ -456,7 +483,6 @@
     "cancelRequest": "Cancel",
     "requestSent": "Request Sent",
     "requestReceived": "Request Received",
-    "friends": "Friends",
     "tabs": {
       "friends": "Friends",
       "requests": "Requests",
@@ -607,5 +633,70 @@
       "loadLeaderboard": "Failed to load leaderboard",
       "loadStats": "Failed to load your stats"
     }
+  },
+  "analytics": {
+    "title": "Analytics",
+    "currentStreak": "current streak",
+    "bestStreak": "best streak",
+    "completed": "completed",
+    "trend": "Trend",
+    "last30": "30 days",
+    "last90": "90 days",
+    "year": "Year",
+    "noData": "No data yet. Complete the habit to see your progress!",
+    "total": "Total",
+    "totalValue": "Total logged",
+    "thisWeek": "This week",
+    "thisMonth": "This month",
+    "completionRate": "Completion rate",
+    "history": "History"
+  },
+  "timer": {
+    "logTime": "Log time",
+    "logValue": "Log value",
+    "manual": "Manual",
+    "stopwatch": "Stopwatch",
+    "countdown": "Countdown",
+    "start": "Start",
+    "startTimer": "Start timer",
+    "startCountdown": "Start countdown",
+    "pause": "Pause",
+    "resume": "Resume",
+    "stop": "Stop",
+    "reset": "Reset",
+    "paused": "PAUSED",
+    "running": "RUNNING",
+    "hours": "HOURS",
+    "minutes": "MINUTES",
+    "seconds": "SECONDS",
+    "enterValue": "Enter a value",
+    "save": "Save",
+    "saved": "Logged!",
+    "logged": "Logged successfully"
+  },
+  "mood": {
+    "title": "Mood",
+    "howAreYou": "How do you feel today?",
+    "save": "Save",
+    "saved": "Mood saved",
+    "today": "Today",
+    "rad": "Rad",
+    "good": "Good",
+    "meh": "Meh",
+    "bad": "Bad",
+    "awful": "Awful",
+    "note": "Note",
+    "notePlaceholder": "What made your day like this? (optional)",
+    "calendar": "Calendar",
+    "stats": "Stats",
+    "entries": "entries",
+    "averageMood": "Average mood",
+    "noEntries": "No mood entries yet",
+    "moodStreak": "Logging streak",
+    "addEntry": "Log mood",
+    "edit": "Edit",
+    "subtitle": "Track how you feel each day",
+    "distribution": "Distribution",
+    "last7": "Last 7 days"
   }
 }

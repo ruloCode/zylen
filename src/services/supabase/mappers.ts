@@ -89,6 +89,10 @@ export function mapHabitRowToHabit(
     lifeArea: row.life_area_id,
     createdAt: mapDBDateToDate(row.created_at),
     completedAt, // From habit_completions join
+    habitType: (row.habit_type as Habit['habitType']) || 'check',
+    unit: row.unit || undefined,
+    dailyGoal: row.daily_goal ?? undefined,
+    color: row.color || undefined,
   };
 }
 
@@ -102,6 +106,7 @@ export function mapHabitCompletionRowToHabitCompletion(
     habitId: row.habit_id,
     completedAt: mapDBDateToDate(row.completed_at),
     xpEarned: row.xp_earned,
+    value: row.value ?? undefined,
   };
 }
 
@@ -219,6 +224,10 @@ export function mapHabitToInsert(
     icon_name: habit.iconName!,
     xp: habit.xp!,
     life_area_id: habit.lifeArea!, // This is now a UUID
+    habit_type: habit.habitType || 'check',
+    unit: habit.unit || null,
+    daily_goal: habit.dailyGoal ?? null,
+    color: habit.color || null,
     // points is auto-calculated by trigger
   };
 }

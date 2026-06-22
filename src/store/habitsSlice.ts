@@ -26,9 +26,13 @@ export interface HabitsSlice {
   addHabit: (habit: Partial<Habit>) => Promise<void>;
   updateHabit: (id: string, updates: Partial<Habit>) => Promise<void>;
   deleteHabit: (id: string) => Promise<void>;
-  completeHabit: (id: string) => Promise<HabitToggleResult>;
+  completeHabit: (id: string, value?: number) => Promise<HabitToggleResult>;
   uncompleteHabit: (id: string) => Promise<void>;
   getTotalXPEarned: () => Promise<number>;
+  getHabitHistory: (
+    id: string,
+    days?: number
+  ) => Promise<import('@/types/habit').HabitDayLog[]>;
 }
 
 export const createHabitsSlice: StateCreator<HabitsSlice> = (set, get) => ({
@@ -118,7 +122,7 @@ export const createHabitsSlice: StateCreator<HabitsSlice> = (set, get) => ({
     }
   },
 
-  completeHabit: async (id: string): Promise<HabitToggleResult> => {
+  completeHabit: async (id: string, value?: number): Promise<HabitToggleResult> => {
     try {
       set({ isLoading: true, error: null });
 
@@ -128,7 +132,7 @@ export const createHabitsSlice: StateCreator<HabitsSlice> = (set, get) => ({
       }
 
       // Complete habit via RPC (handles points, XP, life area updates)
-      const result = await HabitsService.completeHabit(id);
+      const result = await HabitsService.completeHabit(id, value);
 
       // Update streak
       await StreaksService.updateStreakForToday(true);
@@ -198,6 +202,15 @@ export const createHabitsSlice: StateCreator<HabitsSlice> = (set, get) => ({
     } catch (error) {
       console.error('Error getting total XP:', error);
       return 0;
+    }
+  },
+
+  getHabitHistory: async (id: string, days = 365) => {
+    try {
+      return await HabitsService.getHabitHistory(id, days);
+    } catch (error) {
+      console.error('Error getting habit history:', error);
+      return [];
     }
   },
 });

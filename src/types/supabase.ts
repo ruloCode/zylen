@@ -126,6 +126,7 @@ export type Database = {
           points_earned: number
           user_id: string
           xp_earned: number
+          value: number | null
         }
         Insert: {
           completed_at?: string
@@ -134,6 +135,7 @@ export type Database = {
           points_earned: number
           user_id: string
           xp_earned: number
+          value?: number | null
         }
         Update: {
           completed_at?: string
@@ -142,6 +144,7 @@ export type Database = {
           points_earned?: number
           user_id?: string
           xp_earned?: number
+          value?: number | null
         }
         Relationships: [
           {
@@ -213,6 +216,10 @@ export type Database = {
           updated_at: string
           user_id: string
           xp: number
+          habit_type: string
+          unit: string | null
+          daily_goal: number | null
+          color: string | null
         }
         Insert: {
           created_at?: string
@@ -225,6 +232,10 @@ export type Database = {
           updated_at?: string
           user_id: string
           xp: number
+          habit_type?: string
+          unit?: string | null
+          daily_goal?: number | null
+          color?: string | null
         }
         Update: {
           created_at?: string
@@ -237,6 +248,10 @@ export type Database = {
           updated_at?: string
           user_id?: string
           xp?: number
+          habit_type?: string
+          unit?: string | null
+          daily_goal?: number | null
+          color?: string | null
         }
         Relationships: [
           {

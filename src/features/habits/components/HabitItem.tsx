@@ -102,8 +102,6 @@ export function HabitItem({
       ? 100
       : 0;
 
-  const accent = isQuit ? 'cyan' : 'teal';
-
   return (
     <article
       className={cn(

@@ -75,6 +75,7 @@ export function useHabits() {
     completeHabit: state.completeHabit,
     uncompleteHabit: state.uncompleteHabit,
     getTotalXPEarned: state.getTotalXPEarned,
+    getHabitHistory: state.getHabitHistory,
   }));
   return useAppStore(selector);
 }
