@@ -39,7 +39,7 @@
 
     --ring: 76 85% 50%;            /* Verde Brillante ring */
 
-    --radius: 0rem;                /* Sharp corners by default - Dofus style */
+    --radius: 0.875rem;            /* Zylen v2 - evolved rounded corners */
 
     /* ========================================
        DOFUS COLOR PALETTE
@@ -141,7 +141,7 @@
 
     --ring: 76 73% 62%;
 
-    --radius: 0rem;                /* Sharp corners */
+    --radius: 0.875rem;            /* Zylen v2 - evolved rounded corners */
   }
 }
 
@@ -217,34 +217,36 @@
      DOFUS CARD STYLES - Dark theme with sharp corners
      ========================================== */
 
-  /* Dark charcoal card - Dofus style */
+  /* Dark charcoal card - Zylen v2 (rounded + soft depth) */
   .rpg-card {
     background-color: rgb(23, 20, 18);
-    border: 0px;
-    box-shadow: 0px 0px 4px 0px rgb(0, 0, 0);
-    border-radius: 0px;  /* Sharp corners */
-    transition: all 0.2s ease-in-out;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.45);
+    border-radius: 1rem;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  /* Dark glass card - simplified for Dofus */
+  /* Glass card - Zylen v2 (subtle border + blur + soft shadow) */
   .glass-card {
-    background-color: rgba(23, 20, 18, 0.85);
-    backdrop-filter: blur(8px);
-    border: 0px;
-    box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.5);
-    border-radius: 0px;  /* Sharp corners */
+    background-color: rgba(28, 32, 33, 0.7);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    box-shadow: 0 6px 24px -8px rgba(0, 0, 0, 0.5);
+    border-radius: 1.25rem;
   }
 
-  /* Vibrant card for life areas - Dofus character card style */
+  /* Vibrant card for life areas */
   .vibrant-card {
-    border-radius: 0px;  /* Sharp corners */
-    box-shadow: 0px 0px 4px 0px rgb(0, 0, 0);
-    transition: all 0.2s ease-in-out;
+    border-radius: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.45);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .vibrant-card:hover {
-    box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.8);
-    transform: translateY(-2px);
+    box-shadow: 0 10px 30px -6px rgba(0, 0, 0, 0.6);
+    transform: translateY(-3px);
   }
 
   /* ==========================================
@@ -342,7 +344,7 @@
     font-weight: 700;
     text-transform: uppercase;
     padding: 12px 34px;
-    border-radius: 0px;  /* Square buttons - DOFUS style */
+    border-radius: 0.875rem;
     border: 0px;
     transition: all 0.2s ease-in-out;
     font-size: 23px;
@@ -359,7 +361,7 @@
     font-weight: 400;
     text-transform: uppercase;
     padding: 12px 34px;
-    border-radius: 0px;  /* Square buttons - DOFUS style */
+    border-radius: 0.875rem;
     border: 0px;
     transition: all 0.2s ease-in-out;
     font-size: 23px;
@@ -367,6 +369,60 @@
 
   .btn-dofus-secondary:hover {
     opacity: 0.9;
+  }
+
+  /* ── Zylen v2 standard buttons (used across pages) ── */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, hsl(167, 78%, 44%), hsl(168, 80%, 36%));
+    color: #fff;
+    font-weight: 700;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.875rem;
+    border: 0;
+    box-shadow: 0 0 16px -2px hsla(167, 78%, 45%, 0.5);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    min-height: 44px;
+  }
+  .btn-primary:hover {
+    filter: brightness(1.08);
+    box-shadow: 0 0 24px 0px hsla(167, 78%, 50%, 0.65);
+    transform: translateY(-1px);
+  }
+  .btn-primary:active { transform: scale(0.97); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.875rem;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    min-height: 44px;
+  }
+  .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.14);
+    transform: translateY(-1px);
+  }
+  .btn-secondary:active { transform: scale(0.97); }
+
+  /* Soft animated gold shimmer text (for XP highlights) */
+  .text-shimmer-gold {
+    background: linear-gradient(110deg, hsl(40,95%,58%) 30%, hsl(48,100%,75%) 50%, hsl(40,95%,58%) 70%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer-gold 2.5s linear infinite;
   }
 
   /* ==========================================

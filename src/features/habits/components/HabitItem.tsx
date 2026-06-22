@@ -1,17 +1,18 @@
 /**
- * MyWay (LifeQuest) HabitItem Component
- * RPG-styled habit tiles with golden completion glow and teal check icons
+ * Zylen v2 HabitItem
+ * Evolved habit tile: rounded glass card, teal completion glow, gold XP,
+ * streak flame, and support for check / measurable / quit habit types.
  */
 
 import React, { useState } from 'react';
-import { Check, X, Loader2 } from 'lucide-react';
+import { Check, X, Loader2, Flame, Shield, Timer } from 'lucide-react';
 import { cn } from '@/utils';
 import { XPBadge } from '@/components/ui';
 import { HABIT_ICONS } from './IconSelector';
 import { useLifeAreas } from '@/store';
 import { useLocale } from '@/hooks/useLocale';
+import type { HabitType } from '@/types';
 
-// Icon mapper using the centralized HABIT_ICONS from IconSelector
 const iconMap = HABIT_ICONS;
 
 interface HabitItemProps {
@@ -19,10 +20,19 @@ interface HabitItemProps {
   name: string;
   iconName: string;
   xp: number;
-  completedToday: boolean; // Changed from 'completed'
+  completedToday: boolean;
   lifeArea: string;
-  onComplete: (id: string) => Promise<void>; // Changed from onToggle
-  onUncomplete: (id: string) => Promise<void>; // New prop
+  streak?: number;
+  habitType?: HabitType;
+  unit?: string;
+  dailyGoal?: number;
+  todayValue?: number;
+  onComplete: (id: string) => Promise<void>;
+  onUncomplete: (id: string) => Promise<void>;
+  /** measurable: open the value/timer logger */
+  onLog?: (id: string) => void;
+  /** quit: register a relapse (resets streak) */
+  onRelapse?: (id: string) => void;
 }
 
 export function HabitItem({
@@ -32,16 +42,29 @@ export function HabitItem({
   xp,
   completedToday,
   lifeArea,
+  streak = 0,
+  habitType = 'check',
+  unit,
+  dailyGoal,
+  todayValue,
   onComplete,
   onUncomplete,
+  onLog,
+  onRelapse,
 }: HabitItemProps) {
   const { t } = useLocale();
   const { lifeAreas } = useLifeAreas();
   const [isLoading, setIsLoading] = useState(false);
 
+  const isQuit = habitType === 'quit';
+  const isMeasurable = habitType === 'measurable';
+
   const handleComplete = async () => {
     if (isLoading || completedToday) return;
-
+    if (isMeasurable && onLog) {
+      onLog(id);
+      return;
+    }
     try {
       setIsLoading(true);
       await onComplete(id);
@@ -54,7 +77,6 @@ export function HabitItem({
 
   const handleUncomplete = async () => {
     if (isLoading || !completedToday) return;
-
     try {
       setIsLoading(true);
       await onUncomplete(id);
@@ -65,128 +87,189 @@ export function HabitItem({
     }
   };
 
-  // Get icon component from map, fallback to Target if not found
   const IconComponent = iconMap[iconName] || iconMap['Target'];
 
-  // Get life area info
   const lifeAreaInfo = lifeAreas.find((area) => area.id === lifeArea);
   const lifeAreaName = lifeAreaInfo
     ? t(`lifeAreas.${String(lifeAreaInfo.area).toLowerCase()}`)
     : '';
 
+  // Progress for measurable habits
+  const progressPct =
+    isMeasurable && dailyGoal && dailyGoal > 0
+      ? Math.min(100, Math.round(((todayValue || 0) / dailyGoal) * 100))
+      : completedToday
+      ? 100
+      : 0;
+
+  const accent = isQuit ? 'cyan' : 'teal';
+
   return (
     <article
       className={cn(
-        'glass-card rounded-2xl p-3 sm:p-4 transition-all duration-500 relative overflow-hidden',
+        'glass-card p-3 sm:p-4 transition-all duration-300 relative overflow-hidden group',
         completedToday
-          ? 'bg-gradient-to-br from-success-500/20 to-teal-500/20 border-2 border-success-300/60 shadow-glow-success'
-          : 'hover:shadow-soft-lg hover:scale-[1.02]'
+          ? isQuit
+            ? 'border-cyan-400/50 shadow-glow-teal'
+            : 'border-teal-400/50 shadow-glow-teal'
+          : 'hover:-translate-y-0.5 hover:shadow-soft-lg'
       )}
       aria-label={`Habit: ${name}`}
     >
-      {/* Golden celebration glow on completion */}
+      {/* Completion glow wash */}
       {completedToday && (
-        <div className="absolute inset-0 bg-gradient-adventure-glow opacity-20 animate-glow-pulse pointer-events-none" />
+        <div
+          className={cn(
+            'absolute inset-x-0 -top-8 h-20 opacity-30 animate-glow-pulse pointer-events-none blur-2xl',
+            isQuit ? 'bg-cyan-400/40' : 'bg-teal-400/40'
+          )}
+        />
       )}
 
       <div className="flex items-center gap-3 relative z-10">
-        {/* Icon with warm background */}
+        {/* Icon */}
         <div
           className={cn(
-            'p-2.5 sm:p-3 rounded-xl transition-all duration-300 flex-shrink-0',
+            'w-12 h-12 sm:w-14 sm:h-14 rounded-2xl grid place-items-center transition-all duration-300 flex-shrink-0',
             completedToday
-              ? 'bg-gradient-to-br from-teal-400 to-teal-600 text-white shadow-glow-teal'
-              : 'bg-gradient-to-br from-gold-500/30 to-gold-600/30 text-[rgb(242,156,6)] shadow-soft'
+              ? isQuit
+                ? 'bg-gradient-to-br from-cyan-400 to-cyan-600 text-white shadow-glow-teal'
+                : 'bg-gradient-to-br from-teal-400 to-teal-600 text-white shadow-glow-teal'
+              : 'bg-white/[0.06] text-teal-300 group-hover:bg-white/[0.1]'
           )}
         >
-          <IconComponent size={20} className="sm:w-6 sm:h-6" />
+          <IconComponent size={22} />
         </div>
 
-        {/* Habit details */}
+        {/* Details */}
         <div className="flex-1 min-w-0">
-          <h3
-            className={cn(
-              'font-display font-bold text-sm sm:text-base truncate transition-colors',
-              completedToday ? 'text-white' : 'text-white'
+          <div className="flex items-center gap-2">
+            <h3 className="font-bold text-sm sm:text-base text-white truncate">{name}</h3>
+            {streak > 0 && (
+              <span className="inline-flex items-center gap-0.5 text-xs font-bold text-gold-400 flex-shrink-0">
+                <Flame size={13} className="fill-gold-400/30" />
+                {streak}
+              </span>
             )}
-          >
-            {name}
-          </h3>
+          </div>
 
-          {/* XP Badge and Life Area Badge */}
           <div className="mt-1 flex items-center gap-1.5 flex-wrap">
             <XPBadge xp={xp} size="sm" />
-            {lifeAreaName && (
-              <span className="px-1.5 py-0.5 text-xs font-semibold rounded-md bg-teal-500/30 text-white">
+            {isQuit && (
+              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 text-[11px] font-semibold rounded-md bg-cyan-500/20 text-cyan-200">
+                <Shield size={11} /> {t('habits.quitBadge')}
+              </span>
+            )}
+            {isMeasurable && (
+              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 text-[11px] font-semibold rounded-md bg-teal-500/20 text-teal-200">
+                {todayValue ? `${todayValue}` : '0'}
+                {dailyGoal ? `/${dailyGoal}` : ''} {unit || ''}
+              </span>
+            )}
+            {!isQuit && !isMeasurable && lifeAreaName && (
+              <span className="px-1.5 py-0.5 text-[11px] font-semibold rounded-md bg-white/10 text-white/80">
                 {lifeAreaName}
               </span>
             )}
           </div>
+
+          {/* Measurable progress bar */}
+          {isMeasurable && dailyGoal ? (
+            <div className="mt-2 h-1.5 rounded-full bg-white/10 overflow-hidden">
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-teal-400 to-teal-500 transition-all duration-500"
+                style={{ width: `${progressPct}%` }}
+              />
+            </div>
+          ) : null}
         </div>
 
-        {/* Action buttons */}
+        {/* Actions */}
         <div className="flex gap-1.5 sm:gap-2 flex-shrink-0">
-          {/* Complete button */}
-          <button
-            type="button"
-            onClick={handleComplete}
-            disabled={isLoading || completedToday}
-            className={cn(
-              'w-11 h-11 sm:w-12 sm:h-12 p-2 sm:p-3 rounded-xl transition-all duration-300 relative flex items-center justify-center',
-              'focus:outline-none focus-visible:ring-4 focus-visible:ring-teal-400/50 focus-visible:ring-offset-2',
-              'disabled:opacity-50 disabled:cursor-not-allowed',
-              completedToday
-                ? 'bg-gradient-to-br from-success-500 to-success-600 text-white shadow-glow-success scale-110'
-                : 'bg-white/10 text-teal-500 hover:bg-teal-500/20 hover:text-white hover:scale-110 hover:shadow-soft-md'
-            )}
-            aria-label={`Mark ${name} as complete`}
-            aria-pressed={completedToday}
-          >
-            {isLoading && !completedToday ? (
-              <Loader2 size={20} className="animate-spin" />
-            ) : (
-              <Check size={20} strokeWidth={completedToday ? 3 : 2} />
-            )}
-
-            {/* Sparkle on completed */}
-            {completedToday && (
-              <div className="absolute -top-1 -right-1 w-2 h-2 bg-gold-400 rounded-full animate-sparkle" />
-            )}
-          </button>
-
-          {/* Incomplete button */}
-          <button
-            type="button"
-            onClick={handleUncomplete}
-            disabled={isLoading || !completedToday}
-            className={cn(
-              'w-11 h-11 sm:w-12 sm:h-12 p-2 sm:p-3 rounded-xl transition-all duration-300 flex items-center justify-center',
-              'focus:outline-none focus-visible:ring-4 focus-visible:ring-danger-400/50 focus-visible:ring-offset-2',
-              'disabled:opacity-50 disabled:cursor-not-allowed',
-              !completedToday
-                ? 'bg-white/10 text-white/50 hover:bg-danger-500/20 hover:text-white hover:scale-110 hover:shadow-soft-md'
-                : 'bg-white/10 text-white/50 hover:bg-danger-500/20 hover:text-white hover:scale-110 hover:shadow-soft-md'
-            )}
-            aria-label={`Mark ${name} as incomplete`}
-            aria-pressed={!completedToday}
-          >
-            {isLoading && completedToday ? (
-              <Loader2 size={20} className="animate-spin" />
-            ) : (
-              <X size={20} strokeWidth={2} />
-            )}
-          </button>
+          {isQuit ? (
+            <>
+              {/* Resisted */}
+              <button
+                type="button"
+                onClick={handleComplete}
+                disabled={isLoading || completedToday}
+                className={cn(
+                  'w-12 h-12 rounded-2xl grid place-items-center transition-all duration-300',
+                  'focus:outline-none focus-visible:ring-4 focus-visible:ring-cyan-400/40',
+                  'disabled:cursor-not-allowed',
+                  completedToday
+                    ? 'bg-gradient-to-br from-cyan-400 to-cyan-600 text-white shadow-glow-teal scale-105'
+                    : 'bg-white/[0.06] text-cyan-300 hover:bg-cyan-500/20 hover:scale-105'
+                )}
+                aria-label={t('habits.resisted')}
+                title={t('habits.resisted')}
+              >
+                {isLoading && !completedToday ? (
+                  <Loader2 size={20} className="animate-spin" />
+                ) : (
+                  <Shield size={20} />
+                )}
+              </button>
+              {/* Relapse */}
+              <button
+                type="button"
+                onClick={() => onRelapse?.(id)}
+                disabled={isLoading}
+                className="w-12 h-12 rounded-2xl grid place-items-center bg-white/[0.06] text-white/50 hover:bg-danger-500/20 hover:text-white transition-all duration-300 disabled:opacity-50"
+                aria-label={t('habits.relapse')}
+                title={t('habits.relapse')}
+              >
+                <X size={20} />
+              </button>
+            </>
+          ) : (
+            <>
+              {/* Complete / Log */}
+              <button
+                type="button"
+                onClick={handleComplete}
+                disabled={isLoading || completedToday}
+                className={cn(
+                  'w-12 h-12 rounded-2xl grid place-items-center transition-all duration-300 relative',
+                  'focus:outline-none focus-visible:ring-4 focus-visible:ring-teal-400/40',
+                  'disabled:cursor-not-allowed',
+                  completedToday
+                    ? 'bg-gradient-to-br from-teal-400 to-teal-600 text-white shadow-glow-teal scale-105'
+                    : 'bg-white/[0.06] text-teal-300 hover:bg-teal-500/20 hover:text-white hover:scale-105'
+                )}
+                aria-label={isMeasurable ? t('habits.logValue') : `Mark ${name} as complete`}
+                aria-pressed={completedToday}
+              >
+                {isLoading && !completedToday ? (
+                  <Loader2 size={20} className="animate-spin" />
+                ) : isMeasurable && !completedToday ? (
+                  <Timer size={20} />
+                ) : (
+                  <Check size={20} strokeWidth={completedToday ? 3 : 2} />
+                )}
+                {completedToday && (
+                  <span className="absolute -top-1 -right-1 w-2 h-2 bg-gold-400 rounded-full animate-sparkle" />
+                )}
+              </button>
+              {/* Uncomplete */}
+              <button
+                type="button"
+                onClick={handleUncomplete}
+                disabled={isLoading || !completedToday}
+                className="w-12 h-12 rounded-2xl grid place-items-center bg-white/[0.06] text-white/50 hover:bg-danger-500/20 hover:text-white transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed"
+                aria-label={`Mark ${name} as incomplete`}
+                aria-pressed={!completedToday}
+              >
+                {isLoading && completedToday ? (
+                  <Loader2 size={20} className="animate-spin" />
+                ) : (
+                  <X size={20} strokeWidth={2} />
+                )}
+              </button>
+            </>
+          )}
         </div>
       </div>
-
-      {/* Completion celebration effect */}
-      {completedToday && (
-        <>
-          <div className="absolute top-2 right-2 w-3 h-3 bg-gold-500 rounded-full animate-sparkle-rise opacity-0" />
-          <div className="absolute top-4 right-8 w-2 h-2 bg-gold-400 rounded-full animate-sparkle-rise opacity-0 animation-delay-100" />
-          <div className="absolute top-3 right-14 w-2.5 h-2.5 bg-gold-500 rounded-full animate-sparkle-rise opacity-0 animation-delay-200" />
-        </>
-      )}
     </article>
   );
 }

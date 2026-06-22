@@ -22,27 +22,30 @@ export function Card({
   onClick
 }: CardProps) {
   const variants = {
-    // Dark charcoal - Dofus standard card
+    // Dark charcoal - Zylen v2 standard card
     dark: `
       bg-[rgb(23,20,18)]
-      shadow-[0px_0px_4px_0px_rgb(0,0,0)]
+      border border-white/[0.06]
+      shadow-soft-md
     `,
 
-    // Charcoal with slight transparency - Dofus nav style
+    // Charcoal glass - Zylen v2 nav style
     charcoal: `
-      bg-[rgba(23,20,18,0.85)]
-      backdrop-blur-sm
-      shadow-[0px_0px_3px_0px_rgba(0,0,0,0.5)]
+      bg-[rgba(28,32,33,0.7)]
+      backdrop-blur-xl
+      border border-white/[0.07]
+      shadow-soft-md
     `,
 
     // Vibrant for special cards (life areas, characters)
     vibrant: `
-      shadow-[0px_0px_4px_0px_rgb(0,0,0)]
-      hover:shadow-[0px_0px_8px_0px_rgba(0,0,0,0.8)]
+      border border-white/[0.06]
+      shadow-soft-md
+      hover:shadow-soft-lg
       hover:-translate-y-0.5
       transition-all
-      duration-200
-      ease-in-out
+      duration-300
+      ease-out
     `,
 
     // Transparent with subtle border
@@ -62,13 +65,13 @@ export function Card({
     lg: 'p-6'
   };
 
-  const interactiveClass = onClick ? 'cursor-pointer hover:shadow-[0px_0px_6px_0px_rgba(0,0,0,0.7)] transition-shadow duration-200' : '';
+  const interactiveClass = onClick ? 'cursor-pointer hover:shadow-soft-lg hover:-translate-y-0.5 transition-all duration-300' : '';
 
   return (
     <div
       onClick={onClick}
       className={cn(
-        'rounded-none',  // Sharp corners - Dofus style
+        'rounded-2xl',  // Zylen v2 - rounded corners
         variants[variant],
         paddings[padding],
         interactiveClass,

@@ -35,13 +35,13 @@ export function Button({
 }: ButtonProps) {
   // Base styles - DOFUS style (SQUARE corners, normal weight, uppercase)
   const baseStyles = `
-    rounded-none
-    font-normal
-    uppercase
+    rounded-xl
+    font-semibold
     transition-all
     duration-200
     ease-in-out
     active:scale-95
+    hover:-translate-y-0.5
     disabled:opacity-50
     disabled:cursor-not-allowed
     disabled:transform-none
@@ -99,9 +99,9 @@ export function Button({
   };
 
   const sizes = {
-    sm: 'px-3 py-2.5 text-sm min-h-[44px]',               // Small buttons - WCAG compliant
-    md: 'px-[34px] py-[12px] text-[23px] min-h-[44px]',   // DOFUS standard: 12px 34px, 23px text
-    lg: 'px-[34px] py-[12px] text-[23px] min-h-[48px]'    // DOFUS large: slightly larger
+    sm: 'px-4 py-2.5 text-sm min-h-[44px]',          // Small buttons - WCAG compliant
+    md: 'px-6 py-3 text-base min-h-[48px]',          // Zylen v2 standard
+    lg: 'px-8 py-3.5 text-lg min-h-[52px]'           // Zylen v2 large
   };
 
   return (
