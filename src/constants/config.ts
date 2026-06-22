@@ -73,7 +73,7 @@ export const LIFE_AREAS = [
 // Avatar configuration
 export const AVATARS = {
   RULO: '/avatars/rulo_avatar.png',
-  DANI: '/avatars/dani_avatar.png',
+  DANI: '/avatars/daniamor_avatar.png',
 } as const;
 
 export const AVATAR_OPTIONS = [

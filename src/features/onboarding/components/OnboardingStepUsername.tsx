@@ -19,11 +19,11 @@ export function OnboardingStepUsername({
   onPrev,
 }: OnboardingStepUsernameProps) {
   const { t } = useLocale();
-  const { temporaryData, setTemporaryData } = useOnboarding();
+  const { temporaryData, saveStepData } = useOnboarding();
   const [canSkip] = useState(true); // Username is optional during onboarding
 
   const handleUsernameSet = (username: string) => {
-    setTemporaryData({ ...temporaryData, username });
+    saveStepData({ username });
     onNext();
   };
 

@@ -20,40 +20,58 @@ export function AuthCallback() {
   useEffect(() => {
     const handleCallback = async () => {
       try {
-        // Get the auth code from URL
-        const hashParams = new URLSearchParams(window.location.hash.substring(1));
-        const accessToken = hashParams.get('access_token');
-        const refreshToken = hashParams.get('refresh_token');
+        const url = new URL(window.location.href);
 
-        if (accessToken && refreshToken) {
-          // Set the session
-          const { error: sessionError } = await supabase.auth.setSession({
-            access_token: accessToken,
-            refresh_token: refreshToken,
-          });
+        // Surface explicit OAuth errors returned by the provider
+        const errorDescription =
+          url.searchParams.get('error_description') ||
+          new URLSearchParams(window.location.hash.substring(1)).get('error_description');
+        if (errorDescription) throw new Error(errorDescription);
 
-          if (sessionError) throw sessionError;
-
-          // Check if user has completed onboarding
-          const { data: { user } } = await supabase.auth.getUser();
-
-          if (user) {
-            const { data: profile } = await supabase
-              .from('profiles')
-              .select('has_completed_onboarding')
-              .eq('id', user.id)
-              .single();
-
-            // Redirect to onboarding or dashboard
-            if (profile?.has_completed_onboarding) {
-              navigate(ROUTES.DASHBOARD, { replace: true });
-            } else {
-              // New user - redirect to onboarding
-              navigate(ROUTES.ONBOARDING, { replace: true });
-            }
+        // PKCE flow (supabase-js v2 default): provider returns ?code=...
+        const code = url.searchParams.get('code');
+        if (code) {
+          const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
+          if (exchangeError) {
+            // detectSessionInUrl may have already exchanged the code; only fail
+            // if no session actually exists.
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) throw exchangeError;
           }
         } else {
+          // Legacy implicit flow fallback: tokens delivered in URL hash
+          const hashParams = new URLSearchParams(window.location.hash.substring(1));
+          const accessToken = hashParams.get('access_token');
+          const refreshToken = hashParams.get('refresh_token');
+
+          if (accessToken && refreshToken) {
+            const { error: sessionError } = await supabase.auth.setSession({
+              access_token: accessToken,
+              refresh_token: refreshToken,
+            });
+            if (sessionError) throw sessionError;
+          }
+        }
+
+        // Confirm we have an authenticated user
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
           throw new Error('No access token received');
+        }
+
+        // Check if user has completed onboarding
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('has_completed_onboarding')
+          .eq('id', user.id)
+          .single();
+
+        // Redirect to onboarding or dashboard
+        if (profile?.has_completed_onboarding) {
+          navigate(ROUTES.DASHBOARD, { replace: true });
+        } else {
+          // New user - redirect to onboarding
+          navigate(ROUTES.ONBOARDING, { replace: true });
         }
       } catch (err) {
         console.error('Auth callback error:', err);

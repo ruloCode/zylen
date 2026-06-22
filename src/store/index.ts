@@ -12,6 +12,8 @@ import { createLeaderboardSlice, LeaderboardSlice } from './leaderboardSlice';
 import { createRootHabitSlice, RootHabitSlice } from './rootHabitSlice';
 import { createAchievementsSlice, AchievementsSlice } from './achievementsSlice';
 import { createHabitTemplatesSlice, HabitTemplatesSlice } from './habitTemplatesSlice';
+import { AVATARS, LIFE_AREAS } from '@/constants';
+import type { LifeArea, Streak, User } from '@/types';
 
 // Combined store type
 type AppStore = UserSlice &
@@ -247,10 +249,68 @@ export function useHabitTemplates() {
   return useAppStore(selector);
 }
 
+const shouldSkipAuth =
+  import.meta.env.DEV && import.meta.env.VITE_SKIP_AUTH === 'true';
+
+function getDevUser(): User {
+  return {
+    id: 'local-dev-user',
+    name: 'Local Dev',
+    username: 'localdev',
+    points: 250,
+    totalXPEarned: 120,
+    level: 1,
+    joinedAt: new Date(),
+    avatarUrl: AVATARS.DANI,
+    hasCompletedOnboarding: true,
+    selectedLifeAreas: LIFE_AREAS.map((area) => area.toLowerCase()),
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'America/Bogota',
+  };
+}
+
+function getDevLifeAreas(): LifeArea[] {
+  return LIFE_AREAS.map((area) => ({
+    id: area.toLowerCase(),
+    area,
+    level: 1,
+    totalXP: 0,
+    isCustom: false,
+    enabled: true,
+  }));
+}
+
+function getDevStreak(): Streak {
+  return {
+    currentStreak: 0,
+    weeklyStreak: 0,
+    longestStreak: 0,
+    lastSevenDays: [false, false, false, false, false, false, false],
+  };
+}
+
 // Initialize store on app load
 export async function initializeStore() {
   try {
     const state = useAppStore.getState();
+
+    if (shouldSkipAuth) {
+      useAppStore.setState({
+        user: getDevUser(),
+        isInitialized: true,
+        isLoading: false,
+        error: null,
+        habits: [],
+        streak: getDevStreak(),
+        purchaseHistory: { purchases: [], totalSpent: 0 },
+        shopItems: [],
+        lifeAreas: getDevLifeAreas(),
+        lifeAreasInitialized: true,
+        lifeAreasLoading: false,
+        lifeAreasError: null,
+      });
+      console.log('Store initialized in local auth bypass mode');
+      return;
+    }
 
     // Initialize in parallel for better performance
     await Promise.all([
