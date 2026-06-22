@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Home, CheckSquare, ShoppingBag, MessageCircle, Trophy } from 'lucide-react';
+import { Home, CheckSquare, ShoppingBag, MessageCircle, Trophy, Smile } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/utils';
 import { useLocale } from '@/hooks/useLocale';
@@ -30,6 +30,11 @@ export function Navigation() {
       path: '/habits',
       icon: CheckSquare,
       label: t('navigation.habits')
+    },
+    {
+      path: '/mood',
+      icon: Smile,
+      label: t('navigation.mood')
     },
     {
       path: '/leaderboard',

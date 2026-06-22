@@ -13,6 +13,7 @@ const Dashboard = lazy(() => import('./pages/Dashboard').then(m => ({ default: m
 const HabitLog = lazy(() => import('./pages/HabitLog').then(m => ({ default: m.HabitLog })));
 const Streaks = lazy(() => import('./pages/Streaks').then(m => ({ default: m.Streaks })));
 const RootHabit = lazy(() => import('./pages/RootHabit').then(m => ({ default: m.RootHabit })));
+const Mood = lazy(() => import('./pages/Mood').then(m => ({ default: m.Mood })));
 const Shop = lazy(() => import('./pages/Shop').then(m => ({ default: m.Shop })));
 const Chat = lazy(() => import('./pages/Chat').then(m => ({ default: m.Chat })));
 const Social = lazy(() => import('./pages/Social').then(m => ({ default: m.Social })));
@@ -72,6 +73,7 @@ export function App() {
                             <Route path={ROUTES.HABITS} element={<HabitLog />} />
                             <Route path={ROUTES.STREAKS} element={<Streaks />} />
                             <Route path={ROUTES.ROOT_HABIT} element={<RootHabit />} />
+                            <Route path={ROUTES.MOOD} element={<Mood />} />
                             <Route path={ROUTES.SHOP} element={<Shop />} />
                             <Route path={ROUTES.CHAT} element={<Chat />} />
                             <Route path={ROUTES.SOCIAL} element={<Social />} />

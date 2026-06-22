@@ -8,6 +8,7 @@ export const ROUTES = {
   HABITS: '/habits',
   STREAKS: '/streaks',
   ROOT_HABIT: '/root-habit',
+  MOOD: '/mood',
   SHOP: '/shop',
   CHAT: '/chat',
   SOCIAL: '/social',
