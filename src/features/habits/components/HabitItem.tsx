@@ -33,6 +33,8 @@ interface HabitItemProps {
   onLog?: (id: string) => void;
   /** quit: register a relapse (resets streak) */
   onRelapse?: (id: string) => void;
+  /** open the per-habit analytics modal */
+  onOpenAnalytics?: (id: string) => void;
 }
 
 export function HabitItem({
@@ -51,6 +53,7 @@ export function HabitItem({
   onUncomplete,
   onLog,
   onRelapse,
+  onOpenAnalytics,
 }: HabitItemProps) {
   const { t } = useLocale();
   const { lifeAreas } = useLifeAreas();
@@ -139,8 +142,14 @@ export function HabitItem({
           <IconComponent size={22} />
         </div>
 
-        {/* Details */}
-        <div className="flex-1 min-w-0">
+        {/* Details (tap to open analytics) */}
+        <button
+          type="button"
+          onClick={() => onOpenAnalytics?.(id)}
+          disabled={!onOpenAnalytics}
+          className="flex-1 min-w-0 text-left disabled:cursor-default"
+          aria-label={t('habits.viewAnalytics')}
+        >
           <div className="flex items-center gap-2">
             <h3 className="font-bold text-sm sm:text-base text-white truncate">{name}</h3>
             {streak > 0 && (
@@ -180,7 +189,7 @@ export function HabitItem({
               />
             </div>
           ) : null}
-        </div>
+        </button>
 
         {/* Actions */}
         <div className="flex gap-1.5 sm:gap-2 flex-shrink-0">

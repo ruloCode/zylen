@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Plus, Loader2, BookOpen } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { HabitItem, HabitForm, TemplateLibrary } from '@/features/habits/components';
+import { HabitItem, HabitForm, TemplateLibrary, MeasureLogger, HabitAnalytics } from '@/features/habits/components';
 import { LevelUpNotification } from '@/components/ui';
 import { useUser, useLifeAreas, useHabits } from '@/store';
 import { calculateGlobalLevelUpReward, calculateAreaLevelUpReward } from '@/utils/xp';
@@ -34,6 +34,10 @@ export function HabitLog() {
 
   // State for initial data from template
   const [templateInitialData, setTemplateInitialData] = useState<Partial<HabitFormData> | undefined>(undefined);
+
+  // Measurable value/timer logger + analytics modal targets
+  const [loggerHabitId, setLoggerHabitId] = useState<string | null>(null);
+  const [analyticsHabitId, setAnalyticsHabitId] = useState<string | null>(null);
 
   // Load habits on mount
   useEffect(() => {
@@ -86,6 +90,39 @@ export function HabitLog() {
       toast.success(t('habits.habitUncompleted'));
     } catch (error) {
       console.error('Error uncompleting habit:', error);
+      toast.error(t('errors.habitUncompleteFailed'));
+    }
+  };
+
+  /**
+   * Save a measurable value (from the timer/value logger)
+   */
+  const handleLogValue = async (value: number) => {
+    if (!loggerHabitId) return;
+    try {
+      await completeHabit(loggerHabitId, value);
+      await refreshLifeAreas();
+      setLoggerHabitId(null);
+      toast.success(t('timer.logged'));
+    } catch (error) {
+      console.error('Error logging value:', error);
+      toast.error(t('errors.habitCompleteFailed'));
+    }
+  };
+
+  /**
+   * Register a relapse for a quit-habit (resets the streak)
+   */
+  const handleRelapse = async (id: string) => {
+    const habit = habits.find((h) => h.id === id);
+    if (!window.confirm(t('habits.relapseConfirm'))) return;
+    try {
+      if (habit?.completedToday) {
+        await uncompleteHabit(id);
+      }
+      toast(t('habits.relapseRecorded'), { icon: '💪' });
+    } catch (error) {
+      console.error('Error registering relapse:', error);
       toast.error(t('errors.habitUncompleteFailed'));
     }
   };
@@ -264,8 +301,15 @@ export function HabitLog() {
                     xp={habit.xp}
                     completedToday={habit.completedToday}
                     lifeArea={habit.lifeArea}
+                    habitType={habit.habitType}
+                    unit={habit.unit}
+                    dailyGoal={habit.dailyGoal}
+                    todayValue={habit.todayValue}
                     onComplete={handleComplete}
                     onUncomplete={handleUncomplete}
+                    onLog={(id) => setLoggerHabitId(id)}
+                    onRelapse={handleRelapse}
+                    onOpenAnalytics={(id) => setAnalyticsHabitId(id)}
                   />
                 ))}
               </div>
@@ -315,6 +359,36 @@ export function HabitLog() {
           onClose={() => setIsTemplateLibraryOpen(false)}
         />
       )}
+
+      {/* Measurable value / timer logger */}
+      {loggerHabitId && (() => {
+        const h = habits.find((x) => x.id === loggerHabitId);
+        if (!h) return null;
+        return (
+          <MeasureLogger
+            habitName={h.name}
+            unit={h.unit || 'min'}
+            dailyGoal={h.dailyGoal}
+            onSave={handleLogValue}
+            onClose={() => setLoggerHabitId(null)}
+          />
+        );
+      })()}
+
+      {/* Per-habit analytics */}
+      {analyticsHabitId && (() => {
+        const h = habits.find((x) => x.id === analyticsHabitId);
+        if (!h) return null;
+        return (
+          <HabitAnalytics
+            habitId={h.id}
+            habitName={h.name}
+            habitType={h.habitType}
+            unit={h.unit}
+            onClose={() => setAnalyticsHabitId(null)}
+          />
+        );
+      })()}
     </>
   );
 }

@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
+import { X, Check, BarChart3, Ban } from 'lucide-react';
 import { IconSelector, HABIT_ICONS } from './IconSelector';
 import { useLifeAreas } from '@/store';
 import { useLocale } from '@/hooks/useLocale';
-import type { Habit, HabitFormData } from '@/types';
+import type { Habit, HabitFormData, HabitType } from '@/types';
 import { cn } from '@/utils/cn';
 import { XP_CONFIG } from '@/constants/config';
+
+const UNIT_OPTIONS = ['min', 'hr', 'sec', 'km', 'mi', 'pages', 'glasses', 'reps', 'kcal', 'words', '$'];
 
 interface HabitFormProps {
   /** Habit to edit (if editing), undefined for new habit */
@@ -27,6 +29,13 @@ export function HabitForm({ habit, initialData, onSubmit, onCancel }: HabitFormP
   const [lifeArea, setLifeArea] = useState(habit?.lifeArea || initialData?.lifeArea || '');
   const [iconName, setIconName] = useState(habit?.iconName || initialData?.iconName || 'Target');
   const [xp, setXp] = useState(habit?.xp || initialData?.xp || 30);
+  const [habitType, setHabitType] = useState<HabitType>(
+    habit?.habitType || initialData?.habitType || 'check'
+  );
+  const [unit, setUnit] = useState(habit?.unit || initialData?.unit || 'min');
+  const [dailyGoal, setDailyGoal] = useState<string>(
+    habit?.dailyGoal != null ? String(habit.dailyGoal) : initialData?.dailyGoal != null ? String(initialData.dailyGoal) : ''
+  );
 
   // Validation state
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -104,6 +113,12 @@ export function HabitForm({ habit, initialData, onSubmit, onCancel }: HabitFormP
         lifeArea,
         iconName,
         xp,
+        habitType,
+        unit: habitType === 'measurable' ? unit : undefined,
+        dailyGoal:
+          habitType === 'measurable' && dailyGoal.trim() !== ''
+            ? Number(dailyGoal)
+            : undefined,
       });
     }
   };
@@ -139,6 +154,63 @@ export function HabitForm({ habit, initialData, onSubmit, onCancel }: HabitFormP
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 space-y-6">
+          {/* Habit Type */}
+          <div>
+            <label className="block text-sm font-semibold text-white mb-2">
+              {t('habitForm.whatType')}
+            </label>
+            <div className="grid grid-cols-3 gap-2">
+              {([
+                { type: 'check' as HabitType, icon: Check, label: t('habitForm.typeCheck'), accent: 'teal' },
+                { type: 'measurable' as HabitType, icon: BarChart3, label: t('habitForm.typeMeasurable'), accent: 'blue' },
+                { type: 'quit' as HabitType, icon: Ban, label: t('habitForm.typeQuit'), accent: 'cyan' },
+              ]).map(({ type, icon: Icon, label, accent }) => {
+                const active = habitType === type;
+                return (
+                  <button
+                    key={type}
+                    type="button"
+                    onClick={() => setHabitType(type)}
+                    className={cn(
+                      'flex flex-col items-center gap-2 p-3 rounded-2xl border-2 transition-all duration-200 text-center',
+                      active
+                        ? accent === 'teal'
+                          ? 'border-teal-400 bg-teal-500/15'
+                          : accent === 'blue'
+                          ? 'border-blue-400 bg-blue-500/15'
+                          : 'border-cyan-400 bg-cyan-500/15'
+                        : 'border-white/10 bg-white/5 hover:border-white/20'
+                    )}
+                    aria-pressed={active}
+                  >
+                    <span
+                      className={cn(
+                        'w-9 h-9 rounded-xl grid place-items-center',
+                        active
+                          ? accent === 'teal'
+                            ? 'bg-teal-500 text-white'
+                            : accent === 'blue'
+                            ? 'bg-blue-500 text-white'
+                            : 'bg-cyan-500 text-white'
+                          : 'bg-white/10 text-white/60'
+                      )}
+                    >
+                      <Icon className="w-5 h-5" />
+                    </span>
+                    <span className="text-xs font-semibold text-white leading-tight">{label}</span>
+                  </button>
+                );
+              })}
+            </div>
+            <p className="mt-2 text-xs text-white/60">
+              {habitType === 'measurable'
+                ? t('habitForm.typeMeasurableDesc')
+                : habitType === 'quit'
+                ? t('habitForm.typeQuitDesc')
+                : t('habitForm.typeCheckDesc')}
+            </p>
+          </div>
+
           {/* Habit Name */}
           <div>
             <label htmlFor="habit-name" className="block text-sm font-semibold text-white mb-2">
@@ -229,6 +301,53 @@ export function HabitForm({ habit, initialData, onSubmit, onCancel }: HabitFormP
               </p>
             )}
           </div>
+
+          {/* Measurable: unit + daily goal */}
+          {habitType === 'measurable' && (
+            <div className="space-y-4 p-4 rounded-2xl bg-blue-500/[0.07] border border-blue-400/20">
+              <div>
+                <label className="block text-sm font-semibold text-white mb-2">
+                  {t('habitForm.unit')}
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {UNIT_OPTIONS.map((u) => (
+                    <button
+                      key={u}
+                      type="button"
+                      onClick={() => setUnit(u)}
+                      className={cn(
+                        'px-3 py-1.5 rounded-full text-sm font-semibold border transition-all',
+                        unit === u
+                          ? 'bg-blue-500 border-blue-400 text-white'
+                          : 'bg-white/5 border-white/15 text-white/70 hover:border-white/30'
+                      )}
+                    >
+                      {u}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <label htmlFor="daily-goal" className="block text-sm font-semibold text-white mb-2">
+                  {t('habitForm.dailyGoalOptional')}
+                </label>
+                <div className="flex items-center gap-3">
+                  <input
+                    id="daily-goal"
+                    type="number"
+                    min={0}
+                    inputMode="decimal"
+                    value={dailyGoal}
+                    onChange={(e) => setDailyGoal(e.target.value)}
+                    placeholder="0"
+                    className="w-32 px-4 py-3 rounded-xl border-2 border-white/20 bg-white/5 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                  <span className="text-blue-300 font-semibold">{unit}</span>
+                </div>
+                <p className="mt-2 text-xs text-white/60">{t('habitForm.dailyGoalHint')}</p>
+              </div>
+            </div>
+          )}
 
           {/* XP Value */}
           <div>

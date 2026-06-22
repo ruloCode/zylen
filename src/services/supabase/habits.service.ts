@@ -23,6 +23,8 @@ import { trackHabitCompletion } from './leaderboard.service';
 export interface HabitWithCompletion extends Omit<Habit, 'completed' | 'completedAt'> {
   completedToday: boolean;
   completedAt?: Date;
+  /** measurable: value logged today (if any) */
+  todayValue?: number;
 }
 
 export class HabitsService {
@@ -78,7 +80,7 @@ export class HabitsService {
       // Get today's completions
       const { data: completions, error: completionsError } = await supabase
         .from('habit_completions')
-        .select('habit_id, completed_at')
+        .select('habit_id, completed_at, value')
         .eq('user_id', userId)
         .gte('completed_at', start)
         .lte('completed_at', end);
@@ -89,16 +91,21 @@ export class HabitsService {
 
       // Create a map of habit_id -> completion for O(1) lookup
       const completionMap = new Map(
-        completions.map((c) => [c.habit_id, new Date(c.completed_at)])
+        completions.map((c) => [
+          c.habit_id,
+          { at: new Date(c.completed_at), value: c.value ?? undefined },
+        ])
       );
 
       // Map habits with completion status
       return habits.map((habit) => {
-        const completedAt = completionMap.get(habit.id);
+        const completion = completionMap.get(habit.id);
+        const completedAt = completion?.at;
         return {
           ...mapHabitRowToHabit(habit, !!completedAt, completedAt),
           completedToday: !!completedAt,
           completedAt,
+          todayValue: completion?.value,
         } as HabitWithCompletion;
       });
     } catch (error) {
