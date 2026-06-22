@@ -30,7 +30,7 @@ const MONTHS_ES = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep'
 export function HabitHeatmap({ history, weeks = 26, accent = 'teal' }: HabitHeatmapProps) {
   const colors = ACCENTS[accent] || ACCENTS.teal;
 
-  const { columns, maxValue, monthLabels } = useMemo(() => {
+  const { columns, monthLabels } = useMemo(() => {
     const map = new Map(history.map((h) => [h.date, h]));
     const maxVal = history.reduce((m, h) => Math.max(m, h.value || h.count), 0) || 1;
 
@@ -69,7 +69,7 @@ export function HabitHeatmap({ history, weeks = 26, accent = 'teal' }: HabitHeat
       }
       cols.push(col);
     }
-    return { columns: cols, maxValue: maxVal, monthLabels: labels };
+    return { columns: cols, monthLabels: labels };
   }, [history, weeks]);
 
   return (
