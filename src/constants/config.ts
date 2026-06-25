@@ -3,8 +3,8 @@
  */
 
 export const APP_CONFIG = {
-  name: 'Zylen',
-  displayName: 'Zylen',
+  name: 'Everlight',
+  displayName: 'Everlight',
   // tagline is now in i18n translations: app.tagline
   version: '1.0.0',
 } as const;
@@ -49,16 +49,16 @@ export const SHOP_CONFIG = {
 
 // Storage keys for localStorage
 export const STORAGE_KEYS = {
-  USER: 'zylen_user',
-  HABITS: 'zylen_habits',
-  LIFE_AREAS: 'zylen_life_areas',
-  STREAKS: 'zylen_streaks',
-  SHOP: 'zylen_shop',
-  SHOP_ITEMS: 'zylen_shop_items',
-  PURCHASES: 'zylen_purchases',
-  SETTINGS: 'zylen_settings',
-  APP_STATE: 'zylen_app_state',
-  THEME: 'zylen_theme',
+  USER: 'everlight_user',
+  HABITS: 'everlight_habits',
+  LIFE_AREAS: 'everlight_life_areas',
+  STREAKS: 'everlight_streaks',
+  SHOP: 'everlight_shop',
+  SHOP_ITEMS: 'everlight_shop_items',
+  PURCHASES: 'everlight_purchases',
+  SETTINGS: 'everlight_settings',
+  APP_STATE: 'everlight_app_state',
+  THEME: 'everlight_theme',
 } as const;
 
 // Life areas configuration

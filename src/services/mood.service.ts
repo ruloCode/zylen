@@ -6,7 +6,7 @@
 import { StorageService } from './storage';
 import type { MoodEntry, MoodLevel } from '@/types/mood';
 
-const STORAGE_KEY = 'zylen.mood.entries';
+const STORAGE_KEY = 'everlight.mood.entries';
 
 export function localDateKey(d: Date = new Date()): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(

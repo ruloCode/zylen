@@ -34,14 +34,14 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
     persistSession: true,
     detectSessionInUrl: true,
     storage: window.localStorage,
-    storageKey: 'zylen_supabase_auth',
+    storageKey: 'everlight_supabase_auth',
   },
   db: {
     schema: 'public',
   },
   global: {
     headers: {
-      'x-application-name': 'Zylen',
+      'x-application-name': 'Everlight',
     },
   },
 });

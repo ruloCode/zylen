@@ -15,6 +15,7 @@ import { Lock } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
 import type { AchievementWithProgress, AchievementTier } from '@/types/achievement';
 import { isAchievementAvailable, isAchievementClaimed, isAchievementLocked } from '@/types/achievement';
+import { useLocale } from '@/hooks/useLocale';
 
 interface AchievementCardProps {
   achievement: AchievementWithProgress;
@@ -60,6 +61,7 @@ const tierColors: Record<AchievementTier, {
 };
 
 export function AchievementCard({ achievement, onClick }: AchievementCardProps) {
+  const { t } = useLocale();
   const { name, description, iconName, tier, requirementValue, xpReward, pointsReward, progress } = achievement;
 
   // Get achievement states
@@ -123,7 +125,7 @@ export function AchievementCard({ achievement, onClick }: AchievementCardProps) 
         </h3>
         {available && (
           <span className="px-2 py-1 rounded-md text-xs font-bold bg-green-600 text-white animate-pulse">
-            ¡Disponible!
+            {t('achievements.available')}
           </span>
         )}
       </div>
@@ -137,7 +139,7 @@ export function AchievementCard({ achievement, onClick }: AchievementCardProps) 
       {locked && (
         <div className="mb-4">
           <div className="flex justify-between text-xs text-white/70 mb-2">
-            <span>Progreso</span>
+            <span>{t('common.progress')}</span>
             <span>{progress}/{requirementValue}</span>
           </div>
           <div className="h-2 bg-white/10 rounded-full overflow-hidden">
@@ -153,9 +155,9 @@ export function AchievementCard({ achievement, onClick }: AchievementCardProps) 
       {locked && (
         <div className="flex items-center justify-between px-3 py-2 rounded-lg bg-white/5">
           <div className="flex items-center gap-2 text-xs text-white/70">
-            <span>🎁 {xpReward} XP</span>
+            <span>✦ {xpReward} {t('common.xp')}</span>
             <span>•</span>
-            <span>💰 {pointsReward} pts</span>
+            <span>◈ {pointsReward} {t('common.points')}</span>
           </div>
         </div>
       )}
@@ -165,7 +167,7 @@ export function AchievementCard({ achievement, onClick }: AchievementCardProps) 
           flex items-center justify-center gap-2 px-3 py-2 rounded-lg
           bg-gradient-to-r ${tierStyle.gradient} ${tierStyle.glow}
         `}>
-          <span className="text-white text-sm font-bold">🎁 Reclamar: +{xpReward} XP, +{pointsReward} pts</span>
+          <span className="text-white text-sm font-bold">🎁 {t('achievements.claimReward')}: +{xpReward} {t('common.xp')}, +{pointsReward} {t('common.points')}</span>
         </div>
       )}
 
@@ -174,7 +176,7 @@ export function AchievementCard({ achievement, onClick }: AchievementCardProps) 
           flex items-center justify-center gap-2 px-3 py-2 rounded-lg
           bg-gradient-to-r ${tierStyle.gradient} ${tierStyle.glow}
         `}>
-          <span className="text-white text-sm font-bold">✓ Reclamado</span>
+          <span className="text-white text-sm font-bold">{t('achievements.claimed')}</span>
         </div>
       )}
     </div>

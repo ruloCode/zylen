@@ -8,29 +8,32 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Zylen - Tu vida, subida de nivel. Aplicación gamificada de seguimiento de hábitos que te ayuda a construir mejores hábitos ganando XP y subiendo de nivel." />
-    <meta name="keywords" content="hábitos, gamificación, productividad, seguimiento de hábitos, desarrollo personal, Zylen" />
-    <meta name="author" content="Zylen" />
+    <meta name="description" content="Everlight - Tu mejor versión, tu mayor aventura. Un RPG de desarrollo personal donde cada decisión real fortalece la luz del reino." />
+    <meta name="keywords" content="hábitos, RPG, desarrollo personal, gamificación, transformación, Guardián, Everlight" />
+    <meta name="author" content="Everlight" />
     <meta name="theme-color" content="#0d9488" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Zylen - Tu vida, subida de nivel" />
-    <meta property="og:description" content="Aplicación gamificada de seguimiento de hábitos que te ayuda a construir mejores hábitos ganando XP y subiendo de nivel." />
+    <meta property="og:title" content="Everlight - Tu mejor versión, tu mayor aventura" />
+    <meta property="og:description" content="Un RPG de desarrollo personal donde cada decisión real fortalece la luz del reino. Conviértete en Guardián." />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Zylen - Tu vida, subida de nivel" />
-    <meta name="twitter:description" content="Aplicación gamificada de seguimiento de hábitos que te ayuda a construir mejores hábitos ganando XP y subiendo de nivel." />
+    <meta name="twitter:title" content="Everlight - Tu mejor versión, tu mayor aventura" />
+    <meta name="twitter:description" content="Un RPG de desarrollo personal donde cada decisión real fortalece la luz del reino. Conviértete en Guardián." />
 
-    <title>Zylen - Tu vida, subida de nivel</title>
+    <title>Everlight - Tu mejor versión, tu mayor aventura</title>
 
     <!-- Apply persisted theme before first paint to prevent flash of wrong theme.
          Keep this dependency-free; it mirrors src/utils/theme.ts. -->
     <script>
       (function () {
         try {
-          var raw = localStorage.getItem('zylen_theme');
+          // Dual-read during the Zylen → Everlight migration: prefer the new
+          // key, fall back to the legacy one so there's no theme flash on the
+          // first load (before the JS migration copies the value across).
+          var raw = localStorage.getItem('everlight_theme') || localStorage.getItem('zylen_theme');
           var t = raw ? JSON.parse(raw) : 'midnight';
           var allowed = ['nous', 'midnight', 'ember', 'mono', 'cyberpunk', 'slate'];
           document.documentElement.setAttribute(

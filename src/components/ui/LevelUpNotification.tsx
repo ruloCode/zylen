@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Trophy, Sparkles, Coins } from 'lucide-react';
 import { cn } from '@/utils';
+import { useLocale } from '@/hooks/useLocale';
 
 interface LevelUpNotificationProps {
   level: number;
@@ -22,6 +23,7 @@ export function LevelUpNotification({
   onClose,
   autoCloseDelay = 4000,
 }: LevelUpNotificationProps) {
+  const { t } = useLocale();
   const [isVisible, setIsVisible] = useState(false);
   const [isLeaving, setIsLeaving] = useState(false);
 
@@ -46,8 +48,8 @@ export function LevelUpNotification({
   };
 
   const title = type === 'global'
-    ? 'Level Up!'
-    : `${areaName} Level Up!`;
+    ? t('levelUp.title')
+    : t('levelUp.areaTitle', { area: areaName });
 
   return (
     <div
@@ -89,14 +91,14 @@ export function LevelUpNotification({
 
           {/* Level Badge */}
           <div className="px-6 py-2 rounded-full bg-gradient-to-r from-gold-400 to-gold-500 text-charcoal-900 font-bold text-xl shadow-lg">
-            Level {level}
+            {t('levelUp.levelLabel', { level })}
           </div>
 
           {/* Reward */}
           {pointsReward > 0 && (
             <div className="flex items-center gap-2 text-gold-200">
               <Coins size={20} />
-              <span className="text-lg font-semibold">+{pointsReward} points</span>
+              <span className="text-lg font-semibold">{t('levelUp.essenceReward', { points: pointsReward })}</span>
             </div>
           )}
 
@@ -105,7 +107,7 @@ export function LevelUpNotification({
             onClick={handleClose}
             className="mt-2 text-sm text-pale-200/60 hover:text-pale-100 transition-colors"
           >
-            Click to dismiss
+            {t('levelUp.dismiss')}
           </button>
         </div>
       </div>

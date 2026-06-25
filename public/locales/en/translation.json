@@ -17,7 +17,7 @@
     "noArea": "No area"
   },
   "app": {
-    "name": "Zylen",
+    "name": "Everlight",
     "tagline": "Level up your life"
   },
   "navigation": {
@@ -248,7 +248,28 @@
     "subtitle": "Your journey to mastery",
     "progress": "Progress",
     "daysCompleted": "days completed",
-    "keepGoing": "Keep it up!"
+    "keepGoing": "Keep it up!",
+    "reviveTitle": "The Rekindling",
+    "reviveSubtitle": "Even in the deepest dark, a single spark is enough to light the realm again. Each day you return a little stronger.",
+    "challengeTitle": "30-Day Challenge",
+    "dailyProgress": "Daily progress",
+    "quote": "Even the longest night ends in dawn.",
+    "quoteSub": "Every day is a step toward your transformation.",
+    "loading": "Loading…",
+    "completed": "Challenge complete! 🎉",
+    "checkInToday": "Light today's flame",
+    "alreadyCheckedIn": "Today's flame already burns",
+    "dayCount": "Day {{current}} of {{total}}",
+    "percentComplete": "{{percent}}% lit",
+    "checkInSuccess": "You've lit today's flame. The Everlight shines brighter.",
+    "checkInError": "The flame didn't catch this time. Try again, Guardian."
+  },
+  "levelUp": {
+    "title": "Your light has evolved.",
+    "areaTitle": "{{area}}: your light has evolved.",
+    "levelLabel": "Guardian Level {{level}}",
+    "essenceReward": "+{{points}} Essence",
+    "dismiss": "Tap to continue"
   },
   "shop": {
     "title": "Indulgence Shop",
@@ -408,7 +429,7 @@
     "nextButton": "Next",
     "finishButton": "Get Started",
     "step1": {
-      "title": "Welcome to Zylen!",
+      "title": "Welcome to Everlight!",
       "description": "Your journey to a better version of yourself starts here",
       "nameLabel": "What's your name?",
       "namePlaceholder": "Enter your name",
@@ -434,7 +455,7 @@
       "addHabitButton": "+ Add Habit"
     },
     "step4": {
-      "title": "How Zylen works",
+      "title": "How Everlight works",
       "description": "Learn about the game mechanics",
       "xpTitle": "Earn XP",
       "xpDescription": "Complete habits daily to earn experience points",
@@ -906,7 +927,7 @@
       {
         "title": "Welcome",
         "accent": "to your adventure",
-        "desc": "Zylen is your companion to build positive habits and reach your best self."
+        "desc": "Everlight is your companion to build positive habits and reach your best self."
       },
       {
         "title": "Explore",
