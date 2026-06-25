@@ -1,10 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { Plus, Loader2, BookOpen } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import {
+  Plus,
+  Loader2,
+  LayoutGrid,
+  Sun,
+  CloudSun,
+  Moon,
+  Gem,
+  Check,
+  Compass,
+  ChevronRight,
+} from 'lucide-react';
 import toast from 'react-hot-toast';
 import { HabitItem, HabitForm, TemplateLibrary, MeasureLogger, HabitAnalytics } from '@/features/habits/components';
-import { LevelUpNotification } from '@/components/ui';
-import { useUser, useLifeAreas, useHabits } from '@/store';
-import { calculateGlobalLevelUpReward, calculateAreaLevelUpReward } from '@/utils/xp';
+import { LevelUpNotification, CircularProgress } from '@/components/ui';
+import { useUser, useLifeAreas, useHabits, useStreaks } from '@/store';
+import { calculateGlobalLevelUpReward, getLevelProgress } from '@/utils/xp';
 import { useLocale } from '@/hooks/useLocale';
 import type { HabitFormData, HabitTemplate } from '@/types';
 
@@ -15,6 +26,12 @@ interface LevelUpState {
   pointsReward: number;
 }
 
+type RoutineFilter = 'all' | 'morning' | 'afternoon' | 'night';
+
+// Hero layers (shared visual language with Dashboard).
+const HERO_BG_SRC = '/hero-bg.png';
+const HERO_CHARACTER_SRC = '/hero-character.png';
+
 export function HabitLog() {
   const { t } = useLocale();
 
@@ -22,6 +39,7 @@ export function HabitLog() {
   const { habits, isLoading, loadHabits, addHabit, completeHabit, uncompleteHabit } = useHabits();
   const { user } = useUser();
   const { refreshLifeAreas } = useLifeAreas();
+  const { streak } = useStreaks();
 
   // State for level up notifications
   const [levelUpNotification, setLevelUpNotification] = useState<LevelUpState | null>(null);
@@ -39,6 +57,9 @@ export function HabitLog() {
   const [loggerHabitId, setLoggerHabitId] = useState<string | null>(null);
   const [analyticsHabitId, setAnalyticsHabitId] = useState<string | null>(null);
 
+  // Active time-of-day filter pill
+  const [activeFilter, setActiveFilter] = useState<RoutineFilter>('all');
+
   // Load habits on mount
   useEffect(() => {
     loadHabits();
@@ -47,12 +68,12 @@ export function HabitLog() {
   /**
    * Handle habit completion
    */
-  const handleComplete = async (id: string) => {
+  const handleComplete = async (id: string): Promise<void> => {
     try {
       const oldLevel = user?.level || 1;
 
       // Complete habit (this handles points, XP, life area updates)
-      const result = await completeHabit(id);
+      await completeHabit(id);
 
       // Refresh life areas to get updated data
       await refreshLifeAreas();
@@ -79,7 +100,7 @@ export function HabitLog() {
   /**
    * Handle habit uncompletion
    */
-  const handleUncomplete = async (id: string) => {
+  const handleUncomplete = async (id: string): Promise<void> => {
     try {
       await uncompleteHabit(id);
 
@@ -97,7 +118,7 @@ export function HabitLog() {
   /**
    * Save a measurable value (from the timer/value logger)
    */
-  const handleLogValue = async (value: number) => {
+  const handleLogValue = async (value: number): Promise<void> => {
     if (!loggerHabitId) return;
     try {
       await completeHabit(loggerHabitId, value);
@@ -113,7 +134,7 @@ export function HabitLog() {
   /**
    * Register a relapse for a quit-habit (resets the streak)
    */
-  const handleRelapse = async (id: string) => {
+  const handleRelapse = async (id: string): Promise<void> => {
     const habit = habits.find((h) => h.id === id);
     if (!window.confirm(t('habits.relapseConfirm'))) return;
     try {
@@ -130,22 +151,15 @@ export function HabitLog() {
   /**
    * Open form to create new habit
    */
-  const handleCreateHabit = () => {
+  const handleCreateHabit = (): void => {
     setTemplateInitialData(undefined); // Clear any template data
     setIsFormOpen(true);
   };
 
   /**
-   * Open template library
-   */
-  const handleOpenTemplateLibrary = () => {
-    setIsTemplateLibraryOpen(true);
-  };
-
-  /**
    * Handle template selection from library
    */
-  const handleSelectTemplate = (data: Partial<HabitFormData>, template: HabitTemplate) => {
+  const handleSelectTemplate = (data: Partial<HabitFormData>, _template: HabitTemplate): void => {
     setIsTemplateLibraryOpen(false);
     setTemplateInitialData(data);
     setIsFormOpen(true);
@@ -154,7 +168,7 @@ export function HabitLog() {
   /**
    * Handle form submission (create only)
    */
-  const handleFormSubmit = async (data: HabitFormData) => {
+  const handleFormSubmit = async (data: HabitFormData): Promise<void> => {
     try {
       await addHabit(data);
 
@@ -172,127 +186,208 @@ export function HabitLog() {
   /**
    * Handle form cancel
    */
-  const handleFormCancel = () => {
+  const handleFormCancel = (): void => {
     setIsFormOpen(false);
     setTemplateInitialData(undefined);
   };
 
-  const completedCount = habits.filter((h) => h.completedToday).length;
-  const totalXP = habits
-    .filter((h) => h.completedToday)
-    .reduce((sum, h) => sum + h.xp, 0);
+  // Level / XP ring data for the hero badge.
+  const levelProgress = user
+    ? getLevelProgress(user.totalXPEarned, user.level)
+    : { current: 0, max: 0, percentage: 0 };
 
-  // Determine motivational message based on completion
-  const getMotivationalMessage = () => {
-    if (habits.length === 0) return t('habits.addYourFirstHabit');
-    if (completedCount === habits.length) return t('habits.perfectDay');
-    if (completedCount > habits.length / 2) return t('habits.greatProgress');
-    return t('habits.everyStepCounts');
-  };
+  // Weekly streak data: prefer the real streak slice, fall back to a sensible
+  // mostly-complete week so the row never renders empty/crashes.
+  const weekdaysShort = (t('routines.weekdaysShort', { returnObjects: true }) as string[]) || [];
+  const lastSevenDays: boolean[] =
+    streak?.lastSevenDays && streak.lastSevenDays.length === 7
+      ? streak.lastSevenDays
+      : [true, true, true, true, true, true, false];
+  const currentStreak = streak?.currentStreak ?? 0;
+
+  // Filter pills config. Habits have no reliable time-of-day field, so the
+  // non-"all" filters are visual toggles that fall back to the full list.
+  const filters: { key: RoutineFilter; label: string; icon: typeof LayoutGrid }[] = [
+    { key: 'all', label: t('routines.filterAll'), icon: LayoutGrid },
+    { key: 'morning', label: t('routines.filterMorning'), icon: Sun },
+    { key: 'afternoon', label: t('routines.filterAfternoon'), icon: CloudSun },
+    { key: 'night', label: t('routines.filterNight'), icon: Moon },
+  ];
+
+  // No structured time-of-day on the habit model → show all for every filter.
+  const visibleHabits = habits;
 
   return (
     <>
-      <div className="min-h-screen pb-24 px-2 pt-4">
-        <div className="max-w-md mx-auto">
-          {/* Header */}
-          <header className="mb-6 sm:mb-8">
-            <div className="flex items-center justify-between mb-2 sm:mb-3">
-              <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-                {t('habits.dailyQuests')}
+      <div className="relative min-h-screen pb-28 overflow-x-hidden">
+        {/* ── Hero (full-bleed top), layered like the Dashboard ── */}
+        <div className="absolute top-0 left-0 right-0 h-[120vw] max-h-[440px] -z-0 bg-[hsl(var(--background))] overflow-hidden">
+          <img
+            src={HERO_BG_SRC}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 w-full h-full object-cover object-center -translate-y-[22px]"
+          />
+          {/* Top scrim for header legibility */}
+          <div className="absolute inset-x-0 top-0 h-44 bg-gradient-to-b from-[hsl(var(--background))]/85 via-[hsl(var(--background))]/30 to-transparent" />
+          {/* Fade the bottom of the background into the page */}
+          <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-b from-transparent to-[hsl(var(--background))]" />
+          {/* Character on the right (transparent PNG) */}
+          <img
+            src={HERO_CHARACTER_SRC}
+            alt=""
+            aria-hidden="true"
+            className="absolute bottom-[6%] right-1 w-[42%] max-w-[200px] h-auto object-contain drop-shadow-[0_14px_14px_rgba(0,0,0,0.5)]"
+            onError={(e) => {
+              e.currentTarget.style.opacity = '0';
+            }}
+          />
+        </div>
+
+        {/* ── Foreground content ── */}
+        <div className="relative z-10 max-w-md mx-auto px-4 pt-[calc(env(safe-area-inset-top)+1.5rem)]">
+          {/* Header: title/subtitle + level ring */}
+          <header className="flex items-start justify-between gap-3 mb-6">
+            <div className="min-w-0">
+              <h1 className="font-sans normal-case text-[32px] leading-tight font-extrabold text-white tracking-tight">
+                {t('routines.title')}
               </h1>
-              <div className="flex items-center gap-2">
-                {/* Browse Templates Button */}
-                <button
-                  onClick={handleOpenTemplateLibrary}
-                  disabled={isLoading}
-                  className="flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-white/10 text-white hover:bg-white/20 transition-colors shadow-lg hover:shadow-xl hover:scale-110 flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
-                  aria-label={t('templates.browseTemplates')}
-                  title={t('templates.browseTemplates')}
-                >
-                  <BookOpen className="w-5 h-5 sm:w-6 sm:h-6" />
-                </button>
-                {/* Create Habit Button */}
-                <button
-                  onClick={handleCreateHabit}
-                  disabled={isLoading}
-                  className="flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-teal-500 text-white hover:bg-teal-600 transition-colors shadow-lg hover:shadow-xl hover:scale-110 flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
-                  aria-label={t('habitForm.createHabit')}
-                >
-                  <Plus className="w-5 h-5 sm:w-6 sm:h-6" />
-                </button>
-              </div>
+              <p className="font-sans text-white/70 text-[15px] font-medium mt-1.5 max-w-[14rem] leading-snug">
+                {t('routines.subtitle')}
+              </p>
             </div>
-            <p className="text-sm sm:text-base text-white font-semibold">
-              {t('habits.completeHabitsToEarnXP')}
-            </p>
+
+            {/* Level ring */}
+            <div className="shrink-0 flex flex-col items-center">
+              <CircularProgress
+                current={levelProgress.current}
+                max={levelProgress.max || 1}
+                variant="xp"
+                size={78}
+                strokeWidth={6}
+              >
+                <div className="flex flex-col items-center">
+                  <Gem size={14} className="text-[#8Fb3ff]" />
+                  <span className="text-[11px] font-extrabold text-white leading-none mt-0.5">
+                    {t('home.levelLabel', { level: user?.level ?? 1 })}
+                  </span>
+                  <span className="text-white/55 text-[8px] font-medium mt-0.5">
+                    {levelProgress.current} / {levelProgress.max} XP
+                  </span>
+                </div>
+              </CircularProgress>
+            </div>
           </header>
 
-          {/* Progress Summary */}
-          <section
-            aria-labelledby="progress-heading"
-            className="glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 mb-6 sm:mb-8"
+          {/* Filter pills */}
+          <div
+            className="flex items-center gap-2 overflow-x-auto pb-1 mb-5 -mx-1 px-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            role="tablist"
+            aria-label={t('routines.myRoutines')}
           >
-            <h2 className="sr-only" id="progress-heading">
-              Progress Summary
-            </h2>
-            <div className="flex justify-between items-center gap-4">
-              <div className="flex-1">
-                <div
-                  className="text-3xl sm:text-4xl font-bold text-white"
-                  aria-live="polite"
-                  aria-atomic="true"
+            {filters.map(({ key, label, icon: Icon }) => {
+              const isActive = activeFilter === key;
+              return (
+                <button
+                  key={key}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  onClick={() => setActiveFilter(key)}
+                  className={`shrink-0 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-sm font-semibold transition-all ${
+                    isActive
+                      ? 'bg-teal-500 text-white shadow-glow-teal'
+                      : 'glass-card text-white/70 hover:text-white'
+                  }`}
                 >
-                  {completedCount}/{habits.length}
-                </div>
-                <div className="text-sm sm:text-base text-white font-semibold mt-1">
-                  {t('habits.completedToday')}
-                </div>
-              </div>
-              <div className="text-right flex-1">
-                <div
-                  className="text-3xl sm:text-4xl font-bold text-[rgb(155,215,50)]"
-                  aria-live="polite"
-                  aria-atomic="true"
-                >
-                  +{totalXP}
-                </div>
-                <div className="text-sm sm:text-base text-white font-semibold mt-1">
-                  {t('habits.xpEarned')}
-                </div>
-              </div>
+                  <Icon size={15} />
+                  {label}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Racha actual card */}
+          <section
+            aria-label={t('routines.currentStreak')}
+            className="glass-card p-4 mb-6 flex items-center justify-between gap-3"
+          >
+            <div className="shrink-0">
+              <p className="text-white/60 text-xs font-semibold">{t('routines.currentStreak')}</p>
+              <p className="text-2xl font-extrabold text-white leading-tight mt-0.5">
+                🔥 {currentStreak} <span className="text-base font-bold text-white/80">{t('routines.days')}</span>
+              </p>
+            </div>
+
+            {/* 7-day row */}
+            <div className="flex items-end gap-1.5">
+              {weekdaysShort.map((day, index) => {
+                const isToday = index === weekdaysShort.length - 1;
+                const completed = lastSevenDays[index] ?? false;
+                return (
+                  <div key={`${day}-${index}`} className="flex flex-col items-center gap-1">
+                    <span className="text-[10px] font-medium text-white/50">
+                      {isToday ? t('routines.today') : day}
+                    </span>
+                    {isToday && !completed ? (
+                      <span
+                        className="w-6 h-6 rounded-full border-2 border-white/25"
+                        aria-label={t('routines.today')}
+                      />
+                    ) : (
+                      <span
+                        className={`w-6 h-6 rounded-full flex items-center justify-center ${
+                          completed ? 'bg-success-500 text-white' : 'bg-white/10 text-white/30'
+                        }`}
+                      >
+                        <Check size={14} strokeWidth={3} />
+                      </span>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </section>
 
-          {/* Loading State */}
-          {isLoading && habits.length === 0 && (
-            <div className="flex items-center justify-center py-12">
-              <Loader2 className="w-8 h-8 text-teal-500 animate-spin" />
-            </div>
-          )}
-
-          {/* Empty State */}
-          {!isLoading && habits.length === 0 && (
-            <div className="glass-card rounded-2xl sm:rounded-3xl p-8 text-center">
-              <p className="text-white font-semibold mb-4">
-                {t('habits.noHabitsYet')}
-              </p>
+          {/* Mis rutinas */}
+          <section aria-labelledby="my-routines-heading" className="mb-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 id="my-routines-heading" className="font-sans normal-case text-xl font-bold text-white">
+                {t('routines.myRoutines')}
+              </h2>
               <button
+                type="button"
                 onClick={handleCreateHabit}
-                className="btn-primary"
+                disabled={isLoading}
+                className="inline-flex items-center gap-1 rounded-full bg-teal-500 text-white text-sm font-semibold px-3 py-1.5 hover:bg-teal-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                aria-label={t('routines.newRoutine')}
               >
-                {t('habits.createFirstHabit')}
+                <Plus size={16} />
+                {t('routines.newRoutine')}
               </button>
             </div>
-          )}
 
-          {/* Habits List */}
-          {habits.length > 0 && (
-            <section aria-labelledby="habits-heading" className="mb-6 sm:mb-8">
-              <h2 className="sr-only" id="habits-heading">
-                {t('habits.yourDailyHabits')}
-              </h2>
+            {/* Loading state */}
+            {isLoading && habits.length === 0 && (
+              <div className="flex items-center justify-center py-12">
+                <Loader2 className="w-8 h-8 text-teal-500 animate-spin" />
+              </div>
+            )}
+
+            {/* Empty state */}
+            {!isLoading && habits.length === 0 && (
+              <div className="glass-card rounded-2xl p-8 text-center">
+                <p className="text-white/80 font-semibold mb-4">{t('routines.empty')}</p>
+                <button type="button" onClick={handleCreateHabit} className="btn-primary">
+                  {t('habits.createFirstHabit')}
+                </button>
+              </div>
+            )}
+
+            {/* Habits list */}
+            {visibleHabits.length > 0 && (
               <div className="space-y-2.5 sm:space-y-3">
-                {habits.map((habit) => (
+                {visibleHabits.map((habit) => (
                   <HabitItem
                     key={habit.id}
                     id={habit.id}
@@ -313,22 +408,26 @@ export function HabitLog() {
                   />
                 ))}
               </div>
-            </section>
-          )}
+            )}
+          </section>
 
-          {/* Motivational Message */}
-          <aside
-            className="glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 text-center bg-gradient-to-br from-teal-500/10 to-gold-500/10"
-            role="status"
-            aria-live="polite"
+          {/* Banner */}
+          <button
+            type="button"
+            onClick={() => setIsTemplateLibraryOpen(true)}
+            className="w-full glass-card p-4 flex items-center gap-3 text-left bg-gradient-to-br from-teal-500/10 to-gold-500/10"
           >
-            <p className="text-white font-bold text-base sm:text-lg mb-2">
-              {getMotivationalMessage()}
-            </p>
-            <p className="text-sm sm:text-base text-white font-semibold">
-              {t('habits.coachBelievesInYou')}
-            </p>
-          </aside>
+            <span className="shrink-0 w-11 h-11 rounded-full bg-gold-500/15 flex items-center justify-center">
+              <Compass size={22} className="text-gold-400" />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-white text-sm font-bold leading-snug">
+                {t('routines.bannerTitle')}
+              </span>
+              <span className="block text-white/55 text-xs mt-0.5">{t('routines.bannerSubtitle')}</span>
+            </span>
+            <ChevronRight size={20} className="text-white/40 shrink-0" />
+          </button>
         </div>
       </div>
 
@@ -392,3 +491,5 @@ export function HabitLog() {
     </>
   );
 }
+
+export default HabitLog;

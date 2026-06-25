@@ -353,7 +353,27 @@
     "feature2Title": "Earn rewards",
     "feature2Desc": "Redeem points for controlled indulgences",
     "feature3Title": "Maintain streaks",
-    "feature3Desc": "Consistency gives you XP multipliers"
+    "feature3Desc": "Consistency gives you XP multipliers",
+    "tagline": "Your best self,",
+    "taglineAccent": "your greatest adventure",
+    "heroFeature1Title": "Build habits",
+    "heroFeature1Desc": "that transform you",
+    "heroFeature2Title": "Beat challenges",
+    "heroFeature2Desc": "every day",
+    "heroFeature3Title": "Unlock your",
+    "heroFeature3Desc": "best version",
+    "orContinueWith": "or continue with",
+    "emailPlaceholder": "Email address",
+    "continue": "Continue",
+    "noAccount": "Don't have an account?",
+    "register": "Sign up",
+    "termsPrefix": "By continuing you accept our",
+    "termsOfService": "Terms of Service",
+    "and": "and",
+    "privacyPolicy": "Privacy Policy",
+    "emailSent": "Check your inbox! We sent you a sign-in link.",
+    "enterEmail": "Enter your email address",
+    "continueWithApple": "Continue with Apple"
   },
   "errors": {
     "general": "Something went wrong. Please try again.",
@@ -479,6 +499,56 @@
       "inputLabel": "To confirm, type \"{{text}}\" exactly:",
       "inputError": "Text doesn't match. Type exactly as shown.",
       "confirmButton": "Delete Permanently"
+    },
+    "subtitle": "Your journey, your story.",
+    "subtitle2": "Keep growing every day.",
+    "levelLabel": "Level {{level}}",
+    "quote": "It's not about being perfect, it's about being consistent.",
+    "quoteAccent": "You got this.",
+    "statStreakDays": "day streak",
+    "statStreakHint": "Keep it up!",
+    "statMinutes": "minutes invested",
+    "statMinutesHint": "this week",
+    "statTotalXp": "total XP",
+    "statTotalXpHint": "earned",
+    "statHabits": "habits completed",
+    "achievementsTitle": "Achievements",
+    "seeAll": "See all",
+    "seeAllTools": "See all",
+    "locked": "Locked",
+    "toolsTitle": "My tools",
+    "comingSoon": "Coming soon 🚧",
+    "aboutTitle": "About me",
+    "aboutDefault": "Passionate about personal growth, discipline and living with purpose.",
+    "settingsSubtitle": "Settings & account",
+    "tools": {
+      "journal": "Personal journal",
+      "journalDesc": "Write, reflect and grow.",
+      "goals": "Goals",
+      "goalsDesc": "Define and track your objectives.",
+      "reminders": "Reminders",
+      "remindersDesc": "Turn on notifications and never miss a thing.",
+      "breathing": "Breathing",
+      "breathingDesc": "Breathing and mindfulness exercises."
+    },
+    "avatars": {
+      "pickTitle": "Choose your avatar",
+      "save": "Save",
+      "explorer1": "Adventurer",
+      "explorer2": "Adventuress",
+      "explorer3": "Explorer"
+    },
+    "ach": {
+      "firstStep": "First step",
+      "firstStepDesc": "Complete your first habit",
+      "consistency": "Consistency",
+      "consistencyDesc": "7 day streak",
+      "unstoppable": "Unstoppable",
+      "unstoppableDesc": "10 day streak",
+      "focus": "Total focus",
+      "focusDesc": "100 minutes in a week",
+      "elite": "Elite discipline",
+      "eliteDesc": "30 day streak"
     }
   },
   "username": {
@@ -503,12 +573,30 @@
     "onboardingPrompt": "Choose your look",
     "onboardingHint": "You can change the theme anytime from Settings",
     "list": {
-      "nous": { "name": "Nous", "desc": "Glass neutrals with Nous blue accents" },
-      "midnight": { "name": "Midnight", "desc": "Deep blue-violet with cool accents" },
-      "ember": { "name": "Ember", "desc": "Warm crimson and bronze — forge vibes" },
-      "mono": { "name": "Mono", "desc": "Clean grayscale — minimal and focused" },
-      "cyberpunk": { "name": "Cyberpunk", "desc": "Neon green on black — matrix terminal" },
-      "slate": { "name": "Slate", "desc": "Cool slate blue — focused developer theme" }
+      "nous": {
+        "name": "Nous",
+        "desc": "Glass neutrals with Nous blue accents"
+      },
+      "midnight": {
+        "name": "Midnight",
+        "desc": "Deep blue-violet with cool accents"
+      },
+      "ember": {
+        "name": "Ember",
+        "desc": "Warm crimson and bronze — forge vibes"
+      },
+      "mono": {
+        "name": "Mono",
+        "desc": "Clean grayscale — minimal and focused"
+      },
+      "cyberpunk": {
+        "name": "Cyberpunk",
+        "desc": "Neon green on black — matrix terminal"
+      },
+      "slate": {
+        "name": "Slate",
+        "desc": "Cool slate blue — focused developer theme"
+      }
     }
   },
   "social": {
@@ -741,5 +829,100 @@
     "subtitle": "Track how you feel each day",
     "distribution": "Distribution",
     "last7": "Last 7 days"
+  },
+  "progress": {
+    "title": "Progress",
+    "subtitle": "Small habits, big transformations.",
+    "streakChip": "day streak",
+    "weeklySummary": "Weekly summary",
+    "thisWeek": "This week",
+    "habitsCompleted": "Habits completed",
+    "of": "of",
+    "minutesInvested": "Minutes invested",
+    "min": "min",
+    "bestStreak": "Best streak",
+    "days": "days",
+    "xpEarned": "XP earned",
+    "xp": "XP",
+    "currentStreakTitle": "Your current streak",
+    "keepItUp": "Keep it up! 🔥",
+    "today": "Today",
+    "dailyActivity": "Daily activity (minutes)",
+    "minutesUnit": "Minutes",
+    "focusAreas": "Focus areas",
+    "seeDetail": "See detail",
+    "bannerTitle": "Every step brings you closer to your best self.",
+    "bannerSubtitle": "Keep building your path.",
+    "weekdaysShort": [
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri",
+      "Sat",
+      "Sun"
+    ]
+  },
+  "routines": {
+    "title": "Routines",
+    "subtitle": "Small actions, big transformations.",
+    "filterAll": "All",
+    "filterMorning": "Morning",
+    "filterAfternoon": "Afternoon",
+    "filterNight": "Night",
+    "currentStreak": "Current streak",
+    "days": "days",
+    "today": "Today",
+    "myRoutines": "My routines",
+    "newRoutine": "New routine",
+    "empty": "You don't have routines yet. Create your first one!",
+    "bannerTitle": "Consistency is your superpower.",
+    "bannerSubtitle": "Keep going, every day you get closer to your best self.",
+    "weekdaysShort": [
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri",
+      "Sat",
+      "Sun"
+    ]
+  },
+  "welcome": {
+    "tagline": "Your best self, your greatest adventure",
+    "heroTitle1": "Small habits,",
+    "heroTitle2": "big transformations.",
+    "heroSubtitle": "Build positive habits, overcome challenges and unlock your best self every day.",
+    "cta": "Begin the adventure",
+    "haveAccount": "Already have an account?",
+    "signIn": "Sign in"
+  },
+  "onboardingCarousel": {
+    "skip": "Skip",
+    "next": "Next",
+    "authTitle": "Join the adventure",
+    "continueWithApple": "Continue with Apple",
+    "slides": [
+      {
+        "title": "Welcome",
+        "accent": "to your adventure",
+        "desc": "Zylen is your companion to build positive habits and reach your best self."
+      },
+      {
+        "title": "Explore",
+        "accent": "new worlds",
+        "desc": "Each habit takes you to a new level. Discover amazing worlds as you grow every day."
+      },
+      {
+        "title": "Overcome",
+        "accent": "challenges every day",
+        "desc": "Daily missions, challenges and goals designed to push you to be consistent and disciplined."
+      },
+      {
+        "title": "Earn rewards",
+        "accent": "and unlock your best self",
+        "desc": "Every achievement brings you closer to your Supreme Avatar. Evolve, unlock and become your best self."
+      }
+    ]
   }
 }

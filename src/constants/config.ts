@@ -72,14 +72,27 @@ export const LIFE_AREAS = [
 ] as const;
 
 // Avatar configuration
+// NOTE: explorer-1..3 are currently on-theme stand-ins (copies of existing
+// character art) until the final chibi avatars are generated with OpenAI
+// (set VITE_OPENAI_API_KEY and regenerate, or drop the real PNGs at these paths).
 export const AVATARS = {
+  EXPLORER_1: '/avatars/avatar-explorer-1.png',
+  EXPLORER_2: '/avatars/avatar-explorer-2.png',
+  EXPLORER_3: '/avatars/avatar-explorer-3.png',
+  // Legacy constants kept for backward compatibility with existing imports.
   RULO: '/avatars/rulo_avatar.png',
   DANI: '/avatars/daniamor_avatar.png',
 } as const;
 
+// Default avatar for new/unset users (explorer-3 ≈ the current hero character).
+export const DEFAULT_AVATAR = AVATARS.EXPLORER_3;
+
+// The three selectable avatars surfaced in the avatar picker.
+// `nameKey` resolves through i18n (profile.avatars.*).
 export const AVATAR_OPTIONS = [
-  { id: 'rulo', name: 'Rulo', url: AVATARS.RULO },
-  { id: 'dani', name: 'Dani', url: AVATARS.DANI },
+  { id: 'explorer-1', nameKey: 'profile.avatars.explorer1', url: AVATARS.EXPLORER_1 },
+  { id: 'explorer-2', nameKey: 'profile.avatars.explorer2', url: AVATARS.EXPLORER_2 },
+  { id: 'explorer-3', nameKey: 'profile.avatars.explorer3', url: AVATARS.EXPLORER_3 },
 ] as const;
 
 // Chat configuration

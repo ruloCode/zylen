@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { Navigation, Header } from '@/components/layout';
 import { AppProvider } from '@/app/AppProvider';
 import { I18nProvider } from '@/components/I18nProvider';
-import { AuthProvider } from '@/features/auth/context/AuthContext';
+import { AuthProvider, useAuth } from '@/features/auth/context/AuthContext';
 import { ProtectedRoute } from '@/components/guards/ProtectedRoute';
 import { ToastContainer } from '@/components/ui/Toast';
 import { ROUTES } from '@/constants';
@@ -21,6 +21,10 @@ const Leaderboard = lazy(() => import('./pages/Leaderboard').then(m => ({ defaul
 const Onboarding = lazy(() => import('./pages/Onboarding').then(m => ({ default: m.Onboarding })));
 const Profile = lazy(() => import('./pages/Profile').then(m => ({ default: m.Profile })));
 const Login = lazy(() => import('./pages/Login').then(m => ({ default: m.Login })));
+const Welcome = lazy(() => import('./pages/Welcome').then(m => ({ default: m.Welcome })));
+const OnboardingCarousel = lazy(() =>
+  import('./features/onboarding/components').then(m => ({ default: m.OnboardingCarousel }))
+);
 const AuthCallback = lazy(() => import('./pages/AuthCallback').then(m => ({ default: m.AuthCallback })));
 
 // Loading fallback component
@@ -32,6 +36,27 @@ function PageLoader() {
         <p className="text-gray-600 font-semibold">Loading...</p>
       </div>
     </div>
+  );
+}
+
+// Onboarding entry: unauthenticated visitors (arriving from the Welcome
+// splash) see the marketing carousel ending in a sign-in slide. Once
+// authenticated, they fall through to the existing protected multi-step
+// onboarding/profile setup.
+function OnboardingEntry() {
+  const { user, loading } = useAuth();
+
+  if (loading) return <PageLoader />;
+
+  if (!user) return <OnboardingCarousel />;
+
+  return (
+    <ProtectedRoute>
+      <AppProvider>
+        <ProtectedShell />
+        <ToastContainer />
+      </AppProvider>
+    </ProtectedRoute>
   );
 }
 
@@ -84,6 +109,8 @@ export function App() {
           <Suspense fallback={<PageLoader />}>
             <Routes>
               {/* Public Routes */}
+              <Route path={ROUTES.WELCOME} element={<Welcome />} />
+              <Route path={ROUTES.ONBOARDING} element={<OnboardingEntry />} />
               <Route path={ROUTES.LOGIN} element={<Login />} />
               <Route path={ROUTES.AUTH_CALLBACK} element={<AuthCallback />} />
 

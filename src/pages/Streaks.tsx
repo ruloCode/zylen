@@ -1,109 +1,382 @@
-import React, { useEffect } from 'react';
-import { Trophy, Award, Zap, Star, Flame, Crown, CheckCheck, Target, Sparkles } from 'lucide-react';
-import { StreakDisplay } from '@/features/streaks/components';
-import { useAppStore, useAchievements } from '@/store';
+import {
+  Flame,
+  Clock,
+  Star,
+  Gem,
+  Check,
+  ChevronDown,
+  ChevronRight,
+  Compass,
+  Heart,
+  Dumbbell,
+  BookOpen,
+  Users,
+  Wallet,
+  Briefcase,
+  type LucideIcon,
+  Loader2,
+} from 'lucide-react';
+import { useUser, useHabits, useStreaks, useLifeAreas } from '@/store';
 import { useLocale } from '@/hooks/useLocale';
-import * as LucideIcons from 'lucide-react';
+import { getAreaLevelProgress } from '@/utils/xp';
+
+const HERO_BG_SRC = '/hero-bg.png';
+const HERO_CHARACTER_SRC = '/hero-character.png';
+
+// Placeholder daily activity data (minutes). Real per-day tracking isn't stored yet.
+const ACTIVITY_DATA = [20, 35, 10, 45, 30, 50, 20];
+const ACTIVITY_MAX = 60;
+
+// Fallback accent palette for area rows lacking an explicit color.
+const AREA_COLORS = ['#4CAF6D', '#8B5CF6', '#E0A93B', '#2DD4BF', '#F472B6', '#60A5FA'];
+
+// Map a life-area key to a lucide icon.
+const AREA_ICONS: Record<string, LucideIcon> = {
+  health: Heart,
+  fitness: Dumbbell,
+  finance: Wallet,
+  creativity: BookOpen,
+  social: Users,
+  family: Heart,
+  career: Briefcase,
+};
 
 export function Streaks() {
-  const streak = useAppStore((state) => state.streak);
+  const { user, isLoading: userLoading } = useUser();
+  const { streak, isLoading: streakLoading } = useStreaks();
+  const { habits } = useHabits();
+  const { lifeAreas } = useLifeAreas();
   const { t } = useLocale();
-  const {
-    achievementsWithProgress,
-    loadAchievementsWithProgress,
-    isLoading
-  } = useAchievements();
 
-  // Load achievements on mount
-  useEffect(() => {
-    loadAchievementsWithProgress();
-  }, [loadAchievementsWithProgress]);
+  const isLoading = userLoading || streakLoading;
 
-  // Get icon component from icon name
-  const getIcon = (iconName: string) => {
-    const IconComponent = (LucideIcons as any)[iconName];
-    if (IconComponent) {
-      return <IconComponent size={32} />;
-    }
-    return <Award size={32} />;
-  };
+  const weekdays = t('progress.weekdaysShort', { returnObjects: true }) as string[];
+  const safeWeekdays = Array.isArray(weekdays) && weekdays.length === 7
+    ? weekdays
+    : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
-  // Filter to show only streak-related achievements (or all if you want)
-  const streakAchievements = achievementsWithProgress
-    .filter(a => a.category === 'streak')
-    .slice(0, 6); // Show top 6
-  return <div className="min-h-screen pb-24 px-2 pt-4">
-      <div className="max-w-md mx-auto">
-        {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-white mb-2">{t('streaks.title')}</h1>
-          <p className="text-white">{t('streaks.subtitle')}</p>
-        </div>
+  // Glass cards (slightly translucent so the page background shows through).
+  const card = 'glass-card rounded-2xl p-4';
+  const heroChip =
+    'bg-[hsl(var(--glass-bg)/0.4)] backdrop-blur-md border border-white/10 rounded-full';
 
-        {/* Current Streak */}
-        {streak && (
-          <>
-            <div className="glass-card rounded-3xl p-8 mb-6 text-center relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-[rgb(242,156,6)]/20 to-danger-500/20" />
-              <div className="relative z-10">
-                <StreakDisplay
-                  streak={streak.currentStreak}
-                  weeklyStreak={streak.weeklyStreak}
-                  lastSevenDays={streak.lastSevenDays}
-                  size="lg"
-                />
-                <h2 className="text-2xl font-bold text-white mt-6 mb-2">
-                  {t('streaks.current')}
-                </h2>
-                <p className="text-white">{t('streaks.onFire')}</p>
-              </div>
-            </div>
-
-            {/* Best Streak */}
-            <div className="glass-card rounded-3xl p-6 mb-6 flex items-center justify-between">
-              <div>
-                <div className="text-sm text-white mb-1">{t('streaks.best')}</div>
-                <div className="text-3xl font-bold text-white">{streak.longestStreak} {t('common.days')}</div>
-              </div>
-              <Trophy size={48} className="text-[rgb(242,156,6)]" />
-            </div>
-          </>
-        )}
-
-       
-
-        {/* Badges */}
-        <div className="mb-6">
-          <h2 className="text-xl font-bold text-white mb-4">{t('streaks.achievements')}</h2>
-          {isLoading ? (
-            <div className="text-center text-white/70 py-8">Loading achievements...</div>
-          ) : (
-            <div className="grid grid-cols-3 gap-4">
-              {streakAchievements.map(achievement => (
-                <div key={achievement.id} className={`glass-card rounded-2xl p-4 text-center transition-all ${achievement.unlocked ? 'scale-100' : 'opacity-50 grayscale'}`}>
-                  <div className={`${achievement.unlocked ? 'text-[rgb(242,156,6)]' : 'text-white/50'} mb-2`}>
-                    {getIcon(achievement.iconName)}
-                  </div>
-                  <p className="text-xs font-semibold text-white">
-                    {achievement.name}
-                  </p>
-                  {!achievement.unlocked && achievement.requirementValue && (
-                    <p className="text-xs text-white/50 mt-1">
-                      {achievement.requirementValue} {t('common.days')}
-                    </p>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Motivation */}
-        <div className="glass-card rounded-3xl p-6 text-center bg-gradient-to-br from-[rgb(242,156,6)]/10 to-danger-500/10">
-          <p className="text-white font-semibold">
-            "{t('streaks.motivation')}"
-          </p>
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <Loader2 className="w-12 h-12 text-teal-500 animate-spin mx-auto mb-4" />
+          <p className="text-white font-semibold">{t('common.loading')}</p>
         </div>
       </div>
-    </div>;
+    );
+  }
+
+  const completedCount = habits.filter((h) => h.completedToday).length;
+  const totalHabits = habits.length;
+
+  const lastSeven = streak?.lastSevenDays ?? [];
+  const currentStreak = streak?.currentStreak ?? 0;
+  const longestStreak = streak?.longestStreak ?? currentStreak;
+  const totalXP = user?.totalXPEarned ?? 0;
+
+  // Estimate "minutes invested" from measurable habits logged today (placeholder fallback).
+  const minutesInvested =
+    habits.reduce((sum, h) => {
+      const value = (h as { todayValue?: number }).todayValue ?? 0;
+      return h.unit === 'min' ? sum + value : sum;
+    }, 0) || 120;
+
+  const focusAreas = lifeAreas.filter((a) => a.enabled).slice(0, 4);
+
+  const stats: Array<{
+    icon: LucideIcon;
+    iconColor: string;
+    ring: string;
+    big: string;
+    small?: string;
+    label: string;
+  }> = [
+    {
+      icon: Check,
+      iconColor: 'text-success-400',
+      ring: 'bg-success-500/15',
+      big: `${completedCount}`,
+      small: `${t('progress.of')} ${totalHabits}`,
+      label: t('progress.habitsCompleted'),
+    },
+    {
+      icon: Clock,
+      iconColor: 'text-purple-400',
+      ring: 'bg-purple-500/15',
+      big: `${minutesInvested}`,
+      small: t('progress.min'),
+      label: t('progress.minutesInvested'),
+    },
+    {
+      icon: Star,
+      iconColor: 'text-gold-400',
+      ring: 'bg-gold-500/15',
+      big: `${longestStreak}`,
+      small: t('progress.days'),
+      label: t('progress.bestStreak'),
+    },
+    {
+      icon: Gem,
+      iconColor: 'text-blue-400',
+      ring: 'bg-blue-500/15',
+      big: `${totalXP}`,
+      small: t('progress.xp'),
+      label: t('progress.xpEarned'),
+    },
+  ];
+
+  return (
+    <div className="relative min-h-screen pb-28 overflow-x-hidden">
+      {/* ── Hero (full-bleed top), layered like the Dashboard ── */}
+      <div className="absolute top-0 left-0 right-0 h-[120vw] max-h-[460px] -z-0 bg-[hsl(var(--background))] overflow-hidden">
+        <img
+          src={HERO_BG_SRC}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-cover object-top"
+        />
+        {/* Top scrim for header legibility */}
+        <div className="absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-[hsl(var(--background))]/85 via-[hsl(var(--background))]/30 to-transparent" />
+        {/* Bottom fade into the page */}
+        <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-b from-transparent to-[hsl(var(--background))]" />
+        {/* Character (transparent PNG), upper-right */}
+        <img
+          src={HERO_CHARACTER_SRC}
+          alt=""
+          aria-hidden="true"
+          className="absolute top-[6%] right-[-4%] w-[52%] max-w-[230px] h-auto object-contain drop-shadow-[0_14px_14px_rgba(0,0,0,0.5)]"
+          onError={(e) => {
+            e.currentTarget.style.opacity = '0';
+          }}
+        />
+      </div>
+
+      {/* ── Foreground content ── */}
+      <div className="relative z-10 max-w-md mx-auto px-4 pt-[calc(env(safe-area-inset-top)+1.5rem)]">
+        {/* Hero text + streak chip */}
+        <header className="relative mb-6">
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0 max-w-[62%]">
+              <h1 className="font-sans normal-case text-[32px] leading-none font-extrabold text-white tracking-tight">
+                {t('progress.title')}
+              </h1>
+              <p className="font-sans text-white/70 text-[15px] font-medium mt-2 leading-snug">
+                {t('progress.subtitle')}
+              </p>
+            </div>
+            <span
+              className={`${heroChip} shrink-0 flex items-center gap-1.5 px-3 py-1.5 text-white text-xs font-bold`}
+            >
+              <Flame size={14} className="text-orange-400" />
+              {currentStreak} {t('progress.streakChip')}
+            </span>
+          </div>
+          {/* Motivational quote */}
+          <p className="mt-4 text-sm text-white/80 font-medium max-w-[60%] leading-snug">
+            {t('profile.quote')}{' '}
+            <span className="text-teal-300 font-semibold">{t('profile.quoteAccent')}</span>
+          </p>
+        </header>
+
+        {/* Spacer so cards clear the character */}
+        <div className="h-[24vw] max-h-[96px]" aria-hidden="true" />
+
+        {/* ── Resumen semanal ── */}
+        <section className={`${card} mb-4`}>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-white font-bold text-base">{t('progress.weeklySummary')}</h2>
+            <span className="flex items-center gap-1 rounded-full bg-white/10 border border-white/10 px-3 py-1 text-white/80 text-xs font-semibold">
+              {t('progress.thisWeek')}
+              <ChevronDown size={14} />
+            </span>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            {stats.map((s) => {
+              const Icon = s.icon;
+              return (
+                <div
+                  key={s.label}
+                  className="flex items-center gap-3 rounded-xl bg-white/5 border border-white/10 p-3"
+                >
+                  <span
+                    className={`shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${s.ring}`}
+                  >
+                    <Icon size={18} className={s.iconColor} />
+                  </span>
+                  <div className="min-w-0">
+                    <p className="leading-none">
+                      <span className="text-white text-xl font-extrabold">{s.big}</span>
+                      {s.small && (
+                        <span className="text-white/50 text-xs font-medium ml-1">{s.small}</span>
+                      )}
+                    </p>
+                    <p className="text-white/55 text-[11px] mt-1 leading-tight">{s.label}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* ── Tu racha actual ── */}
+        <section className={`${card} mb-4`}>
+          <h2 className="text-white font-bold text-base mb-3">{t('progress.currentStreakTitle')}</h2>
+          <div className="flex items-center gap-4">
+            <div className="shrink-0">
+              <div className="flex items-baseline gap-1.5">
+                <Flame size={26} className="text-orange-400 self-center" />
+                <span className="text-3xl font-extrabold text-white leading-none">
+                  {currentStreak}
+                </span>
+                <span className="text-white/60 text-sm font-semibold">{t('progress.days')}</span>
+              </div>
+              <p className="text-white/55 text-xs mt-1">{t('progress.keepItUp')}</p>
+            </div>
+            <div className="flex-1 flex justify-between gap-1">
+              {safeWeekdays.map((label, i) => {
+                const isToday = i === safeWeekdays.length - 1;
+                const active = lastSeven[i] === true;
+                return (
+                  <div key={i} className="flex flex-col items-center gap-1">
+                    <span className="text-[10px] font-semibold text-white/55">
+                      {isToday ? t('progress.today') : label}
+                    </span>
+                    <span
+                      className={`w-7 h-7 rounded-full flex items-center justify-center ${
+                        active ? 'bg-orange-500/20' : 'bg-white/5'
+                      } ${isToday ? 'ring-2 ring-teal-400' : ''}`}
+                    >
+                      <Flame
+                        size={14}
+                        className={active ? 'text-orange-400' : 'text-white/25'}
+                      />
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* ── Actividad diaria (minutos) ── */}
+        <section className={`${card} mb-4`}>
+          <div className="flex items-center justify-between mb-5">
+            <h2 className="text-white font-bold text-base">{t('progress.dailyActivity')}</h2>
+            <span className="rounded-full bg-white/10 border border-white/10 px-3 py-1 text-white/80 text-xs font-semibold">
+              {t('progress.minutesUnit')}
+            </span>
+          </div>
+          <div className="flex items-end justify-between gap-2 h-36">
+            {ACTIVITY_DATA.map((value, i) => {
+              const heightPct = Math.max((value / ACTIVITY_MAX) * 100, 6);
+              const isLast = i === ACTIVITY_DATA.length - 1;
+              return (
+                <div key={i} className="flex-1 flex flex-col items-center justify-end h-full gap-1.5">
+                  <span className="text-[10px] font-semibold text-white/70">{value}</span>
+                  <div className="w-full flex-1 flex items-end">
+                    <div
+                      className={`w-full rounded-lg bg-gradient-to-t from-teal-600 to-teal-400 transition-all ${
+                        isLast ? 'opacity-50' : ''
+                      }`}
+                      style={{ height: `${heightPct}%` }}
+                    />
+                  </div>
+                  <span className="text-[10px] font-medium text-white/50">{safeWeekdays[i]}</span>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* ── Áreas de enfoque ── */}
+        <section className={`${card} mb-4`}>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-white font-bold text-base">{t('progress.focusAreas')}</h2>
+            <button
+              type="button"
+              className="text-teal-300 text-sm font-semibold"
+              aria-label={t('progress.seeDetail')}
+            >
+              {t('progress.seeDetail')}
+            </button>
+          </div>
+          {focusAreas.length === 0 ? (
+            <p className="text-white/50 text-sm text-center py-4">{t('progress.subtitle')}</p>
+          ) : (
+            <div className="space-y-3">
+              {focusAreas.map((area, index) => {
+                const key = String(area.area).toLowerCase();
+                const Icon = (area.iconName && AREA_ICONS[area.iconName.toLowerCase()]) ||
+                  AREA_ICONS[key] || Star;
+                const color = area.color || AREA_COLORS[index % AREA_COLORS.length];
+                const label = t(`lifeAreas.${key}`, { defaultValue: String(area.area) });
+                const prog = getAreaLevelProgress(area.totalXP, area.level);
+                const pct = prog.max > 0 ? Math.min((prog.current / prog.max) * 100, 100) : 0;
+                return (
+                  <div key={area.id} className="flex items-center gap-3">
+                    <span
+                      className="shrink-0 w-10 h-10 rounded-full flex items-center justify-center"
+                      style={{ backgroundColor: color }}
+                    >
+                      <Icon size={18} className="text-white" />
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center justify-between gap-2">
+                        <p className="text-white font-semibold text-sm truncate">{label}</p>
+                        <p className="text-white/50 text-xs font-medium shrink-0">
+                          {t('home.levelLabel', {
+                            level: area.level,
+                            defaultValue: `Nivel ${area.level}`,
+                          })}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2 mt-1.5">
+                        <div className="h-1.5 flex-1 rounded-full bg-white/10 overflow-hidden">
+                          <div
+                            className="h-full rounded-full transition-all duration-500"
+                            style={{ width: `${pct}%`, backgroundColor: color }}
+                          />
+                        </div>
+                        <span className="text-white/50 text-[10px] font-medium shrink-0">
+                          {prog.current} / {prog.max} XP
+                        </span>
+                      </div>
+                    </div>
+                    <ChevronRight size={18} className="text-white/30 shrink-0" />
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </section>
+
+        {/* ── Banner ── */}
+        <button
+          type="button"
+          className="w-full glass-card rounded-2xl p-4 flex items-center gap-3 text-left"
+          aria-label={t('progress.bannerTitle')}
+        >
+          <span className="shrink-0 w-11 h-11 rounded-full bg-gold-500/15 flex items-center justify-center">
+            <Compass size={22} className="text-gold-400" />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block text-white text-sm font-bold leading-snug">
+              {t('progress.bannerTitle')}
+            </span>
+            <span className="block text-white/55 text-xs mt-0.5">
+              {t('progress.bannerSubtitle')}
+            </span>
+          </span>
+          <ChevronRight size={20} className="text-white/40 shrink-0" />
+        </button>
+      </div>
+    </div>
+  );
 }
+
+export default Streaks;

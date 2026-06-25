@@ -15,6 +15,7 @@ export const ROUTES = {
   LEADERBOARD: '/leaderboard',
   PROFILE: '/profile',
   ONBOARDING: '/onboarding',
+  WELCOME: '/welcome',
   LOGIN: '/login',
   AUTH_CALLBACK: '/auth/callback',
 } as const;

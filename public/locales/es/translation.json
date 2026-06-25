@@ -353,7 +353,27 @@
     "feature2Title": "Gana recompensas",
     "feature2Desc": "Canjea puntos por indulgencias controladas",
     "feature3Title": "Mantén rachas",
-    "feature3Desc": "La consistencia te da multiplicadores de XP"
+    "feature3Desc": "La consistencia te da multiplicadores de XP",
+    "tagline": "Tu mejor versión,",
+    "taglineAccent": "tu mayor aventura",
+    "heroFeature1Title": "Crea hábitos",
+    "heroFeature1Desc": "que te transforman",
+    "heroFeature2Title": "Supera desafíos",
+    "heroFeature2Desc": "cada día",
+    "heroFeature3Title": "Desbloquea tu",
+    "heroFeature3Desc": "mejor versión",
+    "orContinueWith": "o continúa con",
+    "emailPlaceholder": "Correo electrónico",
+    "continue": "Continuar",
+    "noAccount": "¿No tienes cuenta?",
+    "register": "Regístrate",
+    "termsPrefix": "Al continuar aceptas nuestros",
+    "termsOfService": "Términos de servicio",
+    "and": "y",
+    "privacyPolicy": "Política de privacidad",
+    "emailSent": "¡Revisa tu correo! Te enviamos un enlace de acceso.",
+    "enterEmail": "Ingresa tu correo electrónico",
+    "continueWithApple": "Continuar con Apple"
   },
   "errors": {
     "general": "Algo salió mal. Por favor, intenta de nuevo.",
@@ -479,6 +499,56 @@
       "inputLabel": "Para confirmar, escribe \"{{text}}\" exactamente:",
       "inputError": "El texto no coincide. Escribe exactamente como se indica.",
       "confirmButton": "Eliminar Permanentemente"
+    },
+    "subtitle": "Tu viaje, tu historia.",
+    "subtitle2": "Sigue creciendo cada día.",
+    "levelLabel": "Nivel {{level}}",
+    "quote": "No se trata de ser perfecto, se trata de ser constante.",
+    "quoteAccent": "Tú puedes.",
+    "statStreakDays": "días de racha",
+    "statStreakHint": "¡Sigue así!",
+    "statMinutes": "minutos invertidos",
+    "statMinutesHint": "esta semana",
+    "statTotalXp": "XP totales",
+    "statTotalXpHint": "ganados",
+    "statHabits": "hábitos completados",
+    "achievementsTitle": "Logros",
+    "seeAll": "Ver todos",
+    "seeAllTools": "Ver todas",
+    "locked": "Bloqueado",
+    "toolsTitle": "Mis herramientas",
+    "comingSoon": "Próximamente 🚧",
+    "aboutTitle": "Acerca de mí",
+    "aboutDefault": "Apasionado por el crecimiento personal, la disciplina y vivir en propósito.",
+    "settingsSubtitle": "Ajustes y cuenta",
+    "tools": {
+      "journal": "Diario personal",
+      "journalDesc": "Escribe, reflexiona y crece.",
+      "goals": "Metas",
+      "goalsDesc": "Define y sigue tus objetivos.",
+      "reminders": "Recordatorios",
+      "remindersDesc": "Activa notificaciones y no te saltes nada.",
+      "breathing": "Respiración",
+      "breathingDesc": "Ejercicios de respiración y mindfulness."
+    },
+    "avatars": {
+      "pickTitle": "Elige tu avatar",
+      "save": "Guardar",
+      "explorer1": "Aventurero",
+      "explorer2": "Aventurera",
+      "explorer3": "Explorador"
+    },
+    "ach": {
+      "firstStep": "Primer paso",
+      "firstStepDesc": "Completa tu primer hábito",
+      "consistency": "Constancia",
+      "consistencyDesc": "7 días de racha",
+      "unstoppable": "Imparable",
+      "unstoppableDesc": "10 días de racha",
+      "focus": "Enfoque total",
+      "focusDesc": "100 minutos en una semana",
+      "elite": "Disciplina élite",
+      "eliteDesc": "30 días de racha"
     }
   },
   "username": {
@@ -504,12 +574,30 @@
     "onboardingPrompt": "Elige tu apariencia",
     "onboardingHint": "Puedes cambiar el tema en cualquier momento desde Configuración",
     "list": {
-      "nous": { "name": "Nous", "desc": "Neutros de vidrio con acentos azul Nous" },
-      "midnight": { "name": "Medianoche", "desc": "Azul violeta profundo con acentos fríos" },
-      "ember": { "name": "Brasa", "desc": "Carmesí cálido y bronce — vibra de forja" },
-      "mono": { "name": "Mono", "desc": "Escala de grises limpia — minimal y enfocado" },
-      "cyberpunk": { "name": "Cyberpunk", "desc": "Verde neón sobre negro — terminal matrix" },
-      "slate": { "name": "Pizarra", "desc": "Azul pizarra frío — tema de desarrollador" }
+      "nous": {
+        "name": "Nous",
+        "desc": "Neutros de vidrio con acentos azul Nous"
+      },
+      "midnight": {
+        "name": "Medianoche",
+        "desc": "Azul violeta profundo con acentos fríos"
+      },
+      "ember": {
+        "name": "Brasa",
+        "desc": "Carmesí cálido y bronce — vibra de forja"
+      },
+      "mono": {
+        "name": "Mono",
+        "desc": "Escala de grises limpia — minimal y enfocado"
+      },
+      "cyberpunk": {
+        "name": "Cyberpunk",
+        "desc": "Verde neón sobre negro — terminal matrix"
+      },
+      "slate": {
+        "name": "Pizarra",
+        "desc": "Azul pizarra frío — tema de desarrollador"
+      }
     }
   },
   "social": {
@@ -742,5 +830,100 @@
     "subtitle": "Registra cómo te sientes cada día",
     "distribution": "Distribución",
     "last7": "Últimos 7 días"
+  },
+  "progress": {
+    "title": "Progreso",
+    "subtitle": "Pequeños hábitos, grandes transformaciones.",
+    "streakChip": "días racha",
+    "weeklySummary": "Resumen semanal",
+    "thisWeek": "Esta semana",
+    "habitsCompleted": "Hábitos completados",
+    "of": "de",
+    "minutesInvested": "Minutos invertidos",
+    "min": "min",
+    "bestStreak": "Mejor racha",
+    "days": "días",
+    "xpEarned": "XP obtenidos",
+    "xp": "XP",
+    "currentStreakTitle": "Tu racha actual",
+    "keepItUp": "¡Sigue así! 🔥",
+    "today": "Hoy",
+    "dailyActivity": "Actividad diaria (minutos)",
+    "minutesUnit": "Minutos",
+    "focusAreas": "Áreas de enfoque",
+    "seeDetail": "Ver detalle",
+    "bannerTitle": "Cada paso te acerca a tu mejor versión.",
+    "bannerSubtitle": "Sigue construyendo tu camino.",
+    "weekdaysShort": [
+      "Lun",
+      "Mar",
+      "Mié",
+      "Jue",
+      "Vie",
+      "Sáb",
+      "Dom"
+    ]
+  },
+  "routines": {
+    "title": "Rutinas",
+    "subtitle": "Pequeñas acciones, grandes transformaciones.",
+    "filterAll": "Todas",
+    "filterMorning": "Mañana",
+    "filterAfternoon": "Tarde",
+    "filterNight": "Noche",
+    "currentStreak": "Racha actual",
+    "days": "días",
+    "today": "Hoy",
+    "myRoutines": "Mis rutinas",
+    "newRoutine": "Nueva rutina",
+    "empty": "Aún no tienes rutinas. ¡Crea la primera!",
+    "bannerTitle": "La constancia es tu superpoder.",
+    "bannerSubtitle": "Sigue así, cada día te acercas más a tu mejor versión.",
+    "weekdaysShort": [
+      "Lun",
+      "Mar",
+      "Mié",
+      "Jue",
+      "Vie",
+      "Sáb",
+      "Dom"
+    ]
+  },
+  "welcome": {
+    "tagline": "Tu mejor versión, tu mayor aventura",
+    "heroTitle1": "Pequeños hábitos,",
+    "heroTitle2": "grandes transformaciones.",
+    "heroSubtitle": "Construye hábitos positivos, supera desafíos y desbloquea tu mejor versión cada día.",
+    "cta": "Comenzar la aventura",
+    "haveAccount": "¿Ya tienes cuenta?",
+    "signIn": "Inicia sesión"
+  },
+  "onboardingCarousel": {
+    "skip": "Saltar",
+    "next": "Siguiente",
+    "authTitle": "Únete a la aventura",
+    "continueWithApple": "Continuar con Apple",
+    "slides": [
+      {
+        "title": "Bienvenido",
+        "accent": "a tu aventura",
+        "desc": "Zylen es tu compañero para construir hábitos positivos y lograr tu mejor versión."
+      },
+      {
+        "title": "Explora",
+        "accent": "nuevos mundos",
+        "desc": "Cada hábito te lleva a un nuevo nivel. Descubre mundos increíbles mientras creces cada día."
+      },
+      {
+        "title": "Supera",
+        "accent": "desafíos cada día",
+        "desc": "Misiones diarias, retos y objetivos diseñados para impulsarte a ser constante y disciplinado."
+      },
+      {
+        "title": "Gana recompensas",
+        "accent": "y desbloquea tu mejor versión",
+        "desc": "Cada logro te acerca a tu Avatar Supremo. Evoluciona, desbloquea y conviértete en tu mejor versión."
+      }
+    ]
   }
 }

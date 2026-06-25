@@ -21,8 +21,8 @@ export function Navigation() {
   const navigate = useNavigate();
   const { t } = useLocale();
 
-  // Don't show navigation on onboarding page
-  if (location.pathname === ROUTES.ONBOARDING) {
+  // Don't show navigation on onboarding or welcome pages
+  if (location.pathname === ROUTES.ONBOARDING || location.pathname === ROUTES.WELCOME) {
     return null;
   }
 

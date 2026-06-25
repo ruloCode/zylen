@@ -38,6 +38,7 @@ interface AuthContextType {
   session: Session | null;
   loading: boolean;
   signInWithOAuth: (provider: 'google' | 'github') => Promise<void>;
+  signInWithEmail: (email: string) => Promise<{ success: boolean }>;
   signOut: () => Promise<void>;
   error: AuthError | null;
 }
@@ -113,6 +114,37 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
+  const signInWithEmail = async (email: string): Promise<{ success: boolean }> => {
+    if (shouldSkipAuth) {
+      setUser(devUser);
+      setSession(null);
+      setLoading(false);
+      return { success: true };
+    }
+
+    try {
+      setError(null);
+      setLoading(true);
+
+      // Passwordless magic link / OTP
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+
+      if (error) throw error;
+      return { success: true };
+    } catch (err) {
+      console.error('Email sign in error:', err);
+      setError(err as AuthError);
+      return { success: false };
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const signOut = async () => {
     if (shouldSkipAuth) {
       setUser(devUser);
@@ -143,6 +175,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     session,
     loading,
     signInWithOAuth,
+    signInWithEmail,
     signOut,
     error,
   };

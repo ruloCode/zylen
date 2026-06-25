@@ -4,7 +4,8 @@ import { useOnboarding } from '@/store';
 import { useLocale } from '@/hooks/useLocale';
 import { Logo } from '@/components/branding/Logo';
 import { cn } from '@/utils';
-import { AVATARS } from '@/constants';
+import { DEFAULT_AVATAR } from '@/constants';
+import { AvatarPicker } from '@/features/profile/components';
 
 interface OnboardingStep1Props {
   onNext: () => void;
@@ -17,7 +18,7 @@ export function OnboardingStep1({ onNext }: OnboardingStep1Props) {
   const { temporaryData, saveStepData, completeStep } = useOnboarding();
   const { t } = useLocale();
   const [name, setName] = useState(temporaryData.userName || '');
-  const [selectedAvatar, setSelectedAvatar] = useState(temporaryData.avatarUrl || AVATARS.RULO);
+  const [selectedAvatar, setSelectedAvatar] = useState(temporaryData.avatarUrl || DEFAULT_AVATAR);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -106,83 +107,7 @@ export function OnboardingStep1({ onNext }: OnboardingStep1Props) {
           <label className="block text-sm font-bold text-white/90 mb-3 uppercase tracking-wide">
             {t('onboarding.step1.avatarLabel')}
           </label>
-          <div className="grid grid-cols-2 gap-3 sm:gap-4 md:gap-6">
-            {/* Rulo Avatar (Male) */}
-            <button
-              type="button"
-              onClick={() => setSelectedAvatar(AVATARS.RULO)}
-              aria-label={`${t('actions.select')} ${t('onboarding.step1.avatarMale')} avatar`}
-              aria-pressed={selectedAvatar === AVATARS.RULO}
-              className={cn(
-                'relative p-4 rounded-xl transition-all duration-200 min-h-[120px]',
-                'border-2 hover:scale-105',
-                'focus:outline-none focus:ring-2 focus:ring-gold-400',
-                selectedAvatar === AVATARS.RULO
-                  ? 'border-gold-400 bg-gold-400/10 shadow-lg shadow-gold-400/30'
-                  : 'border-charcoal-600 bg-charcoal-700 hover:border-gold-400/50'
-              )}
-            >
-              <div className="flex flex-col items-center gap-3">
-                <div className={cn(
-                  'w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2',
-                  selectedAvatar === AVATARS.RULO ? 'border-gold-400' : 'border-charcoal-500'
-                )}>
-                  <img src={AVATARS.RULO} alt={t('onboarding.step1.avatarMale')} className="w-full h-full object-cover" />
-                </div>
-                <span className={cn(
-                  'text-sm font-medium',
-                  selectedAvatar === AVATARS.RULO ? 'text-gold-400' : 'text-gray-300'
-                )}>
-                  {t('onboarding.step1.avatarMale')}
-                </span>
-              </div>
-              {selectedAvatar === AVATARS.RULO && (
-                <div className="absolute top-2 right-2 w-6 h-6 bg-gold-400 rounded-full flex items-center justify-center">
-                  <svg className="w-4 h-4 text-charcoal-900" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                </div>
-              )}
-            </button>
-
-            {/* Dani Avatar (Female) */}
-            <button
-              type="button"
-              onClick={() => setSelectedAvatar(AVATARS.DANI)}
-              aria-label={`${t('actions.select')} ${t('onboarding.step1.avatarFemale')} avatar`}
-              aria-pressed={selectedAvatar === AVATARS.DANI}
-              className={cn(
-                'relative p-4 rounded-xl transition-all duration-200 min-h-[120px]',
-                'border-2 hover:scale-105',
-                'focus:outline-none focus:ring-2 focus:ring-gold-400',
-                selectedAvatar === AVATARS.DANI
-                  ? 'border-gold-400 bg-gold-400/10 shadow-lg shadow-gold-400/30'
-                  : 'border-charcoal-600 bg-charcoal-700 hover:border-gold-400/50'
-              )}
-            >
-              <div className="flex flex-col items-center gap-3">
-                <div className={cn(
-                  'w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2',
-                  selectedAvatar === AVATARS.DANI ? 'border-gold-400' : 'border-charcoal-500'
-                )}>
-                  <img src={AVATARS.DANI} alt={t('onboarding.step1.avatarFemale')} className="w-full h-full object-cover" />
-                </div>
-                <span className={cn(
-                  'text-sm font-medium',
-                  selectedAvatar === AVATARS.DANI ? 'text-gold-400' : 'text-gray-300'
-                )}>
-                  {t('onboarding.step1.avatarFemale')}
-                </span>
-              </div>
-              {selectedAvatar === AVATARS.DANI && (
-                <div className="absolute top-2 right-2 w-6 h-6 bg-gold-400 rounded-full flex items-center justify-center">
-                  <svg className="w-4 h-4 text-charcoal-900" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                </div>
-              )}
-            </button>
-          </div>
+          <AvatarPicker value={selectedAvatar} onChange={setSelectedAvatar} />
         </div>
 
         {/* Next Button */}

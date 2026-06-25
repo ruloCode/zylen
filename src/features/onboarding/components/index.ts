@@ -1,4 +1,5 @@
 export { OnboardingProgress } from './OnboardingProgress';
+export { OnboardingCarousel } from './OnboardingCarousel';
 export { OnboardingStep1 } from './OnboardingStep1';
 export { OnboardingStepUsername } from './OnboardingStepUsername';
 export { OnboardingStep2 } from './OnboardingStep2';

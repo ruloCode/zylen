@@ -9,6 +9,7 @@ import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/features/auth/context/AuthContext';
 import { useLocale } from '@/hooks/useLocale';
+import { ROUTES } from '@/constants/routes';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -31,9 +32,10 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
     );
   }
 
-  // Redirect to login if not authenticated
+  // Redirect unauthenticated users to the Welcome splash (entry point).
+  // /login stays reachable from there for returning users.
   if (!user) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    return <Navigate to={ROUTES.WELCOME} state={{ from: location }} replace />;
   }
 
   // Render protected content
