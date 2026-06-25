@@ -89,7 +89,7 @@ export function Dashboard() {
           src={HERO_CHARACTER_SRC}
           alt=""
           aria-hidden="true"
-          className="absolute bottom-[23%] left-1/2 -translate-x-1/2 w-[58%] max-w-[270px] h-auto object-contain drop-shadow-[0_14px_14px_rgba(0,0,0,0.5)]"
+          className="absolute bottom-[26%] left-1/2 -translate-x-1/2 w-[58%] max-w-[270px] h-auto object-contain drop-shadow-[0_14px_14px_rgba(0,0,0,0.5)]"
           onError={(e) => { (e.currentTarget.style.opacity = '0'); }}
         />
       </div>

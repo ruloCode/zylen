@@ -72,27 +72,28 @@ export const LIFE_AREAS = [
 ] as const;
 
 // Avatar configuration
-// NOTE: explorer-1..3 are currently on-theme stand-ins (copies of existing
-// character art) until the final chibi avatars are generated with OpenAI
-// (set VITE_OPENAI_API_KEY and regenerate, or drop the real PNGs at these paths).
+// The avatar is now the evolving chibi hero (a bust crop of tier-0). The old
+// 3D "explorer" / Ready-Player-Me-style avatars were retired; every legacy key
+// resolves to the chibi so no stale video-style avatar renders anywhere.
+const HERO_AVATAR = '/avatars/hero-avatar.png';
 export const AVATARS = {
-  EXPLORER_1: '/avatars/avatar-explorer-1.png',
-  EXPLORER_2: '/avatars/avatar-explorer-2.png',
-  EXPLORER_3: '/avatars/avatar-explorer-3.png',
-  // Legacy constants kept for backward compatibility with existing imports.
-  RULO: '/avatars/rulo_avatar.png',
-  DANI: '/avatars/daniamor_avatar.png',
+  HERO: HERO_AVATAR,
+  // Legacy keys kept for backward compatibility with existing imports — all
+  // point to the chibi hero now.
+  EXPLORER_1: HERO_AVATAR,
+  EXPLORER_2: HERO_AVATAR,
+  EXPLORER_3: HERO_AVATAR,
+  RULO: HERO_AVATAR,
+  DANI: HERO_AVATAR,
 } as const;
 
-// Default avatar for new/unset users (explorer-3 ≈ the current hero character).
-export const DEFAULT_AVATAR = AVATARS.EXPLORER_3;
+// Default avatar for new/unset users.
+export const DEFAULT_AVATAR = AVATARS.HERO;
 
-// The three selectable avatars surfaced in the avatar picker.
+// Selectable avatars surfaced in the avatar picker. Only the chibi hero now.
 // `nameKey` resolves through i18n (profile.avatars.*).
 export const AVATAR_OPTIONS = [
-  { id: 'explorer-1', nameKey: 'profile.avatars.explorer1', url: AVATARS.EXPLORER_1 },
-  { id: 'explorer-2', nameKey: 'profile.avatars.explorer2', url: AVATARS.EXPLORER_2 },
-  { id: 'explorer-3', nameKey: 'profile.avatars.explorer3', url: AVATARS.EXPLORER_3 },
+  { id: 'hero', nameKey: 'profile.avatars.explorer1', url: AVATARS.HERO },
 ] as const;
 
 // Chat configuration

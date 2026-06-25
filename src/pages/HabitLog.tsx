@@ -220,92 +220,94 @@ export function HabitLog() {
   return (
     <>
       <div className="relative min-h-screen pb-28 overflow-x-hidden">
-        {/* ── Hero (full-bleed top), layered like the Dashboard ── */}
-        <div className="absolute top-0 left-0 right-0 h-[120vw] max-h-[440px] -z-0 bg-[hsl(var(--background))] overflow-hidden">
-          <img
-            src={HERO_BG_SRC}
-            alt=""
-            aria-hidden="true"
-            className="absolute inset-0 w-full h-full object-cover object-center -translate-y-[22px]"
-          />
-          {/* Top scrim for header legibility */}
-          <div className="absolute inset-x-0 top-0 h-44 bg-gradient-to-b from-[hsl(var(--background))]/85 via-[hsl(var(--background))]/30 to-transparent" />
-          {/* Fade the bottom of the background into the page */}
-          <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-b from-transparent to-[hsl(var(--background))]" />
-          {/* Character on the right (transparent PNG) */}
-          <img
-            src={HERO_CHARACTER_SRC}
-            alt=""
-            aria-hidden="true"
-            className="absolute bottom-[6%] right-1 w-[42%] max-w-[200px] h-auto object-contain drop-shadow-[0_14px_14px_rgba(0,0,0,0.5)]"
-            onError={(e) => {
-              e.currentTarget.style.opacity = '0';
-            }}
-          />
-        </div>
-
         {/* ── Foreground content ── */}
-        <div className="relative z-10 max-w-md mx-auto px-4 pt-[calc(env(safe-area-inset-top)+1.5rem)]">
-          {/* Header: title/subtitle + level ring */}
-          <header className="flex items-start justify-between gap-3 mb-6">
-            <div className="min-w-0">
-              <h1 className="font-sans normal-case text-[32px] leading-tight font-extrabold text-white tracking-tight">
-                {t('routines.title')}
-              </h1>
-              <p className="font-sans text-white/70 text-[15px] font-medium mt-1.5 max-w-[14rem] leading-snug">
-                {t('routines.subtitle')}
-              </p>
-            </div>
+        <div className="relative z-10 max-w-md mx-auto px-4 pt-[calc(env(safe-area-inset-top)+1rem)]">
+          {/* ── Hero card (contained: bg + character + title + level + filters) ── */}
+          <section className="relative rounded-3xl overflow-hidden mb-5 min-h-[212px]">
+            {/* Background scene */}
+            <img
+              src={HERO_BG_SRC}
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 w-full h-full object-cover object-top"
+            />
+            {/* Scrims: darken the left (title) and bottom (chips) for legibility */}
+            <div className="absolute inset-0 bg-gradient-to-r from-[hsl(var(--background))]/90 via-[hsl(var(--background))]/35 to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/55 to-transparent" />
+            {/* Character bust on the right: head at the top, lower body clipped by the card */}
+            <img
+              src={HERO_CHARACTER_SRC}
+              alt=""
+              aria-hidden="true"
+              className="absolute top-2 left-[57%] -translate-x-1/2 w-[47%] max-w-[190px] h-auto object-contain drop-shadow-[0_10px_12px_rgba(0,0,0,0.45)]"
+              onError={(e) => {
+                e.currentTarget.style.opacity = '0';
+              }}
+            />
 
-            {/* Level ring */}
-            <div className="shrink-0 flex flex-col items-center">
-              <CircularProgress
-                current={levelProgress.current}
-                max={levelProgress.max || 1}
-                variant="xp"
-                size={78}
-                strokeWidth={6}
-              >
-                <div className="flex flex-col items-center">
-                  <Gem size={14} className="text-[#8Fb3ff]" />
-                  <span className="text-[11px] font-extrabold text-white leading-none mt-0.5">
-                    {t('home.levelLabel', { level: user?.level ?? 1 })}
-                  </span>
-                  <span className="text-white/55 text-[8px] font-medium mt-0.5">
-                    {levelProgress.current} / {levelProgress.max} XP
-                  </span>
+            {/* Card content */}
+            <div className="relative z-10 flex flex-col min-h-[212px] p-4">
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <h1 className="font-sans normal-case text-[30px] leading-tight font-extrabold text-white tracking-tight">
+                    {t('routines.title')}
+                  </h1>
+                  <p className="font-sans text-white/75 text-[14px] font-medium mt-1.5 max-w-[9rem] leading-snug">
+                    {t('routines.subtitle')}
+                  </p>
                 </div>
-              </CircularProgress>
-            </div>
-          </header>
 
-          {/* Filter pills */}
-          <div
-            className="flex items-center gap-2 overflow-x-auto pb-1 mb-5 -mx-1 px-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-            role="tablist"
-            aria-label={t('routines.myRoutines')}
-          >
-            {filters.map(({ key, label, icon: Icon }) => {
-              const isActive = activeFilter === key;
-              return (
-                <button
-                  key={key}
-                  type="button"
-                  role="tab"
-                  aria-selected={isActive}
-                  onClick={() => setActiveFilter(key)}
-                  className={`shrink-0 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-sm font-semibold transition-all ${
-                    isActive
-                      ? 'bg-teal-500 text-white shadow-glow-teal'
-                      : 'glass-card text-white/70 hover:text-white'
-                  }`}
-                >
-                  <Icon size={15} />
-                  {label}
-                </button>
-              );
-            })}
-          </div>
+                {/* Level ring */}
+                <div className="shrink-0">
+                  <CircularProgress
+                    current={levelProgress.current}
+                    max={levelProgress.max || 1}
+                    variant="xp"
+                    size={66}
+                    strokeWidth={5}
+                  >
+                    <div className="flex flex-col items-center">
+                      <Gem size={12} className="text-[#8Fb3ff]" />
+                      <span className="text-[10px] font-extrabold text-white leading-none mt-0.5">
+                        {t('home.levelLabel', { level: user?.level ?? 1 })}
+                      </span>
+                      <span className="text-white/55 text-[7px] font-medium mt-0.5">
+                        {levelProgress.current} / {levelProgress.max} XP
+                      </span>
+                    </div>
+                  </CircularProgress>
+                </div>
+              </div>
+
+              {/* Filter pills pinned to the bottom of the card */}
+              <div
+                className="mt-auto pt-5 flex items-center gap-2 overflow-x-auto -mx-1 px-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                role="tablist"
+                aria-label={t('routines.myRoutines')}
+              >
+                {filters.map(({ key, label, icon: Icon }) => {
+                  const isActive = activeFilter === key;
+                  return (
+                    <button
+                      key={key}
+                      type="button"
+                      role="tab"
+                      aria-selected={isActive}
+                      onClick={() => setActiveFilter(key)}
+                      className={`shrink-0 inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full text-[12px] font-semibold transition-all ${
+                        isActive
+                          ? 'bg-teal-500 text-white shadow-glow-teal'
+                          : 'bg-black/30 backdrop-blur-md border border-white/10 text-white/80 hover:text-white'
+                      }`}
+                    >
+                      <Icon size={13} />
+                      {label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </section>
 
           {/* Racha actual card */}
           <section
