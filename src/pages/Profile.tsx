@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Settings, Edit2, Save, X, LogOut, User as UserIcon, Pencil, Trash2 } from 'lucide-react';
+import { Settings, Edit2, Save, X, LogOut, User as UserIcon, Pencil, Trash2, Smile, ShoppingBag, Trophy, MessageCircle, Flame, ChevronRight, Compass } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { supabase } from '@/lib/supabase';
 import { useUser, useLifeAreas, useHabits } from '@/store';
@@ -12,6 +12,7 @@ import {
   DangerZone,
 } from '@/features/profile/components';
 import { HabitForm } from '@/features/habits/components';
+import { ThemeSelector } from '@/features/settings/components';
 import { Habit, HabitFormData, HabitWithCompletion } from '@/types';
 import { ROUTES, AVATARS } from '@/constants';
 import { cn } from '@/utils';
@@ -629,6 +630,34 @@ export function Profile() {
               </div>
             </section>
 
+            {/* Explore Section — entry points not in the bottom nav */}
+            <section className="glass-card p-4 md:p-6">
+              <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                <Compass size={20} />
+                {t('profile.exploreTitle')}
+              </h2>
+              <div className="grid grid-cols-2 gap-3">
+                {[
+                  { path: ROUTES.MOOD, icon: Smile, label: t('navigation.mood') },
+                  { path: ROUTES.SHOP, icon: ShoppingBag, label: t('navigation.shop') },
+                  { path: ROUTES.LEADERBOARD, icon: Trophy, label: t('navigation.leaderboard') },
+                  { path: ROUTES.CHAT, icon: MessageCircle, label: t('navigation.chat') },
+                  { path: ROUTES.ROOT_HABIT, icon: Flame, label: t('rootHabit.title') },
+                  { path: ROUTES.SOCIAL, icon: UserIcon, label: t('navigation.social') },
+                ].map(({ path, icon: Icon, label }) => (
+                  <button
+                    key={path}
+                    onClick={() => navigate(path)}
+                    className="flex items-center gap-2 px-3 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-left transition-colors"
+                  >
+                    <Icon size={18} className="text-teal-300 shrink-0" />
+                    <span className="text-sm font-semibold text-white truncate flex-1">{label}</span>
+                    <ChevronRight size={16} className="text-white/30 shrink-0" />
+                  </button>
+                ))}
+              </div>
+            </section>
+
             {/* Settings Section */}
             <section className="glass-card p-4 md:p-6">
               <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
@@ -637,7 +666,15 @@ export function Profile() {
               </h2>
 
               <div className="space-y-4">
-                <p className="text-sm text-white/70">
+                {/* Theme Selector */}
+                <div>
+                  <h3 className="text-sm font-bold text-white/90 mb-3 uppercase tracking-wide">
+                    {t('themes.title')}
+                  </h3>
+                  <ThemeSelector variant="grid" />
+                </div>
+
+                <p className="text-sm text-white/70 pt-2 border-t border-white/10">
                   {t('profile.languageHint')}
                 </p>
 

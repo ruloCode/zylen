@@ -1,14 +1,20 @@
 /**
- * MyWay (LifeQuest) Navigation Component
- * RPG HUD-style bottom navigation with warm golden accents
+ * Zylen bottom navigation
+ * Floating glass pill with a center FAB, matching the Home reference design.
  */
 
 import React from 'react';
-import { Home, CheckSquare, ShoppingBag, MessageCircle, Trophy, Smile } from 'lucide-react';
+import { Home, CalendarCheck, TrendingUp, User, Plus, type LucideIcon } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/utils';
 import { useLocale } from '@/hooks/useLocale';
 import { ROUTES } from '@/constants/routes';
+
+interface NavItem {
+  path: string;
+  icon: LucideIcon;
+  label: string;
+}
 
 export function Navigation() {
   const location = useLocation();
@@ -20,105 +26,71 @@ export function Navigation() {
     return null;
   }
 
-  const navItems = [
-    {
-      path: '/',
-      icon: Home,
-      label: t('navigation.home')
-    },
-    {
-      path: '/habits',
-      icon: CheckSquare,
-      label: t('navigation.habits')
-    },
-    {
-      path: '/mood',
-      icon: Smile,
-      label: t('navigation.mood')
-    },
-    {
-      path: '/leaderboard',
-      icon: Trophy,
-      label: t('navigation.leaderboard')
-    },
-    {
-      path: '/shop',
-      icon: ShoppingBag,
-      label: t('navigation.shop')
-    },
-    {
-      path: '/chat',
-      icon: MessageCircle,
-      label: t('navigation.chat')
-    }
+  const leftItems: NavItem[] = [
+    { path: ROUTES.DASHBOARD, icon: Home, label: t('navigation.home') },
+    { path: ROUTES.HABITS, icon: CalendarCheck, label: t('navigation.routines') },
   ];
 
+  const rightItems: NavItem[] = [
+    { path: ROUTES.STREAKS, icon: TrendingUp, label: t('navigation.progress') },
+    { path: ROUTES.PROFILE, icon: User, label: t('navigation.profile') },
+  ];
+
+  const renderItem = ({ path, icon: Icon, label }: NavItem) => {
+    const isActive = location.pathname === path;
+    return (
+      <button
+        key={path}
+        type="button"
+        onClick={() => navigate(path)}
+        aria-label={t('navigation.navigateTo', { label })}
+        aria-current={isActive ? 'page' : undefined}
+        className={cn(
+          'flex flex-col items-center gap-1 px-2 py-1 rounded-xl transition-all duration-200',
+          'focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400/60',
+          isActive ? 'text-teal-300' : 'text-white/55 hover:text-white/80'
+        )}
+      >
+        <Icon size={22} strokeWidth={isActive ? 2.6 : 2} />
+        <span className={cn('text-[11px] tracking-wide', isActive ? 'font-bold' : 'font-medium')}>
+          {label}
+        </span>
+      </button>
+    );
+  };
+
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50" aria-label="Main navigation">
-      {/* RPG HUD background with warm parchment glass */}
-      <div className="glass-card border-t-2 border-[rgb(137,184,32)]/40 px-2 py-3 shadow-soft-xl backdrop-blur-2xl">
-        <div className="max-w-2xl mx-auto flex justify-around items-center gap-1">
-          {navItems.map(({ path, icon: Icon, label }) => {
-            const isActive = location.pathname === path;
+    <nav
+      className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-2"
+      aria-label="Main navigation"
+    >
+      <div className="relative max-w-md mx-auto">
+        <div className="glass-card rounded-3xl px-3 py-2.5 flex items-center justify-between shadow-soft-xl">
+          <div className="flex items-center gap-2">{leftItems.map(renderItem)}</div>
 
-            return (
-              <button
-                key={path}
-                type="button"
-                onClick={() => navigate(path)}
-                aria-label={`Navigate to ${label}`}
-                aria-current={isActive ? 'page' : undefined}
-                className={cn(
-                  'flex flex-col items-center gap-1.5 px-2 py-2 rounded-xl transition-all duration-300 relative',
-                  'font-body font-semibold',
-                  'focus:outline-none focus-visible:ring-4 focus-visible:ring-[rgb(137,184,32)]/50 focus-visible:ring-offset-2',
-                  isActive
-                    ? 'text-[rgb(137,184,32)] bg-gradient-to-br from-[rgb(137,184,32)]/20 to-[rgb(137,184,32)]/10 scale-110 shadow-soft-md border-2 border-[rgb(137,184,32)]/50'
-                    : 'text-white/60 hover:text-[rgb(137,184,32)] hover:bg-[rgb(137,184,32)]/10 hover:scale-105'
-                )}
-              >
-                {/* Active indicator glow */}
-                {isActive && (
-                  <div className="absolute inset-0 rounded-xl bg-gradient-adventure-glow opacity-30 animate-glow-pulse -z-10" />
-                )}
+          {/* Spacer for the floating FAB */}
+          <div className="w-16 shrink-0" aria-hidden="true" />
 
-                {/* Icon with golden glow on active */}
-                <div className={cn(
-                  'relative',
-                  isActive && 'drop-shadow-lg'
-                )}>
-                  <Icon
-                    size={22}
-                    strokeWidth={isActive ? 2.5 : 2}
-                    className="transition-all duration-200"
-                  />
-
-                  {/* Sparkle effect on active */}
-                  {isActive && (
-                    <div className="absolute -top-1 -right-1 w-2 h-2 bg-[rgb(137,184,32)] rounded-full animate-sparkle" />
-                  )}
-                </div>
-
-                {/* Label */}
-                <span className={cn(
-                  'text-[11px] tracking-wide',
-                  isActive ? 'font-extrabold' : 'font-medium'
-                )}>
-                  {label}
-                </span>
-
-                {/* Lime green underline on active */}
-                {isActive && (
-                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-gradient-to-r from-transparent via-[rgb(137,184,32)] to-transparent rounded-full" />
-                )}
-              </button>
-            );
-          })}
+          <div className="flex items-center gap-2">{rightItems.map(renderItem)}</div>
         </div>
-      </div>
 
-      {/* Subtle top rim light */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[rgb(137,184,32)]/50 to-transparent" />
+        {/* Center FAB */}
+        <button
+          type="button"
+          onClick={() => navigate(ROUTES.HABITS)}
+          aria-label={t('home.addHabit')}
+          className={cn(
+            'absolute left-1/2 -translate-x-1/2 -top-5',
+            'w-14 h-14 rounded-full bg-primary text-primary-foreground',
+            'flex items-center justify-center shadow-glow-teal',
+            'border-4 border-[hsl(var(--background))]',
+            'transition-transform duration-200 hover:scale-105 active:scale-95',
+            'focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400/70'
+          )}
+        >
+          <Plus size={26} strokeWidth={2.8} />
+        </button>
+      </div>
     </nav>
   );
 }

@@ -17,8 +17,8 @@ export function Header() {
   const { user } = useUser();
   const location = useLocation();
 
-  // Don't show header on onboarding page
-  if (location.pathname === ROUTES.ONBOARDING) {
+  // Don't show header on onboarding, or on Home (which has its own immersive header)
+  if (location.pathname === ROUTES.ONBOARDING || location.pathname === ROUTES.DASHBOARD) {
     return null;
   }
 

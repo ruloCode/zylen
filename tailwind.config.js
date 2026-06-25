@@ -22,31 +22,32 @@ module.exports = {
 
       // Color palette - Dark Fantasy RPG
       colors: {
-        // Base semantic colors
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        // Base semantic colors (alpha-value form so /<opacity> modifiers work)
+        border: "hsl(var(--border) / <alpha-value>)",
+        input: "hsl(var(--input) / <alpha-value>)",
+        ring: "hsl(var(--ring) / <alpha-value>)",
+        background: "hsl(var(--background) / <alpha-value>)",
+        foreground: "hsl(var(--foreground) / <alpha-value>)",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: "hsl(var(--primary) / <alpha-value>)",
+          hover: "hsl(var(--primary-hover) / <alpha-value>)",
+          foreground: "hsl(var(--primary-foreground) / <alpha-value>)",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
+          DEFAULT: "hsl(var(--secondary) / <alpha-value>)",
+          foreground: "hsl(var(--secondary-foreground) / <alpha-value>)",
         },
         destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
+          DEFAULT: "hsl(var(--destructive) / <alpha-value>)",
+          foreground: "hsl(var(--destructive-foreground) / <alpha-value>)",
         },
         muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
+          DEFAULT: "hsl(var(--muted) / <alpha-value>)",
+          foreground: "hsl(var(--muted-foreground) / <alpha-value>)",
         },
         accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
+          DEFAULT: "hsl(var(--accent) / <alpha-value>)",
+          foreground: "hsl(var(--accent-foreground) / <alpha-value>)",
         },
 
         // Verde Brillante - Alto contraste (Primary)
@@ -106,17 +107,18 @@ module.exports = {
         },
 
         // Teal/Emerald - Primary ACTION color (completions, CTAs) - revives ~215 legacy refs
+        // THEMED: re-pointed to per-theme --accent-* ramp so it restyles with the active theme.
         teal: {
-          50: 'hsl(167, 85%, 96%)',
-          100: 'hsl(167, 80%, 88%)',
-          200: 'hsl(167, 76%, 76%)',
-          300: 'hsl(167, 72%, 62%)',
-          400: 'hsl(167, 70%, 50%)',
-          500: 'hsl(167, 78%, 42%)',  // Zylen action teal-green
-          600: 'hsl(168, 80%, 35%)',
-          700: 'hsl(170, 78%, 28%)',
-          800: 'hsl(172, 70%, 22%)',
-          900: 'hsl(174, 64%, 17%)',
+          50:  'hsl(var(--accent-50) / <alpha-value>)',
+          100: 'hsl(var(--accent-50) / <alpha-value>)',
+          200: 'hsl(var(--accent-50) / <alpha-value>)',
+          300: 'hsl(var(--accent-400) / <alpha-value>)',
+          400: 'hsl(var(--accent-400) / <alpha-value>)',
+          500: 'hsl(var(--accent-500) / <alpha-value>)',
+          600: 'hsl(var(--accent-600) / <alpha-value>)',
+          700: 'hsl(var(--accent-700) / <alpha-value>)',
+          800: 'hsl(var(--accent-700) / <alpha-value>)',
+          900: 'hsl(var(--accent-700) / <alpha-value>)',
         },
 
         // Gold/Amber - XP, points & rewards - revives ~200 legacy refs
@@ -133,19 +135,27 @@ module.exports = {
           900: 'hsl(24, 76%, 27%)',
         },
 
-        // Dark Charcoal (Main backgrounds) - DOFUS
+        // Dark Charcoal (Main backgrounds / surfaces)
+        // THEMED: re-pointed to per-theme --surface-* ramp so it restyles
+        // with the active theme (drives light vs dark — e.g. Nous goes light).
         charcoal: {
-          DEFAULT: 'rgb(23, 20, 18)',
-          50: '#F5F5F6',
-          100: '#E8E9EA',
-          200: '#D1D3D5',
-          300: '#A9ACAF',
-          400: '#6B6F73',
-          500: 'rgb(23, 20, 18)',  // DOFUS charcoal
-          600: 'rgb(46, 42, 39)',  // DOFUS dark brown
-          700: 'rgb(71, 65, 61)',  // DOFUS gray-brown
-          800: '#0E1011',
-          900: 'rgb(11, 25, 29)',  // DOFUS deep teal
+          DEFAULT: 'hsl(var(--surface-500) / <alpha-value>)',
+          50:  'hsl(var(--surface-50) / <alpha-value>)',
+          100: 'hsl(var(--surface-50) / <alpha-value>)',
+          200: 'hsl(var(--surface-50) / <alpha-value>)',
+          300: 'hsl(var(--surface-50) / <alpha-value>)',
+          400: 'hsl(var(--surface-600) / <alpha-value>)',
+          500: 'hsl(var(--surface-500) / <alpha-value>)',
+          600: 'hsl(var(--surface-600) / <alpha-value>)',
+          700: 'hsl(var(--surface-700) / <alpha-value>)',
+          800: 'hsl(var(--surface-900) / <alpha-value>)',
+          900: 'hsl(var(--surface-900) / <alpha-value>)',
+        },
+
+        // Surface tokens (themed) - explicit semantic naming for new code
+        surface: {
+          DEFAULT: 'hsl(var(--surface) / <alpha-value>)',
+          elevated: 'hsl(var(--surface-elevated) / <alpha-value>)',
         },
 
         // Semantic colors

@@ -30,13 +30,41 @@
     "profile": "Perfil",
     "chat": "Chat",
     "navigateTo": "Navegar a {{label}}",
-    "mood": "Ánimo"
+    "mood": "Ánimo",
+    "routines": "Rutinas",
+    "progress": "Progreso"
   },
   "dashboard": {
     "title": "Panel",
     "lifeAreas": "Áreas de Vida",
     "logHabits": "Registrar Hábitos del Día",
     "keepGoing": "¡Sigue adelante, Campeón! 💪"
+  },
+  "home": {
+    "greetingMorning": "¡Buenos días, {{name}}!",
+    "greetingAfternoon": "¡Hola, {{name}}!",
+    "greetingEvening": "¡Buenas noches, {{name}}!",
+    "subtitle": "Hoy es un gran día para ser tu mejor versión.",
+    "notifications": "Notificaciones",
+    "streakLabel": "Racha actual",
+    "streakKeepGoing": "¡Sigue así!",
+    "levelLabel": "Nivel {{level}}",
+    "focusOfDay": "Enfoque del día",
+    "personalJournal": "Diario personal",
+    "todayPath": "Tu camino de hoy",
+    "seeAll": "Ver todo",
+    "noHabits": "Aún no tienes hábitos para hoy",
+    "comingSoon": "Próximamente",
+    "addHabit": "Añadir hábito",
+    "minutes": "minutos",
+    "quoteSubtitle": "Pequeñas acciones, grandes cambios.",
+    "quotes": [
+      "Enfócate en avanzar, no en ser perfecto.",
+      "Pequeños pasos cada día construyen grandes cambios.",
+      "La constancia vence al talento.",
+      "Hoy es un buen día para empezar.",
+      "Tu yo del futuro te lo agradecerá."
+    ]
   },
   "lifeAreas": {
     "health": "Salud",
@@ -412,6 +440,7 @@
     "lifeAreasTitle": "Áreas de Vida Activas",
     "habitsTitle": "Mis Hábitos",
     "settingsTitle": "Configuración",
+    "exploreTitle": "Explorar",
     "languageLabel": "Idioma",
     "languageHint": "Puedes cambiar el idioma desde el icono en el encabezado",
     "noHabits": "No tienes hábitos creados",
@@ -468,6 +497,20 @@
     },
     "success": "¡Nombre de usuario guardado exitosamente!",
     "error": "Error al guardar el nombre de usuario"
+  },
+  "themes": {
+    "title": "Tema",
+    "ariaLabel": "Seleccionar tema",
+    "onboardingPrompt": "Elige tu apariencia",
+    "onboardingHint": "Puedes cambiar el tema en cualquier momento desde Configuración",
+    "list": {
+      "nous": { "name": "Nous", "desc": "Neutros de vidrio con acentos azul Nous" },
+      "midnight": { "name": "Medianoche", "desc": "Azul violeta profundo con acentos fríos" },
+      "ember": { "name": "Brasa", "desc": "Carmesí cálido y bronce — vibra de forja" },
+      "mono": { "name": "Mono", "desc": "Escala de grises limpia — minimal y enfocado" },
+      "cyberpunk": { "name": "Cyberpunk", "desc": "Verde neón sobre negro — terminal matrix" },
+      "slate": { "name": "Pizarra", "desc": "Azul pizarra frío — tema de desarrollador" }
+    }
   },
   "social": {
     "title": "Social",

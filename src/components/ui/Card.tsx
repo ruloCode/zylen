@@ -22,24 +22,24 @@ export function Card({
   onClick
 }: CardProps) {
   const variants = {
-    // Dark charcoal - Zylen v2 standard card
+    // Dark surface - Zylen v2 standard card (theme-driven)
     dark: `
-      bg-[rgb(23,20,18)]
-      border border-white/[0.06]
+      bg-surface
+      border border-[hsl(var(--border))]
       shadow-soft-md
     `,
 
-    // Charcoal glass - Zylen v2 nav style
+    // Glass - Zylen v2 nav style (theme-driven)
     charcoal: `
-      bg-[rgba(28,32,33,0.7)]
+      bg-[hsl(var(--glass-bg)/0.7)]
       backdrop-blur-xl
-      border border-white/[0.07]
+      border border-[hsl(var(--glass-border)/0.12)]
       shadow-soft-md
     `,
 
     // Vibrant for special cards (life areas, characters)
     vibrant: `
-      border border-white/[0.06]
+      border border-[hsl(var(--border))]
       shadow-soft-md
       hover:shadow-soft-lg
       hover:-translate-y-0.5
@@ -52,8 +52,8 @@ export function Card({
     transparent: `
       bg-transparent
       border
-      border-white/10
-      hover:border-white/20
+      border-[hsl(var(--border))]
+      hover:border-[hsl(var(--glass-border)/0.25)]
       transition-colors
       duration-200
     `
@@ -109,7 +109,7 @@ interface CardTitleProps {
 }
 
 export function CardTitle({ children, className = '', gradient = false }: CardTitleProps) {
-  const gradientClass = gradient ? 'text-gradient-lime' : 'text-white';
+  const gradientClass = gradient ? 'text-gradient-lime' : 'text-foreground';
 
   return (
     <h3 className={cn('font-display text-xl font-bold uppercase tracking-wide', gradientClass, className)}>
@@ -128,7 +128,7 @@ interface CardDescriptionProps {
 
 export function CardDescription({ children, className = '' }: CardDescriptionProps) {
   return (
-    <p className={cn('text-sm text-white/85 font-body font-medium', className)}>
+    <p className={cn('text-sm text-[hsl(var(--text-secondary))] font-body font-medium', className)}>
       {children}
     </p>
   );
@@ -160,7 +160,7 @@ interface CardFooterProps {
 
 export function CardFooter({ children, className = '' }: CardFooterProps) {
   return (
-    <div className={cn('mt-6 pt-4 border-t border-white/10', className)}>
+    <div className={cn('mt-6 pt-4 border-t border-[hsl(var(--border))]', className)}>
       {children}
     </div>
   );

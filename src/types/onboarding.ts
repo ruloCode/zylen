@@ -30,7 +30,8 @@ export const ONBOARDING_STEPS = {
   USERNAME: 1,
   LIFE_AREAS: 2,
   HABITS: 3,
-  TUTORIAL: 4,
+  THEME: 4,
+  TUTORIAL: 5,
 } as const;
 
-export const TOTAL_ONBOARDING_STEPS = 5;
+export const TOTAL_ONBOARDING_STEPS = 6;

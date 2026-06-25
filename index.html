@@ -24,6 +24,24 @@
     <meta name="twitter:description" content="Aplicación gamificada de seguimiento de hábitos que te ayuda a construir mejores hábitos ganando XP y subiendo de nivel." />
 
     <title>Zylen - Tu vida, subida de nivel</title>
+
+    <!-- Apply persisted theme before first paint to prevent flash of wrong theme.
+         Keep this dependency-free; it mirrors src/utils/theme.ts. -->
+    <script>
+      (function () {
+        try {
+          var raw = localStorage.getItem('zylen_theme');
+          var t = raw ? JSON.parse(raw) : 'midnight';
+          var allowed = ['nous', 'midnight', 'ember', 'mono', 'cyberpunk', 'slate'];
+          document.documentElement.setAttribute(
+            'data-theme',
+            allowed.indexOf(t) > -1 ? t : 'midnight'
+          );
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'midnight');
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

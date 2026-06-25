@@ -58,6 +58,7 @@ export const STORAGE_KEYS = {
   PURCHASES: 'zylen_purchases',
   SETTINGS: 'zylen_settings',
   APP_STATE: 'zylen_app_state',
+  THEME: 'zylen_theme',
 } as const;
 
 // Life areas configuration

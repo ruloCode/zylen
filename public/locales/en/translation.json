@@ -30,13 +30,41 @@
     "leaderboard": "Leaderboard",
     "profile": "Profile",
     "navigateTo": "Navigate to {{label}}",
-    "mood": "Mood"
+    "mood": "Mood",
+    "routines": "Routines",
+    "progress": "Progress"
   },
   "dashboard": {
     "title": "Dashboard",
     "lifeAreas": "Life Areas",
     "logHabits": "Log Today's Habits",
     "keepGoing": "Keep going, Champion! 💪"
+  },
+  "home": {
+    "greetingMorning": "Good morning, {{name}}!",
+    "greetingAfternoon": "Hi, {{name}}!",
+    "greetingEvening": "Good evening, {{name}}!",
+    "subtitle": "Today is a great day to be your best self.",
+    "notifications": "Notifications",
+    "streakLabel": "Current streak",
+    "streakKeepGoing": "Keep it up!",
+    "levelLabel": "Level {{level}}",
+    "focusOfDay": "Focus of the day",
+    "personalJournal": "Personal journal",
+    "todayPath": "Your path today",
+    "seeAll": "See all",
+    "noHabits": "No habits for today yet",
+    "comingSoon": "Coming soon",
+    "addHabit": "Add habit",
+    "minutes": "minutes",
+    "quoteSubtitle": "Small actions, big changes.",
+    "quotes": [
+      "Focus on progress, not perfection.",
+      "Small steps every day build big changes.",
+      "Consistency beats talent.",
+      "Today is a good day to start.",
+      "Your future self will thank you."
+    ]
   },
   "lifeAreas": {
     "health": "Health",
@@ -412,6 +440,7 @@
     "lifeAreasTitle": "Active Life Areas",
     "habitsTitle": "My Habits",
     "settingsTitle": "Settings",
+    "exploreTitle": "Explore",
     "languageLabel": "Language",
     "languageHint": "You can change the language from the icon in the header",
     "noHabits": "You don't have any habits created",
@@ -467,6 +496,20 @@
     },
     "success": "Username set successfully!",
     "error": "Failed to set username"
+  },
+  "themes": {
+    "title": "Theme",
+    "ariaLabel": "Select theme",
+    "onboardingPrompt": "Choose your look",
+    "onboardingHint": "You can change the theme anytime from Settings",
+    "list": {
+      "nous": { "name": "Nous", "desc": "Glass neutrals with Nous blue accents" },
+      "midnight": { "name": "Midnight", "desc": "Deep blue-violet with cool accents" },
+      "ember": { "name": "Ember", "desc": "Warm crimson and bronze — forge vibes" },
+      "mono": { "name": "Mono", "desc": "Clean grayscale — minimal and focused" },
+      "cyberpunk": { "name": "Cyberpunk", "desc": "Neon green on black — matrix terminal" },
+      "slate": { "name": "Slate", "desc": "Cool slate blue — focused developer theme" }
+    }
   },
   "social": {
     "title": "Social",

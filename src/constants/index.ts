@@ -2,3 +2,4 @@
 export * from './routes';
 export * from './config';
 export * from './design-tokens';
+export * from './themes';

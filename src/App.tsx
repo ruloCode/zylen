@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { Navigation, Header } from '@/components/layout';
 import { AppProvider } from '@/app/AppProvider';
 import { I18nProvider } from '@/components/I18nProvider';
@@ -35,6 +35,47 @@ function PageLoader() {
   );
 }
 
+// Protected app shell: Home is full-bleed (its own header + hero), so it
+// drops the top padding the fixed Header would otherwise need.
+function ProtectedShell() {
+  const location = useLocation();
+  const isHome = location.pathname === ROUTES.DASHBOARD;
+
+  return (
+    <div className="w-full min-h-screen">
+      {/* Skip Navigation for screen readers (WCAG 2.4.1) */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-6 focus:py-3 focus:bg-gold-500 focus:text-navy-700 focus:rounded-xl focus:font-bold focus:shadow-glow-gold focus:outline-none focus:ring-4 focus:ring-gold-400"
+      >
+        Skip to main content
+      </a>
+
+      {/* Header */}
+      <Header />
+
+      {/* Main content with proper landmark */}
+      <main id="main-content" className={isHome ? 'pb-28' : 'pt-16 pb-24'}>
+        <Routes>
+          <Route path={ROUTES.ONBOARDING} element={<Onboarding />} />
+          <Route path={ROUTES.PROFILE} element={<Profile />} />
+          <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
+          <Route path={ROUTES.HABITS} element={<HabitLog />} />
+          <Route path={ROUTES.STREAKS} element={<Streaks />} />
+          <Route path={ROUTES.ROOT_HABIT} element={<RootHabit />} />
+          <Route path={ROUTES.MOOD} element={<Mood />} />
+          <Route path={ROUTES.SHOP} element={<Shop />} />
+          <Route path={ROUTES.CHAT} element={<Chat />} />
+          <Route path={ROUTES.SOCIAL} element={<Social />} />
+          <Route path={ROUTES.LEADERBOARD} element={<Leaderboard />} />
+        </Routes>
+      </main>
+
+      <Navigation />
+    </div>
+  );
+}
+
 export function App() {
   return (
     <I18nProvider>
@@ -52,37 +93,7 @@ export function App() {
                 element={
                   <ProtectedRoute>
                     <AppProvider>
-                      <div className="w-full min-h-screen">
-                        {/* Skip Navigation for screen readers (WCAG 2.4.1) */}
-                        <a
-                          href="#main-content"
-                          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-6 focus:py-3 focus:bg-gold-500 focus:text-navy-700 focus:rounded-xl focus:font-bold focus:shadow-glow-gold focus:outline-none focus:ring-4 focus:ring-gold-400"
-                        >
-                          Skip to main content
-                        </a>
-
-                        {/* Header */}
-                        <Header />
-
-                        {/* Main content with proper landmark */}
-                        <main id="main-content" className="pt-16 pb-24">
-                          <Routes>
-                            <Route path={ROUTES.ONBOARDING} element={<Onboarding />} />
-                            <Route path={ROUTES.PROFILE} element={<Profile />} />
-                            <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
-                            <Route path={ROUTES.HABITS} element={<HabitLog />} />
-                            <Route path={ROUTES.STREAKS} element={<Streaks />} />
-                            <Route path={ROUTES.ROOT_HABIT} element={<RootHabit />} />
-                            <Route path={ROUTES.MOOD} element={<Mood />} />
-                            <Route path={ROUTES.SHOP} element={<Shop />} />
-                            <Route path={ROUTES.CHAT} element={<Chat />} />
-                            <Route path={ROUTES.SOCIAL} element={<Social />} />
-                            <Route path={ROUTES.LEADERBOARD} element={<Leaderboard />} />
-                          </Routes>
-                        </main>
-
-                        <Navigation />
-                      </div>
+                      <ProtectedShell />
 
                       {/* Toast Notifications */}
                       <ToastContainer />

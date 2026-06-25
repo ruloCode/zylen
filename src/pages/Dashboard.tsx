@@ -1,31 +1,60 @@
-import React, { useState } from 'react';
-import { Sparkles, TrendingUp, Loader2 } from 'lucide-react';
-import { LifeAreaCard, LifeAreaModal } from '@/features/dashboard/components';
-import { StreakDisplay } from '@/features/streaks/components';
-import { Button, LevelBadge, ProgressBar } from '@/components/ui';
+import React from 'react';
+import {
+  Bell,
+  Flame,
+  Gem,
+  Target,
+  NotebookPen,
+  Compass,
+  ChevronRight,
+  Check,
+  Loader2,
+} from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useUser, useLifeAreas, useStreaks } from '@/store';
-import { ROUTES, APP_CONFIG } from '@/constants';
+import toast from 'react-hot-toast';
+import { CircularProgress } from '@/components/ui';
+import { HABIT_ICONS } from '@/components/atoms/icons/iconMaps';
+import { useUser, useHabits, useStreaks } from '@/store';
+import { ROUTES } from '@/constants';
 import { useLocale } from '@/hooks/useLocale';
 import { getLevelProgress } from '@/utils/xp';
+import { getGreetingKey, getDailyQuoteIndex } from '@/utils/greeting';
+
+// Hero is composed of two independent layers (swappable / animatable):
+// the jungle background and the transparent character. Both live in /public.
+const HERO_BG_SRC = '/hero-bg.png';
+const HERO_CHARACTER_SRC = '/hero-character.png';
+
+// Fallback accent palette for habit rows when a habit has no explicit color.
+const HABIT_COLORS = ['#4CAF6D', '#8B5CF6', '#E0A93B', '#2DD4BF', '#F472B6', '#60A5FA'];
 
 export function Dashboard() {
   const navigate = useNavigate();
   const { user, isLoading: userLoading } = useUser();
-  const { lifeAreas, lifeAreasInitialized } = useLifeAreas();
+  const { habits, completeHabit, uncompleteHabit } = useHabits();
   const { streak, isLoading: streakLoading } = useStreaks();
   const { t } = useLocale();
 
-  // Modal state
-  const [selectedAreaId, setSelectedAreaId] = useState<string | null>(null);
-
-  // Calculate progress to next level
   const levelProgress = user
     ? getLevelProgress(user.totalXPEarned, user.level)
     : { current: 0, max: 0, percentage: 0 };
 
-  // Loading state - show spinner while any critical data is loading
-  const isLoading = userLoading || !lifeAreasInitialized || streakLoading;
+  const isLoading = userLoading || streakLoading;
+
+  const comingSoon = () => toast(t('home.comingSoon'), { icon: '🚧' });
+
+  // Motivational quote rotates once per day.
+  const quotes = t('home.quotes', { returnObjects: true }) as string[];
+  const quote = Array.isArray(quotes) && quotes.length > 0
+    ? quotes[getDailyQuoteIndex(quotes.length)]
+    : '';
+
+  const firstName = user?.name?.split(' ')[0] || '';
+  const todaysHabits = habits.slice(0, 3);
+
+  // Hero cards: lighter, more translucent glass so the character shows through
+  const heroCard =
+    'bg-[hsl(var(--glass-bg)/0.3)] backdrop-blur-md border border-white/10 rounded-2xl shadow-soft';
 
   if (isLoading) {
     return (
@@ -38,98 +67,240 @@ export function Dashboard() {
     );
   }
 
-  return <div className="min-h-screen pb-24 px-2 pt-4">
-      <div className="max-w-md mx-auto">
-        {/* Header */}
-        <header className="text-center mb-8">
-          <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-3 tracking-tight">
-            {APP_CONFIG.displayName}
-          </h1>
-          <p className="text-white text-base font-semibold">{t('app.tagline')}</p>
-        </header>
-
-        {/* User Stats Card */}
-        <section aria-labelledby="stats-heading" className="bg-charcoal-500 rounded-3xl p-6 mb-6 text-center shadow-lg border border-white/10">
-          {user?.avatarUrl ? (
-            <img
-              src={user.avatarUrl}
-              alt={user.name || 'User Avatar'}
-              className="w-32 h-32 mx-auto mb-4 float-animation object-cover rounded-full"
-            />
-          ) : (
-            <div className="w-32 h-32 mx-auto mb-4 float-animation rounded-full bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center">
-              <span className="text-5xl font-bold text-white">
-                {user?.name?.charAt(0)?.toUpperCase() || 'U'}
-              </span>
-            </div>
-          )}
-
-          {/* Global Level */}
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <LevelBadge level={user?.level || 1} size="lg" />
-          </div>
-
-          {/* XP Progress */}
-          <div className="mb-6">
-            <ProgressBar
-              current={levelProgress.current}
-              max={levelProgress.max}
-              variant="gold"
-              size="md"
-              showLabel={false}
-              withGlow={true}
-            />
-            <p className="text-xs text-white mt-1">
-              {levelProgress.max - levelProgress.current} XP to Level {(user?.level || 1) + 1}
-            </p>
-          </div>
-
-          {/* Points */}
-          <div className="text-5xl font-bold text-white mb-2" aria-live="polite">
-            {user?.points?.toLocaleString() || 0}
-          </div>
-          <div className="text-base text-white font-semibold flex items-center justify-center gap-2" id="stats-heading">
-            <TrendingUp size={18} className="text-success-600" aria-hidden="true" />
-            <span>{t('common.points')}</span>
-          </div>
-        </section>
-
-        {/* Streak */}
-        {streak && (
-          <section aria-labelledby="streak-heading" className="glass-card rounded-3xl mb-6">
-            <StreakDisplay
-              streak={streak.currentStreak}
-              weeklyStreak={streak.weeklyStreak}
-              lastSevenDays={streak.lastSevenDays}
-              size="lg"
-            />
-          </section>
-        )}
-
-        {/* Life Areas */}
-        <section aria-labelledby="life-areas-heading" className="mb-8">
-          <h2 id="life-areas-heading" className="text-2xl font-bold text-white mb-5">{t('dashboard.lifeAreas')}</h2>
-          <div className="grid grid-cols-2 gap-4">
-            {lifeAreas.map(area => <LifeAreaCard key={area.area} {...area} onClick={() => setSelectedAreaId(area.id)} />)}
-          </div>
-        </section>
-
-        {/* CTA */}
-        <Button variant="primary" size="lg" className="w-full mb-4" onClick={() => navigate(ROUTES.HABITS)}>
-          <Sparkles size={20} aria-hidden="true" />
-          {t('dashboard.logHabits')}
-        </Button>
-
-        <p className="text-center text-base text-white font-semibold">
-          {t('dashboard.keepGoing')}
-        </p>
+  return (
+    <div className="relative min-h-screen overflow-x-hidden pb-28">
+      {/* ── Hero (full-bleed top), composed of independent layers ── */}
+      <div className="absolute top-0 left-0 right-0 h-[150vw] max-h-[620px] -z-0 bg-[hsl(var(--background))] overflow-hidden">
+        {/* Layer 0 — background scene (swappable / themable).
+            Nudged up so the character lands on the centre of the platform face. */}
+        <img
+          src={HERO_BG_SRC}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-cover object-center -translate-y-[22px]"
+        />
+        {/* Top scrim for header legibility (matches the reference's darker top) */}
+        <div className="absolute inset-x-0 top-0 h-56 bg-gradient-to-b from-[hsl(var(--background))]/85 via-[hsl(var(--background))]/30 to-transparent" />
+        {/* Fade the bottom of the BACKGROUND into the page (kept BELOW the character so it doesn't fade the figure) */}
+        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-[hsl(var(--background))]" />
+        {/* Layer 1 — character (transparent PNG, own layer → swappable / animatable).
+            Feet aligned to the rock platform in the background (~77% down). */}
+        <img
+          src={HERO_CHARACTER_SRC}
+          alt=""
+          aria-hidden="true"
+          className="absolute bottom-[23%] left-1/2 -translate-x-1/2 w-[58%] max-w-[270px] h-auto object-contain drop-shadow-[0_14px_14px_rgba(0,0,0,0.5)]"
+          onError={(e) => { (e.currentTarget.style.opacity = '0'); }}
+        />
       </div>
 
-      {/* Life Area Modal */}
-      <LifeAreaModal
-        lifeAreaId={selectedAreaId}
-        isOpen={selectedAreaId !== null}
-        onClose={() => setSelectedAreaId(null)}
-      />
-    </div>;
+      {/* ── Foreground content ── */}
+      <div className="relative z-10 max-w-md mx-auto px-4 pt-[calc(env(safe-area-inset-top)+1.5rem)]">
+        {/* Top bar: greeting + notifications */}
+        <header className="flex items-start justify-between gap-3 mb-5">
+          <div className="min-w-0">
+            <h1 className="font-sans normal-case text-[26px] leading-tight font-extrabold text-white tracking-tight">
+              {t(getGreetingKey(), { name: firstName })} 👋
+            </h1>
+            <p className="font-sans text-white/70 text-[15px] font-medium mt-1.5 max-w-[15rem] leading-snug">
+              {t('home.subtitle')}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={comingSoon}
+            aria-label={t('home.notifications')}
+            className="relative shrink-0 w-11 h-11 rounded-full glass-card flex items-center justify-center text-white"
+          >
+            <Bell size={20} />
+            <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-danger-500 text-white text-[10px] font-bold flex items-center justify-center border border-[hsl(var(--background))]">
+              3
+            </span>
+          </button>
+        </header>
+
+        {/* Stat cards + quick actions, split left/right with the hero character in the gap */}
+        <div className="flex justify-between items-start gap-3">
+          {/* Left column */}
+          <div className="flex flex-col gap-2.5 w-[27%]">
+            {/* Streak card */}
+            <div className={`${heroCard} p-2.5 flex flex-col items-center text-center`}>
+              <p className="text-white/70 text-[10px] font-semibold leading-tight">{t('home.streakLabel')}</p>
+              <div className="flex items-center justify-center gap-1 mt-0.5">
+                <Flame size={16} className="text-orange-400" />
+                <span className="text-2xl font-extrabold text-white leading-none">
+                  {streak?.currentStreak ?? 0}
+                </span>
+              </div>
+              <p className="text-white/60 text-[10px] font-medium">{t('common.days').toLowerCase()}</p>
+              <p className="text-white/45 text-[9px] mt-0.5">{t('home.streakKeepGoing')}</p>
+            </div>
+
+            {/* Quick action: focus of the day */}
+            <button
+              type="button"
+              onClick={comingSoon}
+              className={`${heroCard} p-2.5 flex flex-col items-center text-center gap-1.5`}
+            >
+              <Target size={18} className="text-teal-300" />
+              <span className="text-white text-[12px] font-semibold leading-tight">
+                {t('home.focusOfDay')}
+              </span>
+            </button>
+          </div>
+
+          {/* Right column */}
+          <div className="flex flex-col gap-2.5 w-[27%]">
+            {/* Level / XP card */}
+            <div className={`${heroCard} p-2.5 flex flex-col items-center`}>
+              <p className="text-white/70 text-[10px] font-semibold mb-1.5">
+                {t('home.levelLabel', { level: user?.level ?? 1 })}
+              </p>
+              <CircularProgress
+                current={levelProgress.current}
+                max={levelProgress.max || 1}
+                variant="xp"
+                size={74}
+                strokeWidth={6}
+              >
+                <div className="flex flex-col items-center">
+                  <Gem size={14} className="text-[#8Fb3ff]" />
+                  <span className="text-base font-extrabold text-white leading-none">
+                    {levelProgress.current}
+                  </span>
+                  <span className="text-white/50 text-[8px] font-medium">
+                    / {levelProgress.max} XP
+                  </span>
+                </div>
+              </CircularProgress>
+            </div>
+
+            {/* Quick action: personal journal */}
+            <button
+              type="button"
+              onClick={comingSoon}
+              className={`${heroCard} p-2.5 flex flex-col items-center text-center gap-1.5`}
+            >
+              <NotebookPen size={18} className="text-amber-300" />
+              <span className="text-white text-[12px] font-semibold leading-tight">
+                {t('home.personalJournal')}
+              </span>
+            </button>
+          </div>
+        </div>
+
+        {/* Spacer so the banner sits just under the character's feet */}
+        <div className="h-[30vw] max-h-[120px]" aria-hidden="true" />
+
+        {/* Motivational banner */}
+        <button
+          type="button"
+          onClick={comingSoon}
+          className="w-full glass-card p-4 flex items-center gap-3 text-left mb-7"
+        >
+          <span className="shrink-0 w-11 h-11 rounded-full bg-gold-500/15 flex items-center justify-center">
+            <Compass size={22} className="text-gold-400" />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block text-white text-sm font-bold leading-snug">{quote}</span>
+            <span className="block text-white/55 text-xs mt-0.5">{t('home.quoteSubtitle')}</span>
+          </span>
+          <ChevronRight size={20} className="text-white/40 shrink-0" />
+        </button>
+
+        {/* Today's path */}
+        <section aria-labelledby="today-heading">
+          <div className="flex items-center justify-between mb-4">
+            <h2 id="today-heading" className="font-sans normal-case text-xl font-bold text-white">
+              {t('home.todayPath')}
+            </h2>
+            <button
+              type="button"
+              onClick={() => navigate(ROUTES.HABITS)}
+              className="flex items-center gap-1 text-teal-300 text-sm font-semibold"
+            >
+              {t('home.seeAll')} <ChevronRight size={16} />
+            </button>
+          </div>
+
+          {todaysHabits.length === 0 ? (
+            <p className="text-white/50 text-sm text-center py-6">{t('home.noHabits')}</p>
+          ) : (
+            <div className="space-y-3">
+              {todaysHabits.map((habit, index) => {
+                const Icon = HABIT_ICONS[habit.iconName] || HABIT_ICONS['Target'] || Target;
+                const color = habit.color || HABIT_COLORS[index % HABIT_COLORS.length];
+                const isMeasurable = habit.habitType === 'measurable' && !!habit.dailyGoal;
+                const value = habit.todayValue ?? 0;
+                const goal = habit.dailyGoal ?? 0;
+                const pct = goal > 0 ? Math.min((value / goal) * 100, 100) : 0;
+                const unitLong = habit.unit === 'min' ? t('home.minutes') : habit.unit ?? '';
+                const subtitle = habit.dailyGoal
+                  ? `${goal} ${unitLong}`.trim()
+                  : `+${habit.xp} XP`;
+
+                return (
+                  <div
+                    key={habit.id}
+                    onClick={() => isMeasurable && navigate(ROUTES.HABITS)}
+                    className="glass-card p-3.5 flex items-center gap-3"
+                    role={isMeasurable ? 'button' : undefined}
+                  >
+                    {/* Icon */}
+                    <span
+                      className="shrink-0 w-11 h-11 rounded-full flex items-center justify-center"
+                      style={{ backgroundColor: color }}
+                    >
+                      <Icon size={20} className="text-white" />
+                    </span>
+
+                    {/* Name + subtitle */}
+                    <div className="min-w-0 flex-1">
+                      <p className="text-white font-semibold leading-tight truncate">{habit.name}</p>
+                      <p className="text-white/55 text-xs mt-0.5">{subtitle}</p>
+                    </div>
+
+                    {/* Right side: progress or check */}
+                    {isMeasurable ? (
+                      <div className="w-28 shrink-0">
+                        <p className="text-right text-white text-sm font-semibold mb-1">
+                          <span className="text-white">{value}</span>
+                          <span className="text-white/50"> / {goal} {habit.unit}</span>
+                        </p>
+                        <div className="h-2 w-full rounded-full bg-white/10 overflow-hidden">
+                          <div
+                            className="h-full rounded-full transition-all duration-500"
+                            style={{ width: `${pct}%`, backgroundColor: color }}
+                          />
+                        </div>
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          habit.completedToday ? uncompleteHabit(habit.id) : completeHabit(habit.id);
+                        }}
+                        aria-pressed={habit.completedToday}
+                        aria-label={habit.name}
+                        className={`shrink-0 w-9 h-9 rounded-full flex items-center justify-center transition-all ${
+                          habit.completedToday
+                            ? 'bg-success-500 text-white shadow-glow-success'
+                            : 'bg-white/10 text-white/40 border border-white/15'
+                        }`}
+                      >
+                        <Check size={18} strokeWidth={3} />
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </section>
+      </div>
+    </div>
+  );
 }
+
+export default Dashboard;

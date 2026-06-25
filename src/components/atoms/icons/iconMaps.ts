@@ -19,6 +19,8 @@ import {
   Droplets,
   Bed,
   Utensils,
+  Sprout,
+  Leaf,
 
   // Mental & Learning
   Brain,
@@ -74,6 +76,8 @@ export const HABIT_ICONS: Record<string, LucideIcon> = {
   Droplets,
   Bed,
   Utensils,
+  Sprout,
+  Leaf,
 
   // Mental & Learning
   Brain,

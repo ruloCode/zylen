@@ -126,7 +126,7 @@ interface CircularProgressProps {
   current: number;
   max: number;
   size?: number;
-  variant?: 'gold' | 'teal' | 'success' | 'fire';
+  variant?: 'gold' | 'teal' | 'success' | 'fire' | 'xp';
   strokeWidth?: number;
   children?: React.ReactNode;
   className?: string;
@@ -153,9 +153,24 @@ export function CircularProgress({
     fire: '#FFC107'
   };
 
+  // 'xp' uses an SVG linear gradient (blue → purple) instead of a flat color.
+  // Unique id avoids collisions when several rings render on the same page.
+  const gradientId = React.useId();
+  const isGradient = variant === 'xp';
+  const strokeColor = isGradient ? `url(#${gradientId})` : colorVariants[variant];
+
   return (
     <div className={cn('relative inline-flex items-center justify-center', className)}>
       <svg width={size} height={size} className="transform -rotate-90">
+        {isGradient && (
+          <defs>
+            <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#6EC1E4" />
+              <stop offset="100%" stopColor="#A855F7" />
+            </linearGradient>
+          </defs>
+        )}
+
         {/* Background circle */}
         <circle
           cx={size / 2}
@@ -164,7 +179,7 @@ export function CircularProgress({
           fill="none"
           stroke="#F7EEDB"
           strokeWidth={strokeWidth}
-          opacity="0.3"
+          opacity="0.18"
         />
 
         {/* Progress circle */}
@@ -173,7 +188,7 @@ export function CircularProgress({
           cy={size / 2}
           r={radius}
           fill="none"
-          stroke={colorVariants[variant]}
+          stroke={strokeColor}
           strokeWidth={strokeWidth}
           strokeLinecap="round"
           strokeDasharray={circumference}

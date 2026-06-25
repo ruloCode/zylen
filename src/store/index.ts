@@ -12,8 +12,10 @@ import { createLeaderboardSlice, LeaderboardSlice } from './leaderboardSlice';
 import { createRootHabitSlice, RootHabitSlice } from './rootHabitSlice';
 import { createAchievementsSlice, AchievementsSlice } from './achievementsSlice';
 import { createHabitTemplatesSlice, HabitTemplatesSlice } from './habitTemplatesSlice';
+import { createThemeSlice, ThemeSlice } from './themeSlice';
 import { AVATARS, LIFE_AREAS } from '@/constants';
 import type { LifeArea, Streak, User } from '@/types';
+import type { HabitWithCompletion } from '@/services/supabase/habits.service';
 
 // Combined store type
 type AppStore = UserSlice &
@@ -27,7 +29,8 @@ type AppStore = UserSlice &
   LeaderboardSlice &
   RootHabitSlice &
   AchievementsSlice &
-  HabitTemplatesSlice;
+  HabitTemplatesSlice &
+  ThemeSlice;
 
 // Create the store with all slices
 export const useAppStore = create<AppStore>()((...a) => ({
@@ -43,6 +46,7 @@ export const useAppStore = create<AppStore>()((...a) => ({
   ...createRootHabitSlice(...a),
   ...createAchievementsSlice(...a),
   ...createHabitTemplatesSlice(...a),
+  ...createThemeSlice(...a),
 }));
 
 // Typed hooks for easier access
@@ -250,23 +254,52 @@ export function useHabitTemplates() {
   return useAppStore(selector);
 }
 
+export function useTheme() {
+  const selector = useShallow((state: AppStore) => ({
+    theme: state.theme,
+    setTheme: state.setTheme,
+    loadTheme: state.loadTheme,
+  }));
+  return useAppStore(selector);
+}
+
 const shouldSkipAuth =
   import.meta.env.DEV && import.meta.env.VITE_SKIP_AUTH === 'true';
 
 function getDevUser(): User {
   return {
     id: 'local-dev-user',
-    name: 'Local Dev',
+    name: 'Camilo',
     username: 'localdev',
     points: 250,
-    totalXPEarned: 120,
-    level: 1,
+    totalXPEarned: 838,
+    level: 8,
     joinedAt: new Date(),
     avatarUrl: AVATARS.DANI,
     hasCompletedOnboarding: true,
     selectedLifeAreas: LIFE_AREAS.map((area) => area.toLowerCase()),
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'America/Bogota',
   };
+}
+
+function getDevHabits(): HabitWithCompletion[] {
+  return [
+    {
+      id: 'dev-meditation', name: 'Meditación', iconName: 'Sprout', xp: 20, points: 10,
+      lifeArea: 'health', habitType: 'check', unit: 'min', dailyGoal: 10,
+      color: '#4CAF50', completedToday: true,
+    },
+    {
+      id: 'dev-training', name: 'Entrenamiento', iconName: 'Dumbbell', xp: 30, points: 15,
+      lifeArea: 'health', habitType: 'measurable', unit: 'min', dailyGoal: 30,
+      todayValue: 15, color: '#8757DB', completedToday: false,
+    },
+    {
+      id: 'dev-reading', name: 'Lectura', iconName: 'Book', xp: 20, points: 10,
+      lifeArea: 'creativity', habitType: 'measurable', unit: 'min', dailyGoal: 20,
+      todayValue: 0, color: '#E1AB3D', completedToday: false,
+    },
+  ];
 }
 
 function getDevLifeAreas(): LifeArea[] {
@@ -282,10 +315,10 @@ function getDevLifeAreas(): LifeArea[] {
 
 function getDevStreak(): Streak {
   return {
-    currentStreak: 0,
-    weeklyStreak: 0,
-    longestStreak: 0,
-    lastSevenDays: [false, false, false, false, false, false, false],
+    currentStreak: 12,
+    weeklyStreak: 4,
+    longestStreak: 20,
+    lastSevenDays: [true, true, true, true, true, true, true],
   };
 }
 
@@ -294,13 +327,16 @@ export async function initializeStore() {
   try {
     const state = useAppStore.getState();
 
+    // Theme is a UI preference (localStorage) — load it regardless of auth state.
+    state.loadTheme();
+
     if (shouldSkipAuth) {
       useAppStore.setState({
         user: getDevUser(),
         isInitialized: true,
         isLoading: false,
         error: null,
-        habits: [],
+        habits: getDevHabits(),
         streak: getDevStreak(),
         purchaseHistory: { purchases: [], totalSpent: 0 },
         shopItems: [],

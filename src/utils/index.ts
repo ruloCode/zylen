@@ -3,3 +3,4 @@ export * from './cn';
 export * from './xp';
 export * from './date';
 export * from './debounce';
+export * from './greeting';

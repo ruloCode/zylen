@@ -56,45 +56,45 @@ export function Button({
   `;
 
   const variants = {
-    // Primary verde brillante - Alto contraste
+    // Primary accent - theme-driven
     'primary': `
-      bg-[rgb(155,215,50)]
-      text-black
-      hover:bg-[rgb(180,240,80)]
+      bg-primary
+      text-primary-foreground
+      hover:bg-primary-hover
       shadow-dofus
       hover:shadow-dofus-hover
-      focus-visible:ring-[rgb(155,215,50)]
+      focus-visible:ring-primary
     `,
 
-    // Secondary DOFUS orange - Exact DOFUS secondary CTA
+    // Secondary accent - theme-driven
     'secondary': `
-      bg-[rgb(242,156,6)]
-      text-white
+      bg-secondary
+      text-secondary-foreground
       hover:opacity-90
       shadow-dofus
       hover:shadow-dofus-hover
-      focus-visible:ring-[rgb(242,156,6)]
+      focus-visible:ring-secondary
     `,
 
     // Ghost - Transparent with border
     'ghost': `
       bg-transparent
-      text-white
+      text-foreground
       border-2
-      border-white/20
-      hover:bg-white/10
-      hover:border-white/30
-      focus-visible:ring-white/50
+      border-[hsl(var(--glass-border)/0.2)]
+      hover:bg-[hsl(var(--glass-bg)/0.4)]
+      hover:border-[hsl(var(--glass-border)/0.3)]
+      focus-visible:ring-primary
     `,
 
-    // Danger - DOFUS red for destructive actions
+    // Danger - theme-driven destructive
     'danger': `
-      bg-[rgb(217,83,79)]
-      text-white
+      bg-destructive
+      text-destructive-foreground
       hover:opacity-90
       shadow-dofus
       hover:shadow-dofus-hover
-      focus-visible:ring-[rgb(217,83,79)]
+      focus-visible:ring-destructive
     `
   };
 

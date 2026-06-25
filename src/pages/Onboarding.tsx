@@ -10,6 +10,7 @@ import {
   OnboardingStepUsername,
   OnboardingStep2,
   OnboardingStep3,
+  OnboardingStepTheme,
   OnboardingStep4,
 } from '@/features/onboarding/components';
 import { useLocale } from '@/hooks/useLocale';
@@ -124,6 +125,10 @@ export function Onboarding() {
 
           {currentStep === ONBOARDING_STEPS.HABITS && (
             <OnboardingStep3 onNext={nextStep} onPrev={prevStep} />
+          )}
+
+          {currentStep === ONBOARDING_STEPS.THEME && (
+            <OnboardingStepTheme onNext={nextStep} onPrev={prevStep} />
           )}
 
           {currentStep === ONBOARDING_STEPS.TUTORIAL && (

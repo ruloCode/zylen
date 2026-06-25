@@ -8,140 +8,337 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    /* Base semantic colors - Dark Dofus theme */
-    --background: 191 45% 8%;      /* Deep teal-black rgb(11, 25, 29) */
-    --foreground: 0 0% 100%;       /* Pure white text */
+  /* ============================================================
+     THEME TOKEN CONTRACT
+     Every theme provides this same set of semantic CSS vars
+     (bare HSL triplets so Tailwind's /<alpha> modifier works).
+     :root holds the MIDNIGHT defaults; [data-theme="x"] overrides.
+     ============================================================ */
+  :root,
+  [data-theme="midnight"] {
+    /* Surfaces — teal-charcoal, sampled from the Zylen Home reference */
+    --background: 192 28% 8%;
+    --surface: 190 22% 13%;
+    --surface-elevated: 190 20% 17%;
+    --overlay: 192 35% 4%;
+    --glass-bg: 190 20% 19%;
+    --glass-border: 185 28% 72%;
 
-    --muted: 20 6% 9%;             /* Dark brown muted */
-    --muted-foreground: 0 0% 75%;  /* Light gray text rgb(191, 191, 191) - improved contrast */
+    /* shadcn-style aliases */
+    --card: 190 22% 13%;
+    --card-foreground: 180 12% 96%;
+    --popover: 190 20% 17%;
+    --popover-foreground: 180 12% 96%;
+    --muted: 190 14% 22%;
 
-    --popover: 20 6% 9%;           /* Dark brown */
-    --popover-foreground: 0 0% 100%;
+    /* Borders / ring */
+    --border: 190 16% 24%;
+    --input: 190 16% 24%;
+    --ring: 172 66% 50%;
 
-    --border: 20 8% 10%;           /* Charcoal border */
-    --input: 20 8% 10%;            /* Charcoal input */
+    /* Text */
+    --foreground: 180 12% 96%;
+    --text-secondary: 185 12% 80%;
+    --text-tertiary: 188 10% 62%;
+    --text-inverse: 190 30% 10%;
+    --muted-foreground: 188 10% 62%;
 
-    --card: 20 8% 10%;             /* Dark charcoal cards */
-    --card-foreground: 0 0% 100%;
-
-    --primary: 76 85% 50%;         /* Verde Brillante - Alto contraste con fondo oscuro */
+    /* Accent (primary action) — Zylen teal */
+    --primary: 172 66% 50%;
+    --primary-hover: 172 66% 57%;
     --primary-foreground: 0 0% 100%;
-
-    --secondary: 36 98% 49%;       /* DOFUS Orange rgb(242, 156, 6) - Secondary CTA */
-    --secondary-foreground: 0 0% 100%;
-
-    --accent: 76 85% 50%;          /* Verde Brillante accent - Alto contraste */
+    --accent: 172 66% 50%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 4 66% 58%;      /* DOFUS Red rgb(217, 83, 79) - Alert/Danger */
+    /* Secondary accent */
+    --secondary: 175 60% 45%;
+    --secondary-foreground: 0 0% 100%;
+
+    /* Status */
+    --success: 150 55% 45%;
+    --warning: 42 100% 62%;
+    --danger: 352 80% 64%;
+    --info: 220 90% 68%;
+    --destructive: 352 80% 64%;
     --destructive-foreground: 0 0% 100%;
 
-    --ring: 76 85% 50%;            /* Verde Brillante ring */
+    /* Effects */
+    --glow: 172 66% 50%;
+    --shadow-color: 0 0% 0%;
 
-    --radius: 0.875rem;            /* Zylen v2 - evolved rounded corners */
+    /* Tailwind-bridge ramps (drive charcoal-* surfaces & teal-* accent) */
+    --surface-50: 190 20% 88%;
+    --surface-500: 190 22% 13%;
+    --surface-600: 190 20% 17%;
+    --surface-700: 190 16% 24%;
+    --surface-900: 192 28% 8%;
+    --accent-50: 172 60% 90%;
+    --accent-400: 172 58% 62%;
+    --accent-500: 172 66% 50%;
+    --accent-600: 172 70% 42%;
+    --accent-700: 172 72% 34%;
 
-    /* ========================================
-       DOFUS COLOR PALETTE
-       ======================================== */
+    --radius: 0.875rem;
 
-    /* Deep backgrounds - Dark teal/charcoal theme */
-    --dofus-deep-teal: 191 45% 8%;      /* rgb(11, 25, 29) - Main body background */
-    --dofus-charcoal: 20 8% 10%;        /* rgb(23, 20, 18) - Navigation, cards */
-    --dofus-charcoal-alpha: 20 8% 10%;  /* rgba(23, 20, 18, 0.85) - Semi-transparent nav */
-    --dofus-black: 0 0% 0%;             /* Pure black for depth */
-    --dofus-dark-brown: 15 8% 17%;      /* rgb(46, 42, 39) - UI elements */
-    --dofus-gray-brown: 20 7% 26%;      /* rgb(71, 65, 61) - Buttons, selector */
-
-    /* Verde Brillante Palette - Alto contraste con fondo oscuro */
-    --green-50: 76 90% 95%;        /* Verde muy claro */
-    --green-100: 76 85% 90%;       /* Verde claro */
-    --green-200: 76 85% 80%;       /* Verde suave brillante */
-    --green-300: 76 85% 70%;       /* Verde medio brillante */
-    --green-400: 76 85% 60%;       /* Verde estándar brillante */
-    --green-500: 76 85% 52%;       /* rgb(155, 215, 50) - PRIMARY VERDE BRILLANTE */
-    --green-600: 76 73% 42%;       /* rgb(137, 184, 32) - Verde DOFUS */
-    --green-700: 65 100% 33%;      /* rgb(151, 168, 0) - Verde oscuro */
-    --green-800: 65 100% 28%;      /* Verde profundo */
-    --green-900: 65 100% 23%;      /* Verde muy oscuro */
-
-    /* DOFUS Orange Palette - Secondary CTA color */
-    --dofus-orange-50: 36 90% 95%;      /* Very light orange */
-    --dofus-orange-100: 36 85% 85%;     /* Light orange */
-    --dofus-orange-200: 36 80% 75%;     /* Soft orange */
-    --dofus-orange-300: 36 75% 65%;     /* Medium orange */
-    --dofus-orange-400: 36 90% 55%;     /* Standard orange */
-    --dofus-orange-500: 36 98% 49%;     /* rgb(242, 156, 6) - PRIMARY DOFUS ORANGE */
-    --dofus-orange-600: 36 95% 45%;     /* Darker orange */
-    --dofus-orange-700: 36 90% 40%;     /* Deep orange */
-    --dofus-orange-800: 36 85% 35%;     /* Very deep orange */
-    --dofus-orange-900: 36 80% 30%;     /* Ultra deep orange */
-
-    /* Text colors - White/Gray hierarchy (improved contrast) */
-    --text-primary: 0 0% 100%;          /* Pure white rgb(255, 255, 255) */
-    --text-secondary: 0 0% 87%;         /* Light gray rgb(222, 222, 222) */
-    --text-tertiary: 0 0% 75%;          /* Light-medium gray rgb(191, 191, 191) - improved contrast */
-    --text-dark: 0 0% 20%;              /* Dark gray rgb(51, 51, 51) */
-    --text-brown: 30 50% 14%;           /* DOFUS Brown rgb(54, 39, 18) - Warm accents */
-    --text-brown-dark: 31 74% 21%;      /* DOFUS Brown Dark rgb(91, 54, 14) - Headings */
-    --text-medium-gray: 0 0% 44%;       /* Medium gray rgb(111, 111, 111) */
-    --text-light-gray: 0 0% 51%;        /* Light gray rgb(131, 131, 131) */
-
-    /* Vibrant life area colors - Alto contraste para fondo oscuro */
-    --vibrant-red: 0 85% 60%;           /* Rojo brillante - alto contraste */
-    --vibrant-green: 140 75% 55%;       /* Verde brillante - alto contraste */
-    --vibrant-purple: 285 70% 65%;      /* Púrpura brillante - alto contraste */
-    --vibrant-blue: 210 100% 65%;       /* Azul brillante - alto contraste */
-    --vibrant-orange: 28 100% 65%;      /* Naranja brillante - alto contraste */
-    --vibrant-cyan: 186 75% 60%;        /* Cyan brillante - alto contraste */
-    --vibrant-pink: 327 80% 68%;        /* Rosa brillante - alto contraste */
-    --vibrant-yellow: 48 100% 65%;      /* Amarillo brillante - alto contraste */
-
-    /* Semantic colors - Alto contraste para dark theme */
-    --success: 156 65% 50%;             /* Verde jade brillante */
-    --danger: 0 85% 65%;                /* Rojo brillante */
-    --warning: 45 100% 60%;             /* Amarillo brillante */
-    --info: 210 100% 65%;               /* Azul brillante */
-
-    /* Shadow colors for Dofus effect */
-    --shadow-color: 0 0% 0%;            /* Pure black shadows */
+    /* ── Brand-stable palette vars (NOT themed) ── */
+    --dofus-deep-teal: 191 45% 8%;
+    --dofus-charcoal: 20 8% 10%;
+    --dofus-black: 0 0% 0%;
+    --green-500: 76 85% 52%;
+    --green-600: 76 73% 42%;
+    --green-700: 65 100% 33%;
+    --dofus-orange-500: 36 98% 49%;
+    --vibrant-red: 0 85% 60%;
+    --vibrant-green: 140 75% 55%;
+    --vibrant-purple: 285 70% 65%;
+    --vibrant-blue: 210 100% 65%;
+    --vibrant-orange: 28 100% 65%;
+    --vibrant-cyan: 186 75% 60%;
+    --vibrant-pink: 327 80% 68%;
+    --vibrant-yellow: 48 100% 65%;
+    --text-primary: 0 0% 100%;
+    --text-dark: 0 0% 20%;
     --shadow-alpha-light: 0 0% 0% / 0.5;
-    --shadow-alpha-medium: 0 0% 0% / 1;
-    --shadow-alpha-strong: 0 0% 0% / 1;
   }
 
-  /* Dark mode variant (same as default since we're dark by default) */
-  :root[class~="dark"] {
-    --background: 191 45% 8%;      /* Deep teal-black */
-    --foreground: 0 0% 100%;       /* Pure white */
-
-    --muted: 20 6% 9%;
-    --muted-foreground: 0 0% 75%;
-
-    --accent: 76 73% 62%;          /* Lime green */
-    --accent-foreground: 0 0% 100%;
-
-    --popover: 20 6% 9%;
-    --popover-foreground: 0 0% 100%;
-
-    --border: 20 8% 10%;
-    --input: 20 8% 10%;
-
-    --card: 20 8% 10%;
-    --card-foreground: 0 0% 100%;
-
-    --primary: 76 73% 62%;         /* Lime green */
+  /* ── NOUS — light glass neutrals, cool Nous-blue accent ── */
+  [data-theme="nous"] {
+    --background: 210 30% 96%;
+    --surface: 210 30% 99%;
+    --surface-elevated: 0 0% 100%;
+    --overlay: 215 25% 30%;
+    --glass-bg: 210 40% 100%;
+    --glass-border: 215 30% 60%;
+    --card: 210 30% 99%;
+    --card-foreground: 217 33% 17%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 217 33% 17%;
+    --muted: 214 24% 92%;
+    --border: 214 24% 86%;
+    --input: 214 24% 86%;
+    --ring: 211 92% 52%;
+    --foreground: 217 33% 17%;
+    --text-secondary: 216 18% 34%;
+    --text-tertiary: 216 14% 50%;
+    --text-inverse: 0 0% 100%;
+    --muted-foreground: 216 14% 50%;
+    --primary: 211 92% 52%;
+    --primary-hover: 211 92% 46%;
     --primary-foreground: 0 0% 100%;
-
-    --secondary: 65 100% 36%;
+    --accent: 211 92% 52%;
+    --accent-foreground: 0 0% 100%;
+    --secondary: 199 89% 48%;
     --secondary-foreground: 0 0% 100%;
-
-    --destructive: 350 81% 71%;
+    --success: 152 60% 40%;
+    --warning: 38 92% 48%;
+    --danger: 0 72% 51%;
+    --info: 211 92% 52%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
+    --glow: 211 92% 60%;
+    --shadow-color: 215 30% 40%;
+    --surface-50: 210 30% 99%;
+    --surface-500: 210 30% 99%;
+    --surface-600: 210 28% 95%;
+    --surface-700: 214 24% 90%;
+    --surface-900: 210 30% 96%;
+    --accent-50: 211 92% 94%;
+    --accent-400: 211 92% 60%;
+    --accent-500: 211 92% 52%;
+    --accent-600: 211 92% 46%;
+    --accent-700: 213 90% 40%;
+  }
 
-    --ring: 76 73% 62%;
+  /* ── EMBER — dark warm, amber/bronze/crimson ── */
+  [data-theme="ember"] {
+    --background: 20 30% 6%;
+    --surface: 18 26% 10%;
+    --surface-elevated: 16 24% 14%;
+    --overlay: 18 50% 3%;
+    --glass-bg: 18 30% 13%;
+    --glass-border: 30 60% 60%;
+    --card: 18 26% 10%;
+    --card-foreground: 36 40% 95%;
+    --popover: 16 24% 14%;
+    --popover-foreground: 36 40% 95%;
+    --muted: 16 20% 16%;
+    --border: 18 22% 20%;
+    --input: 18 22% 20%;
+    --ring: 32 95% 56%;
+    --foreground: 36 40% 95%;
+    --text-secondary: 34 28% 80%;
+    --text-tertiary: 30 18% 62%;
+    --text-inverse: 20 40% 8%;
+    --muted-foreground: 30 18% 62%;
+    --primary: 32 95% 56%;
+    --primary-hover: 32 95% 62%;
+    --primary-foreground: 20 50% 8%;
+    --accent: 32 95% 56%;
+    --accent-foreground: 20 50% 8%;
+    --secondary: 8 78% 54%;
+    --secondary-foreground: 0 0% 100%;
+    --success: 86 55% 50%;
+    --warning: 42 100% 58%;
+    --danger: 4 80% 58%;
+    --info: 28 80% 60%;
+    --destructive: 4 80% 58%;
+    --destructive-foreground: 0 0% 100%;
+    --glow: 24 90% 56%;
+    --shadow-color: 0 0% 0%;
+    --surface-50: 24 24% 84%;
+    --surface-500: 18 26% 10%;
+    --surface-600: 16 24% 14%;
+    --surface-700: 18 22% 20%;
+    --surface-900: 20 30% 6%;
+    --accent-50: 32 95% 90%;
+    --accent-400: 32 95% 62%;
+    --accent-500: 32 95% 56%;
+    --accent-600: 28 90% 48%;
+    --accent-700: 22 86% 40%;
+  }
 
-    --radius: 0.875rem;            /* Zylen v2 - evolved rounded corners */
+  /* ── MONO — pure greyscale, white/grey accent (no hue) ── */
+  [data-theme="mono"] {
+    --background: 0 0% 4%;
+    --surface: 0 0% 9%;
+    --surface-elevated: 0 0% 13%;
+    --overlay: 0 0% 0%;
+    --glass-bg: 0 0% 12%;
+    --glass-border: 0 0% 70%;
+    --card: 0 0% 9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 13%;
+    --popover-foreground: 0 0% 98%;
+    --muted: 0 0% 16%;
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 0 0% 90%;
+    --foreground: 0 0% 98%;
+    --text-secondary: 0 0% 78%;
+    --text-tertiary: 0 0% 58%;
+    --text-inverse: 0 0% 6%;
+    --muted-foreground: 0 0% 58%;
+    --primary: 0 0% 96%;
+    --primary-hover: 0 0% 100%;
+    --primary-foreground: 0 0% 6%;
+    --accent: 0 0% 96%;
+    --accent-foreground: 0 0% 6%;
+    --secondary: 0 0% 60%;
+    --secondary-foreground: 0 0% 6%;
+    --success: 0 0% 82%;
+    --warning: 0 0% 70%;
+    --danger: 0 0% 92%;
+    --info: 0 0% 75%;
+    --destructive: 0 0% 92%;
+    --destructive-foreground: 0 0% 6%;
+    --glow: 0 0% 90%;
+    --shadow-color: 0 0% 0%;
+    --surface-50: 0 0% 85%;
+    --surface-500: 0 0% 9%;
+    --surface-600: 0 0% 13%;
+    --surface-700: 0 0% 20%;
+    --surface-900: 0 0% 4%;
+    --accent-50: 0 0% 96%;
+    --accent-400: 0 0% 86%;
+    --accent-500: 0 0% 96%;
+    --accent-600: 0 0% 78%;
+    --accent-700: 0 0% 64%;
+  }
+
+  /* ── CYBERPUNK — black + neon green glow ── */
+  [data-theme="cyberpunk"] {
+    --background: 0 0% 3%;
+    --surface: 150 20% 7%;
+    --surface-elevated: 150 18% 11%;
+    --overlay: 0 0% 0%;
+    --glass-bg: 150 30% 10%;
+    --glass-border: 140 100% 55%;
+    --card: 150 20% 7%;
+    --card-foreground: 120 30% 96%;
+    --popover: 150 18% 11%;
+    --popover-foreground: 120 30% 96%;
+    --muted: 150 16% 13%;
+    --border: 150 25% 16%;
+    --input: 150 25% 16%;
+    --ring: 140 100% 50%;
+    --foreground: 120 30% 96%;
+    --text-secondary: 140 25% 80%;
+    --text-tertiary: 140 15% 60%;
+    --text-inverse: 150 40% 5%;
+    --muted-foreground: 140 15% 60%;
+    --primary: 140 100% 50%;
+    --primary-hover: 140 100% 60%;
+    --primary-foreground: 150 60% 6%;
+    --accent: 140 100% 50%;
+    --accent-foreground: 150 60% 6%;
+    --secondary: 320 100% 60%;
+    --secondary-foreground: 0 0% 100%;
+    --success: 140 100% 50%;
+    --warning: 54 100% 55%;
+    --danger: 330 100% 58%;
+    --info: 180 100% 55%;
+    --destructive: 330 100% 58%;
+    --destructive-foreground: 0 0% 100%;
+    --glow: 140 100% 50%;
+    --shadow-color: 0 0% 0%;
+    --surface-50: 150 18% 82%;
+    --surface-500: 150 20% 7%;
+    --surface-600: 150 18% 11%;
+    --surface-700: 150 25% 16%;
+    --surface-900: 0 0% 3%;
+    --accent-50: 140 100% 88%;
+    --accent-400: 140 100% 60%;
+    --accent-500: 140 100% 50%;
+    --accent-600: 140 100% 42%;
+    --accent-700: 140 90% 34%;
+  }
+
+  /* ── SLATE — cool blue-grey, muted steel-blue accent ── */
+  [data-theme="slate"] {
+    --background: 215 28% 12%;
+    --surface: 215 24% 17%;
+    --surface-elevated: 214 22% 22%;
+    --overlay: 217 33% 6%;
+    --glass-bg: 215 26% 20%;
+    --glass-border: 210 30% 70%;
+    --card: 215 24% 17%;
+    --card-foreground: 210 30% 95%;
+    --popover: 214 22% 22%;
+    --popover-foreground: 210 30% 95%;
+    --muted: 215 18% 24%;
+    --border: 215 18% 28%;
+    --input: 215 18% 28%;
+    --ring: 207 60% 60%;
+    --foreground: 210 30% 95%;
+    --text-secondary: 212 20% 80%;
+    --text-tertiary: 213 14% 62%;
+    --text-inverse: 215 30% 12%;
+    --muted-foreground: 213 14% 62%;
+    --primary: 207 60% 60%;
+    --primary-hover: 207 60% 66%;
+    --primary-foreground: 215 40% 10%;
+    --accent: 207 60% 60%;
+    --accent-foreground: 215 40% 10%;
+    --secondary: 190 45% 56%;
+    --secondary-foreground: 215 40% 10%;
+    --success: 156 50% 52%;
+    --warning: 40 80% 60%;
+    --danger: 0 65% 60%;
+    --info: 207 70% 62%;
+    --destructive: 0 65% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --glow: 207 60% 60%;
+    --shadow-color: 0 0% 0%;
+    --surface-50: 214 22% 86%;
+    --surface-500: 215 24% 17%;
+    --surface-600: 214 22% 22%;
+    --surface-700: 215 18% 28%;
+    --surface-900: 215 28% 12%;
+    --accent-50: 207 60% 90%;
+    --accent-400: 207 60% 66%;
+    --accent-500: 207 60% 60%;
+    --accent-600: 207 56% 50%;
+    --accent-700: 207 52% 42%;
   }
 }
 
@@ -151,13 +348,14 @@
   }
 
   body {
-    /* Deep teal-black background - DOFUS style */
-    background-color: rgb(11, 25, 29);
+    /* Theme-driven background & text */
+    background-color: hsl(var(--background));
     @apply text-foreground min-h-screen;
     font-feature-settings: "rlig" 1, "calt" 1;
     font-family: 'Roboto', sans-serif;
     font-size: 16px;
-    color: rgb(51, 51, 51);
+    color: hsl(var(--foreground));
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -219,28 +417,28 @@
 
   /* Dark charcoal card - Zylen v2 (rounded + soft depth) */
   .rpg-card {
-    background-color: rgb(23, 20, 18);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    box-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.45);
+    background-color: hsl(var(--surface));
+    border: 1px solid hsl(var(--border));
+    box-shadow: 0 4px 16px -4px hsl(var(--shadow-color) / 0.45);
     border-radius: 1rem;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   /* Glass card - Zylen v2 (subtle border + blur + soft shadow) */
   .glass-card {
-    background-color: rgba(28, 32, 33, 0.7);
+    background-color: hsl(var(--glass-bg) / 0.7);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
-    border: 1px solid rgba(255, 255, 255, 0.07);
-    box-shadow: 0 6px 24px -8px rgba(0, 0, 0, 0.5);
+    border: 1px solid hsl(var(--glass-border) / 0.12);
+    box-shadow: 0 6px 24px -8px hsl(var(--shadow-color) / 0.5);
     border-radius: 1.25rem;
   }
 
   /* Vibrant card for life areas */
   .vibrant-card {
     border-radius: 1rem;
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    box-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.45);
+    border: 1px solid hsl(var(--border));
+    box-shadow: 0 4px 16px -4px hsl(var(--shadow-color) / 0.45);
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
@@ -253,14 +451,14 @@
      DOFUS GLOW EFFECTS - Simplified and clean
      ========================================== */
 
-  /* Verde brillante glow (for XP, rewards, primary actions) */
+  /* Accent glow (for XP, rewards, primary actions) - theme-driven */
   .glow-lime {
-    box-shadow: 0px 0px 8px 0px rgba(155, 215, 50, 0.6);
+    box-shadow: 0px 0px 8px 0px hsl(var(--glow) / 0.6);
   }
 
   /* Success glow (for completions) */
   .glow-success {
-    box-shadow: 0px 0px 8px 0px rgba(66, 179, 129, 0.5);
+    box-shadow: 0px 0px 8px 0px hsl(var(--success) / 0.5);
   }
 
   /* Vibrant glow for cards */
@@ -272,9 +470,9 @@
      DOFUS TEXT STYLES
      ========================================== */
 
-  /* Verde brillante gradient text */
+  /* Accent gradient text - theme-driven */
   .text-gradient-lime {
-    background: linear-gradient(135deg, rgb(155, 215, 50), rgb(180, 240, 80));
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-hover)));
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -337,10 +535,10 @@
      DOFUS BUTTON STYLES
      ========================================== */
 
-  /* Primary verde brillante button */
+  /* Primary accent button - theme-driven */
   .btn-dofus-primary {
-    background-color: rgb(155, 215, 50);
-    color: rgb(0, 0, 0);  /* Texto negro para mejor contraste */
+    background-color: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
     font-weight: 700;
     text-transform: uppercase;
     padding: 12px 34px;
@@ -351,13 +549,13 @@
   }
 
   .btn-dofus-primary:hover {
-    background-color: rgb(180, 240, 80);
+    background-color: hsl(var(--primary-hover));
   }
 
-  /* Secondary DOFUS orange button - Exact DOFUS spec */
+  /* Secondary accent button */
   .btn-dofus-secondary {
-    background-color: rgb(242, 156, 6);
-    color: rgb(255, 255, 255);
+    background-color: hsl(var(--secondary));
+    color: hsl(var(--secondary-foreground));
     font-weight: 400;
     text-transform: uppercase;
     padding: 12px 34px;
@@ -377,19 +575,19 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    background: linear-gradient(135deg, hsl(167, 78%, 44%), hsl(168, 80%, 36%));
-    color: #fff;
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-hover)));
+    color: hsl(var(--primary-foreground));
     font-weight: 700;
     padding: 0.75rem 1.5rem;
     border-radius: 0.875rem;
     border: 0;
-    box-shadow: 0 0 16px -2px hsla(167, 78%, 45%, 0.5);
+    box-shadow: 0 0 16px -2px hsl(var(--glow) / 0.5);
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     min-height: 44px;
   }
   .btn-primary:hover {
     filter: brightness(1.08);
-    box-shadow: 0 0 24px 0px hsla(167, 78%, 50%, 0.65);
+    box-shadow: 0 0 24px 0px hsl(var(--glow) / 0.65);
     transform: translateY(-1px);
   }
   .btn-primary:active { transform: scale(0.97); }
@@ -400,17 +598,17 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    background: rgba(255, 255, 255, 0.08);
-    color: #fff;
+    background: hsl(var(--glass-bg) / 0.5);
+    color: hsl(var(--foreground));
     font-weight: 600;
     padding: 0.75rem 1.5rem;
     border-radius: 0.875rem;
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    border: 1px solid hsl(var(--glass-border) / 0.15);
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     min-height: 44px;
   }
   .btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.14);
+    background: hsl(var(--glass-bg) / 0.7);
     transform: translateY(-1px);
   }
   .btn-secondary:active { transform: scale(0.97); }
@@ -429,9 +627,9 @@
      DOFUS UTILITY CLASSES
      ========================================== */
 
-  /* Modal overlay - dark */
+  /* Modal overlay - theme-driven scrim */
   .modal-overlay {
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: hsl(var(--overlay) / 0.8);
     backdrop-filter: blur(4px);
   }
 
@@ -468,5 +666,23 @@
       padding-top: max(2rem, env(safe-area-inset-top));
       padding-bottom: max(2rem, env(safe-area-inset-bottom));
     }
+  }
+
+  /* ==========================================
+     THEME COMPATIBILITY BRIDGES
+     ========================================== */
+
+  /* Nous (light theme): legacy hardcoded white text would be invisible
+     on light surfaces — remap it to the theme foreground. */
+  [data-theme="nous"] .text-white {
+    color: hsl(var(--foreground));
+  }
+  [data-theme="nous"] [class*="text-white/"] {
+    color: hsl(var(--text-secondary));
+  }
+
+  /* Cyberpunk: punchier neon glow */
+  [data-theme="cyberpunk"] .glow-lime {
+    box-shadow: 0 0 14px 2px hsl(var(--glow) / 0.7);
   }
 }
