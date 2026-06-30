@@ -12,6 +12,10 @@ import type { Message } from '@/types';
  * which we persist per browser. The `streamChatCompletion` signature mirrors
  * the OpenAI service so both backends stay interchangeable.
  *
+ * In production the app is served from Vercel and reaches the local Hermes
+ * machine through an HTTPS tunnel, so VITE_HERMES_API_URL points at the tunnel
+ * base (…/v1). Locally it defaults to http://localhost:8642/v1.
+ *
  * Gateway contract:
  *   POST {VITE_HERMES_API_URL}/chat/completions
  *     headers: Authorization: Bearer {VITE_HERMES_API_KEY}
