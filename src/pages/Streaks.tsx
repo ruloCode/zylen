@@ -19,9 +19,10 @@ import {
 import { useUser, useHabits, useStreaks, useLifeAreas } from '@/store';
 import { useLocale } from '@/hooks/useLocale';
 import { getAreaLevelProgress } from '@/utils/xp';
+import { getHeroBodySrc } from '@/constants';
 
+// The character body is resolved from the user's chosen avatar (see getHeroBodySrc).
 const HERO_BG_SRC = '/hero-bg.png';
-const HERO_CHARACTER_SRC = '/hero-character.png';
 
 // Placeholder daily activity data (minutes). Real per-day tracking isn't stored yet.
 const ACTIVITY_DATA = [20, 35, 10, 45, 30, 50, 20];
@@ -146,7 +147,7 @@ export function Streaks() {
         <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-b from-transparent to-[hsl(var(--background))]" />
         {/* Character (transparent PNG), upper-right */}
         <img
-          src={HERO_CHARACTER_SRC}
+          src={getHeroBodySrc(user?.avatarUrl)}
           alt=""
           aria-hidden="true"
           className="absolute top-[6%] right-[-4%] w-[52%] max-w-[230px] h-auto object-contain drop-shadow-[0_14px_14px_rgba(0,0,0,0.5)]"

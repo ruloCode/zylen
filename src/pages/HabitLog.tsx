@@ -17,6 +17,7 @@ import { LevelUpNotification, CircularProgress } from '@/components/ui';
 import { useUser, useLifeAreas, useHabits, useStreaks } from '@/store';
 import { calculateGlobalLevelUpReward, getLevelProgress } from '@/utils/xp';
 import { useLocale } from '@/hooks/useLocale';
+import { getHeroBodySrc } from '@/constants';
 import type { HabitFormData, HabitTemplate } from '@/types';
 
 interface LevelUpState {
@@ -29,8 +30,8 @@ interface LevelUpState {
 type RoutineFilter = 'all' | 'morning' | 'afternoon' | 'night';
 
 // Hero layers (shared visual language with Dashboard).
+// The character body is resolved from the user's chosen avatar (see getHeroBodySrc).
 const HERO_BG_SRC = '/hero-bg.png';
-const HERO_CHARACTER_SRC = '/hero-character.png';
 
 export function HabitLog() {
   const { t } = useLocale();
@@ -236,7 +237,7 @@ export function HabitLog() {
             <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/55 to-transparent" />
             {/* Character bust on the right: head at the top, lower body clipped by the card */}
             <img
-              src={HERO_CHARACTER_SRC}
+              src={getHeroBodySrc(user?.avatarUrl)}
               alt=""
               aria-hidden="true"
               className="absolute top-2 left-[57%] -translate-x-1/2 w-[47%] max-w-[190px] h-auto object-contain drop-shadow-[0_10px_12px_rgba(0,0,0,0.45)]"
