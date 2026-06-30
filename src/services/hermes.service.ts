@@ -14,7 +14,8 @@ import type { Message } from '@/types';
  *
  * In production the app is served from Vercel and reaches the local Hermes
  * machine through an HTTPS tunnel, so VITE_HERMES_API_URL points at the tunnel
- * base (…/v1). Locally it defaults to http://localhost:8642/v1.
+ * base (…/v1). Locally it defaults to http://localhost:8642/v1. These VITE_*
+ * vars are inlined at build time, so changing them requires a fresh deploy.
  *
  * Gateway contract:
  *   POST {VITE_HERMES_API_URL}/chat/completions
