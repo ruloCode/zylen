@@ -3,7 +3,8 @@ import { Send, AlertCircle, X, Sparkles } from 'lucide-react';
 import { ChatBubble } from './ChatBubble';
 import { HermesService } from '@/services/hermes.service';
 import { useLocale } from '@/hooks/useLocale';
-import { CHAT_CONFIG } from '@/constants';
+import { useUser } from '@/store';
+import { CHAT_CONFIG, getHeroBodySrc } from '@/constants';
 import type { Message } from '@/types';
 
 interface CoachChatProps {
@@ -22,6 +23,9 @@ interface CoachChatProps {
  */
 export function CoachChat({ onClose }: CoachChatProps) {
   const { t } = useLocale();
+  const { user } = useUser();
+  // Hermes "speaks" to you wearing the same hero the user picked on the Home.
+  const hermesAvatar = getHeroBodySrc(user?.avatarUrl);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -98,8 +102,8 @@ export function CoachChat({ onClose }: CoachChatProps) {
   const showTyping = isLoading && !streamingId;
 
   return (
-    <div className="fixed inset-0 z-[60] flex flex-col bg-[hsl(var(--background))]/95 backdrop-blur-md">
-      <div className="max-w-md mx-auto w-full h-full flex flex-col px-4">
+    <div className="fixed inset-0 z-[60] flex flex-col overflow-x-hidden bg-[hsl(var(--background))]/95 backdrop-blur-md">
+      <div className="max-w-md mx-auto w-full h-full flex flex-col overflow-x-hidden px-4">
         {/* Header */}
         <header className="flex items-center gap-3 pt-[calc(env(safe-area-inset-top)+1.25rem)] pb-4 flex-shrink-0">
           <span className="shrink-0 w-11 h-11 rounded-full bg-gradient-to-br from-gold-500 to-gold-600 flex items-center justify-center">
@@ -137,6 +141,7 @@ export function CoachChat({ onClose }: CoachChatProps) {
                 key={msg.id}
                 message={msg.content}
                 isUser={msg.role === 'user'}
+                avatarSrc={hermesAvatar}
                 timestamp={new Date(msg.timestamp).toLocaleTimeString([], {
                   hour: '2-digit',
                   minute: '2-digit',
@@ -144,7 +149,15 @@ export function CoachChat({ onClose }: CoachChatProps) {
               />
             ))}
             {showTyping && (
-              <div className="flex justify-start">
+              <div className="flex flex-row gap-3 w-full max-w-full mb-4">
+                <div className="flex-shrink-0 w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-gradient-to-br from-gold-500 to-gold-600">
+                  <img
+                    src={hermesAvatar}
+                    alt="Hermes"
+                    className="w-full h-full object-cover object-top"
+                    draggable={false}
+                  />
+                </div>
                 <div className="bg-charcoal-500 border border-white/10 rounded-2xl px-5 py-3">
                   <div className="flex space-x-2">
                     <div className="w-2 h-2 bg-gold-400 rounded-full animate-bounce"></div>
