@@ -14,7 +14,8 @@
     "cancel": "Cancelar",
     "progress": "Progreso",
     "pts": "ess",
-    "noArea": "Sin reino"
+    "noArea": "Sin reino",
+    "close": "Cerrar"
   },
   "app": {
     "name": "Everlight",
@@ -59,7 +60,7 @@
     "levelLabel_male": "Guardián Nivel {{level}}",
     "levelLabel_female": "Guardiana Nivel {{level}}",
     "focusOfDay": "Enfoque del día",
-    "personalJournal": "Crónica personal",
+    "personalJournal": "Coach Personal",
     "todayPath": "Tu sendero de hoy",
     "seeAll": "Ver todo",
     "noHabits": "Aún no hay hábitos que enciendan la luz hoy",

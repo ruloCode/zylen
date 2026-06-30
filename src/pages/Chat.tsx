@@ -4,7 +4,7 @@ import { ChatBubble } from '@/features/chat/components';
 import { useAppStore } from '@/store';
 import { useLocale } from '@/hooks/useLocale';
 import { CHAT_CONFIG } from '@/constants';
-import { ChatService } from '@/services/chat.service';
+import { OpenAIService } from '@/services/openai.service';
 
 export function Chat() {
   const messages = useAppStore((state) => state.messages);
@@ -37,9 +37,9 @@ export function Chat() {
   const handleSend = async () => {
     if (!input.trim() || input.length > CHAT_CONFIG.maxMessageLength) return;
 
-    // Check if the active chat backend is configured
-    if (!ChatService.isConfigured()) {
-      setError('Chat backend not configured. Please check your .env.local settings.');
+    // Check if OpenAI is configured
+    if (!OpenAIService.isConfigured()) {
+      setError('OpenAI API key not configured. Please add your API key to .env.local');
       return;
     }
 
@@ -56,7 +56,7 @@ export function Chat() {
       const streamingId = startStreamingMessage();
       let accumulatedContent = '';
 
-      await ChatService.streamChatCompletion(
+      await OpenAIService.streamChatCompletion(
         messages.concat([{
           id: crypto.randomUUID(),
           role: 'user',

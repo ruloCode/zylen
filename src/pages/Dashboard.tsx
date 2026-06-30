@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Bell,
   Flame,
@@ -13,6 +13,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { CircularProgress } from '@/components/ui';
+import { CoachChat } from '@/features/chat/components';
 import { HABIT_ICONS } from '@/components/atoms/icons/iconMaps';
 import { useUser, useHabits, useStreaks } from '@/store';
 import { ROUTES, getHeroBodySrc } from '@/constants';
@@ -33,6 +34,7 @@ export function Dashboard() {
   const { habits, completeHabit, uncompleteHabit } = useHabits();
   const { streak, isLoading: streakLoading } = useStreaks();
   const { t } = useLocale();
+  const [isCoachOpen, setIsCoachOpen] = useState(false);
 
   const levelProgress = user
     ? getLevelProgress(user.totalXPEarned, user.level)
@@ -202,10 +204,10 @@ export function Dashboard() {
               </CircularProgress>
             </div>
 
-            {/* Quick action: personal journal */}
+            {/* Quick action: personal coach (Hermes chat) */}
             <button
               type="button"
-              onClick={comingSoon}
+              onClick={() => setIsCoachOpen(true)}
               className={`${heroCard} p-2.5 flex flex-col items-center text-center gap-1.5`}
             >
               <NotebookPen size={18} className="text-amber-300" />
@@ -325,6 +327,9 @@ export function Dashboard() {
           )}
         </section>
       </div>
+
+      {/* Coach Personal — Hermes-powered chat overlay */}
+      {isCoachOpen && <CoachChat onClose={() => setIsCoachOpen(false)} />}
     </div>
   );
 }

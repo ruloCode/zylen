@@ -14,7 +14,8 @@
     "cancel": "Cancel",
     "progress": "Progress",
     "pts": "pts",
-    "noArea": "No area"
+    "noArea": "No area",
+    "close": "Close"
   },
   "app": {
     "name": "Everlight",
@@ -50,7 +51,7 @@
     "streakKeepGoing": "Keep it up!",
     "levelLabel": "Level {{level}}",
     "focusOfDay": "Focus of the day",
-    "personalJournal": "Personal journal",
+    "personalJournal": "Personal Coach",
     "todayPath": "Your path today",
     "seeAll": "See all",
     "noHabits": "No habits for today yet",
