@@ -3,23 +3,26 @@ import type { Message } from '@/types';
 /**
  * Hermes Service
  *
- * HTTP client for the Hermes Agent gateway — a local AI agent running on the
+ * HTTP client for the Hermes Agent API server — a local AI agent running on the
  * user's machine with persistent memory, skills and system access.
  *
- * Unlike {@link OpenAIService} (which sends the full conversation on every
- * request), Hermes keeps its own per-session context. We therefore only send
- * the latest user message plus a stable `session_id`; Hermes remembers the
- * rest. The `streamChatCompletion` signature is kept identical to the OpenAI
- * service so the two backends are interchangeable behind `ChatService`.
+ * Hermes exposes an OpenAI-compatible Chat Completions API, so we send the
+ * standard `{ messages, stream }` payload and parse OpenAI-style SSE. Session
+ * memory is kept server-side and keyed off the `X-Hermes-Session-Id` header,
+ * which we persist per browser. The `streamChatCompletion` signature mirrors
+ * the OpenAI service so both backends stay interchangeable.
  *
- * Expected gateway contract:
- *   POST {VITE_HERMES_API_URL}/chat
- *     body:    { message: string, session_id: string }
- *     accept:  text/event-stream
- *     returns: Server-Sent Events stream of token/text chunks
+ * Gateway contract:
+ *   POST {VITE_HERMES_API_URL}/chat/completions
+ *     headers: Authorization: Bearer {VITE_HERMES_API_KEY}
+ *              X-Hermes-Session-Id: {session_id}
+ *     body:    { messages: [{ role, content }], stream: true }
+ *     returns: OpenAI-style SSE — `data: {json}\n\n`, terminated by `data: [DONE]`
  */
 
-const HERMES_API_URL = (import.meta.env.VITE_HERMES_API_URL || 'http://localhost:8000').replace(/\/$/, '');
+const HERMES_API_URL = (import.meta.env.VITE_HERMES_API_URL || 'http://localhost:8642/v1').replace(/\/$/, '');
+
+const HERMES_API_KEY = import.meta.env.VITE_HERMES_API_KEY || '';
 
 const SESSION_STORAGE_KEY = 'everlight_hermes_session_id';
 
@@ -53,59 +56,39 @@ function resetSession(): void {
   }
 }
 
-/**
- * Extracts a text delta from a parsed SSE `data` payload. Hermes' exact event
- * schema can vary, so we accept the most common shapes and fall back to the
- * raw value when it is already a plain string.
- */
-function extractDelta(payload: unknown): string {
-  if (typeof payload === 'string') return payload;
-  if (!payload || typeof payload !== 'object') return '';
-
-  const obj = payload as Record<string, any>;
-
-  // OpenAI-compatible shape (some gateways proxy this through unchanged).
-  const openAIDelta = obj.choices?.[0]?.delta?.content;
-  if (typeof openAIDelta === 'string') return openAIDelta;
-
-  // Common single-field token shapes.
-  for (const key of ['delta', 'token', 'content', 'text', 'message', 'response', 'chunk']) {
-    if (typeof obj[key] === 'string') return obj[key];
-  }
-
-  return '';
+/** Converts app messages into the OpenAI Chat Completions message format. */
+function toChatMessages(messages: Message[]): Array<{ role: 'user' | 'assistant'; content: string }> {
+  return messages.map((msg) => ({ role: msg.role, content: msg.content }));
 }
 
 /**
- * Streams a chat response from the Hermes gateway.
+ * Streams a chat response from the Hermes OpenAI-compatible API.
  *
- * @param messages - Conversation history. Only the latest user message is sent;
- *                   Hermes maintains the rest via `session_id`.
+ * @param messages - Conversation history (latest message last). Sent in full;
+ *                   Hermes also keeps its own memory via the session header.
  * @param onChunk  - Called with each text delta as it arrives.
  */
 export async function streamChatCompletion(
   messages: Message[],
   onChunk: (delta: string) => void
 ): Promise<void> {
-  // The latest user message is what we forward to Hermes.
-  const lastUser = [...messages].reverse().find((m) => m.role === 'user');
-  const message = lastUser?.content ?? '';
-
-  const response = await fetch(`${HERMES_API_URL}/chat`, {
+  const response = await fetch(`${HERMES_API_URL}/chat/completions`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'text/event-stream',
+      ...(HERMES_API_KEY ? { Authorization: `Bearer ${HERMES_API_KEY}` } : {}),
+      'X-Hermes-Session-Id': getSessionId(),
     },
     body: JSON.stringify({
-      message,
-      session_id: getSessionId(),
+      messages: toChatMessages(messages),
+      stream: true,
     }),
   });
 
   if (!response.ok || !response.body) {
     throw new Error(
-      `Hermes gateway error (${response.status}). Make sure the Hermes API server is running at ${HERMES_API_URL}.`
+      `Hermes API error (${response.status}). Make sure the Hermes API server is running at ${HERMES_API_URL}.`
     );
   }
 
@@ -126,15 +109,13 @@ export async function streamChatCompletion(
     const data = dataLines.join('\n');
     if (data === '[DONE]') return true; // stream finished
 
-    let delta = '';
     try {
-      delta = extractDelta(JSON.parse(data));
+      const parsed = JSON.parse(data);
+      const delta = parsed?.choices?.[0]?.delta?.content;
+      if (typeof delta === 'string' && delta) onChunk(delta);
     } catch {
-      // Not JSON — treat the raw payload as a text delta.
-      delta = data;
+      // Ignore non-JSON keep-alive lines / comments.
     }
-
-    if (delta) onChunk(delta);
     return false;
   };
 
@@ -165,13 +146,12 @@ export async function streamChatCompletion(
 
 /**
  * Hermes Service object — mirrors the OpenAIService public interface so the
- * two are interchangeable behind {@link ChatService}.
+ * two are interchangeable.
  */
 export const HermesService = {
   streamChatCompletion,
-  // Hermes runs locally; we always consider it "configured" since there is no
-  // API key to validate. Reachability is surfaced as a runtime error instead.
-  isConfigured: () => true,
+  // Requires an API key to talk to the Hermes API server.
+  isConfigured: () => !!HERMES_API_KEY,
   getSessionId,
   resetSession,
 };
