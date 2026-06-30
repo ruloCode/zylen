@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, Suspense, lazy } from 'react';
 import {
   Bell,
   Flame,
@@ -13,7 +13,11 @@ import {
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { CircularProgress } from '@/components/ui';
-import { CoachChat } from '@/features/chat/components';
+// Lazy-loaded: pulls in the markdown + syntax-highlighting bundle only when the
+// user actually opens the Coach overlay, keeping the Dashboard chunk lean.
+const CoachChat = lazy(() =>
+  import('@/features/chat/components/CoachChat').then((m) => ({ default: m.CoachChat }))
+);
 import { HABIT_ICONS } from '@/components/atoms/icons/iconMaps';
 import { useUser, useHabits, useStreaks } from '@/store';
 import { ROUTES, getHeroBodySrc } from '@/constants';
@@ -329,7 +333,11 @@ export function Dashboard() {
       </div>
 
       {/* Coach Personal — Hermes-powered chat overlay */}
-      {isCoachOpen && <CoachChat onClose={() => setIsCoachOpen(false)} />}
+      {isCoachOpen && (
+        <Suspense fallback={null}>
+          <CoachChat onClose={() => setIsCoachOpen(false)} />
+        </Suspense>
+      )}
     </div>
   );
 }

@@ -1,6 +1,11 @@
-import { useState, useEffect, useRef } from 'react';
-import { Send, AlertCircle, X, Sparkles } from 'lucide-react';
+import { useState } from 'react';
+import { AlertCircle, X, Sparkles } from 'lucide-react';
 import { ChatBubble } from './ChatBubble';
+import { ChatComposer } from './ChatComposer';
+import { ChatEmptyState } from './ChatEmptyState';
+import { ScrollToBottomButton } from './ScrollToBottomButton';
+import { TypingIndicator } from './TypingIndicator';
+import { useSmartAutoScroll } from '../hooks/useSmartAutoScroll';
 import { HermesService } from '@/services/hermes.service';
 import { useLocale } from '@/hooks/useLocale';
 import { useUser } from '@/store';
@@ -31,30 +36,14 @@ export function CoachChat({ onClose }: CoachChatProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [streamingId, setStreamingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Seed the conversation with the mentor's welcome message.
-  useEffect(() => {
-    setMessages([
-      {
-        id: crypto.randomUUID(),
-        role: 'assistant',
-        content: t('chat.welcomeMessage'),
-        timestamp: new Date(),
-      },
-    ]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const { scrollRef, endRef, onScroll, showJump, scrollToBottom } = useSmartAutoScroll([messages, isLoading]);
+  const suggestions = t('chat.suggestions', { returnObjects: true }) as string[];
 
-  // Keep the latest message in view.
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, isLoading]);
+  const sendMessage = async (text: string) => {
+    const userMessage = text.trim();
+    if (!userMessage || userMessage.length > CHAT_CONFIG.maxMessageLength || isLoading) return;
 
-  const handleSend = async () => {
-    if (!input.trim() || input.length > CHAT_CONFIG.maxMessageLength || isLoading) return;
-
-    const userMessage = input.trim();
     setInput('');
     setError(null);
 
@@ -106,8 +95,12 @@ export function CoachChat({ onClose }: CoachChatProps) {
       <div className="max-w-md mx-auto w-full h-full flex flex-col overflow-x-hidden px-4">
         {/* Header */}
         <header className="flex items-center gap-3 pt-[calc(env(safe-area-inset-top)+1.25rem)] pb-4 flex-shrink-0">
-          <span className="shrink-0 w-11 h-11 rounded-full bg-gradient-to-br from-gold-500 to-gold-600 flex items-center justify-center">
-            <Sparkles size={22} className="text-white" />
+          <span className="shrink-0 w-11 h-11 rounded-full bg-gradient-to-br from-gold-500 to-gold-600 flex items-center justify-center overflow-hidden">
+            {hermesAvatar ? (
+              <img src={hermesAvatar} alt="" className="w-full h-full object-cover object-top" draggable={false} />
+            ) : (
+              <Sparkles size={22} className="text-white" />
+            )}
           </span>
           <div className="min-w-0 flex-1">
             <h1 className="text-2xl font-extrabold text-white tracking-tight leading-tight truncate">
@@ -119,7 +112,7 @@ export function CoachChat({ onClose }: CoachChatProps) {
             type="button"
             onClick={onClose}
             aria-label={t('common.close')}
-            className="shrink-0 w-10 h-10 rounded-full glass-card flex items-center justify-center text-white"
+            className="shrink-0 w-10 h-10 rounded-full glass-card flex items-center justify-center text-white transition-transform duration-200 hover:scale-105"
           >
             <X size={20} />
           </button>
@@ -127,81 +120,69 @@ export function CoachChat({ onClose }: CoachChatProps) {
 
         {/* Error banner */}
         {error && (
-          <div className="flex-shrink-0 mb-4 bg-red-500/20 border border-red-500/50 rounded-xl p-3 flex items-start gap-2">
+          <div className="flex-shrink-0 mb-4 bg-red-500/20 border border-red-500/50 rounded-xl p-3 flex items-start gap-2 animate-message-in">
             <AlertCircle size={20} className="text-red-400 flex-shrink-0 mt-0.5" />
             <p className="text-sm text-red-200">{error}</p>
           </div>
         )}
 
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto pb-4 flex flex-col">
-          <section aria-label="Coach messages" className="space-y-1 flex-1">
-            {messages.map((msg) => (
-              <ChatBubble
-                key={msg.id}
-                message={msg.content}
-                isUser={msg.role === 'user'}
+        <div className="relative flex-1 min-h-0">
+          <div ref={scrollRef} onScroll={onScroll} className="h-full overflow-y-auto pb-4 flex flex-col">
+            {messages.length === 0 && !showTyping ? (
+              <ChatEmptyState
+                accent="gold"
                 avatarSrc={hermesAvatar}
-                timestamp={new Date(msg.timestamp).toLocaleTimeString([], {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })}
+                title={t('chat.emptyTitle')}
+                subtitle={t('chat.emptySubtitle')}
+                suggestions={suggestions}
+                onSuggestion={sendMessage}
               />
-            ))}
-            {showTyping && (
-              <div className="flex flex-row gap-3 w-full max-w-full mb-4">
-                <div className="flex-shrink-0 w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-gradient-to-br from-gold-500 to-gold-600">
-                  <img
-                    src={hermesAvatar}
-                    alt="Hermes"
-                    className="w-full h-full object-cover object-top"
-                    draggable={false}
+            ) : (
+              <section aria-label="Coach messages" className="flex-1">
+                {messages.map((msg) => (
+                  <ChatBubble
+                    key={msg.id}
+                    message={msg.content}
+                    isUser={msg.role === 'user'}
+                    accent="gold"
+                    avatarSrc={hermesAvatar}
+                    copyLabel={t('chat.copy')}
+                    copiedLabel={t('chat.copied')}
+                    timestamp={new Date(msg.timestamp).toLocaleTimeString([], {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
                   />
-                </div>
-                <div className="bg-charcoal-500 border border-white/10 rounded-2xl px-5 py-3">
-                  <div className="flex space-x-2">
-                    <div className="w-2 h-2 bg-gold-400 rounded-full animate-bounce"></div>
-                    <div className="w-2 h-2 bg-gold-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                    <div className="w-2 h-2 bg-gold-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
-                  </div>
-                </div>
-              </div>
+                ))}
+                {showTyping && <TypingIndicator accent="gold" avatarSrc={hermesAvatar} />}
+                <div ref={endRef} />
+              </section>
             )}
-            <div ref={messagesEndRef} />
-          </section>
+          </div>
+          <ScrollToBottomButton
+            show={showJump}
+            onClick={scrollToBottom}
+            label={t('chat.newMessages')}
+            accent="gold"
+          />
         </div>
 
         {/* Input */}
         <div className="pt-2 pb-[calc(env(safe-area-inset-bottom)+1rem)] flex-shrink-0">
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleSend();
-            }}
-            className="glass-card rounded-3xl p-4 flex gap-3 items-center shadow-lg"
-          >
-            <label htmlFor="coach-input" className="sr-only">
-              {t('chat.typeMessage')}
-            </label>
-            <input
-              id="coach-input"
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder={t('chat.typeMessage')}
-              className="flex-1 bg-transparent outline-none text-white placeholder-white/50 text-base py-2 focus:ring-0"
-              maxLength={CHAT_CONFIG.maxMessageLength}
-              autoFocus
-            />
-            <button
-              type="submit"
-              disabled={!input.trim() || isLoading}
-              aria-label={t('chat.send')}
-              className="bg-gradient-to-br from-gold-500 to-gold-600 text-white p-3 rounded-xl hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 focus:outline-none focus-visible:ring-4 focus-visible:ring-gold-400/50 min-w-[48px] min-h-[48px] flex items-center justify-center"
-            >
-              <Send size={20} aria-hidden="true" />
-            </button>
-          </form>
+          <ChatComposer
+            value={input}
+            onChange={setInput}
+            onSend={() => sendMessage(input)}
+            placeholder={t('chat.typeMessage')}
+            disabled={!input.trim()}
+            isLoading={isLoading}
+            accent="gold"
+            maxLength={CHAT_CONFIG.maxMessageLength}
+            sendLabel={t('chat.send')}
+            inputId="coach-input"
+            autoFocus
+          />
         </div>
       </div>
     </div>

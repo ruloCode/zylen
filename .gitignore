@@ -32,3 +32,4 @@ dist-ssr
 .playwright-mcp/
 .learnings/
 supabase/.temp/
+.vercel

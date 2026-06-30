@@ -332,6 +332,16 @@ module.exports = {
           "0%": { strokeDashoffset: "var(--ring-circumference, 283)" },
           "100%": { strokeDashoffset: "var(--ring-offset, 0)" },
         },
+
+        // ── Chat micro-interactions ──
+        "typing-dot": {
+          "0%, 60%, 100%": { transform: "translateY(0)", opacity: "0.4" },
+          "30%": { transform: "translateY(-4px)", opacity: "1" },
+        },
+        "message-in": {
+          "0%": { opacity: "0", transform: "translateY(8px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
       },
 
       // Animation classes - Simplified for DOFUS aesthetic
@@ -348,6 +358,8 @@ module.exports = {
         "sparkle-rise": "sparkle-rise 1.6s ease-out infinite",
         "shimmer-gold": "shimmer-gold 2.5s linear infinite",
         "pop-in": "pop-in 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)",
+        "typing-dot": "typing-dot 1.4s ease-in-out infinite",
+        "message-in": "message-in 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
       },
     },
   },

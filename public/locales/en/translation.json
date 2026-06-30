@@ -353,6 +353,17 @@
     "typeMessage": "Ask your coach anything...",
     "send": "Send",
     "thinking": "Thinking...",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "newMessages": "New messages",
+    "emptyTitle": "How's your light today, Guardian?",
+    "emptySubtitle": "The Everlight sage is listening. Share what's on your mind and we'll walk it together.",
+    "suggestions": [
+      "How do I keep my flame alive?",
+      "I'm struggling to move forward today",
+      "Give me a ritual to start the day",
+      "I want to celebrate a win"
+    ],
     "welcomeMessage": "Hey there, champion! 💪 I'm here to support you on your journey. How are you feeling today?",
     "responses": {
       "1": "That's great to hear! Remember, every small step counts. Keep up the amazing work!",

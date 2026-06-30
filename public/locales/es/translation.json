@@ -364,6 +364,17 @@
     "typeMessage": "Confía tu pensamiento al Mentor...",
     "send": "Enviar",
     "thinking": "Reflexionando...",
+    "copy": "Copiar",
+    "copied": "¡Copiado!",
+    "newMessages": "Mensajes nuevos",
+    "emptyTitle": "¿Cómo está tu luz hoy, Guardián?",
+    "emptySubtitle": "El sabio del Everlight te escucha. Comparte lo que llevas dentro y caminaremos juntos.",
+    "suggestions": [
+      "¿Cómo mantengo viva mi llama?",
+      "Hoy me cuesta avanzar",
+      "Dame un ritual para empezar el día",
+      "Quiero celebrar un logro"
+    ],
     "welcomeMessage": "Te doy la bienvenida, Guardián. 💪 Camino a tu lado en este viaje. ¿Cómo se encuentra tu luz hoy?",
     "welcomeMessage_male": "Bienvenido, Guardián. 💪 Camino a tu lado en este viaje. ¿Cómo se encuentra tu luz hoy?",
     "welcomeMessage_female": "Bienvenida, Guardiana. 💪 Camino a tu lado en este viaje. ¿Cómo se encuentra tu luz hoy?",

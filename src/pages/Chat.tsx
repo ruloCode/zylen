@@ -1,14 +1,23 @@
-import { useState, useEffect, useRef } from 'react';
-import { Send, AlertCircle } from 'lucide-react';
-import { ChatBubble } from '@/features/chat/components';
+import { useState } from 'react';
+import { AlertCircle } from 'lucide-react';
+import {
+  ChatBubble,
+  ChatComposer,
+  ChatEmptyState,
+  ScrollToBottomButton,
+  TypingIndicator,
+} from '@/features/chat/components';
+import { useSmartAutoScroll } from '@/features/chat/hooks/useSmartAutoScroll';
 import { useAppStore } from '@/store';
 import { useLocale } from '@/hooks/useLocale';
 import { CHAT_CONFIG } from '@/constants';
 import { OpenAIService } from '@/services/openai.service';
+import type { Message } from '@/types';
 
 export function Chat() {
   const messages = useAppStore((state) => state.messages);
   const isLoading = useAppStore((state) => state.isLoading);
+  const streamingMessageId = useAppStore((state) => state.streamingMessageId);
   const addMessage = useAppStore((state) => state.addMessage);
   const startStreamingMessage = useAppStore((state) => state.startStreamingMessage);
   const updateStreamingMessage = useAppStore((state) => state.updateStreamingMessage);
@@ -17,25 +26,17 @@ export function Chat() {
   const { t } = useLocale();
   const [input, setInput] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Initialize with welcome message if empty
-  useEffect(() => {
-    if (messages.length === 0) {
-      addMessage(
-        t('chat.welcomeMessage'),
-        'assistant'
-      );
-    }
-  }, []);
+  const { scrollRef, endRef, onScroll, showJump, scrollToBottom } = useSmartAutoScroll([messages, isLoading]);
 
-  // Scroll to bottom when new messages arrive
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+  // The assistant bubble is created on the first streamed chunk; until then show
+  // the typing indicator.
+  const showTyping = isLoading && !streamingMessageId;
+  const suggestions = t('chat.suggestions', { returnObjects: true }) as string[];
 
-  const handleSend = async () => {
-    if (!input.trim() || input.length > CHAT_CONFIG.maxMessageLength) return;
+  const sendMessage = async (text: string) => {
+    const userMessage = text.trim();
+    if (!userMessage || userMessage.length > CHAT_CONFIG.maxMessageLength || isLoading) return;
 
     // Check if OpenAI is configured
     if (!OpenAIService.isConfigured()) {
@@ -43,7 +44,6 @@ export function Chat() {
       return;
     }
 
-    const userMessage = input.trim();
     setInput('');
     setError(null);
 
@@ -56,18 +56,19 @@ export function Chat() {
       const streamingId = startStreamingMessage();
       let accumulatedContent = '';
 
-      await OpenAIService.streamChatCompletion(
-        messages.concat([{
+      const history: Message[] = messages.concat([
+        {
           id: crypto.randomUUID(),
           role: 'user',
           content: userMessage,
           timestamp: new Date(),
-        }]),
-        (delta: string) => {
-          accumulatedContent += delta;
-          updateStreamingMessage(streamingId, accumulatedContent);
-        }
-      );
+        },
+      ]);
+
+      await OpenAIService.streamChatCompletion(history, (delta: string) => {
+        accumulatedContent += delta;
+        updateStreamingMessage(streamingId, accumulatedContent);
+      });
 
       finishStreamingMessage();
     } catch (err) {
@@ -90,68 +91,67 @@ export function Chat() {
 
         {/* Error Message */}
         {error && (
-          <div className="flex-shrink-0 mb-4 bg-red-500/20 border border-red-500/50 rounded-xl p-3 flex items-start gap-2">
+          <div className="flex-shrink-0 mb-4 bg-red-500/20 border border-red-500/50 rounded-xl p-3 flex items-start gap-2 animate-message-in">
             <AlertCircle size={20} className="text-red-400 flex-shrink-0 mt-0.5" />
             <p className="text-sm text-red-200">{error}</p>
           </div>
         )}
 
         {/* Messages - Scrollable Area */}
-        <div className="flex-1 overflow-y-auto pb-4 flex flex-col">
-          <section aria-labelledby="messages-heading" className="space-y-4 flex-1">
-            <h2 className="sr-only" id="messages-heading">Chat Messages</h2>
-            {messages.map(msg => (
-              <ChatBubble
-                key={msg.id}
-                message={msg.content}
-                isUser={msg.role === 'user'}
-                timestamp={new Date(msg.timestamp).toLocaleTimeString([], {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })}
+        <div className="relative flex-1 min-h-0">
+          <div ref={scrollRef} onScroll={onScroll} className="h-full overflow-y-auto pb-4 flex flex-col">
+            {messages.length === 0 && !showTyping ? (
+              <ChatEmptyState
+                accent="teal"
+                title={t('chat.emptyTitle')}
+                subtitle={t('chat.emptySubtitle')}
+                suggestions={suggestions}
+                onSuggestion={sendMessage}
               />
-            ))}
-            {isLoading && (
-              <div className="flex justify-start">
-                <div className="bg-white/70 rounded-2xl px-5 py-3 shadow-lg">
-                  <div className="flex space-x-2">
-                    <div className="w-2 h-2 bg-teal-500 rounded-full animate-bounce"></div>
-                    <div className="w-2 h-2 bg-teal-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                    <div className="w-2 h-2 bg-teal-500 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
-                  </div>
-                </div>
-              </div>
+            ) : (
+              <section aria-labelledby="messages-heading" className="space-y-0 flex-1">
+                <h2 className="sr-only" id="messages-heading">Chat Messages</h2>
+                {messages.map((msg) => (
+                  <ChatBubble
+                    key={msg.id}
+                    message={msg.content}
+                    isUser={msg.role === 'user'}
+                    accent="teal"
+                    copyLabel={t('chat.copy')}
+                    copiedLabel={t('chat.copied')}
+                    timestamp={new Date(msg.timestamp).toLocaleTimeString([], {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
+                  />
+                ))}
+                {showTyping && <TypingIndicator accent="teal" />}
+                <div ref={endRef} />
+              </section>
             )}
-            <div ref={messagesEndRef} />
-          </section>
+          </div>
+          <ScrollToBottomButton
+            show={showJump}
+            onClick={scrollToBottom}
+            label={t('chat.newMessages')}
+            accent="teal"
+          />
         </div>
 
         {/* Input - Always Visible at Bottom */}
         <div className="pt-4 flex-shrink-0">
-          <form
-            onSubmit={(e) => { e.preventDefault(); handleSend(); }}
-            className="glass-card rounded-3xl p-4 flex gap-3 items-center shadow-lg"
-          >
-            <label htmlFor="chat-input" className="sr-only">Message to AI coach</label>
-            <input
-              id="chat-input"
-              type="text"
-              value={input}
-              onChange={e => setInput(e.target.value)}
-              placeholder={t('chat.typeMessage')}
-              className="flex-1 bg-transparent outline-none text-white placeholder-white/50 text-base py-2 focus:ring-0"
-              aria-label="Type your message"
-              maxLength={CHAT_CONFIG.maxMessageLength}
-            />
-            <button
-              type="submit"
-              disabled={!input.trim() || isLoading}
-              aria-label="Send message"
-              className="bg-gradient-to-br from-teal-500 to-teal-600 text-white p-3 rounded-xl hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 focus:outline-none focus-visible:ring-4 focus-visible:ring-teal-400/50 focus-visible:ring-offset-2 min-w-[48px] min-h-[48px] flex items-center justify-center"
-            >
-              <Send size={20} aria-hidden="true" />
-            </button>
-          </form>
+          <ChatComposer
+            value={input}
+            onChange={setInput}
+            onSend={() => sendMessage(input)}
+            placeholder={t('chat.typeMessage')}
+            disabled={!input.trim()}
+            isLoading={isLoading}
+            accent="teal"
+            maxLength={CHAT_CONFIG.maxMessageLength}
+            sendLabel={t('chat.send')}
+            inputId="chat-input"
+          />
         </div>
       </div>
     </div>
