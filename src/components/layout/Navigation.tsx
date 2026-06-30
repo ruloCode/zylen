@@ -1,6 +1,8 @@
 /**
- * Zylen bottom navigation
- * Floating glass pill with a center FAB, matching the Home reference design.
+ * Everlight bottom navigation
+ * HUD / sci-fi styled bar with hexagonal icon frames, a glowing top edge,
+ * an underline indicator on the active item and a floating center FAB.
+ * Matches navbar-reference.jpg.
  */
 
 import React from 'react';
@@ -15,6 +17,9 @@ interface NavItem {
   icon: LucideIcon;
   label: string;
 }
+
+/** Flat-top hexagon used for every icon frame. */
+const HEX_CLIP = 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)';
 
 export function Navigation() {
   const location = useLocation();
@@ -46,49 +51,120 @@ export function Navigation() {
         aria-label={t('navigation.navigateTo', { label })}
         aria-current={isActive ? 'page' : undefined}
         className={cn(
-          'flex flex-col items-center gap-1 px-2 py-1 rounded-xl transition-all duration-200',
-          'focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400/60',
-          isActive ? 'text-teal-300' : 'text-white/55 hover:text-white/80'
+          'group relative flex flex-1 flex-col items-center gap-1.5 px-1 pt-1 pb-0.5',
+          'transition-colors duration-200',
+          'focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400/60 rounded-xl'
         )}
       >
-        <Icon size={22} strokeWidth={isActive ? 2.6 : 2} />
-        <span className={cn('text-[11px] tracking-wide', isActive ? 'font-bold' : 'font-medium')}>
+        {/* Hexagonal icon frame (outer glow ring + inner dark face) */}
+        <span
+          className="relative grid place-items-center transition-transform duration-200 group-active:scale-90"
+          style={{
+            width: 38,
+            height: 34,
+            clipPath: HEX_CLIP,
+            background: isActive
+              ? 'linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-hover)))'
+              : 'hsl(var(--primary) / 0.28)',
+            filter: isActive ? 'drop-shadow(0 0 7px hsl(var(--glow) / 0.85))' : 'none',
+          }}
+        >
+          <span
+            className="grid place-items-center"
+            style={{
+              width: 32,
+              height: 28,
+              clipPath: HEX_CLIP,
+              background: isActive ? 'hsl(var(--primary) / 0.16)' : 'hsl(var(--background))',
+            }}
+          >
+            <Icon
+              size={16}
+              strokeWidth={isActive ? 2.6 : 2}
+              className={isActive ? 'text-teal-200' : 'text-white/60 group-hover:text-white/85'}
+            />
+          </span>
+        </span>
+
+        <span
+          className={cn(
+            'text-[9px] font-semibold uppercase tracking-[0.15em] transition-colors',
+            isActive ? 'text-teal-200' : 'text-white/45 group-hover:text-white/70'
+          )}
+        >
           {label}
         </span>
+
+        {/* Active underline indicator */}
+        <span
+          aria-hidden="true"
+          className={cn(
+            'absolute -bottom-0.5 h-[2px] w-7 rounded-full transition-all duration-300',
+            isActive ? 'opacity-100' : 'opacity-0'
+          )}
+          style={{
+            background: 'hsl(var(--primary))',
+            boxShadow: '0 0 8px 1px hsl(var(--glow) / 0.9)',
+          }}
+        />
       </button>
     );
   };
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-2"
+      className="fixed bottom-0 left-0 right-0 z-50 pb-[env(safe-area-inset-bottom)]"
       aria-label="Main navigation"
     >
-      <div className="relative max-w-md mx-auto">
-        <div className="glass-card rounded-3xl px-3 py-2.5 flex items-center justify-between shadow-soft-xl">
-          <div className="flex items-center gap-2">{leftItems.map(renderItem)}</div>
+      <div className="relative mx-auto max-w-md">
+        {/* Bar surface */}
+        <div
+          className="relative flex items-end gap-1 rounded-t-2xl px-2 pb-2 pt-3 backdrop-blur-xl"
+          style={{
+            background:
+              'linear-gradient(180deg, hsl(var(--background) / 0.82), hsl(var(--background) / 0.97))',
+            borderTop: '1px solid hsl(var(--primary) / 0.25)',
+            boxShadow: '0 -8px 28px -10px hsl(var(--glow) / 0.45)',
+          }}
+        >
+          {/* Glowing top edge */}
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-6 top-0 h-px"
+            style={{
+              background:
+                'linear-gradient(90deg, transparent, hsl(var(--primary) / 0.9), transparent)',
+            }}
+          />
+
+          {leftItems.map(renderItem)}
 
           {/* Spacer for the floating FAB */}
-          <div className="w-16 shrink-0" aria-hidden="true" />
+          <div className="w-14 shrink-0" aria-hidden="true" />
 
-          <div className="flex items-center gap-2">{rightItems.map(renderItem)}</div>
+          {rightItems.map(renderItem)}
         </div>
 
-        {/* Center FAB */}
+        {/* Center FAB with glowing ring */}
         <button
           type="button"
           onClick={() => navigate(ROUTES.HABITS)}
           aria-label={t('home.addHabit')}
           className={cn(
-            'absolute left-1/2 -translate-x-1/2 -top-5',
-            'w-14 h-14 rounded-full bg-primary text-primary-foreground',
-            'flex items-center justify-center shadow-glow-teal',
-            'border-4 border-[hsl(var(--background))]',
+            'absolute left-1/2 -top-6 -translate-x-1/2',
+            'grid h-14 w-14 place-items-center rounded-full',
             'transition-transform duration-200 hover:scale-105 active:scale-95',
-            'focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400/70'
+            'focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-300/70'
           )}
+          style={{
+            background:
+              'radial-gradient(circle at 35% 30%, hsl(var(--primary-hover)), hsl(var(--primary)) 70%)',
+            border: '2px solid hsl(var(--primary) / 0.55)',
+            boxShadow:
+              '0 0 0 4px hsl(var(--background)), 0 0 18px 2px hsl(var(--glow) / 0.7), inset 0 1px 2px hsl(0 0% 100% / 0.4)',
+          }}
         >
-          <Plus size={26} strokeWidth={2.8} />
+          <Plus size={26} strokeWidth={2.8} className="text-primary-foreground" />
         </button>
       </div>
     </nav>
