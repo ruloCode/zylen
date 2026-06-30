@@ -98,7 +98,7 @@ export function CoachChat({ onClose }: CoachChatProps) {
   const showTyping = isLoading && !streamingId;
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-[hsl(var(--background))]/95 backdrop-blur-md">
+    <div className="fixed inset-0 z-[60] flex flex-col bg-[hsl(var(--background))]/95 backdrop-blur-md">
       <div className="max-w-md mx-auto w-full h-full flex flex-col px-4">
         {/* Header */}
         <header className="flex items-center gap-3 pt-[calc(env(safe-area-inset-top)+1.25rem)] pb-4 flex-shrink-0">
