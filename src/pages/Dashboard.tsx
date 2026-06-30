@@ -75,7 +75,7 @@ export function Dashboard() {
           fixed PERCENTAGE of the container regardless of screen size. The
           character is then placed by a percentage too, so feet always land on
           the platform centre (see ASSET ALIGNMENT note below). */}
-      <div className="absolute top-0 left-0 right-0 w-full aspect-[941/1672] -z-0 bg-[hsl(var(--background))] overflow-hidden">
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-md aspect-[941/1672] -z-0 bg-[hsl(var(--background))] overflow-hidden">
         {/* Layer 0 — background scene (swappable / themable). aspect matches the
             container, so object-cover shows the whole image without cropping. */}
         <img
@@ -111,15 +111,20 @@ export function Dashboard() {
       </div>
 
       {/* ── Foreground content ── */}
-      <div className="relative z-10 max-w-md mx-auto px-4 pt-[calc(env(safe-area-inset-top)+1.5rem)]">
-        {/* Hero overlay zone — its height is locked to the background scene
-            (same aspect as the hero, full container width via -mx-4) so the
-            banner that follows always begins right below the platform at ANY
-            resolution. Greeting + stat cards sit at the top; the gap reveals
-            the character standing on the platform behind. */}
-        <div className="aspect-[941/1530] -mx-4 px-4">
-        {/* Top bar: greeting + notifications */}
-        <header className="flex items-start justify-between gap-3 mb-5">
+      {/* No top padding here: the content column shares the hero's top origin
+          (y=0) so the spacer below tracks the character's feet exactly. The
+          safe-area / top inset is applied to the header instead. */}
+      <div className="relative z-10 max-w-md mx-auto px-4">
+        {/* Hero overlay zone — a spacer whose height tracks the hero scene down
+            to the character's FEET. The hero is aspect-[941/1672] and the feet
+            land on the platform at 72.4% of that height → 0.724 × 1672 ≈ 1210.
+            Because this spacer shares the hero's width (max-w-md) and top origin
+            (y=0), its bottom edge lands on the feet at ANY width, so the banner
+            that follows floats right below them. Greeting + stat cards sit at
+            the top; the gap reveals the character standing on the platform. */}
+        <div className="aspect-[941/1210] -mx-4 px-4">
+        {/* Top bar: greeting + notifications (carries the safe-area / top inset) */}
+        <header className="flex items-start justify-between gap-3 mb-5 pt-[calc(env(safe-area-inset-top)+1.5rem)]">
           <div className="min-w-0">
             <h1 className="font-sans normal-case text-[26px] leading-tight font-extrabold text-white tracking-tight">
               {t(getGreetingKey(), { name: firstName })} 👋
@@ -212,11 +217,12 @@ export function Dashboard() {
         </div>
         </div>{/* /hero overlay zone */}
 
-        {/* Motivational banner */}
+        {/* Motivational banner — floats just below the character's feet (the
+            spacer above ends at the feet; this small margin is the breathing gap) */}
         <button
           type="button"
           onClick={comingSoon}
-          className="w-full glass-card p-4 flex items-center gap-3 text-left mb-7"
+          className="w-full glass-card p-4 flex items-center gap-3 text-left mt-3 mb-7"
         >
           <span className="shrink-0 w-11 h-11 rounded-full bg-gold-500/15 flex items-center justify-center">
             <Compass size={22} className="text-gold-400" />
