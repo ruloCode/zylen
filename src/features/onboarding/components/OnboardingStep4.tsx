@@ -25,8 +25,8 @@ export function OnboardingStep4({ onFinish, onPrev, isSubmitting = false }: Onbo
     },
     {
       icon: Coins,
-      color: 'text-gold-400',
-      bgColor: 'bg-gold-500/20',
+      color: 'text-teal-300',
+      bgColor: 'bg-teal-500/20',
       title: t('onboarding.step4.pointsTitle'),
       description: t('onboarding.step4.pointsDescription'),
     },
@@ -85,7 +85,7 @@ export function OnboardingStep4({ onFinish, onPrev, isSubmitting = false }: Onbo
       </div>
 
       {/* Ready Message */}
-      <div className="p-6 bg-gradient-to-br from-teal-500/20 to-gold-500/20 rounded-xl border border-teal-500/30 mb-8 text-center">
+      <div className="p-6 bg-gradient-to-br from-teal-500/20 to-teal-600/20 rounded-xl border border-teal-500/30 mb-8 text-center">
         <p className="text-lg font-semibold text-white mb-2">
           {t('onboarding.step4.readyTitle')}
         </p>
@@ -108,7 +108,7 @@ export function OnboardingStep4({ onFinish, onPrev, isSubmitting = false }: Onbo
           type="button"
           onClick={onFinish}
           disabled={isSubmitting}
-          className="flex-1 py-3 px-6 rounded-xl font-semibold bg-gradient-to-r from-teal-500 to-gold-600 text-white hover:from-teal-600 hover:to-gold-700 shadow-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex-1 py-3 px-6 rounded-xl font-semibold bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] hover:bg-[hsl(var(--primary-hover))] shadow-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isSubmitting ? (
             <>

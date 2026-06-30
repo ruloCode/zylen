@@ -38,17 +38,26 @@
     "title": "El Reino",
     "lifeAreas": "Reinos de la Vida",
     "logHabits": "Sembrar la luz de hoy",
-    "keepGoing": "El Everlight brilla contigo, Guardián. 💪"
+    "keepGoing": "El Everlight brilla contigo, Guardián. 💪",
+    "keepGoing_female": "El Everlight brilla contigo, Guardiana. 💪"
   },
   "home": {
     "greetingMorning": "Buenos días, Guardián {{name}}.",
-    "greetingAfternoon": "Bienvenido, Guardián {{name}}.",
+    "greetingMorning_male": "Buenos días, Guardián {{name}}.",
+    "greetingMorning_female": "Buenos días, Guardiana {{name}}.",
+    "greetingAfternoon": "Te damos la bienvenida, Guardián {{name}}.",
+    "greetingAfternoon_male": "Bienvenido, Guardián {{name}}.",
+    "greetingAfternoon_female": "Bienvenida, Guardiana {{name}}.",
     "greetingEvening": "Buenas noches, Guardián {{name}}.",
+    "greetingEvening_male": "Buenas noches, Guardián {{name}}.",
+    "greetingEvening_female": "Buenas noches, Guardiana {{name}}.",
     "subtitle": "Hoy la luz necesita un paso más de ti.",
     "notifications": "Mensajes del reino",
     "streakLabel": "Llama constante",
     "streakKeepGoing": "Mantén viva la llama.",
     "levelLabel": "Guardián Nivel {{level}}",
+    "levelLabel_male": "Guardián Nivel {{level}}",
+    "levelLabel_female": "Guardiana Nivel {{level}}",
     "focusOfDay": "Enfoque del día",
     "personalJournal": "Crónica personal",
     "todayPath": "Tu sendero de hoy",
@@ -99,6 +108,7 @@
     "unlocked": "✓ Recuperada",
     "badges": {
       "weekWarrior": "Guardián de la Semana",
+      "weekWarrior_female": "Guardiana de la Semana",
       "consistencyKing": "Custodio de la Constancia",
       "unstoppable": "Llama Imparable"
     }
@@ -175,6 +185,7 @@
     "title": "Tu luz ha evolucionado.",
     "areaTitle": "{{area}}: tu luz ha evolucionado.",
     "levelLabel": "Guardián Nivel {{level}}",
+    "levelLabel_female": "Guardiana Nivel {{level}}",
     "essenceReward": "+{{points}} Esencia",
     "dismiss": "Toca para continuar"
   },
@@ -352,7 +363,9 @@
     "typeMessage": "Confía tu pensamiento al Mentor...",
     "send": "Enviar",
     "thinking": "Reflexionando...",
-    "welcomeMessage": "Bienvenido, Guardián. 💪 Camino a tu lado en este viaje. ¿Cómo se encuentra tu luz hoy?",
+    "welcomeMessage": "Te doy la bienvenida, Guardián. 💪 Camino a tu lado en este viaje. ¿Cómo se encuentra tu luz hoy?",
+    "welcomeMessage_male": "Bienvenido, Guardián. 💪 Camino a tu lado en este viaje. ¿Cómo se encuentra tu luz hoy?",
+    "welcomeMessage_female": "Bienvenida, Guardiana. 💪 Camino a tu lado en este viaje. ¿Cómo se encuentra tu luz hoy?",
     "responses": {
       "1": "Me alegra escucharlo. Cada decisión deja una huella; sigue iluminando el reino.",
       "2": "Tu viaje me llena de orgullo. La constancia es la que mantiene viva la llama. 🌟",
@@ -385,6 +398,12 @@
     "heroFeature3Desc": "luz interior",
     "orContinueWith": "o continúa con",
     "emailPlaceholder": "Correo electrónico",
+    "passwordPlaceholder": "Contraseña",
+    "passwordTooShort": "La contraseña debe tener al menos 6 caracteres",
+    "signIn": "Iniciar sesión",
+    "createAccount": "Crear cuenta",
+    "accountCreated": "¡Cuenta creada! Tu viaje comienza.",
+    "haveAccount": "¿Ya tienes cuenta?",
     "continue": "Continuar",
     "noAccount": "¿Aún no cruzas el Portal?",
     "register": "Cruza el Portal",
@@ -428,8 +447,48 @@
     "prevButton": "Anterior",
     "nextButton": "Siguiente",
     "finishButton": "Comienza tu viaje",
+    "completedSuccess": "¡Tu viaje ha comenzado, Guardián!",
+    "completedSuccess_male": "¡Tu viaje ha comenzado, Guardián!",
+    "completedSuccess_female": "¡Tu viaje ha comenzado, Guardiana!",
+    "identity": {
+      "label": "¿Cómo prefieres que te tratemos?",
+      "hint": "Adaptamos el lenguaje del reino a ti. Puedes cambiarlo luego.",
+      "female": "Guardiana",
+      "male": "Guardián",
+      "neutral": "Prefiero neutro",
+      "error": "Elige una opción para personalizar tu trato"
+    },
+    "aboutYou": {
+      "title": "Cuéntanos sobre ti",
+      "description": "Esto nos ayuda a acompañarte mejor en tu viaje.",
+      "motivationLabel": "¿Qué te trae al reino?",
+      "experienceLabel": "¿Tu experiencia con los hábitos?",
+      "ageLabel": "¿Tu rango de edad?",
+      "motivations": {
+        "health": "Salud",
+        "discipline": "Disciplina",
+        "focus": "Enfoque",
+        "wellbeing": "Bienestar",
+        "productivity": "Productividad"
+      },
+      "experience": {
+        "beginner": "Principiante",
+        "intermediate": "Intermedio",
+        "advanced": "Avanzado"
+      },
+      "ageRanges": {
+        "teen": "13-17",
+        "youngAdult": "18-24",
+        "adult": "25-34",
+        "midAdult": "35-44",
+        "mature": "45-54",
+        "senior": "55+"
+      }
+    },
     "step1": {
-      "title": "Bienvenido, Guardián, a Everlight",
+      "title": "Te damos la bienvenida a Everlight, Guardián",
+      "title_male": "Bienvenido a Everlight, Guardián",
+      "title_female": "Bienvenida a Everlight, Guardiana",
       "description": "Tu viaje comienza aquí: restaura el reino con cada paso real.",
       "nameLabel": "¿Cómo te llaman, Guardián?",
       "namePlaceholder": "Ingresa tu nombre",
@@ -467,7 +526,9 @@
       "shopDescription": "Usa tu Esencia para recompensas conscientes",
       "streaksTitle": "Mantén la llama",
       "streaksDescription": "La constancia multiplica tu Luz",
-      "readyTitle": "¡Todo listo, Guardián!",
+      "readyTitle": "¡Todo a punto, Guardián!",
+      "readyTitle_male": "¡Ya estás listo, Guardián!",
+      "readyTitle_female": "¡Ya estás lista, Guardiana!",
       "readyDescription": "El reino te esperaba. Tu viaje comienza aquí."
     }
   },
@@ -524,6 +585,7 @@
     "subtitle": "Tu viaje, tu legado.",
     "subtitle2": "El reino florece contigo cada día.",
     "levelLabel": "Guardián Nivel {{level}}",
+    "levelLabel_female": "Guardiana Nivel {{level}}",
     "quote": "No se trata de ser perfecto, sino de mantener viva la llama.",
     "quoteAccent": "La luz está en ti.",
     "statStreakDays": "días de llama",
@@ -540,8 +602,11 @@
     "toolsTitle": "Mis herramientas",
     "comingSoon": "Próximamente 🚧",
     "aboutTitle": "Sobre este Guardián",
+    "aboutTitle_female": "Sobre esta Guardiana",
     "aboutDefault": "Guardián entregado al crecimiento, la constancia y a vivir con propósito.",
+    "aboutDefault_female": "Guardiana entregada al crecimiento, la constancia y a vivir con propósito.",
     "settingsSubtitle": "Archivos del Guardián",
+    "settingsSubtitle_female": "Archivos de la Guardiana",
     "tools": {
       "journal": "Crónica personal",
       "journalDesc": "Escribe, reflexiona y crece.",
@@ -555,6 +620,8 @@
     "avatars": {
       "pickTitle": "Elige tu avatar",
       "save": "Guardar",
+      "rulo": "Rulo",
+      "dani": "Dani",
       "explorer1": "Aventurero",
       "explorer2": "Aventurera",
       "explorer3": "Explorador"
@@ -926,7 +993,7 @@
     "continueWithApple": "Continuar con Apple",
     "slides": [
       {
-        "title": "Bienvenido, Guardián,",
+        "title": "Te damos la bienvenida, Guardián,",
         "accent": "a tu viaje",
         "desc": "Everlight es tu compañero para sembrar hábitos positivos y restaurar la luz del reino."
       },

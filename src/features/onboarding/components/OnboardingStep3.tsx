@@ -102,7 +102,7 @@ export function OnboardingStep3({ onNext, onPrev }: OnboardingStep3Props) {
     if (habits.length === 0) return;
 
     saveStepData({ createdHabits: habits });
-    completeStep(2);
+    completeStep(3);
     onNext();
   };
 
@@ -145,7 +145,7 @@ export function OnboardingStep3({ onNext, onPrev }: OnboardingStep3Props) {
                     <Icon size={16} aria-hidden="true" />
                   )}
                   <span>{name}</span>
-                  <span className="text-xs text-gold-400 font-semibold">
+                  <span className="text-xs text-teal-300 font-semibold">
                     +{tpl.suggestedXp}
                   </span>
                 </button>
@@ -270,7 +270,7 @@ export function OnboardingStep3({ onNext, onPrev }: OnboardingStep3Props) {
         <button
           type="button"
           onClick={() => setShowForm(true)}
-          className="w-full py-3 px-4 bg-charcoal-700 border-2 border-dashed border-charcoal-600 text-gray-300 rounded-xl hover:border-gold-500 hover:text-gold-400 transition-all flex items-center justify-center gap-2 mb-6"
+          className="w-full py-3 px-4 bg-charcoal-700 border-2 border-dashed border-charcoal-600 text-gray-300 rounded-xl hover:border-[hsl(var(--primary))] hover:text-teal-300 transition-all flex items-center justify-center gap-2 mb-6"
         >
           <Plus size={20} />
           {t('onboarding.step3.addHabitButton')}
@@ -296,7 +296,7 @@ export function OnboardingStep3({ onNext, onPrev }: OnboardingStep3Props) {
             'flex-1 py-3 px-6 rounded-xl font-semibold flex items-center justify-center gap-2',
             habits.length === 0
               ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
-              : 'bg-gradient-to-r from-gold-500 to-gold-600 text-white hover:from-gold-600 hover:to-gold-700'
+              : 'bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] hover:bg-[hsl(var(--primary-hover))]'
           )}
         >
           {t('onboarding.nextButton')}

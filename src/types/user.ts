@@ -10,7 +10,17 @@ export interface User {
   hasCompletedOnboarding: boolean; // Whether user has completed the onboarding flow
   selectedLifeAreas: string[]; // IDs of active life areas
   timezone: string; // IANA timezone (e.g., 'America/Bogota') for habit reset calculation
+  gender?: Gender; // Player identity, drives gendered language (undefined === neutral)
+  ageRange?: string; // Self-reported age bucket (e.g. '18-24')
+  experienceLevel?: ExperienceLevel; // Self-reported experience with habit building
+  motivation?: string; // Primary reason for using the app (e.g. 'health')
 }
+
+/** Player identity used to drive gendered copy. Neutral falls back to base (neutral) strings. */
+export type Gender = 'female' | 'male' | 'neutral';
+
+/** Self-reported experience with habit building. */
+export type ExperienceLevel = 'beginner' | 'intermediate' | 'advanced';
 
 export interface UserStats {
   totalHabitsCompleted: number;

@@ -38,6 +38,10 @@ export function mapProfileToUser(profile: ProfileRow, selectedLifeAreas: string[
     hasCompletedOnboarding: profile.has_completed_onboarding,
     selectedLifeAreas, // This needs to be fetched separately from life_areas where enabled=true
     timezone: profile.timezone || 'America/Bogota', // Default timezone if not set
+    gender: (profile.gender as User['gender']) || undefined,
+    ageRange: profile.age_range || undefined,
+    experienceLevel: (profile.experience_level as User['experienceLevel']) || undefined,
+    motivation: profile.motivation || undefined,
   };
 }
 
@@ -167,6 +171,10 @@ export function mapUserToProfileInsert(
     level: user.level || 1,
     avatar_url: user.avatarUrl || null,
     has_completed_onboarding: user.hasCompletedOnboarding || false,
+    gender: user.gender || null,
+    age_range: user.ageRange || null,
+    experience_level: user.experienceLevel || null,
+    motivation: user.motivation || null,
   };
 }
 
@@ -187,6 +195,11 @@ export function mapUserToProfileUpdate(
   if (user.hasCompletedOnboarding !== undefined)
     update.has_completed_onboarding = user.hasCompletedOnboarding;
   if (user.timezone !== undefined) update.timezone = user.timezone;
+  if (user.gender !== undefined) update.gender = user.gender || null;
+  if (user.ageRange !== undefined) update.age_range = user.ageRange || null;
+  if (user.experienceLevel !== undefined)
+    update.experience_level = user.experienceLevel || null;
+  if (user.motivation !== undefined) update.motivation = user.motivation || null;
 
   return update;
 }

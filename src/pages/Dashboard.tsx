@@ -15,7 +15,7 @@ import toast from 'react-hot-toast';
 import { CircularProgress } from '@/components/ui';
 import { HABIT_ICONS } from '@/components/atoms/icons/iconMaps';
 import { useUser, useHabits, useStreaks } from '@/store';
-import { ROUTES } from '@/constants';
+import { ROUTES, getHeroBodySrc } from '@/constants';
 import { useLocale } from '@/hooks/useLocale';
 import { getLevelProgress } from '@/utils/xp';
 import { getGreetingKey, getDailyQuoteIndex } from '@/utils/greeting';
@@ -23,7 +23,6 @@ import { getGreetingKey, getDailyQuoteIndex } from '@/utils/greeting';
 // Hero is composed of two independent layers (swappable / animatable):
 // the jungle background and the transparent character. Both live in /public.
 const HERO_BG_SRC = '/hero-bg.png';
-const HERO_CHARACTER_SRC = '/hero-character.png';
 
 // Fallback accent palette for habit rows when a habit has no explicit color.
 const HABIT_COLORS = ['#4CAF6D', '#8B5CF6', '#E0A93B', '#2DD4BF', '#F472B6', '#60A5FA'];
@@ -70,32 +69,55 @@ export function Dashboard() {
   return (
     <div className="relative min-h-screen overflow-x-hidden pb-28">
       {/* ── Hero (full-bleed top), composed of independent layers ── */}
-      <div className="absolute top-0 left-0 right-0 h-[150vw] max-h-[620px] -z-0 bg-[hsl(var(--background))] overflow-hidden">
-        {/* Layer 0 — background scene (swappable / themable).
-            Nudged up so the character lands on the centre of the platform face. */}
+      {/* The container is locked to the BACKGROUND's exact aspect ratio
+          (941×1672) so the scene shows in full with NO crop at any width. That
+          makes every feature of the scene — crucially the platform — sit at a
+          fixed PERCENTAGE of the container regardless of screen size. The
+          character is then placed by a percentage too, so feet always land on
+          the platform centre (see ASSET ALIGNMENT note below). */}
+      <div className="absolute top-0 left-0 right-0 w-full aspect-[941/1672] -z-0 bg-[hsl(var(--background))] overflow-hidden">
+        {/* Layer 0 — background scene (swappable / themable). aspect matches the
+            container, so object-cover shows the whole image without cropping. */}
         <img
           src={HERO_BG_SRC}
           alt=""
           aria-hidden="true"
-          className="absolute inset-0 w-full h-full object-cover object-center -translate-y-[22px]"
+          className="absolute inset-0 w-full h-full object-cover object-center"
         />
         {/* Top scrim for header legibility (matches the reference's darker top) */}
-        <div className="absolute inset-x-0 top-0 h-56 bg-gradient-to-b from-[hsl(var(--background))]/85 via-[hsl(var(--background))]/30 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-[36%] bg-gradient-to-b from-[hsl(var(--background))]/90 via-[hsl(var(--background))]/35 to-transparent" />
         {/* Fade the bottom of the BACKGROUND into the page (kept BELOW the character so it doesn't fade the figure) */}
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-[hsl(var(--background))]" />
-        {/* Layer 1 — character (transparent PNG, own layer → swappable / animatable).
-            Feet aligned to the rock platform in the background (~77% down). */}
+        <div className="absolute inset-x-0 bottom-0 h-[14%] bg-gradient-to-b from-transparent to-[hsl(var(--background))]" />
+        {/*
+          Layer 1 — character (transparent PNG, own layer → swappable / animatable).
+
+          ── ASSET ALIGNMENT (keep avatars consistent so they always line up) ──
+          Background platform centre (golden rune): 47% x, 72.4% y of /hero-bg.png.
+          Character canvas (/hero-character.png 820×1230): feet baseline at 93.4%
+          of the canvas height, content horizontally centred ~46%.
+          With the container aspect-locked, `bottom-[24.4%]` + `w-[58%]` lands the
+          feet exactly on the rune at EVERY width (the width term cancels).
+          NEW AVATARS must use the SAME canvas: portrait 820×1230 ratio (2:3),
+          character horizontally centred, feet at ~93% down the canvas. Then they
+          align automatically with no code change.
+        */}
         <img
-          src={HERO_CHARACTER_SRC}
+          src={getHeroBodySrc(user?.avatarUrl)}
           alt=""
           aria-hidden="true"
-          className="absolute bottom-[26%] left-1/2 -translate-x-1/2 w-[58%] max-w-[270px] h-auto object-contain drop-shadow-[0_14px_14px_rgba(0,0,0,0.5)]"
+          className="absolute bottom-[24.4%] left-1/2 -translate-x-1/2 w-[58%] h-auto object-contain drop-shadow-[0_14px_14px_rgba(0,0,0,0.5)]"
           onError={(e) => { (e.currentTarget.style.opacity = '0'); }}
         />
       </div>
 
       {/* ── Foreground content ── */}
       <div className="relative z-10 max-w-md mx-auto px-4 pt-[calc(env(safe-area-inset-top)+1.5rem)]">
+        {/* Hero overlay zone — its height is locked to the background scene
+            (same aspect as the hero, full container width via -mx-4) so the
+            banner that follows always begins right below the platform at ANY
+            resolution. Greeting + stat cards sit at the top; the gap reveals
+            the character standing on the platform behind. */}
+        <div className="aspect-[941/1530] -mx-4 px-4">
         {/* Top bar: greeting + notifications */}
         <header className="flex items-start justify-between gap-3 mb-5">
           <div className="min-w-0">
@@ -188,9 +210,7 @@ export function Dashboard() {
             </button>
           </div>
         </div>
-
-        {/* Spacer so the banner sits just under the character's feet */}
-        <div className="h-[30vw] max-h-[120px]" aria-hidden="true" />
+        </div>{/* /hero overlay zone */}
 
         {/* Motivational banner */}
         <button

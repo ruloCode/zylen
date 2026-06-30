@@ -279,6 +279,10 @@ function getDevUser(): User {
     hasCompletedOnboarding: true,
     selectedLifeAreas: LIFE_AREAS.map((area) => area.toLowerCase()),
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'America/Bogota',
+    gender: 'female',
+    ageRange: '25-34',
+    experienceLevel: 'intermediate',
+    motivation: 'wellbeing',
   };
 }
 

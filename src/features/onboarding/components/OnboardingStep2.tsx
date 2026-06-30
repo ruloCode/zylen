@@ -56,7 +56,7 @@ export function OnboardingStep2({ onNext, onPrev }: OnboardingStep2Props) {
     if (selectedAreaIds.length === 0) return;
 
     saveStepData({ selectedLifeAreaIds: selectedAreaIds });
-    completeStep(1);
+    completeStep(2);
     onNext();
   };
 
@@ -90,7 +90,7 @@ export function OnboardingStep2({ onNext, onPrev }: OnboardingStep2Props) {
               className={cn(
                 'p-4 rounded-xl border-2 transition-all duration-200 min-h-[120px]',
                 'flex flex-col items-center gap-3',
-                'focus:outline-none focus:ring-2 focus:ring-gold-400',
+                'focus:outline-none focus:ring-2 focus:ring-[hsl(var(--primary))]',
                 isSelected
                   ? 'bg-teal-500/20 border-teal-500 scale-105 shadow-lg shadow-teal-500/20'
                   : 'bg-charcoal-700/50 border-charcoal-600 hover:border-charcoal-500'
@@ -135,7 +135,7 @@ export function OnboardingStep2({ onNext, onPrev }: OnboardingStep2Props) {
             'bg-charcoal-700 text-white border-2 border-charcoal-600',
             'hover:bg-charcoal-600 hover:border-charcoal-500',
             'transition-all duration-200',
-            'focus:outline-none focus:ring-2 focus:ring-gold-400'
+            'focus:outline-none focus:ring-2 focus:ring-[hsl(var(--primary))]'
           )}
         >
           <ArrowLeft size={20} />
@@ -150,10 +150,10 @@ export function OnboardingStep2({ onNext, onPrev }: OnboardingStep2Props) {
             'flex-1 py-3 px-6 rounded-xl font-semibold',
             'flex items-center justify-center gap-2',
             'transition-all duration-200',
-            'focus:outline-none focus:ring-2 focus:ring-gold-400',
+            'focus:outline-none focus:ring-2 focus:ring-[hsl(var(--primary))]',
             selectedAreaIds.length === 0
               ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
-              : 'bg-gradient-to-r from-gold-500 to-gold-600 text-white hover:from-gold-600 hover:to-gold-700 shadow-lg hover:shadow-gold-500/50'
+              : 'bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] hover:bg-[hsl(var(--primary-hover))] shadow-lg hover:shadow-[0_10px_30px_-8px_hsl(var(--primary)/0.6)]'
           )}
         >
           {t('onboarding.nextButton')}

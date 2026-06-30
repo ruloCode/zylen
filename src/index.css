@@ -347,15 +347,48 @@
     @apply border-border;
   }
 
+  html,
   body {
-    /* Theme-driven background & text */
-    background-color: hsl(var(--background));
-    @apply text-foreground min-h-screen;
+    min-height: 100%;
+  }
+
+  body {
+    /* Dark backdrop shown in the desktop gutters around the mobile frame */
+    background-color: #06090d;
+    @apply text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
     font-family: 'Roboto', sans-serif;
     font-size: 16px;
     color: hsl(var(--foreground));
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: color 0.3s ease;
+  }
+
+  /*
+   * Mobile-frame shell: the whole app is locked to a phone-width column,
+   * centered on large screens. The document itself scrolls (no transform /
+   * overflow on #root) so that `position: fixed` descendants (Header,
+   * Navigation, modals) pin to the real viewport and stay put while content
+   * scrolls. A transform here would make #root the containing block for
+   * fixed elements AND, since it was also the scroll container, the nav
+   * scrolled away with the content. Fixed elements width-constrain
+   * themselves (e.g. the nav's inner `max-w-md mx-auto`) to align with this
+   * centered frame on desktop.
+   */
+  #root {
+    width: 100%;
+    max-width: 480px;
+    min-height: 100dvh;
+    margin-inline: auto;
+    overflow-x: hidden;
+    position: relative;
+    background-color: hsl(var(--background));
+  }
+
+  @media (min-width: 480px) {
+    #root {
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06),
+        0 24px 80px -12px rgba(0, 0, 0, 0.8);
+    }
   }
 
   h1, h2, h3, h4, h5, h6 {

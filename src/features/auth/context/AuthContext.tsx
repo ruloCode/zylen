@@ -38,7 +38,14 @@ interface AuthContextType {
   session: Session | null;
   loading: boolean;
   signInWithOAuth: (provider: 'google' | 'github') => Promise<void>;
-  signInWithEmail: (email: string) => Promise<{ success: boolean }>;
+  signInWithPassword: (
+    email: string,
+    password: string
+  ) => Promise<{ success: boolean; error?: string }>;
+  signUpWithPassword: (
+    email: string,
+    password: string
+  ) => Promise<{ success: boolean; error?: string }>;
   signOut: () => Promise<void>;
   error: AuthError | null;
 }
@@ -114,7 +121,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
-  const signInWithEmail = async (email: string): Promise<{ success: boolean }> => {
+  const signInWithPassword = async (
+    email: string,
+    password: string
+  ): Promise<{ success: boolean; error?: string }> => {
     if (shouldSkipAuth) {
       setUser(devUser);
       setSession(null);
@@ -126,20 +136,51 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setError(null);
       setLoading(true);
 
-      // Passwordless magic link / OTP
-      const { error } = await supabase.auth.signInWithOtp({
-        email,
-        options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
-        },
-      });
-
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
       return { success: true };
     } catch (err) {
       console.error('Email sign in error:', err);
       setError(err as AuthError);
-      return { success: false };
+      return { success: false, error: (err as AuthError)?.message };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const signUpWithPassword = async (
+    email: string,
+    password: string
+  ): Promise<{ success: boolean; error?: string }> => {
+    if (shouldSkipAuth) {
+      setUser(devUser);
+      setSession(null);
+      setLoading(false);
+      return { success: true };
+    }
+
+    try {
+      setError(null);
+      setLoading(true);
+
+      // Email confirmation is disabled (mailer_autoconfirm), so signUp returns a
+      // session immediately and onAuthStateChange establishes the user.
+      const { data, error } = await supabase.auth.signUp({ email, password });
+      if (error) throw error;
+
+      // Defensive: if the project still requires confirmation, no session is
+      // returned. Surface that instead of silently appearing to succeed.
+      if (!data.session) {
+        return {
+          success: false,
+          error: 'Account created but no active session. Email confirmation may be enabled.',
+        };
+      }
+      return { success: true };
+    } catch (err) {
+      console.error('Email sign up error:', err);
+      setError(err as AuthError);
+      return { success: false, error: (err as AuthError)?.message };
     } finally {
       setLoading(false);
     }
@@ -175,7 +216,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
     session,
     loading,
     signInWithOAuth,
-    signInWithEmail,
+    signInWithPassword,
+    signUpWithPassword,
     signOut,
     error,
   };

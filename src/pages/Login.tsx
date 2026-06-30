@@ -7,7 +7,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Target, Mountain, Gem, Mail, Loader2 } from 'lucide-react';
+import { Mail, Lock, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuth } from '@/features/auth/context/AuthContext';
 import { useLocale } from '@/hooks/useLocale';
@@ -15,64 +15,15 @@ import { LanguageSwitcher } from '@/features/settings/components/LanguageSwitche
 
 const LOGIN_BG = '/login-bg.png';
 
-/** Faceted crystal emblem (matches the reference brand mark). */
-function CrystalLogo() {
-  return (
-    <svg
-      width={62}
-      height={74}
-      viewBox="0 0 64 76"
-      fill="none"
-      className="drop-shadow-[0_0_22px_rgba(80,170,255,0.85)]"
-      aria-hidden="true"
-    >
-      <defs>
-        <linearGradient id="crystalFill" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#d6f1ff" />
-          <stop offset="0.5" stopColor="#54acff" />
-          <stop offset="1" stopColor="#1e63d6" />
-        </linearGradient>
-      </defs>
-      {/* pavilion */}
-      <polygon points="14,26 32,74 32,26" fill="#2f86e8" opacity="0.9" />
-      <polygon points="50,26 32,74 32,26" fill="#1b59bd" opacity="0.95" />
-      {/* crown */}
-      <polygon points="32,2 14,26 50,26" fill="url(#crystalFill)" />
-      <polygon points="32,2 32,26 14,26" fill="#a9dcff" opacity="0.65" />
-      <polygon points="32,2 50,26 32,26" fill="#6fb8ff" opacity="0.8" />
-      {/* center sparkle line */}
-      <polygon points="32,2 30,26 34,26" fill="#eaf7ff" opacity="0.9" />
-    </svg>
-  );
-}
-
-interface HeroFeatureProps {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-}
-
-function HeroFeature({ icon, title, description }: HeroFeatureProps) {
-  return (
-    <div className="flex flex-col items-center text-center gap-2 px-1">
-      <div className="w-11 h-11 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
-        {icon}
-      </div>
-      <div>
-        <p className="text-white text-[13px] font-bold leading-tight">{title}</p>
-        <p className="text-white/55 text-[11px] leading-tight mt-0.5">{description}</p>
-      </div>
-    </div>
-  );
-}
-
 export function Login() {
-  const { user, loading, signInWithOAuth, signInWithEmail } = useAuth();
+  const { user, loading, signInWithOAuth, signInWithPassword, signUpWithPassword } = useAuth();
   const { t } = useLocale();
   const navigate = useNavigate();
   const emailRef = useRef<HTMLInputElement>(null);
 
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [mode, setMode] = useState<'signin' | 'signup'>('signin');
   const [submitting, setSubmitting] = useState(false);
 
   // Redirect to dashboard if already authenticated
@@ -86,7 +37,7 @@ export function Login() {
     await signInWithOAuth('google');
   };
 
-  const handleEmailContinue = async (e: React.FormEvent) => {
+  const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const value = email.trim();
     if (!value || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
@@ -94,11 +45,22 @@ export function Login() {
       emailRef.current?.focus();
       return;
     }
+    if (password.length < 6) {
+      toast.error(t('auth.passwordTooShort'));
+      return;
+    }
     setSubmitting(true);
-    const { success } = await signInWithEmail(value);
+    const { success, error } =
+      mode === 'signup'
+        ? await signUpWithPassword(value, password)
+        : await signInWithPassword(value, password);
     setSubmitting(false);
-    if (success) toast.success(t('auth.emailSent'));
-    else toast.error(t('errors.authenticationFailed'));
+    if (success) {
+      toast.success(mode === 'signup' ? t('auth.accountCreated') : t('auth.welcomeBack'));
+      // Navigation happens via the auth state effect once the session is set.
+    } else {
+      toast.error(error || t('errors.authenticationFailed'));
+    }
   };
 
   if (loading) {
@@ -117,7 +79,7 @@ export function Login() {
       {/* ── Portal background ── */}
       <div className="absolute inset-0 -z-0">
         <img src={LOGIN_BG} alt="" aria-hidden="true" className="w-full h-full object-cover object-top" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0a1622]/40 via-[#0a1622]/10 to-[#0a1622]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0a1622]/35 via-[#0a1622]/10 to-[#0a1622]" />
         <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-b from-transparent to-[#0a1622]" />
       </div>
 
@@ -128,44 +90,11 @@ export function Login() {
 
       {/* ── Content ── */}
       <div className="relative z-10 min-h-screen flex flex-col max-w-md mx-auto px-6 pt-[calc(env(safe-area-inset-top)+2.5rem)] pb-8">
-        {/* Brand */}
-        <div className="flex flex-col items-center text-center">
-          <CrystalLogo />
-          <h1 className="mt-4 text-3xl font-bold tracking-[0.32em] text-white pl-[0.32em]">
-            {t('app.name').toUpperCase()}
-          </h1>
-          <div className="flex items-center gap-2 my-3 w-44">
-            <span className="h-px flex-1 bg-gradient-to-r from-transparent to-white/30" />
-            <span className="w-1.5 h-1.5 rotate-45 bg-[#4aa8ff]" />
-            <span className="h-px flex-1 bg-gradient-to-l from-transparent to-white/30" />
-          </div>
-          <p className="text-[13px] font-semibold tracking-wider text-white/80 uppercase">
-            {t('auth.tagline')}{' '}
-            <span className="text-[#4aa8ff]">{t('auth.taglineAccent')}</span>
-          </p>
-        </div>
+        {/* Logo + tagline are baked into the background image — reserve their zone */}
+        <div aria-hidden="true" className="min-h-[34vh]" />
 
         {/* Spacer reveals the portal */}
         <div className="flex-1 min-h-[120px]" />
-
-        {/* Feature highlights */}
-        <div className="grid grid-cols-3 gap-2 rounded-2xl bg-white/[0.06] backdrop-blur-md border border-white/10 p-4 mb-5">
-          <HeroFeature
-            icon={<Target size={20} className="text-[#2dd4bf]" />}
-            title={t('auth.heroFeature1Title')}
-            description={t('auth.heroFeature1Desc')}
-          />
-          <HeroFeature
-            icon={<Mountain size={20} className="text-[#a855f7]" />}
-            title={t('auth.heroFeature2Title')}
-            description={t('auth.heroFeature2Desc')}
-          />
-          <HeroFeature
-            icon={<Gem size={20} className="text-[#4aa8ff]" />}
-            title={t('auth.heroFeature3Title')}
-            description={t('auth.heroFeature3Desc')}
-          />
-        </div>
 
         {/* Google */}
         <button
@@ -190,8 +119,8 @@ export function Login() {
           <span className="h-px flex-1 bg-white/12" />
         </div>
 
-        {/* Email + Continue */}
-        <form onSubmit={handleEmailContinue} className="space-y-3">
+        {/* Email + Password */}
+        <form onSubmit={handleEmailSubmit} className="space-y-3">
           <div className="relative">
             <Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#2dd4bf]" />
             <input
@@ -205,25 +134,39 @@ export function Login() {
               className="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-white/[0.04] border border-white/12 text-white placeholder-white/40 outline-none focus:border-[#4aa8ff]/60 focus:bg-white/[0.06] transition"
             />
           </div>
+          <div className="relative">
+            <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#2dd4bf]" />
+            <input
+              type="password"
+              autoComplete={mode === 'signup' ? 'new-password' : 'current-password'}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder={t('auth.passwordPlaceholder')}
+              className="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-white/[0.04] border border-white/12 text-white placeholder-white/40 outline-none focus:border-[#4aa8ff]/60 focus:bg-white/[0.06] transition"
+            />
+          </div>
           <button
             type="submit"
             disabled={submitting}
             className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl bg-gradient-to-r from-[#2dd4bf] to-[#3b82f6] text-white font-semibold text-[15px] shadow-[0_8px_24px_-6px_rgba(59,130,246,0.6)] hover:brightness-110 active:scale-[0.99] transition disabled:opacity-60"
           >
             {submitting && <Loader2 size={18} className="animate-spin" />}
-            {t('auth.continue')}
+            {mode === 'signup' ? t('auth.createAccount') : t('auth.signIn')}
           </button>
         </form>
 
-        {/* Register */}
+        {/* Toggle sign in / sign up */}
         <p className="text-center text-sm text-white/65 mt-6">
-          {t('auth.noAccount')}{' '}
+          {mode === 'signup' ? t('auth.haveAccount') : t('auth.noAccount')}{' '}
           <button
             type="button"
-            onClick={() => emailRef.current?.focus()}
+            onClick={() => {
+              setMode((m) => (m === 'signup' ? 'signin' : 'signup'));
+              emailRef.current?.focus();
+            }}
             className="text-[#4aa8ff] font-semibold hover:underline"
           >
-            {t('auth.register')}
+            {mode === 'signup' ? t('auth.signIn') : t('auth.register')}
           </button>
         </p>
 

@@ -385,6 +385,12 @@
     "heroFeature3Desc": "best version",
     "orContinueWith": "or continue with",
     "emailPlaceholder": "Email address",
+    "passwordPlaceholder": "Password",
+    "passwordTooShort": "Password must be at least 6 characters",
+    "signIn": "Sign in",
+    "createAccount": "Create account",
+    "accountCreated": "Account created! Your journey begins.",
+    "haveAccount": "Already have an account?",
     "continue": "Continue",
     "noAccount": "Don't have an account?",
     "register": "Sign up",
@@ -428,6 +434,42 @@
     "prevButton": "Previous",
     "nextButton": "Next",
     "finishButton": "Get Started",
+    "completedSuccess": "Your journey has begun, Guardian!",
+    "identity": {
+      "label": "How would you like to be addressed?",
+      "hint": "We tailor the realm's language to you. You can change it later.",
+      "female": "Guardian (she)",
+      "male": "Guardian (he)",
+      "neutral": "Prefer neutral",
+      "error": "Pick an option to personalize how we address you"
+    },
+    "aboutYou": {
+      "title": "Tell us about you",
+      "description": "This helps us guide you better on your journey.",
+      "motivationLabel": "What brings you to the realm?",
+      "experienceLabel": "Your experience with habits?",
+      "ageLabel": "Your age range?",
+      "motivations": {
+        "health": "Health",
+        "discipline": "Discipline",
+        "focus": "Focus",
+        "wellbeing": "Wellbeing",
+        "productivity": "Productivity"
+      },
+      "experience": {
+        "beginner": "Beginner",
+        "intermediate": "Intermediate",
+        "advanced": "Advanced"
+      },
+      "ageRanges": {
+        "teen": "13-17",
+        "youngAdult": "18-24",
+        "adult": "25-34",
+        "midAdult": "35-44",
+        "mature": "45-54",
+        "senior": "55+"
+      }
+    },
     "step1": {
       "title": "Welcome to Everlight!",
       "description": "Your journey to a better version of yourself starts here",
@@ -555,6 +597,8 @@
     "avatars": {
       "pickTitle": "Choose your avatar",
       "save": "Save",
+      "rulo": "Rulo",
+      "dani": "Dani",
       "explorer1": "Adventurer",
       "explorer2": "Adventuress",
       "explorer3": "Explorer"

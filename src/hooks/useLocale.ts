@@ -1,4 +1,7 @@
+import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
+import { useAppStore } from '@/store';
 
 /**
  * Custom hook for internationalization
@@ -25,7 +28,29 @@ import { useTranslation } from 'react-i18next';
  * ```
  */
 export function useLocale() {
-  const { t, i18n } = useTranslation();
+  const { t: baseT, i18n } = useTranslation();
+
+  // Player identity drives gendered copy. We inject an i18next `context` so that
+  // `key_female` / `key_male` variants resolve automatically; neutral (or unset)
+  // falls back to the base key. Only 'female' | 'male' produce a context.
+  const genderContext = useAppStore((state) =>
+    state.user?.gender === 'female' || state.user?.gender === 'male'
+      ? state.user.gender
+      : undefined
+  );
+
+  // Wrapped translation function that injects the gender context by default.
+  // Call sites keep using `t('key')` unchanged; an explicit `context` in options
+  // still wins. Strings without `_female`/`_male` variants fall back to the base key.
+  const t = useCallback(
+    ((key: Parameters<TFunction>[0], options?: Parameters<TFunction>[1]) => {
+      if (genderContext && (options === undefined || typeof options === 'object')) {
+        return baseT(key, { context: genderContext, ...(options as object) });
+      }
+      return baseT(key, options as never);
+    }) as TFunction,
+    [baseT, genderContext]
+  );
 
   /**
    * Change the current language

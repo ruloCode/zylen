@@ -331,11 +331,15 @@ export type Database = {
       }
       profiles: {
         Row: {
+          age_range: string | null
           avatar_url: string | null
           created_at: string
+          experience_level: string | null
+          gender: string | null
           has_completed_onboarding: boolean
           id: string
           level: number
+          motivation: string | null
           name: string
           points: number
           timezone: string
@@ -344,11 +348,15 @@ export type Database = {
           username: string | null
         }
         Insert: {
+          age_range?: string | null
           avatar_url?: string | null
           created_at?: string
+          experience_level?: string | null
+          gender?: string | null
           has_completed_onboarding?: boolean
           id: string
           level?: number
+          motivation?: string | null
           name: string
           points?: number
           timezone?: string
@@ -357,11 +365,15 @@ export type Database = {
           username?: string | null
         }
         Update: {
+          age_range?: string | null
           avatar_url?: string | null
           created_at?: string
+          experience_level?: string | null
+          gender?: string | null
           has_completed_onboarding?: boolean
           id?: string
           level?: number
+          motivation?: string | null
           name?: string
           points?: number
           timezone?: string

@@ -75,25 +75,74 @@ export const LIFE_AREAS = [
 // The avatar is now the evolving chibi hero (a bust crop of tier-0). The old
 // 3D "explorer" / Ready-Player-Me-style avatars were retired; every legacy key
 // resolves to the chibi so no stale video-style avatar renders anywhere.
-const HERO_AVATAR = '/avatars/hero-avatar.png';
+const HERO_AVATAR = '/avatars/hero-avatar.png'; // Rulo (male) bust
+const DANI_AVATAR = '/avatars/dani-avatar.png'; // Dani (female) bust
 export const AVATARS = {
   HERO: HERO_AVATAR,
-  // Legacy keys kept for backward compatibility with existing imports — all
-  // point to the chibi hero now.
+  RULO: HERO_AVATAR,
+  DANI: DANI_AVATAR,
+  // Legacy keys kept for backward compatibility with existing imports.
   EXPLORER_1: HERO_AVATAR,
   EXPLORER_2: HERO_AVATAR,
   EXPLORER_3: HERO_AVATAR,
-  RULO: HERO_AVATAR,
-  DANI: HERO_AVATAR,
 } as const;
 
 // Default avatar for new/unset users.
 export const DEFAULT_AVATAR = AVATARS.HERO;
 
-// Selectable avatars surfaced in the avatar picker. Only the chibi hero now.
+// Selectable avatars surfaced in the avatar picker (onboarding + profile).
+// `url`  = square bust shown in the picker / profile / header.
+// `body` = full-body PNG used as the standing hero on the Home (must follow the
+//          avatar canvas convention: portrait 2:3, centred, feet at ~93%).
 // `nameKey` resolves through i18n (profile.avatars.*).
 export const AVATAR_OPTIONS = [
-  { id: 'hero', nameKey: 'profile.avatars.explorer1', url: AVATARS.HERO },
+  { id: 'rulo', nameKey: 'profile.avatars.rulo', url: AVATARS.RULO, body: '/hero-character.png' },
+  { id: 'dani', nameKey: 'profile.avatars.dani', url: AVATARS.DANI, body: '/avatars/dani-full.png' },
+] as const;
+
+// Default full-body hero character (Rulo) when the user has no/unknown avatar.
+export const DEFAULT_HERO_BODY = '/hero-character.png';
+
+/**
+ * Resolve the full-body hero character for the Home from the user's saved
+ * avatar (which is the bust `url`). Falls back to the default hero.
+ */
+export function getHeroBodySrc(avatarUrl?: string | null): string {
+  const opt = AVATAR_OPTIONS.find((o) => o.url === avatarUrl);
+  return opt?.body ?? DEFAULT_HERO_BODY;
+}
+
+// Identity & personalization options collected during onboarding.
+// `labelKey` resolves through i18n (onboarding.identity.* / onboarding.aboutYou.*).
+
+// Player identity → drives gendered language across the app.
+export const GENDER_OPTIONS = [
+  { value: 'female', labelKey: 'onboarding.identity.female', emoji: '♀️' },
+  { value: 'male', labelKey: 'onboarding.identity.male', emoji: '♂️' },
+  { value: 'neutral', labelKey: 'onboarding.identity.neutral', emoji: '⚧️' },
+] as const;
+
+export const MOTIVATION_OPTIONS = [
+  { value: 'health', labelKey: 'onboarding.aboutYou.motivations.health', emoji: '🌱' },
+  { value: 'discipline', labelKey: 'onboarding.aboutYou.motivations.discipline', emoji: '🔥' },
+  { value: 'focus', labelKey: 'onboarding.aboutYou.motivations.focus', emoji: '🎯' },
+  { value: 'wellbeing', labelKey: 'onboarding.aboutYou.motivations.wellbeing', emoji: '🧘' },
+  { value: 'productivity', labelKey: 'onboarding.aboutYou.motivations.productivity', emoji: '⚡' },
+] as const;
+
+export const EXPERIENCE_OPTIONS = [
+  { value: 'beginner', labelKey: 'onboarding.aboutYou.experience.beginner' },
+  { value: 'intermediate', labelKey: 'onboarding.aboutYou.experience.intermediate' },
+  { value: 'advanced', labelKey: 'onboarding.aboutYou.experience.advanced' },
+] as const;
+
+export const AGE_RANGE_OPTIONS = [
+  { value: '13-17', labelKey: 'onboarding.aboutYou.ageRanges.teen' },
+  { value: '18-24', labelKey: 'onboarding.aboutYou.ageRanges.youngAdult' },
+  { value: '25-34', labelKey: 'onboarding.aboutYou.ageRanges.adult' },
+  { value: '35-44', labelKey: 'onboarding.aboutYou.ageRanges.midAdult' },
+  { value: '45-54', labelKey: 'onboarding.aboutYou.ageRanges.mature' },
+  { value: '55+', labelKey: 'onboarding.aboutYou.ageRanges.senior' },
 ] as const;
 
 // Chat configuration

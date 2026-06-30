@@ -15,34 +15,6 @@ import { ROUTES } from '@/constants';
 
 const LOGIN_BG = '/login-bg.png';
 
-/** Faceted crystal emblem (matches the brand mark used on Login). */
-function CrystalLogo() {
-  return (
-    <svg
-      width={62}
-      height={74}
-      viewBox="0 0 64 76"
-      fill="none"
-      className="drop-shadow-[0_0_22px_rgba(80,170,255,0.85)]"
-      aria-hidden="true"
-    >
-      <defs>
-        <linearGradient id="welcomeCrystalFill" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#d6f1ff" />
-          <stop offset="0.5" stopColor="#54acff" />
-          <stop offset="1" stopColor="#1e63d6" />
-        </linearGradient>
-      </defs>
-      <polygon points="14,26 32,74 32,26" fill="#2f86e8" opacity="0.9" />
-      <polygon points="50,26 32,74 32,26" fill="#1b59bd" opacity="0.95" />
-      <polygon points="32,2 14,26 50,26" fill="url(#welcomeCrystalFill)" />
-      <polygon points="32,2 32,26 14,26" fill="#a9dcff" opacity="0.65" />
-      <polygon points="32,2 50,26 32,26" fill="#6fb8ff" opacity="0.8" />
-      <polygon points="32,2 30,26 34,26" fill="#eaf7ff" opacity="0.9" />
-    </svg>
-  );
-}
-
 export function Welcome() {
   const { user, loading } = useAuth();
   const { t } = useLocale();
@@ -71,24 +43,8 @@ export function Welcome() {
 
       {/* ── Content ── */}
       <div className="relative z-10 min-h-screen flex flex-col max-w-md mx-auto px-6 pt-[calc(env(safe-area-inset-top)+2.5rem)] pb-8">
-        {/* Brand */}
-        <div className="flex flex-col items-center text-center">
-          <CrystalLogo />
-          <h1 className="mt-4 text-3xl font-bold tracking-[0.32em] text-white pl-[0.32em]">
-            {t('app.name').toUpperCase()}
-          </h1>
-          <div className="flex items-center gap-2 my-3 w-44">
-            <span className="h-px flex-1 bg-gradient-to-r from-transparent to-white/30" />
-            <span className="w-1.5 h-1.5 rotate-45 bg-[#4aa8ff]" />
-            <span className="h-px flex-1 bg-gradient-to-l from-transparent to-white/30" />
-          </div>
-          <p className="text-[13px] font-semibold tracking-wider uppercase text-[#4aa8ff]">
-            {t('welcome.tagline')}
-          </p>
-        </div>
-
-        {/* Spacer reveals the portal */}
-        <div className="flex-1 min-h-[120px]" />
+        {/* Logo + tagline are baked into the background image — reserve their zone */}
+        <div aria-hidden="true" className="flex-1 min-h-[40vh]" />
 
         {/* Hero copy */}
         <div className="text-center mb-6">

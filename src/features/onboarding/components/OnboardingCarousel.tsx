@@ -3,24 +3,14 @@
  *
  * Pre-auth marketing flow shown to unauthenticated users reaching /onboarding
  * from the Welcome splash. Five slides: 4 feature intro slides + a final auth
- * slide (Google / Apple / email magic-link). After successful auth the app's
- * normal protected redirect leads the user into the existing multi-step
- * onboarding/profile setup — this component does NOT replace that flow.
+ * slide (Google + email/password — signs up new users and signs in returning
+ * ones). After successful auth the app's normal protected redirect leads the
+ * user into the existing multi-step onboarding/profile setup.
  */
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  Gem,
-  Mountain,
-  Target,
-  Star,
-  Mail,
-  Apple,
-  ArrowRight,
-  Loader2,
-  type LucideIcon,
-} from 'lucide-react';
+import { Mail, Lock, ArrowRight, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuth } from '@/features/auth/context/AuthContext';
 import { useLocale } from '@/hooks/useLocale';
@@ -28,38 +18,21 @@ import { ROUTES } from '@/constants';
 
 const PORTAL_BG = '/login-bg.png';
 
+/**
+ * Per-slide background art (index = step). Slides without a dedicated image
+ * fall back to PORTAL_BG.
+ */
+const SLIDE_BG: (string | undefined)[] = [
+  '/onboarding-1.png',
+  '/onboarding-2.png',
+  '/onboarding-3.png',
+  '/onboarding-4.png',
+];
+
 interface CarouselSlide {
   title: string;
   accent: string;
   desc: string;
-}
-
-/** Faceted crystal emblem (matches the brand mark used on Login/Welcome). */
-function CrystalLogo() {
-  return (
-    <svg
-      width={56}
-      height={66}
-      viewBox="0 0 64 76"
-      fill="none"
-      className="drop-shadow-[0_0_22px_rgba(80,170,255,0.85)]"
-      aria-hidden="true"
-    >
-      <defs>
-        <linearGradient id="carouselCrystalFill" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#d6f1ff" />
-          <stop offset="0.5" stopColor="#54acff" />
-          <stop offset="1" stopColor="#1e63d6" />
-        </linearGradient>
-      </defs>
-      <polygon points="14,26 32,74 32,26" fill="#2f86e8" opacity="0.9" />
-      <polygon points="50,26 32,74 32,26" fill="#1b59bd" opacity="0.95" />
-      <polygon points="32,2 14,26 50,26" fill="url(#carouselCrystalFill)" />
-      <polygon points="32,2 32,26 14,26" fill="#a9dcff" opacity="0.65" />
-      <polygon points="32,2 50,26 32,26" fill="#6fb8ff" opacity="0.8" />
-      <polygon points="32,2 30,26 34,26" fill="#eaf7ff" opacity="0.9" />
-    </svg>
-  );
 }
 
 /** Dots indicator (5 steps). */
@@ -80,11 +53,8 @@ function Dots({ active }: { active: number }) {
   );
 }
 
-const SLIDE_ICONS: LucideIcon[] = [Gem, Mountain, Target, Star];
-const SLIDE_ICON_COLORS = ['#4aa8ff', '#a855f7', '#2dd4bf', '#fbbf24'];
-
 export function OnboardingCarousel() {
-  const { signInWithOAuth, signInWithEmail } = useAuth();
+  const { signInWithOAuth, signUpWithPassword, signInWithPassword } = useAuth();
   const { t } = useLocale();
   const navigate = useNavigate();
 
@@ -94,6 +64,7 @@ export function OnboardingCarousel() {
 
   const [step, setStep] = useState(0);
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
   const goToAuth = () => setStep(authIndex);
@@ -103,10 +74,6 @@ export function OnboardingCarousel() {
     await signInWithOAuth('google');
   };
 
-  const handleApple = () => {
-    toast(`🚧 ${t('profile.comingSoon')}`);
-  };
-
   const handleEmailContinue = async (e: React.FormEvent) => {
     e.preventDefault();
     const value = email.trim();
@@ -114,25 +81,41 @@ export function OnboardingCarousel() {
       toast.error(t('auth.enterEmail'));
       return;
     }
+    if (password.length < 6) {
+      toast.error(t('auth.passwordTooShort'));
+      return;
+    }
     setSubmitting(true);
-    const { success } = await signInWithEmail(value);
+    // Try to create the account; if the email already exists, sign in instead,
+    // so the same form works for new and returning users.
+    let res = await signUpWithPassword(value, password);
+    let returning = false;
+    if (!res.success && /already|registered|exist/i.test(res.error || '')) {
+      returning = true;
+      res = await signInWithPassword(value, password);
+    }
     setSubmitting(false);
-    if (success) toast.success(t('auth.emailSent'));
-    else toast.error(t('errors.authenticationFailed'));
+    if (res.success) toast.success(returning ? t('auth.welcomeBack') : t('auth.accountCreated'));
+    else toast.error(res.error || t('errors.authenticationFailed'));
   };
 
   const isAuthSlide = step === authIndex;
+  const bg = SLIDE_BG[step] ?? PORTAL_BG;
   const slide: CarouselSlide | undefined = slides[step];
-  const Icon: LucideIcon = SLIDE_ICONS[step] ?? Gem;
-  const iconColor = SLIDE_ICON_COLORS[step] ?? SLIDE_ICON_COLORS[0];
 
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-[#0a1622] text-white">
       {/* ── Portal background ── */}
       <div className="absolute inset-0 -z-0">
-        <img src={PORTAL_BG} alt="" aria-hidden="true" className="w-full h-full object-cover object-top" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0a1622]/60 via-[#0a1622]/30 to-[#0a1622]" />
-        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-b from-transparent to-[#0a1622]" />
+        <img src={bg} alt="" aria-hidden="true" className="w-full h-full object-cover object-top" />
+        <div
+          className={`absolute inset-0 bg-gradient-to-b ${
+            isAuthSlide
+              ? 'from-[#0a1622]/35 via-[#0a1622]/10 to-[#0a1622]'
+              : 'from-[#0a1622]/65 via-[#0a1622]/35 to-[#0a1622]'
+          }`}
+        />
+        <div className="absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-b from-transparent via-[#0a1622]/70 to-[#0a1622]" />
       </div>
 
       {/* Skip (hidden on auth slide) */}
@@ -152,27 +135,8 @@ export function OnboardingCarousel() {
       <div className="relative z-10 min-h-screen flex flex-col max-w-md mx-auto px-6 pt-[calc(env(safe-area-inset-top)+3.5rem)] pb-8">
         {isAuthSlide ? (
           <>
-            {/* Brand */}
-            <div className="flex flex-col items-center text-center">
-              <CrystalLogo />
-              <h1 className="mt-4 text-2xl font-bold tracking-[0.3em] text-white pl-[0.3em]">
-                {t('app.name').toUpperCase()}
-              </h1>
-              <div className="flex items-center gap-2 my-3 w-40">
-                <span className="h-px flex-1 bg-gradient-to-r from-transparent to-white/30" />
-                <span className="w-1.5 h-1.5 rotate-45 bg-[#4aa8ff]" />
-                <span className="h-px flex-1 bg-gradient-to-l from-transparent to-white/30" />
-              </div>
-              <p className="text-[13px] font-semibold tracking-wider uppercase text-[#4aa8ff]">
-                {t('welcome.tagline')}
-              </p>
-            </div>
-
-            <div className="flex-1 min-h-[40px]" />
-
-            <h2 className="text-center text-xl font-extrabold mb-6">
-              {t('onboardingCarousel.authTitle')}
-            </h2>
+            {/* Logo + tagline are baked into the background image — reserve their zone */}
+            <div aria-hidden="true" className="flex-1 min-h-[36vh]" />
 
             {/* Google */}
             <button
@@ -188,16 +152,6 @@ export function OnboardingCarousel() {
                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
               </svg>
               {t('auth.continueWithGoogle')}
-            </button>
-
-            {/* Apple */}
-            <button
-              type="button"
-              onClick={handleApple}
-              className="mt-3 w-full flex items-center justify-center gap-3 py-3.5 rounded-2xl bg-black text-white font-semibold text-[15px] shadow-lg border border-white/10 hover:bg-black/90 active:scale-[0.99] transition"
-            >
-              <Apple size={20} className="fill-white" />
-              {t('onboardingCarousel.continueWithApple')}
             </button>
 
             {/* Divider */}
@@ -221,13 +175,24 @@ export function OnboardingCarousel() {
                   className="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-white/[0.04] border border-white/12 text-white placeholder-white/40 outline-none focus:border-[#4aa8ff]/60 focus:bg-white/[0.06] transition"
                 />
               </div>
+              <div className="relative">
+                <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#2dd4bf]" />
+                <input
+                  type="password"
+                  autoComplete="new-password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder={t('auth.passwordPlaceholder')}
+                  className="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-white/[0.04] border border-white/12 text-white placeholder-white/40 outline-none focus:border-[#4aa8ff]/60 focus:bg-white/[0.06] transition"
+                />
+              </div>
               <button
                 type="submit"
                 disabled={submitting}
                 className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl bg-gradient-to-r from-[#2dd4bf] to-[#3b82f6] text-white font-semibold text-[15px] shadow-[0_8px_24px_-6px_rgba(59,130,246,0.6)] hover:brightness-110 active:scale-[0.99] transition disabled:opacity-60"
               >
                 {submitting && <Loader2 size={18} className="animate-spin" />}
-                {t('auth.continue')}
+                {t('auth.createAccount')}
               </button>
             </form>
 
@@ -247,20 +212,18 @@ export function OnboardingCarousel() {
           <>
             <div className="flex-1 min-h-[40px]" />
 
-            {/* Glowing icon */}
-            <div className="flex flex-col items-center text-center">
+            <div className="relative flex flex-col items-center text-center">
+              {/* Readability scrim: soft dark halo behind the copy so text
+                  stays legible over bright areas of the artwork (WCAG contrast). */}
               <div
-                className="w-24 h-24 rounded-full flex items-center justify-center bg-white/[0.06] border border-white/10"
-                style={{ boxShadow: `0 0 48px -8px ${iconColor}` }}
-              >
-                <Icon size={44} color={iconColor} strokeWidth={1.8} />
-              </div>
-
-              <h2 className="mt-8 text-[26px] leading-tight font-extrabold">
+                aria-hidden="true"
+                className="pointer-events-none absolute -inset-x-10 -inset-y-12 -z-10 rounded-[40px] bg-[radial-gradient(ellipse_at_center,rgba(5,9,13,0.9)_0%,rgba(5,9,13,0.65)_45%,transparent_78%)] blur-xl"
+              />
+              <h2 className="text-[26px] leading-tight font-extrabold [text-shadow:0_2px_14px_rgba(0,0,0,0.85)]">
                 <span className="text-white">{slide?.title} </span>
-                <span className="text-[#4aa8ff]">{slide?.accent}</span>
+                <span className="text-[#7cc4ff]">{slide?.accent}</span>
               </h2>
-              <p className="mt-4 text-[15px] leading-relaxed text-white/70 px-2">
+              <p className="mt-4 text-[15px] leading-relaxed text-white/90 px-2 [text-shadow:0_1px_10px_rgba(0,0,0,0.85)]">
                 {slide?.desc}
               </p>
             </div>

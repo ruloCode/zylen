@@ -7,10 +7,9 @@ import { ONBOARDING_STEPS } from '@/types';
 import {
   OnboardingProgress,
   OnboardingStep1,
-  OnboardingStepUsername,
+  OnboardingStepAboutYou,
   OnboardingStep2,
   OnboardingStep3,
-  OnboardingStepTheme,
   OnboardingStep4,
 } from '@/features/onboarding/components';
 import { useLocale } from '@/hooks/useLocale';
@@ -54,9 +53,14 @@ export function Onboarding() {
     try {
       setIsSubmitting(true);
 
-      // 1. Update user profile with name and avatar
+      // 1. Update user profile with name, avatar and identity/personalization data
       if (temporaryData.userName) {
-        await updateUserProfile(temporaryData.userName, temporaryData.avatarUrl);
+        await updateUserProfile(temporaryData.userName, temporaryData.avatarUrl, {
+          gender: temporaryData.gender,
+          ageRange: temporaryData.ageRange,
+          experienceLevel: temporaryData.experienceLevel,
+          motivation: temporaryData.motivation,
+        });
       }
 
       // 2. Enable/disable selected life areas
@@ -86,8 +90,17 @@ export function Onboarding() {
       await completeOnboarding();
       finalizeOnboarding();
 
-      // 5. Show success message
-      toast.success(t('onboarding.completedSuccess') || '¡Onboarding completado!');
+      // 5. Show success message. Pass the just-selected gender explicitly: the
+      // component's `t` still holds the pre-onboarding gender context (no re-render
+      // happened between saving the profile and this call), so without this the
+      // toast would fall back to the neutral copy.
+      const genderCtx =
+        temporaryData.gender === 'female' || temporaryData.gender === 'male'
+          ? temporaryData.gender
+          : undefined;
+      toast.success(
+        t('onboarding.completedSuccess', { context: genderCtx }) || '¡Onboarding completado!'
+      );
 
       // 6. Navigate to dashboard
       navigate(ROUTES.DASHBOARD, { replace: true });
@@ -102,7 +115,7 @@ export function Onboarding() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-charcoal-900 via-charcoal-800 to-charcoal-900 flex items-center justify-center p-4 sm:p-6 md:p-8 safe-area-inset">
+    <div className="min-h-screen bg-[hsl(var(--background))] flex items-center justify-center p-4 sm:p-6 md:p-8 safe-area-inset">
       <div className="w-full max-w-4xl">
         {/* Progress Indicator */}
         <div className="mb-12">
@@ -115,8 +128,8 @@ export function Onboarding() {
             <OnboardingStep1 onNext={nextStep} />
           )}
 
-          {currentStep === ONBOARDING_STEPS.USERNAME && (
-            <OnboardingStepUsername onNext={nextStep} onPrev={prevStep} />
+          {currentStep === ONBOARDING_STEPS.ABOUT_YOU && (
+            <OnboardingStepAboutYou onNext={nextStep} onPrev={prevStep} />
           )}
 
           {currentStep === ONBOARDING_STEPS.LIFE_AREAS && (
@@ -125,10 +138,6 @@ export function Onboarding() {
 
           {currentStep === ONBOARDING_STEPS.HABITS && (
             <OnboardingStep3 onNext={nextStep} onPrev={prevStep} />
-          )}
-
-          {currentStep === ONBOARDING_STEPS.THEME && (
-            <OnboardingStepTheme onNext={nextStep} onPrev={prevStep} />
           )}
 
           {currentStep === ONBOARDING_STEPS.TUTORIAL && (

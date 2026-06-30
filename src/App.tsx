@@ -50,10 +50,15 @@ function OnboardingEntry() {
 
   if (!user) return <OnboardingCarousel />;
 
+  // Render the multi-step Onboarding directly. We must NOT reuse ProtectedShell
+  // here: its self-contained <Routes> resolves relative to the already-matched
+  // "/onboarding" parent route, leaving an empty path that falls through to the
+  // "/" (Dashboard) route — which made /onboarding render the Dashboard and the
+  // onboarding steps (incl. the identity/gender step) never show.
   return (
     <ProtectedRoute>
       <AppProvider>
-        <ProtectedShell />
+        <Onboarding />
         <ToastContainer />
       </AppProvider>
     </ProtectedRoute>
