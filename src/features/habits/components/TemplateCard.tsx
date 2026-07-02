@@ -19,7 +19,8 @@ interface TemplateCardProps {
 export function TemplateCard({ template, onSelect, onLearnMore }: TemplateCardProps) {
   const { t } = useLocale();
   const Icon = HABIT_ICONS[template.iconName] || HABIT_ICONS['Target'];
-  const hasScience = !!findCatalogEntry(template.name);
+  const catalogEntry = findCatalogEntry(template.name);
+  const hasScience = !!catalogEntry;
 
   // Get translated name if key exists, otherwise use raw name
   const displayName = template.nameKey ? t(template.nameKey, template.name) : template.name;
@@ -52,10 +53,32 @@ export function TemplateCard({ template, onSelect, onLearnMore }: TemplateCardPr
         </div>
       )}
 
-      {/* Icon and XP */}
+      {/* Illustration (or icon fallback) and XP */}
       <div className="flex items-start justify-between mb-3">
-        <div className="flex items-center justify-center w-12 h-12 bg-teal-500/20 text-teal-400 rounded-xl">
-          <Icon className="w-6 h-6" />
+        <div className="flex items-center justify-center w-14 h-14 rounded-xl overflow-hidden relative">
+          {catalogEntry ? (
+            <>
+              <img
+                src={`/catalog/${catalogEntry.slug}.png`}
+                alt=""
+                aria-hidden="true"
+                className="w-full h-full object-contain"
+                onError={(e) => {
+                  const img = e.currentTarget;
+                  img.style.display = 'none';
+                  const fb = img.nextElementSibling as HTMLElement | null;
+                  if (fb) fb.style.display = 'flex';
+                }}
+              />
+              <span className="absolute inset-0 hidden items-center justify-center bg-teal-500/20 text-teal-400 rounded-xl">
+                <Icon className="w-6 h-6" />
+              </span>
+            </>
+          ) : (
+            <span className="w-12 h-12 flex items-center justify-center bg-teal-500/20 text-teal-400 rounded-xl">
+              <Icon className="w-6 h-6" />
+            </span>
+          )}
         </div>
         <div className="flex items-center gap-1 px-2 py-1 bg-gold-500/20 text-gold-400 rounded-lg text-sm font-semibold">
           +{template.suggestedXp} XP

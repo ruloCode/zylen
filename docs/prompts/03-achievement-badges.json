@@ -1,6 +1,6 @@
 {
   "purpose": "One medallion per achievement (keys match the achievements table). Today the UI uses Lucide icons; these raise the quality of the achievement modal. 1024x1024, transparent background, shield-shaped backplate. Frame changes by tier.",
-  "status": "pending",
+  "status": "done",
   "shared_prompt_body": "ornate fantasy achievement medallion, 3D rendered game badge, centered emblem on a shield-shaped backplate, jungle-kingdom dark-fantasy style, teal and gold palette, glowing details, transparent background, premium mobile-game quality, no text",
   "frames_by_tier": {
     "bronze": "simple bronze frame",

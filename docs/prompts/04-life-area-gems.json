@@ -1,6 +1,6 @@
 {
   "purpose": "One gem/totem per life area (today the UI uses Lucide icons). 1024x1024, transparent background. area_type values match the life_areas table.",
-  "status": "pending",
+  "status": "done",
   "shared_prompt_body": "mystical kingdom totem gem, 3D rendered, faceted crystal core with a carved stone frame and jungle vines, teal and gold dark-fantasy palette, soft inner glow, transparent background, premium mobile-game quality, no text",
   "items": [
     {

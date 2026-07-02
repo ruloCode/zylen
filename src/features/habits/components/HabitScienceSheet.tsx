@@ -66,25 +66,41 @@ export function HabitScienceSheet({ entry, onClose, onCreate }: HabitScienceShee
         role="dialog"
         aria-label={title}
       >
-        {/* Header */}
-        <div className="sticky top-0 bg-charcoal-500/95 backdrop-blur-md px-5 py-4 flex items-center gap-3 border-b border-white/10 z-10">
-          <span className="w-11 h-11 rounded-2xl grid place-items-center shrink-0 bg-teal-500/15 text-teal-300">
-            <HeaderIcon className="w-6 h-6" />
-          </span>
-          <div className="flex-1 min-w-0">
-            <h3 className="text-lg font-bold text-white truncate">{title}</h3>
-            <p className="text-xs text-teal-300/90 font-semibold truncate">{tagline}</p>
-          </div>
-          <button
-            onClick={onClose}
-            className="w-9 h-9 rounded-xl grid place-items-center bg-white/10 text-white/70 hover:bg-white/15"
-            aria-label={t('actions.close')}
-          >
-            <X className="w-5 h-5" />
-          </button>
+        {/* Close button (floats over the hero illustration) */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 z-20 w-9 h-9 rounded-xl grid place-items-center bg-black/40 backdrop-blur-sm text-white/80 hover:bg-black/60"
+          aria-label={t('actions.close')}
+        >
+          <X className="w-5 h-5" />
+        </button>
+
+        {/* Hero illustration */}
+        <div className="relative h-40 bg-gradient-to-b from-teal-500/10 to-transparent grid place-items-center">
+          <img
+            src={`/catalog/${entry.slug}.png`}
+            alt=""
+            aria-hidden="true"
+            className="h-36 w-36 object-contain drop-shadow-[0_8px_16px_rgba(0,0,0,0.5)]"
+            onError={(e) => {
+              // Fall back to the lucide icon if the illustration is missing.
+              e.currentTarget.style.display = 'none';
+            }}
+          />
         </div>
 
-        <div className="p-5 space-y-4">
+        <div className="px-5 pb-5 space-y-4">
+          {/* Title */}
+          <div className="flex items-center gap-3">
+            <span className="w-10 h-10 rounded-2xl grid place-items-center shrink-0 bg-teal-500/15 text-teal-300">
+              <HeaderIcon className="w-5 h-5" />
+            </span>
+            <div className="min-w-0">
+              <h3 className="text-lg font-bold text-white leading-tight">{title}</h3>
+              <p className="text-xs text-teal-300/90 font-semibold">{tagline}</p>
+            </div>
+          </div>
+
           {/* Summary */}
           <p className="text-sm text-white/85 leading-relaxed">{summary}</p>
 

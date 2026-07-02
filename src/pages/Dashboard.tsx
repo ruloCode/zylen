@@ -277,8 +277,20 @@ export function Dashboard() {
                   onClick={() => setCatalogEntry(entry)}
                   className="shrink-0 w-[132px] glass-card p-3 text-left hover:border-teal-400/40 transition-colors"
                 >
-                  <span className="w-10 h-10 rounded-xl grid place-items-center bg-teal-500/15 text-teal-300 mb-2">
-                    <Icon size={20} />
+                  <span className="w-16 h-16 rounded-xl grid place-items-center bg-teal-500/10 mb-2 overflow-hidden">
+                    <img
+                      src={`/catalog/${entry.slug}.png`}
+                      alt=""
+                      aria-hidden="true"
+                      className="w-full h-full object-contain"
+                      onError={(e) => {
+                        // Fall back to the lucide icon if the illustration is missing.
+                        const el = e.currentTarget;
+                        el.style.display = 'none';
+                        el.parentElement?.classList.add('text-teal-300');
+                      }}
+                    />
+                    <Icon size={20} className="hidden" />
                   </span>
                   <p className="text-white text-sm font-bold leading-tight line-clamp-2">
                     {(t as (k: string) => string)(`habitCatalog.${entry.slug}.title`)}

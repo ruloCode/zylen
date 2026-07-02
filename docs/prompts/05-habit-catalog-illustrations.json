@@ -1,6 +1,6 @@
 {
   "purpose": "Optional header illustration for each science card in the habit catalog (HabitScienceSheet). NEW batch. 1024x1024, transparent background, single centered emblem/mini-scene. Slugs match src/constants/habitCatalog.ts and habitCatalog.<slug> in i18n. Wire up by adding an optional image to HabitCatalogEntry + rendering it in the sheet header once generated.",
-  "status": "pending",
+  "status": "done",
   "shared_prompt_body": "single centered chibi emblem / mini-scene, 3D Pixar-style, dark-fantasy jungle-kingdom vibe, teal and gold palette with soft glow, transparent background, premium mobile-game quality, wholesome and motivating, no text",
   "items": [
     {

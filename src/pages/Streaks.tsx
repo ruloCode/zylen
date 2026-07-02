@@ -339,11 +339,28 @@ export function Streaks() {
                 const pct = prog.max > 0 ? Math.min((prog.current / prog.max) * 100, 100) : 0;
                 return (
                   <div key={area.id} className="flex items-center gap-3">
-                    <span
-                      className="shrink-0 w-10 h-10 rounded-full flex items-center justify-center"
-                      style={{ backgroundColor: color }}
-                    >
-                      <Icon size={18} className="text-white" />
+                    <span className="shrink-0 w-11 h-11 rounded-full grid place-items-center relative">
+                      <img
+                        src={`/life-areas/${key}.png`}
+                        alt=""
+                        aria-hidden="true"
+                        className="w-full h-full object-contain"
+                        onError={(e) => {
+                          // Fall back to the colored lucide icon if the gem is missing.
+                          const img = e.currentTarget;
+                          img.style.display = 'none';
+                          const fb = img.nextElementSibling as HTMLElement | null;
+                          if (fb) {
+                            fb.style.display = 'flex';
+                            fb.style.backgroundColor = color || '#2DD4BF';
+                          }
+                        }}
+                      />
+                      <span
+                        className="absolute inset-0 rounded-full hidden items-center justify-center"
+                      >
+                        <Icon size={18} className="text-white" />
+                      </span>
                     </span>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center justify-between gap-2">

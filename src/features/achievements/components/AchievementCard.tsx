@@ -62,7 +62,7 @@ const tierColors: Record<AchievementTier, {
 
 export function AchievementCard({ achievement, onClick }: AchievementCardProps) {
   const { t } = useLocale();
-  const { name, description, iconName, tier, requirementValue, xpReward, pointsReward, progress } = achievement;
+  const { key, name, description, iconName, tier, requirementValue, xpReward, pointsReward, progress } = achievement;
 
   // Get achievement states
   const locked = isAchievementLocked(achievement);
@@ -92,7 +92,7 @@ export function AchievementCard({ achievement, onClick }: AchievementCardProps) 
       {/* Header with Icon */}
       <div className="flex items-center justify-between mb-4">
         <div className={`
-          w-16 h-16 rounded-xl flex items-center justify-center
+          w-16 h-16 rounded-xl flex items-center justify-center relative overflow-hidden
           ${locked
             ? 'bg-white/5'
             : `bg-gradient-to-br ${tierStyle.gradient} ${tierStyle.glow} shadow-lg`}
@@ -100,7 +100,23 @@ export function AchievementCard({ achievement, onClick }: AchievementCardProps) 
           {locked ? (
             <Lock size={32} className="text-white/50" />
           ) : (
-            <IconComponent size={32} className="text-white" />
+            <>
+              <img
+                src={`/achievements/${key}.png`}
+                alt=""
+                aria-hidden="true"
+                className="w-full h-full object-contain"
+                onError={(e) => {
+                  const img = e.currentTarget;
+                  img.style.display = 'none';
+                  const fb = img.nextElementSibling as HTMLElement | null;
+                  if (fb) fb.style.display = 'flex';
+                }}
+              />
+              <span className="absolute inset-0 hidden items-center justify-center">
+                <IconComponent size={32} className="text-white" />
+              </span>
+            </>
           )}
         </div>
 

@@ -154,10 +154,21 @@ export function HabitLog() {
   };
 
   /**
-   * Open form to create new habit
+   * Start habit creation: open the suggested-habits catalog first; the user
+   * can pick a template (detail sheet → prefilled form) or jump to a custom
+   * habit from there.
    */
   const handleCreateHabit = (): void => {
     setTemplateInitialData(undefined); // Clear any template data
+    setIsTemplateLibraryOpen(true);
+  };
+
+  /**
+   * Create a habit from scratch (from the catalog's custom option)
+   */
+  const handleCreateCustomHabit = (): void => {
+    setIsTemplateLibraryOpen(false);
+    setTemplateInitialData(undefined);
     setIsFormOpen(true);
   };
 
@@ -485,6 +496,7 @@ export function HabitLog() {
         <TemplateLibrary
           onSelectTemplate={handleSelectTemplate}
           onClose={() => setIsTemplateLibraryOpen(false)}
+          onCreateCustom={handleCreateCustomHabit}
         />
       )}
 

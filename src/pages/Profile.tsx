@@ -424,11 +424,31 @@ export function Profile() {
                   <div key={ach.id} className="shrink-0 w-[88px] flex flex-col items-center text-center">
                     <div
                       className={cn(
-                        'w-16 h-16 rounded-2xl bg-gradient-to-br border flex items-center justify-center',
-                        tone
+                        'w-16 h-16 rounded-2xl flex items-center justify-center relative overflow-hidden',
+                        ach.unlocked ? '' : cn('bg-gradient-to-br border', tone)
                       )}
                     >
-                      {ach.unlocked ? <Icon size={26} /> : <Lock size={22} />}
+                      {ach.unlocked ? (
+                        <>
+                          <img
+                            src={`/achievements/${ach.key}.png`}
+                            alt=""
+                            aria-hidden="true"
+                            className="w-full h-full object-contain"
+                            onError={(e) => {
+                              const img = e.currentTarget;
+                              img.style.display = 'none';
+                              const fb = img.nextElementSibling as HTMLElement | null;
+                              if (fb) fb.style.display = 'flex';
+                            }}
+                          />
+                          <span className={cn('absolute inset-0 rounded-2xl bg-gradient-to-br border hidden items-center justify-center', tone)}>
+                            <Icon size={26} />
+                          </span>
+                        </>
+                      ) : (
+                        <Lock size={22} />
+                      )}
                     </div>
                     <p className="mt-2 text-[11px] font-semibold text-white/90 leading-tight">
                       {ach.name}

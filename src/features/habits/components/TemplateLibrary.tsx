@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { X, BookOpen, Loader2 } from 'lucide-react';
+import { X, BookOpen, Loader2, Plus, ChevronRight } from 'lucide-react';
 import { TemplateCard } from './TemplateCard';
 import { TemplateFilters } from './TemplateFilters';
 import { HabitScienceSheet } from './HabitScienceSheet';
@@ -14,12 +14,14 @@ interface TemplateLibraryProps {
   onSelectTemplate: (data: Partial<HabitFormData>, template: HabitTemplate) => void;
   /** Called when modal is closed */
   onClose: () => void;
+  /** Called when the user wants to create a habit from scratch instead */
+  onCreateCustom?: () => void;
 }
 
 /**
  * Modal component for browsing and selecting habit templates
  */
-export function TemplateLibrary({ onSelectTemplate, onClose }: TemplateLibraryProps) {
+export function TemplateLibrary({ onSelectTemplate, onClose, onCreateCustom }: TemplateLibraryProps) {
   const { t } = useLocale();
   const {
     filteredTemplates,
@@ -41,6 +43,16 @@ export function TemplateLibrary({ onSelectTemplate, onClose }: TemplateLibraryPr
   useEffect(() => {
     loadTemplates();
   }, [loadTemplates]);
+
+  // Tapping a card opens the science detail first (when the template maps to
+  // the catalog); templates without a catalog entry are added directly.
+  const handleCardTap = (template: HabitTemplate) => {
+    if (findCatalogEntry(template.name)) {
+      setScienceTemplate(template);
+    } else {
+      handleSelectTemplate(template);
+    }
+  };
 
   // Handle template selection
   const handleSelectTemplate = (template: HabitTemplate) => {
@@ -125,6 +137,29 @@ export function TemplateLibrary({ onSelectTemplate, onClose }: TemplateLibraryPr
 
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-6">
+          {/* Custom habit CTA — always available so users can create from
+              scratch without hunting through the catalog */}
+          {onCreateCustom && (
+            <button
+              type="button"
+              onClick={onCreateCustom}
+              className="w-full mb-5 flex items-center gap-3 rounded-2xl p-4 text-left border border-dashed border-teal-400/40 bg-teal-500/[0.06] hover:bg-teal-500/[0.12] hover:border-teal-400/70 transition-colors"
+            >
+              <span className="shrink-0 flex items-center justify-center w-11 h-11 rounded-xl bg-teal-500/20 text-teal-300">
+                <Plus className="w-6 h-6" />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block text-white text-sm font-bold">
+                  {t('templates.createCustomTitle')}
+                </span>
+                <span className="block text-white/55 text-xs mt-0.5">
+                  {t('templates.createCustomSubtitle')}
+                </span>
+              </span>
+              <ChevronRight className="w-5 h-5 text-white/40 shrink-0" />
+            </button>
+          )}
+
           {/* Loading state */}
           {templatesLoading && (
             <div className="flex flex-col items-center justify-center py-12 text-white/60">
@@ -172,7 +207,7 @@ export function TemplateLibrary({ onSelectTemplate, onClose }: TemplateLibraryPr
                 <TemplateCard
                   key={template.id}
                   template={template}
-                  onSelect={handleSelectTemplate}
+                  onSelect={handleCardTap}
                   onLearnMore={(tpl) => setScienceTemplate(tpl)}
                 />
               ))}
