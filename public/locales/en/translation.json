@@ -643,6 +643,7 @@
   "username": {
     "title": "Username",
     "choose": "Choose your username",
+    "description": "This will be your unique identifier in Everlight",
     "placeholder": "yourUsername",
     "available": "✓ Available",
     "taken": "✗ Already taken",

@@ -22,11 +22,12 @@ i18n
   .use(initReactI18next)
   // Initialize i18next
   .init({
-    // Fallback language if translation is missing
+    // Fallback language if translation is missing. Also the effective
+    // default: detection only reads localStorage, so first-time visitors
+    // (no stored preference) always start in Spanish. Note: an explicit
+    // `lng` here would BYPASS detection and reset the user's stored
+    // language on every reload — do not add one.
     fallbackLng: 'es',
-
-    // Default language (Spanish) - will be overridden ONLY by localStorage
-    lng: 'es',
 
     // Supported languages
     supportedLngs: ['es', 'en'],

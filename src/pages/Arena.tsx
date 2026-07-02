@@ -88,6 +88,7 @@ export function Arena() {
       tier: String(tier),
       weapon: progress.weaponId,
       gems: [...progress.gems, focusGemsParam].filter(Boolean).join(','),
+      level: String(Math.max(1, user.level || 1)),   // the hero enters at their real Everlight level
     });
     if (user.avatarUrl) {
       params.set('avatar', new URL(user.avatarUrl, window.location.origin).href);
