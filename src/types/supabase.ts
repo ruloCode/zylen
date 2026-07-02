@@ -143,6 +143,156 @@ export type Database = {
           },
         ]
       }
+      focus_gem_species: {
+        Row: {
+          is_default: boolean
+          key: string
+          life_area_key: string | null
+          price_points: number
+          sort_order: number
+        }
+        Insert: {
+          is_default?: boolean
+          key: string
+          life_area_key?: string | null
+          price_points?: number
+          sort_order?: number
+        }
+        Update: {
+          is_default?: boolean
+          key?: string
+          life_area_key?: string | null
+          price_points?: number
+          sort_order?: number
+        }
+        Relationships: []
+      }
+      focus_gems: {
+        Row: {
+          activity: string | null
+          created_at: string
+          habit_id: string | null
+          id: string
+          is_archived: boolean
+          name: string
+          species: string
+          user_id: string
+        }
+        Insert: {
+          activity?: string | null
+          created_at?: string
+          habit_id?: string | null
+          id?: string
+          is_archived?: boolean
+          name: string
+          species: string
+          user_id: string
+        }
+        Update: {
+          activity?: string | null
+          created_at?: string
+          habit_id?: string | null
+          id?: string
+          is_archived?: boolean
+          name?: string
+          species?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "focus_gems_species_fkey"
+            columns: ["species"]
+            isOneToOne: false
+            referencedRelation: "focus_gem_species"
+            referencedColumns: ["key"]
+          },
+        ]
+      }
+      focus_species_unlocks: {
+        Row: {
+          points_paid: number
+          species: string
+          unlocked_at: string
+          user_id: string
+        }
+        Insert: {
+          points_paid?: number
+          species: string
+          unlocked_at?: string
+          user_id: string
+        }
+        Update: {
+          points_paid?: number
+          species?: string
+          unlocked_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "focus_species_unlocks_species_fkey"
+            columns: ["species"]
+            isOneToOne: false
+            referencedRelation: "focus_gem_species"
+            referencedColumns: ["key"]
+          },
+        ]
+      }
+      focus_sessions: {
+        Row: {
+          break_reason: string | null
+          duration_minutes: number
+          ended_at: string | null
+          gem_id: string | null
+          id: string
+          life_area_id: string | null
+          paused_ms: number
+          points_awarded: number
+          species: string
+          started_at: string
+          status: string
+          user_id: string
+          xp_awarded: number
+        }
+        Insert: {
+          break_reason?: string | null
+          duration_minutes: number
+          ended_at?: string | null
+          gem_id?: string | null
+          id?: string
+          life_area_id?: string | null
+          paused_ms?: number
+          points_awarded?: number
+          species: string
+          started_at?: string
+          status?: string
+          user_id: string
+          xp_awarded?: number
+        }
+        Update: {
+          break_reason?: string | null
+          duration_minutes?: number
+          ended_at?: string | null
+          gem_id?: string | null
+          id?: string
+          life_area_id?: string | null
+          paused_ms?: number
+          points_awarded?: number
+          species?: string
+          started_at?: string
+          status?: string
+          user_id?: string
+          xp_awarded?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "focus_sessions_gem_id_fkey"
+            columns: ["gem_id"]
+            isOneToOne: false
+            referencedRelation: "focus_gems"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       habit_completions: {
         Row: {
           completed_at: string
@@ -717,8 +867,28 @@ export type Database = {
         Args: { p_achievement_id: string; p_user_id: string }
         Returns: Json
       }
+      break_focus_session: {
+        Args: { p_session_id: string; p_reason: string }
+        Returns: Json
+      }
+      complete_focus_session: {
+        Args: { p_session_id: string }
+        Returns: Json
+      }
       complete_habit: {
         Args: { p_habit_id: string; p_value?: number }
+        Returns: Json
+      }
+      get_focus_stats: {
+        Args: never
+        Returns: Json
+      }
+      start_focus_session: {
+        Args: { p_gem_id: string; p_duration_minutes: number }
+        Returns: Json
+      }
+      unlock_focus_species: {
+        Args: { p_species: string }
         Returns: Json
       }
       generate_username_suggestions: {

@@ -1,0 +1,11 @@
+{
+  "purpose": "Master isometric scene for the Gem Vault ('Bóveda de gemas'): an EMPTY mossy 5x5 tile platform in a bioluminescent night jungle with a portal-altar at the top-right corner. Gem sprites (public/gems/{species}-stage-4.png / broken.png) are composited on the tiles at runtime via bilinear percentage anchors (src/features/focus/utils/platformAnchors.ts) using the Dashboard hero ASSET ALIGNMENT technique — the painted grid seams are decorative; the virtual grid is mathematical. If this image is ever regenerated, the four corner-tile-center constants in platformAnchors.ts MUST be recalibrated (dev overlay: /focus vault view with ?debugAnchors).",
+  "status": "done",
+  "generator": "higgsfield mcp — nano_banana_2, text-to-image 4:5 (rendered 928x1152), post: sips jpeg q74",
+  "items": [
+    {
+      "file": "public/gems/vault-platform.jpg",
+      "prompt": "Isometric video-game diorama, premium mobile-game splash art, 3D rendered: a floating square platform of mossy green grass tiles in a perfect 5x5 grid on a carved dark-stone base, viewed in clean isometric perspective, occupying the lower two thirds of the frame, every tile flat and completely empty, subtle thin seams between tiles; a small ancient stone portal-altar with a glowing teal crystal arch stands at the platform's top-right corner emitting warm golden light; surrounding it a lush bioluminescent night jungle: giant dark leaves, mayan-style ruins, waterfall in the mist, teal fireflies and glowing flowers; palette deep charcoal #101418 with teal #2DD4BF and gold #F29C06 accents, cinematic volumetric god rays, high detail, no characters, no animals, nothing placed on the tiles, no text, no watermark."
+    }
+  ]
+}

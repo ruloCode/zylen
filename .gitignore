@@ -33,3 +33,8 @@ dist-ssr
 .learnings/
 supabase/.temp/
 .vercel
+
+# Scratch screenshots / reference images at repo root (real app assets live in public/)
+/*.jpeg
+/*.jpg
+/*.png

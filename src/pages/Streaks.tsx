@@ -7,38 +7,20 @@ import {
   ChevronDown,
   ChevronRight,
   Compass,
-  Heart,
-  Dumbbell,
-  BookOpen,
-  Users,
-  Wallet,
-  Briefcase,
   type LucideIcon,
   Loader2,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useUser, useHabits, useStreaks, useLifeAreas } from '@/store';
 import { useLocale } from '@/hooks/useLocale';
 import { getAreaLevelProgress } from '@/utils/xp';
-import { getHeroBodySrc } from '@/constants';
+import { getHeroBodySrc, getLifeAreaMeta, ROUTES } from '@/constants';
+import { getIcon } from '@/components/atoms/icons/iconMaps';
 import { StatsService, type DailyActivity } from '@/services/supabase/stats.service';
 
 // The character body is resolved from the user's chosen avatar (see getHeroBodySrc).
 const HERO_BG_SRC = '/hero-bg.png';
-
-// Fallback accent palette for area rows lacking an explicit color.
-const AREA_COLORS = ['#4CAF6D', '#8B5CF6', '#E0A93B', '#2DD4BF', '#F472B6', '#60A5FA'];
-
-// Map a life-area key to a lucide icon.
-const AREA_ICONS: Record<string, LucideIcon> = {
-  health: Heart,
-  fitness: Dumbbell,
-  finance: Wallet,
-  creativity: BookOpen,
-  social: Users,
-  family: Heart,
-  career: Briefcase,
-};
 
 export function Streaks() {
   const { user, isLoading: userLoading } = useUser();
@@ -46,6 +28,7 @@ export function Streaks() {
   const { habits } = useHabits();
   const { lifeAreas } = useLifeAreas();
   const { t } = useLocale();
+  const navigate = useNavigate();
 
   const isLoading = userLoading || streakLoading;
 
@@ -319,6 +302,7 @@ export function Streaks() {
             <h2 className="text-white font-bold text-base">{t('progress.focusAreas')}</h2>
             <button
               type="button"
+              onClick={() => navigate(ROUTES.REALMS)}
               className="text-teal-300 text-sm font-semibold"
               aria-label={t('progress.seeDetail')}
             >
@@ -329,19 +313,23 @@ export function Streaks() {
             <p className="text-white/50 text-sm text-center py-4">{t('progress.subtitle')}</p>
           ) : (
             <div className="space-y-3">
-              {focusAreas.map((area, index) => {
-                const key = String(area.area).toLowerCase();
-                const Icon = (area.iconName && AREA_ICONS[area.iconName.toLowerCase()]) ||
-                  AREA_ICONS[key] || Star;
-                const color = area.color || AREA_COLORS[index % AREA_COLORS.length];
-                const label = t(`lifeAreas.${key}`, { defaultValue: String(area.area) });
+              {focusAreas.map((area) => {
+                const meta = getLifeAreaMeta(area);
+                const Icon = getIcon(meta.iconName, Star);
+                const label = t(meta.i18nKey, { defaultValue: String(area.area) });
                 const prog = getAreaLevelProgress(area.totalXP, area.level);
                 const pct = prog.max > 0 ? Math.min((prog.current / prog.max) * 100, 100) : 0;
                 return (
-                  <div key={area.id} className="flex items-center gap-3">
+                  <button
+                    key={area.id}
+                    type="button"
+                    onClick={() => navigate(ROUTES.REALMS, { state: { areaId: area.id } })}
+                    className="w-full flex items-center gap-3 text-left"
+                    aria-label={label}
+                  >
                     <span className="shrink-0 w-11 h-11 rounded-full grid place-items-center relative">
                       <img
-                        src={`/life-areas/${key}.png`}
+                        src={meta.image}
                         alt=""
                         aria-hidden="true"
                         className="w-full h-full object-contain"
@@ -352,7 +340,7 @@ export function Streaks() {
                           const fb = img.nextElementSibling as HTMLElement | null;
                           if (fb) {
                             fb.style.display = 'flex';
-                            fb.style.backgroundColor = color || '#2DD4BF';
+                            fb.style.backgroundColor = meta.color;
                           }
                         }}
                       />
@@ -362,30 +350,30 @@ export function Streaks() {
                         <Icon size={18} className="text-white" />
                       </span>
                     </span>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center justify-between gap-2">
-                        <p className="text-white font-semibold text-sm truncate">{label}</p>
-                        <p className="text-white/50 text-xs font-medium shrink-0">
-                          {t('home.levelLabel', {
+                    <span className="min-w-0 flex-1">
+                      <span className="flex items-center justify-between gap-2">
+                        <span className="text-white font-semibold text-sm truncate">{label}</span>
+                        <span className="text-white/50 text-xs font-medium shrink-0">
+                          {t('realms.levelLabel', {
                             level: area.level,
                             defaultValue: `Nivel ${area.level}`,
                           })}
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-2 mt-1.5">
-                        <div className="h-1.5 flex-1 rounded-full bg-white/10 overflow-hidden">
-                          <div
-                            className="h-full rounded-full transition-all duration-500"
-                            style={{ width: `${pct}%`, backgroundColor: color }}
+                        </span>
+                      </span>
+                      <span className="flex items-center gap-2 mt-1.5">
+                        <span className="h-1.5 flex-1 rounded-full bg-white/10 overflow-hidden">
+                          <span
+                            className="block h-full rounded-full transition-all duration-500"
+                            style={{ width: `${pct}%`, backgroundColor: meta.color }}
                           />
-                        </div>
+                        </span>
                         <span className="text-white/50 text-[10px] font-medium shrink-0">
                           {prog.current} / {prog.max} XP
                         </span>
-                      </div>
-                    </div>
+                      </span>
+                    </span>
                     <ChevronRight size={18} className="text-white/30 shrink-0" />
-                  </div>
+                  </button>
                 );
               })}
             </div>

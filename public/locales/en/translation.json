@@ -742,6 +742,8 @@
     "clearFilters": "Clear filters",
     "addToMyHabits": "Add to My Habits",
     "footerHint": "Select a template and customize it to fit your needs",
+    "createCustomTitle": "Create custom habit",
+    "createCustomSubtitle": "Can't find what you're looking for? Build it from scratch",
     "filters": {
       "all": "All"
     },
@@ -1598,5 +1600,167 @@
     "homeTitle": "Learn habits",
     "explore": "Explore",
     "libraryTitle": "Habit catalog"
+  },
+  "arena": {
+    "title": "Temple of Disorder",
+    "badge": "Co-op arena",
+    "cardTitle": "Temple of Disorder",
+    "cardSubtitle": "Enter the 3D arena, fight your vices with up to 3 heroes and defeat Supreme Sloth.",
+    "cardCta": "Enter the arena",
+    "loading": "Opening the portal to the Temple…",
+    "victoryReward": "You defeated Supreme Sloth! +{{xp}} XP · +{{points}} points",
+    "dailyCapReached": "The Temple's light rests for today — come back tomorrow for more rewards.",
+    "rewardError": "Could not deliver the reward. Check your connection.",
+    "armory": {
+      "title": "Guardian's Armory",
+      "subtitle": "Your habits forge your power — buy with your points.",
+      "selectTier": "Choose your arena",
+      "tierLabel": "Arena {{tier}}",
+      "tierHint": "Victory reward: +{{xp}} XP · +{{points}} points",
+      "weapons": "Staves",
+      "gems": "Gems",
+      "gemSlots": "Up to {{max}} gems socketed at once.",
+      "equipped": "Equipped",
+      "equip": "Equip",
+      "unequip": "Remove",
+      "insufficient": "Not enough points — complete more habits.",
+      "purchased": "Purchased! Your habits' power takes shape.",
+      "purchaseError": "Purchase could not be completed.",
+      "enter": "Enter Arena {{tier}}",
+      "back": "Armory"
+    },
+    "gear": {
+      "staff_novice": {
+        "name": "Initiate's Staff",
+        "desc": "Your first light. Base damage."
+      },
+      "staff_adept": {
+        "name": "Adept's Staff",
+        "desc": "+30% damage."
+      },
+      "staff_guardian": {
+        "name": "Guardian's Staff",
+        "desc": "+60% damage · 10% faster attack."
+      },
+      "staff_everlight": {
+        "name": "Everlight Staff",
+        "desc": "×2 damage · 20% faster attack."
+      },
+      "vitality": {
+        "name": "Vitality Gem",
+        "desc": "+30 max HP."
+      },
+      "swift": {
+        "name": "Swift Gem",
+        "desc": "+12% movement speed."
+      },
+      "wisdom": {
+        "name": "Wisdom Gem",
+        "desc": "+30% arena XP."
+      },
+      "wrath": {
+        "name": "Wrath Gem",
+        "desc": "+50% Light Nova damage."
+      },
+      "haste": {
+        "name": "Haste Gem",
+        "desc": "−25% spell cooldowns."
+      },
+      "leech": {
+        "name": "Leech Gem",
+        "desc": "Steal 10% of damage as life."
+      }
+    },
+    "gemPowerActive": "Gem power active",
+    "gemPowerNone": "Grow gems in Focus to earn powers"
+  },
+  "focus": {
+    "title": "Focus of the day",
+    "subtitle": "Grow gems with deep focus sessions",
+    "pickGem": "Pick your gem",
+    "newGem": "New gem",
+    "noGems": "Create your first gem: name it and choose which realm it feeds.",
+    "duration": "Duration",
+    "start": "Grow gem",
+    "stage1": "Crystal seed",
+    "stage2": "Sprouting",
+    "stage3": "Taking shape",
+    "stage4": "Full gem",
+    "keepGrowing": "Your gem is growing… stay focused",
+    "keepGrowingCta": "Keep growing",
+    "pauseBudget": "Pause left: {{time}}",
+    "abandon": "Abandon",
+    "abandonTitle": "Abandon the session?",
+    "abandonBody": "If you abandon now, your gem will break and you won't earn Light.",
+    "abandonConfirm": "Break the gem",
+    "completeTitle": "Your gem has grown!",
+    "completeReward": "+{{xp}} Light · +{{points}} Essence",
+    "completeCapped": "Daily cap reached: reduced reward.",
+    "growAnother": "Grow another gem",
+    "brokenTitle": "Your gem broke",
+    "brokenPause": "The pause lasted too long and the gem lost its light. Next time, come back within 3 minutes.",
+    "brokenAbandon": "You abandoned the session early. Every gem needs your full focus to grow.",
+    "brokenExpired": "The session was left unattended for too long. Try again with a new gem.",
+    "retry": "Try again",
+    "vault": "Gem vault",
+    "vaultToday": "Today",
+    "vaultWeek": "Week",
+    "statsGems": "Gems",
+    "statsMinutes": "Minutes",
+    "statsBroken": "Broken",
+    "vaultEmpty": "No gems in this period yet. Grow the first one!",
+    "speciesTotals": "Collection by realm",
+    "arenaPower": "Arena power",
+    "arenaPowerHint": "Every grown gem strengthens your hero in the Temple of Disorder: more health, damage and powers.",
+    "shieldProgress": "Light Shield: {{count}}/{{total}} gems",
+    "creator": {
+      "title": "New gem",
+      "name": "Name",
+      "namePlaceholder": "E.g. Study, Read, Meditate…",
+      "linkHabit": "Link to a habit (optional)",
+      "noHabit": "No habit — free activity",
+      "activity": "Activity",
+      "activityPlaceholder": "What will you focus on?",
+      "species": "Gem realm",
+      "speciesLocked": "The realm is inherited from the linked habit.",
+      "create": "Create gem",
+      "unlockTitle": "Unlock the {{species}} gem?",
+      "unlockBody": "Unlock it for ◆{{price}} Essence and grow it forever.",
+      "unlock": "Unlock",
+      "unlockCta": "Unlock {{species}} for ◆{{price}}",
+      "unlocked": "Species unlocked!",
+      "unlockFailed": "Could not unlock. Try again.",
+      "insufficientPoints": "Not enough Essence — earn it by completing habits."
+    },
+    "notificationTitle": "Your gem has grown! 💎",
+    "notificationBody": "Focus session complete. Come back to Zylen to claim your Light.",
+    "errors": {
+      "alreadyRunning": "You already have a session running.",
+      "startFailed": "Could not start the session. Try again.",
+      "completeFailed": "Could not complete the session.",
+      "createFailed": "Could not create the gem."
+    },
+    "starterGem": "Focus",
+    "vaultMonth": "Month",
+    "vaultYear": "Year",
+    "vaultLatest": "Latest gem",
+    "vaultOverflow": "+{{count}}",
+    "vaultInfo": "Every focus session grows a gem on the platform. Broken ones leave their mark too. Switch periods to see your harvest.",
+    "vaultChipLight": "Light",
+    "vaultChipEssence": "Essence",
+    "vaultChipGems": "Gems grown"
+  },
+  "realms": {
+    "title": "Focus Realms",
+    "subtitle": "Every habit you complete feeds the light of a realm. Grow them all.",
+    "cardBadge": "Realms",
+    "cardTitle": "Focus Realms",
+    "cardSubtitle": "Watch your light strengthen every domain of your life.",
+    "cardCta": "View my realms",
+    "levelLabel": "Level {{level}}",
+    "habitsCount_one": "{{count}} habit",
+    "habitsCount_other": "{{count}} habits",
+    "dormant": "Dormant realm",
+    "empty": "No realms to light up yet."
   }
 }

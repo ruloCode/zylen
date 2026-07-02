@@ -766,6 +766,8 @@
     "clearFilters": "Limpiar filtros",
     "addToMyHabits": "Agregar a Mis Hábitos",
     "footerHint": "Selecciona una plantilla y personalízala según tus necesidades",
+    "createCustomTitle": "Crear hábito personalizado",
+    "createCustomSubtitle": "¿No encuentras lo que buscas? Créalo desde cero",
     "filters": {
       "all": "Todos"
     },
@@ -1622,5 +1624,167 @@
     "homeTitle": "Aprende hábitos",
     "explore": "Explorar",
     "libraryTitle": "Catálogo de hábitos"
+  },
+  "arena": {
+    "title": "Templo del Desorden",
+    "badge": "Arena co-op",
+    "cardTitle": "Templo del Desorden",
+    "cardSubtitle": "Entra a la arena 3D, combate tus vicios con hasta 3 héroes y vence a la Pereza Suprema.",
+    "cardCta": "Entrar a la arena",
+    "loading": "Abriendo el portal al Templo…",
+    "victoryReward": "¡Venciste a la Pereza Suprema! +{{xp}} XP · +{{points}} puntos",
+    "dailyCapReached": "La luz del Templo descansa por hoy — vuelve mañana por más recompensas.",
+    "rewardError": "No se pudo entregar la recompensa. Revisa tu conexión.",
+    "armory": {
+      "title": "Armería del Guardián",
+      "subtitle": "Tus hábitos forjan tu poder — compra con tus puntos.",
+      "selectTier": "Elige tu arena",
+      "tierLabel": "Arena {{tier}}",
+      "tierHint": "Recompensa por victoria: +{{xp}} XP · +{{points}} puntos",
+      "weapons": "Bastones",
+      "gems": "Gemas",
+      "gemSlots": "Hasta {{max}} gemas engarzadas a la vez.",
+      "equipped": "Equipado",
+      "equip": "Equipar",
+      "unequip": "Quitar",
+      "insufficient": "Puntos insuficientes — completa más hábitos.",
+      "purchased": "¡Comprado! El poder de tus hábitos toma forma.",
+      "purchaseError": "No se pudo completar la compra.",
+      "enter": "Entrar a la Arena {{tier}}",
+      "back": "Armería"
+    },
+    "gear": {
+      "staff_novice": {
+        "name": "Bastón del Iniciado",
+        "desc": "Tu primera luz. Daño base."
+      },
+      "staff_adept": {
+        "name": "Bastón del Adepto",
+        "desc": "+30% de daño."
+      },
+      "staff_guardian": {
+        "name": "Bastón del Guardián",
+        "desc": "+60% de daño · ataque 10% más rápido."
+      },
+      "staff_everlight": {
+        "name": "Bastón Everlight",
+        "desc": "Daño ×2 · ataque 20% más rápido."
+      },
+      "vitality": {
+        "name": "Gema de Vitalidad",
+        "desc": "+30 HP máximo."
+      },
+      "swift": {
+        "name": "Gema Veloz",
+        "desc": "+12% velocidad de movimiento."
+      },
+      "wisdom": {
+        "name": "Gema de Sabiduría",
+        "desc": "+30% XP en la arena."
+      },
+      "wrath": {
+        "name": "Gema de Ira",
+        "desc": "+50% daño de Nova de Luz."
+      },
+      "haste": {
+        "name": "Gema de Celeridad",
+        "desc": "−25% cooldowns de hechizos."
+      },
+      "leech": {
+        "name": "Gema Sangrante",
+        "desc": "Robas 10% del daño como vida."
+      }
+    },
+    "gemPowerActive": "Poder de gemas activo",
+    "gemPowerNone": "Cultiva gemas en Enfoque para ganar poderes"
+  },
+  "focus": {
+    "title": "Enfoque del día",
+    "subtitle": "Cultiva gemas con sesiones de enfoque profundo",
+    "pickGem": "Elige tu gema",
+    "newGem": "Nueva gema",
+    "noGems": "Crea tu primera gema: dale un nombre y elige a qué reino alimenta.",
+    "duration": "Duración",
+    "start": "Cultivar gema",
+    "stage1": "Semilla de cristal",
+    "stage2": "Brotando",
+    "stage3": "Formándose",
+    "stage4": "Gema completa",
+    "keepGrowing": "Tu gema está creciendo… mantén el enfoque",
+    "keepGrowingCta": "Seguir cultivando",
+    "pauseBudget": "Pausa restante: {{time}}",
+    "abandon": "Abandonar",
+    "abandonTitle": "¿Abandonar la sesión?",
+    "abandonBody": "Si abandonas ahora, tu gema se romperá y no ganarás Luz.",
+    "abandonConfirm": "Romper la gema",
+    "completeTitle": "¡Tu gema ha crecido!",
+    "completeReward": "+{{xp}} Luz · +{{points}} Esencia",
+    "completeCapped": "Alcanzaste el límite diario: recompensa reducida.",
+    "growAnother": "Cultivar otra gema",
+    "brokenTitle": "Tu gema se rompió",
+    "brokenPause": "La pausa duró demasiado y la gema perdió su luz. La próxima vez, vuelve antes de 3 minutos.",
+    "brokenAbandon": "Abandonaste la sesión antes de tiempo. Cada gema necesita tu enfoque completo para crecer.",
+    "brokenExpired": "La sesión quedó abandonada demasiado tiempo. Vuelve a intentarlo con una nueva gema.",
+    "retry": "Intentar de nuevo",
+    "vault": "Bóveda de gemas",
+    "vaultToday": "Hoy",
+    "vaultWeek": "Semana",
+    "statsGems": "Gemas",
+    "statsMinutes": "Minutos",
+    "statsBroken": "Rotas",
+    "vaultEmpty": "Aún no hay gemas en este período. ¡Cultiva la primera!",
+    "speciesTotals": "Colección por reino",
+    "arenaPower": "Poder en la Arena",
+    "arenaPowerHint": "Cada gema cultivada fortalece a tu héroe en el Templo del Desorden: más vida, daño y poderes.",
+    "shieldProgress": "Escudo de Luz: {{count}}/{{total}} gemas",
+    "creator": {
+      "title": "Nueva gema",
+      "name": "Nombre",
+      "namePlaceholder": "Ej. Estudiar, Leer, Meditar…",
+      "linkHabit": "Vincular a un hábito (opcional)",
+      "noHabit": "Sin hábito — actividad libre",
+      "activity": "Actividad",
+      "activityPlaceholder": "¿En qué te vas a enfocar?",
+      "species": "Reino de la gema",
+      "speciesLocked": "El reino se hereda del hábito vinculado.",
+      "create": "Crear gema",
+      "unlockTitle": "¿Desbloquear gema de {{species}}?",
+      "unlockBody": "Desbloquéala por ◆{{price}} Esencia y podrás sembrarla para siempre.",
+      "unlock": "Desbloquear",
+      "unlockCta": "Desbloquear {{species}} por ◆{{price}}",
+      "unlocked": "¡Especie desbloqueada!",
+      "unlockFailed": "No se pudo desbloquear. Intenta de nuevo.",
+      "insufficientPoints": "Te falta Esencia — gánala completando hábitos."
+    },
+    "notificationTitle": "¡Tu gema ha crecido! 💎",
+    "notificationBody": "Sesión de enfoque completada. Vuelve a Zylen para reclamar tu Luz.",
+    "errors": {
+      "alreadyRunning": "Ya tienes una sesión en curso.",
+      "startFailed": "No se pudo iniciar la sesión. Intenta de nuevo.",
+      "completeFailed": "No se pudo completar la sesión.",
+      "createFailed": "No se pudo crear la gema."
+    },
+    "starterGem": "Enfoque",
+    "vaultMonth": "Mes",
+    "vaultYear": "Año",
+    "vaultLatest": "Última gema",
+    "vaultOverflow": "+{{count}}",
+    "vaultInfo": "Cada sesión de enfoque cultiva una gema en la plataforma. Las rotas también dejan huella. Cambia el período para ver tu cosecha.",
+    "vaultChipLight": "Luz",
+    "vaultChipEssence": "Esencia",
+    "vaultChipGems": "Gemas cultivadas"
+  },
+  "realms": {
+    "title": "Reinos de enfoque",
+    "subtitle": "Cada hábito completado alimenta la luz de un reino. Hazlos crecer todos.",
+    "cardBadge": "Reinos",
+    "cardTitle": "Reinos de enfoque",
+    "cardSubtitle": "Observa cómo tu luz fortalece cada dominio de tu vida.",
+    "cardCta": "Ver mis reinos",
+    "levelLabel": "Nivel {{level}}",
+    "habitsCount_one": "{{count}} hábito",
+    "habitsCount_other": "{{count}} hábitos",
+    "dormant": "Reino dormido",
+    "empty": "Aún no hay reinos que iluminar."
   }
 }

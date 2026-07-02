@@ -1,0 +1,30 @@
+{
+  "purpose": "Growth-stage gems for the Focus (Pomodoro) feature. Each life-area species grows through 4 stages during a focus session. Stage 4 is NOT generated: it is a byte-for-byte copy of the matching public/life-areas/{key}.png so the finished gem is identical to the realm gem. Stages 1-3 were generated image-to-image (Higgsfield nano_banana_2) using the stage-4 PNG as reference for style/motif continuity, then background-removed. 1024x1024 transparent PNG except focus-bg.png (9:16 scene, opaque).",
+  "status": "done",
+  "generator": "higgsfield mcp — nano_banana_2 (image-to-image with /life-areas/{key}.png as reference) + remove_background post-pass",
+  "shared_prompt_body": "Same 3D-rendered premium mobile-game style, teal (#2DD4BF) and gold (#F29C06) dark-fantasy palette, soft inner glow, subject centered and isolated on a plain solid very dark charcoal background, no text, no watermark.",
+  "stage_descriptors": {
+    "stage-1": "EARLIEST growth stage: only a tiny dormant crystal seed of the same material and colors, half-buried in the same carved stone pedestal, the crystal barely emerging, faint inner light just awakening, sprouting moss and one young jungle vine.",
+    "stage-2": "MID growth stage: a budding crystal cluster about half formed, beginning to hint at the final shape, jungle vines curling up the same carved stone pedestal, inner glow strengthening.",
+    "stage-3": "NEARLY COMPLETE: the gem almost fully formed, bright facets emerging, vivid inner glow, small light motes floating, a few final shards still crystallizing.",
+    "stage-4": "copy of public/life-areas/{key}.png (no generation)"
+  },
+  "items": [
+    { "species": "health", "files": ["public/gems/health-stage-1.png", "public/gems/health-stage-2.png", "public/gems/health-stage-3.png", "public/gems/health-stage-4.png"], "motif": "heart-shaped emerald crystal with a gentle pulse of light and a leaf motif" },
+    { "species": "finance", "files": ["public/gems/finance-stage-1.png", "public/gems/finance-stage-2.png", "public/gems/finance-stage-3.png", "public/gems/finance-stage-4.png"], "motif": "amber-gold coin crystal engraved with a rune of abundance" },
+    { "species": "creativity", "files": ["public/gems/creativity-stage-1.png", "public/gems/creativity-stage-2.png", "public/gems/creativity-stage-3.png", "public/gems/creativity-stage-4.png"], "motif": "violet-teal crystal shaped like a flame-brush with floating ink sparks" },
+    { "species": "social", "files": ["public/gems/social-stage-1.png", "public/gems/social-stage-2.png", "public/gems/social-stage-3.png", "public/gems/social-stage-4.png"], "motif": "two intertwined teal crystals forming a bond, connected by a thread of light" },
+    { "species": "family", "files": ["public/gems/family-stage-1.png", "public/gems/family-stage-2.png", "public/gems/family-stage-3.png", "public/gems/family-stage-4.png"], "motif": "warm rose-gold crystal cluster (one large, two small gems) sheltered under a stone arch" },
+    { "species": "career", "files": ["public/gems/career-stage-1.png", "public/gems/career-stage-2.png", "public/gems/career-stage-3.png", "public/gems/career-stage-4.png"], "motif": "deep-blue crystal mountain peak with a golden summit-flag rune" },
+    {
+      "species": null,
+      "files": ["public/gems/broken.png"],
+      "prompt": "A shattered mystical crystal totem gem: grey-teal crystal split into several broken fragments collapsed on a cracked carved stone pedestal, dim fading inner glow, tiny dust particles and dying light motes, withered jungle vine, somber melancholic mood. Shared species accent is added in the UI via a colored CSS glow behind the image."
+    },
+    {
+      "species": null,
+      "files": ["public/gems/focus-bg.png"],
+      "prompt": "Dark-fantasy magical jungle shrine interior at night: an empty carved stone altar centered in the lower third of the frame, glowing teal runes etched into the stone, fireflies and floating light motes, misty atmospheric depth, ancient vines and giant jungle leaves framing the edges, distant bioluminescent plants, deep charcoal and teal palette with warm gold accents, cinematic volumetric lighting, premium mobile-game splash art quality, no characters, no text. 9:16, opaque (rendered under a charcoal gradient at ~40% opacity)."
+    }
+  ]
+}

@@ -13,6 +13,8 @@ import { createRootHabitSlice } from './rootHabitSlice';
 import { createAchievementsSlice } from './achievementsSlice';
 import { createHabitTemplatesSlice } from './habitTemplatesSlice';
 import { createThemeSlice } from './themeSlice';
+import { createArenaSlice } from './arenaSlice';
+import { createFocusSlice } from './focusSlice';
 import { AVATARS, LIFE_AREAS } from '@/constants';
 import type { LifeArea, Streak, User } from '@/types';
 import type { HabitWithCompletion } from '@/services/supabase/habits.service';
@@ -35,6 +37,8 @@ export const useAppStore = create<AppStore>()((...a) => ({
   ...createAchievementsSlice(...a),
   ...createHabitTemplatesSlice(...a),
   ...createThemeSlice(...a),
+  ...createArenaSlice(...a),
+  ...createFocusSlice(...a),
 }));
 
 // Typed hooks for easier access
@@ -248,6 +252,40 @@ export function useTheme() {
     theme: state.theme,
     setTheme: state.setTheme,
     loadTheme: state.loadTheme,
+  }));
+  return useAppStore(selector);
+}
+
+export function useArena() {
+  const selector = useShallow((state: AppStore) => ({
+    arenaProgress: state.arenaProgress,
+    arenaLoading: state.arenaLoading,
+    arenaError: state.arenaError,
+    loadArenaProgress: state.loadArenaProgress,
+    purchaseArenaItem: state.purchaseArenaItem,
+    equipArenaGear: state.equipArenaGear,
+    completeArenaTier: state.completeArenaTier,
+  }));
+  return useAppStore(selector);
+}
+
+export function useFocus() {
+  const selector = useShallow((state: AppStore) => ({
+    focusGems: state.focusGems,
+    focusSpecies: state.focusSpecies,
+    focusStats: state.focusStats,
+    activeFocusSession: state.activeFocusSession,
+    isLoading: state.focusLoading,
+    error: state.focusError,
+    loadFocusData: state.loadFocusData,
+    createFocusGem: state.createFocusGem,
+    archiveFocusGem: state.archiveFocusGem,
+    unlockFocusSpecies: state.unlockFocusSpecies,
+    startFocusSession: state.startFocusSession,
+    completeFocusSession: state.completeFocusSession,
+    breakFocusSession: state.breakFocusSession,
+    setActiveFocusSession: state.setActiveFocusSession,
+    updateFocusPause: state.updateFocusPause,
   }));
   return useAppStore(selector);
 }

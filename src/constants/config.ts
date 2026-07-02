@@ -91,13 +91,34 @@ export const AVATARS = {
 export const DEFAULT_AVATAR = AVATARS.HERO;
 
 // Selectable avatars surfaced in the avatar picker (onboarding + profile).
-// `url`  = square bust shown in the picker / profile / header.
-// `body` = full-body PNG used as the standing hero on the Home (must follow the
-//          avatar canvas convention: portrait 2:3, centred, feet at ~93%).
+// `url`   = square bust shown in the picker / profile / header.
+// `body`  = full-body PNG used as the standing hero on the Home (must follow
+//           the avatar canvas convention: portrait 2:3, centred, feet at ~93%).
+// `video` = idle-loop clips of the same artwork (alpha channel), played over
+//           the Home hero instead of the static PNG. Two encodings of the
+//           same clip: `mov` (HEVC+alpha — Safari/iOS) and `webm` (VP9+alpha
+//           — Chrome/Android/Firefox). Filenames are VERSIONED (-vN): the
+//           service worker caches them CacheFirst, so regenerating a clip
+//           means bumping the version suffix. `undefined` = static PNG only.
 // `nameKey` resolves through i18n (profile.avatars.*).
 export const AVATAR_OPTIONS = [
-  { id: 'rulo', nameKey: 'profile.avatars.rulo', url: AVATARS.RULO, body: '/hero-character.png' },
-  { id: 'dani', nameKey: 'profile.avatars.dani', url: AVATARS.DANI, body: '/avatars/dani-full.png' },
+  {
+    id: 'rulo',
+    nameKey: 'profile.avatars.rulo',
+    url: AVATARS.RULO,
+    body: '/hero-character.png',
+    video: {
+      mov: '/avatars/video/rulo-idle-v1.mov',
+      webm: '/avatars/video/rulo-idle-v1.webm',
+    },
+  },
+  {
+    id: 'dani',
+    nameKey: 'profile.avatars.dani',
+    url: AVATARS.DANI,
+    body: '/avatars/dani-full.png',
+    video: undefined,
+  },
 ] as const;
 
 // Default full-body hero character (Rulo) when the user has no/unknown avatar.
@@ -110,6 +131,31 @@ export const DEFAULT_HERO_BODY = '/hero-character.png';
 export function getHeroBodySrc(avatarUrl?: string | null): string {
   const opt = AVATAR_OPTIONS.find((o) => o.url === avatarUrl);
   return opt?.body ?? DEFAULT_HERO_BODY;
+}
+
+/** Ordered <source> list for the hero idle-loop video. */
+export interface HeroVideoSource {
+  src: string;
+  type: string;
+}
+
+/**
+ * Resolve the hero idle-loop video sources from the user's saved avatar.
+ * Mirrors getHeroBodySrc; falls back to the default hero. Returns undefined
+ * when the avatar has no clip (the hero then stays a static PNG). The mov
+ * (HEVC+alpha) source goes first: Safari picks it and Chrome skips to the
+ * webm — reversed, Safari would pick the webm and lose the alpha channel.
+ */
+export function getHeroVideoSources(
+  avatarUrl?: string | null
+): HeroVideoSource[] | undefined {
+  const opt = AVATAR_OPTIONS.find((o) => o.url === avatarUrl);
+  const video = (opt ?? AVATAR_OPTIONS[0]).video;
+  if (!video) return undefined;
+  return [
+    { src: video.mov, type: 'video/quicktime' },
+    { src: video.webm, type: 'video/webm' },
+  ];
 }
 
 // Identity & personalization options collected during onboarding.
@@ -144,6 +190,34 @@ export const AGE_RANGE_OPTIONS = [
   { value: '45-54', labelKey: 'onboarding.aboutYou.ageRanges.mature' },
   { value: '55+', labelKey: 'onboarding.aboutYou.ageRanges.senior' },
 ] as const;
+
+// Arena (embedded co-op game) configuration
+export const GAME_CONFIG = {
+  url: 'https://noble-shore-296.higgsfield.gg/',
+  victoryXP: 75,
+  victoryPoints: 25,
+  maxRewardedVictoriesPerDay: 3,
+  rewardCounterKeyPrefix: 'everlight_game_rewards_', // + yyyy-mm-dd
+} as const;
+
+// Focus (Pomodoro) configuration — "Enfoque del día"
+export const FOCUS_CONFIG = {
+  presets: [10, 25, 45, 60],
+  minMinutes: 10,
+  maxMinutes: 120,
+  xpPerMinute: 1,
+  pointsPerXP: 0.5,
+  dailyXPSoftCap: 120, // mirrors complete_focus_session damping thresholds
+  maxPauseMs: 180_000, // 3 min pause budget, then the gem breaks
+  completionGraceMs: 30_000, // server grace before the nominal end
+  returnGraceMs: 600_000, // 10 min to come back after the timer ended
+  storageKey: 'everlight_focus_session_v1',
+  devStorageKey: 'everlight_focus_dev_v1',
+  arena: {
+    shieldUnlockGems: 10,
+    buffTiers: [1, 3, 6, 10, 15],
+  },
+} as const;
 
 // Chat configuration
 export const CHAT_CONFIG = {

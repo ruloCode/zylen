@@ -18,6 +18,9 @@ const Shop = lazy(() => import('./pages/Shop').then(m => ({ default: m.Shop })))
 const Chat = lazy(() => import('./pages/Chat').then(m => ({ default: m.Chat })));
 const Social = lazy(() => import('./pages/Social').then(m => ({ default: m.Social })));
 const Leaderboard = lazy(() => import('./pages/Leaderboard').then(m => ({ default: m.Leaderboard })));
+const Arena = lazy(() => import('./pages/Arena').then(m => ({ default: m.Arena })));
+const Realms = lazy(() => import('./pages/Realms').then(m => ({ default: m.Realms })));
+const Focus = lazy(() => import('./pages/Focus').then(m => ({ default: m.Focus })));
 const Onboarding = lazy(() => import('./pages/Onboarding').then(m => ({ default: m.Onboarding })));
 const Profile = lazy(() => import('./pages/Profile').then(m => ({ default: m.Profile })));
 const Login = lazy(() => import('./pages/Login').then(m => ({ default: m.Login })));
@@ -70,6 +73,11 @@ function OnboardingEntry() {
 function ProtectedShell() {
   const location = useLocation();
   const isHome = location.pathname === ROUTES.DASHBOARD;
+  // Immersive routes render their own chrome: the Arena (fullscreen game
+  // embed) and Focus (a running countdown must not share the screen with the
+  // bottom nav — mis-taps break gems).
+  const isImmersive =
+    location.pathname === ROUTES.ARENA || location.pathname === ROUTES.FOCUS;
 
   return (
     <div className="w-full min-h-screen">
@@ -82,11 +90,11 @@ function ProtectedShell() {
       </a>
 
       {/* Header */}
-      <Header />
+      {!isImmersive && <Header />}
 
       {/* Main content with proper landmark. The keyed wrapper replays a
           short fade+slide on every route change (page transition). */}
-      <main id="main-content" className={isHome ? 'pb-28' : 'pt-16 pb-24'}>
+      <main id="main-content" className={isImmersive ? '' : isHome ? 'pb-28' : 'pt-16 pb-24'}>
         <div key={location.pathname} className="animate-page-in motion-reduce:animate-none">
           <Routes>
             <Route path={ROUTES.ONBOARDING} element={<Onboarding />} />
@@ -100,11 +108,14 @@ function ProtectedShell() {
             <Route path={ROUTES.CHAT} element={<Chat />} />
             <Route path={ROUTES.SOCIAL} element={<Social />} />
             <Route path={ROUTES.LEADERBOARD} element={<Leaderboard />} />
+            <Route path={ROUTES.ARENA} element={<Arena />} />
+            <Route path={ROUTES.REALMS} element={<Realms />} />
+            <Route path={ROUTES.FOCUS} element={<Focus />} />
           </Routes>
         </div>
       </main>
 
-      <Navigation />
+      {!isImmersive && <Navigation />}
     </div>
   );
 }

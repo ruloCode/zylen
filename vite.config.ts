@@ -64,6 +64,19 @@ export default defineConfig({
             handler: "StaleWhileRevalidate",
             options: { cacheName: "zylen-locales" },
           },
+          {
+            // Hero animation media (idle-loop videos, 3D models). Never
+            // precached (too big); cached on first use. Invalidation is by
+            // versioned filename (rulo-idle-v1 -> -v2), so a long expiration
+            // is safe.
+            urlPattern: /\.(?:webm|mov|glb)$/,
+            handler: "CacheFirst",
+            options: {
+              cacheName: "zylen-hero-media",
+              expiration: { maxEntries: 8, maxAgeSeconds: 60 * 24 * 60 * 60 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
         ],
       },
     }),
@@ -110,6 +123,9 @@ export default defineConfig({
           "react-vendor": ["react", "react-dom", "react-router-dom"],
           "zustand-vendor": ["zustand"],
           "ui-vendor": ["lucide-react", "clsx", "tailwind-merge"],
+          // three is only reached through the lazy-loaded HeroStage3D, so this
+          // chunk stays out of the initial bundle.
+          "three-vendor": ["three"],
 
           // Feature-based chunks
           "store": [
@@ -151,6 +167,7 @@ export default defineConfig({
       "react-router-dom",
       "zustand",
       "lucide-react",
+      "three",
     ],
   },
 });

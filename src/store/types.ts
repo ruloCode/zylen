@@ -11,6 +11,8 @@ import type { RootHabitSlice } from './rootHabitSlice';
 import type { AchievementsSlice } from './achievementsSlice';
 import type { HabitTemplatesSlice } from './habitTemplatesSlice';
 import type { ThemeSlice } from './themeSlice';
+import type { ArenaSlice } from './arenaSlice';
+import type { FocusSlice } from './focusSlice';
 
 /**
  * Combined store type. Lives in its own module so individual slices can
@@ -29,4 +31,6 @@ export type AppStore = UserSlice &
   RootHabitSlice &
   AchievementsSlice &
   HabitTemplatesSlice &
-  ThemeSlice;
+  ThemeSlice &
+  ArenaSlice &
+  FocusSlice;

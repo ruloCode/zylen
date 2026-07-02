@@ -1,0 +1,1 @@
+-- Placeholder: this version was applied directly on the live DB (2026-06-22 session) before local history existed. No-op.

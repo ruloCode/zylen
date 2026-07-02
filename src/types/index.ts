@@ -9,6 +9,7 @@ export * from './onboarding';
 export * from './rootHabit';
 export * from './achievement';
 export * from './habitTemplate';
+export * from './focus';
 
 // App-wide utility types
 export interface AppState {

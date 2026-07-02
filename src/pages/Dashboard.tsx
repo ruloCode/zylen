@@ -1,4 +1,4 @@
-import React, { useState, Suspense, lazy } from 'react';
+import React, { useRef, useState, Suspense, lazy } from 'react';
 import {
   Bell,
   Flame,
@@ -10,6 +10,8 @@ import {
   Check,
   Loader2,
   FlaskConical,
+  Swords,
+  Crown,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
@@ -25,8 +27,10 @@ const CoachChat = lazy(() =>
   import('@/features/chat/components/CoachChat').then((m) => ({ default: m.CoachChat }))
 );
 import { HABIT_ICONS } from '@/components/atoms/icons/iconMaps';
+import HeroCharacter from '@/components/hero/HeroCharacter';
+import type { HeroCharacterHandle } from '@/components/hero/HeroCharacter';
 import { useUser, useHabits, useStreaks } from '@/store';
-import { ROUTES, getHeroBodySrc } from '@/constants';
+import { ROUTES, getHeroBodySrc, getHeroVideoSources, LIFE_AREA_CATALOG } from '@/constants';
 import { useLocale } from '@/hooks/useLocale';
 import { getLevelProgress } from '@/utils/xp';
 import { getGreetingKey, getDailyQuoteIndex } from '@/utils/greeting';
@@ -45,6 +49,7 @@ export function Dashboard() {
   const { streak, isLoading: streakLoading } = useStreaks();
   const { t } = useLocale();
   const [isCoachOpen, setIsCoachOpen] = useState(false);
+  const heroRef = useRef<HeroCharacterHandle>(null);
   // Habit catalog: browse the library, or read a featured habit's science card.
   const [isCatalogOpen, setIsCatalogOpen] = useState(false);
   const [catalogEntry, setCatalogEntry] = useState<HabitCatalogEntry | null>(null);
@@ -106,7 +111,7 @@ export function Dashboard() {
         {/* Fade the bottom of the BACKGROUND into the page (kept BELOW the character so it doesn't fade the figure) */}
         <div className="absolute inset-x-0 bottom-0 h-[14%] bg-gradient-to-b from-transparent to-[hsl(var(--background))]" />
         {/*
-          Layer 1 — character (transparent PNG, own layer → swappable / animatable).
+          Layer 1 — character (PNG placeholder + animated 3D stage on top).
 
           ── ASSET ALIGNMENT (keep avatars consistent so they always line up) ──
           Background platform centre (golden rune): 47% x, 72.4% y of /hero-bg.png.
@@ -117,13 +122,16 @@ export function Dashboard() {
           NEW AVATARS must use the SAME canvas: portrait 820×1230 ratio (2:3),
           character horizontally centred, feet at ~93% down the canvas. Then they
           align automatically with no code change.
+          ANIMATED AVATARS (idle-loop video with alpha) are generated FROM the
+          same PNG artwork, so they inherit the canvas convention and swap in
+          over the PNG with no visual jump (same box, same classes).
         */}
-        <img
-          src={getHeroBodySrc(user?.avatarUrl)}
-          alt=""
-          aria-hidden="true"
-          className="absolute bottom-[24.4%] left-1/2 -translate-x-1/2 w-[58%] h-auto object-contain drop-shadow-[0_14px_14px_rgba(0,0,0,0.5)]"
-          onError={(e) => { (e.currentTarget.style.opacity = '0'); }}
+        <HeroCharacter
+          ref={heroRef}
+          imgSrc={getHeroBodySrc(user?.avatarUrl)}
+          videoSources={getHeroVideoSources(user?.avatarUrl)}
+          className="absolute inset-0"
+          imgClassName="absolute bottom-[24.4%] left-1/2 -translate-x-1/2 w-[58%] h-auto object-contain drop-shadow-[0_14px_14px_rgba(0,0,0,0.5)]"
         />
       </div>
 
@@ -139,7 +147,17 @@ export function Dashboard() {
             (y=0), its bottom edge lands on the feet at ANY width, so the banner
             that follows floats right below them. Greeting + stat cards sit at
             the top; the gap reveals the character standing on the platform. */}
-        <div className="aspect-[941/1210] -mx-4 px-4">
+        <div
+          className="aspect-[941/1210] -mx-4 px-4"
+          // Tap-to-interact: the hero canvas sits behind this spacer (-z-0 vs
+          // z-10), so taps "on the character" actually land here. Only react
+          // when the tap hits the spacer itself — not the cards/header inside.
+          onPointerDown={(e) => {
+            if (e.target === e.currentTarget) {
+              heroRef.current?.playRandomInteraction();
+            }
+          }}
+        >
         {/* Top bar: greeting + notifications (carries the safe-area / top inset) */}
         <header className="flex items-start justify-between gap-3 mb-5 pt-[calc(env(safe-area-inset-top)+1.5rem)]">
           <div className="min-w-0">
@@ -182,10 +200,10 @@ export function Dashboard() {
               <p className="text-white/45 text-[9px] mt-0.5">{t('home.streakKeepGoing')}</p>
             </div>
 
-            {/* Quick action: focus of the day */}
+            {/* Quick action: focus of the day (Pomodoro gems) */}
             <button
               type="button"
-              onClick={comingSoon}
+              onClick={() => navigate(ROUTES.FOCUS)}
               className={`${heroCard} p-2.5 flex flex-col items-center text-center gap-1.5`}
             >
               <Target size={18} className="text-teal-300" />
@@ -252,6 +270,87 @@ export function Dashboard() {
           </span>
           <ChevronRight size={20} className="text-white/40 shrink-0" />
         </button>
+
+        {/* Arena — the embedded Everlight co-op game (Templo del Desorden) */}
+        <section aria-labelledby="arena-heading" className="mb-7">
+          <button
+            type="button"
+            onClick={() => navigate(ROUTES.ARENA)}
+            className="relative w-full glass-card overflow-hidden text-left group"
+          >
+            <img
+              src="/images/arena-cover.png"
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:opacity-85 transition-opacity"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-[hsl(var(--background))]/95 via-[hsl(var(--background))]/55 to-transparent" />
+            <div className="relative p-4 pr-24 min-h-[7.5rem] flex flex-col justify-center">
+              <span className="inline-flex items-center gap-1.5 text-teal-300 text-[11px] font-bold uppercase tracking-wider mb-1">
+                <Swords size={13} /> {t('arena.badge')}
+              </span>
+              <h2 id="arena-heading" className="font-sans normal-case text-lg font-extrabold text-white leading-tight">
+                {t('arena.cardTitle')}
+              </h2>
+              <p className="text-white/70 text-xs mt-1 max-w-[16rem] leading-snug">
+                {t('arena.cardSubtitle')}
+              </p>
+              <span className="mt-2 inline-flex items-center gap-1 text-gold-400 text-sm font-bold">
+                {t('arena.cardCta')} <ChevronRight size={16} />
+              </span>
+            </div>
+          </button>
+        </section>
+
+        {/* Focus realms — life areas as fantasy kingdoms, each with its own detail */}
+        <section aria-labelledby="realms-heading" className="mb-7">
+          <button
+            type="button"
+            onClick={() => navigate(ROUTES.REALMS)}
+            className="relative w-full glass-card overflow-hidden text-left p-4 group"
+          >
+            <span
+              aria-hidden="true"
+              className="absolute inset-0"
+              style={{
+                background:
+                  'radial-gradient(70% 90% at 85% 25%, hsl(var(--primary) / 0.16), transparent 65%)',
+              }}
+            />
+            <span className="relative flex items-center gap-3">
+              <span className="min-w-0 flex-1">
+                <span className="inline-flex items-center gap-1.5 text-teal-300 text-[11px] font-bold uppercase tracking-wider mb-1">
+                  <Crown size={13} /> {t('realms.cardBadge')}
+                </span>
+                <h2
+                  id="realms-heading"
+                  className="font-sans normal-case text-lg font-extrabold text-white leading-tight"
+                >
+                  {t('realms.cardTitle')}
+                </h2>
+                <p className="text-white/70 text-xs mt-1 leading-snug">
+                  {t('realms.cardSubtitle')}
+                </p>
+                <span className="mt-2 inline-flex items-center gap-1 text-gold-400 text-sm font-bold">
+                  {t('realms.cardCta')} <ChevronRight size={16} />
+                </span>
+              </span>
+              {/* Mosaic peek at the six realm gems */}
+              <span className="shrink-0 grid grid-cols-3 gap-1 opacity-90 group-hover:opacity-100 transition-opacity">
+                {LIFE_AREA_CATALOG.map((m) => (
+                  <img
+                    key={m.key}
+                    src={m.image}
+                    alt=""
+                    aria-hidden="true"
+                    loading="lazy"
+                    className="w-8 h-8 object-contain drop-shadow"
+                  />
+                ))}
+              </span>
+            </span>
+          </button>
+        </section>
 
         {/* Habit catalog — learn about science-backed habits before adding them */}
         <section aria-labelledby="catalog-heading" className="mb-7">
