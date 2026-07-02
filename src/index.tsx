@@ -8,6 +8,8 @@ import './services/migration';
 import './index.css';
 // Initialize i18n before app renders
 import './services/i18n';
+// Register the PWA service worker with reliable auto-update (see src/pwa.ts).
+import './pwa';
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { App } from "./App";

@@ -52,11 +52,19 @@ export default defineConfig({
         maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
         runtimeCaching: [
           {
-            urlPattern: /\.(?:png|jpg|jpeg|webp)$/,
-            handler: "CacheFirst",
+            // Images live at stable paths (/catalog/*, /avatars/*, /gems/*,
+            // /life-areas/*, hero/onboarding PNGs), so they are NOT content
+            // hashed: regenerating one reuses the same URL. CacheFirst would
+            // therefore pin the OLD bytes for the whole expiration window and
+            // users never see the new illustration. StaleWhileRevalidate serves
+            // the cached copy instantly (fast) but revalidates in the
+            // background, so a redeployed image self-heals on the next view.
+            urlPattern: /\.(?:png|jpg|jpeg|webp|gif)$/,
+            handler: "StaleWhileRevalidate",
             options: {
               cacheName: "zylen-images",
-              expiration: { maxEntries: 60, maxAgeSeconds: 30 * 24 * 60 * 60 },
+              expiration: { maxEntries: 100, maxAgeSeconds: 30 * 24 * 60 * 60 },
+              cacheableResponse: { statuses: [0, 200] },
             },
           },
           {
