@@ -1,13 +1,13 @@
 /**
- * Zylen v2 HabitItem
- * Evolved habit tile: rounded glass card, teal completion glow, gold XP,
- * streak flame, and support for check / measurable / quit habit types.
+ * Zylen v2 HabitItem — AAA mobile tile
+ * Premium glass card: top-lit gradient, glossy accent icon with radial glow,
+ * refined gold XP chip, streak flame, celebratory completion sheen, and
+ * tactile press states. Supports check / measurable / quit habit types.
  */
 
 import React, { useState } from 'react';
-import { Check, X, Loader2, Flame, Shield, Timer } from 'lucide-react';
+import { Check, X, Loader2, Flame, Shield, Timer, Zap } from 'lucide-react';
 import { cn } from '@/utils';
-import { XPBadge } from '@/components/ui';
 import { XPBurst } from '@/components/effects/XPBurst';
 import { HABIT_ICONS } from './IconSelector';
 import { useLifeAreas } from '@/store';
@@ -121,7 +121,8 @@ export function HabitItem({
   return (
     <article
       className={cn(
-        'glass-card p-3 sm:p-4 transition-all duration-300 relative overflow-hidden group',
+        'glass-card p-3 sm:p-3.5 transition-all duration-300 relative overflow-hidden group',
+        'active:scale-[0.985]',
         completedToday
           ? isQuit
             ? 'border-cyan-400/50 shadow-glow-teal'
@@ -135,29 +136,73 @@ export function HabitItem({
         <XPBurst xp={burst.xp} hint={burst.hint} onDone={() => setBurst(null)} />
       )}
 
-      {/* Completion glow wash */}
+      {/* Top-lit gloss (subtle AAA card sheen, always on) */}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 rounded-[inherit] bg-gradient-to-b from-white/[0.05] to-transparent"
+      />
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"
+      />
+
+      {/* Glowing left accent bar (brighter on completion) */}
+      <span
+        aria-hidden="true"
+        className={cn(
+          'pointer-events-none absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 rounded-r-full transition-all duration-300',
+          completedToday
+            ? isQuit
+              ? 'bg-gradient-to-b from-cyan-300 to-cyan-500 shadow-[0_0_10px_hsl(186_75%_57%/0.8)] h-12'
+              : 'bg-gradient-to-b from-teal-300 to-teal-500 shadow-glow-teal h-12'
+            : 'bg-white/10'
+        )}
+      />
+
+      {/* Completion glow wash + diagonal sheen */}
       {completedToday && (
-        <div
-          className={cn(
-            'absolute inset-x-0 -top-8 h-20 opacity-30 animate-glow-pulse pointer-events-none blur-2xl',
-            isQuit ? 'bg-cyan-400/40' : 'bg-teal-400/40'
-          )}
-        />
+        <>
+          <div
+            className={cn(
+              'absolute inset-x-0 -top-8 h-20 opacity-30 animate-glow-pulse pointer-events-none blur-2xl',
+              isQuit ? 'bg-cyan-400/40' : 'bg-teal-400/40'
+            )}
+          />
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 rounded-[inherit] bg-gradient-to-tr from-transparent via-white/[0.06] to-transparent"
+          />
+        </>
       )}
 
-      <div className="flex items-center gap-3 relative z-10">
-        {/* Icon */}
-        <div
-          className={cn(
-            'w-12 h-12 sm:w-14 sm:h-14 rounded-2xl grid place-items-center transition-all duration-300 flex-shrink-0',
-            completedToday
-              ? isQuit
-                ? 'bg-gradient-to-br from-cyan-400 to-cyan-600 text-white shadow-glow-teal'
-                : 'bg-gradient-to-br from-teal-400 to-teal-600 text-white shadow-glow-teal'
-              : 'bg-white/[0.06] text-teal-300 group-hover:bg-white/[0.1]'
-          )}
-        >
-          <IconComponent size={22} />
+      <div className="flex items-center gap-3 relative z-10 pl-1">
+        {/* Icon — glossy tile with radial glow */}
+        <div className="relative flex-shrink-0">
+          {/* Soft radial glow behind the icon */}
+          <span
+            aria-hidden="true"
+            className={cn(
+              'pointer-events-none absolute inset-0 rounded-2xl blur-md transition-opacity duration-300',
+              completedToday
+                ? isQuit
+                  ? 'bg-cyan-400/50 opacity-70'
+                  : 'bg-teal-400/50 opacity-70'
+                : 'bg-teal-400/20 opacity-0 group-hover:opacity-100'
+            )}
+          />
+          <div
+            className={cn(
+              'relative w-12 h-12 sm:w-[52px] sm:h-[52px] rounded-2xl grid place-items-center transition-all duration-300',
+              'ring-1 ring-inset',
+              completedToday
+                ? isQuit
+                  ? 'bg-gradient-to-br from-cyan-400 to-cyan-600 text-white ring-white/25 shadow-[inset_0_1px_1px_rgba(255,255,255,0.4)]'
+                  : 'bg-gradient-to-br from-teal-400 to-teal-600 text-white ring-white/25 shadow-[inset_0_1px_1px_rgba(255,255,255,0.4)]'
+                : 'bg-gradient-to-br from-white/[0.1] to-white/[0.02] text-teal-300 ring-white/10 group-hover:ring-teal-400/30'
+            )}
+          >
+            <IconComponent size={22} />
+          </div>
         </div>
 
         {/* Details (tap to open analytics) */}
@@ -169,30 +214,36 @@ export function HabitItem({
           aria-label={t('habits.viewAnalytics')}
         >
           <div className="flex items-center gap-2">
-            <h3 className="font-bold text-sm sm:text-base text-white truncate">{name}</h3>
+            <h3 className="font-bold text-[15px] sm:text-base text-white truncate tracking-tight">
+              {name}
+            </h3>
             {streak > 0 && (
-              <span className="inline-flex items-center gap-0.5 text-xs font-bold text-gold-400 flex-shrink-0">
-                <Flame size={13} className="fill-gold-400/30" />
+              <span className="inline-flex items-center gap-0.5 text-xs font-extrabold text-gold-300 flex-shrink-0 drop-shadow-[0_0_6px_hsl(40_95%_58%/0.5)]">
+                <Flame size={13} className="fill-gold-400/40" />
                 {streak}
               </span>
             )}
           </div>
 
-          <div className="mt-1 flex items-center gap-1.5 flex-wrap">
-            <XPBadge xp={xp} size="sm" />
+          <div className="mt-1.5 flex items-center gap-1.5 flex-wrap">
+            {/* Refined gold XP chip (no constant pulse) */}
+            <span className="inline-flex items-center gap-0.5 rounded-lg bg-gradient-to-br from-gold-400/25 to-gold-600/10 ring-1 ring-inset ring-gold-400/30 px-1.5 py-0.5 text-[11px] font-extrabold text-gold-200">
+              <Zap size={10} className="fill-gold-300 text-gold-300" />
+              {xp}
+            </span>
             {isQuit && (
-              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 text-[11px] font-semibold rounded-md bg-cyan-500/20 text-cyan-200">
+              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 text-[11px] font-semibold rounded-md bg-cyan-500/20 text-cyan-200 ring-1 ring-inset ring-cyan-400/20">
                 <Shield size={11} /> {t('habits.quitBadge')}
               </span>
             )}
             {isMeasurable && (
-              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 text-[11px] font-semibold rounded-md bg-teal-500/20 text-teal-200">
+              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 text-[11px] font-semibold rounded-md bg-teal-500/20 text-teal-200 ring-1 ring-inset ring-teal-400/20">
                 {todayValue ? `${todayValue}` : '0'}
                 {dailyGoal ? `/${dailyGoal}` : ''} {unit || ''}
               </span>
             )}
             {!isQuit && !isMeasurable && lifeAreaName && (
-              <span className="px-1.5 py-0.5 text-[11px] font-semibold rounded-md bg-white/10 text-white/80">
+              <span className="px-1.5 py-0.5 text-[11px] font-semibold rounded-md bg-white/10 text-white/80 ring-1 ring-inset ring-white/5">
                 {lifeAreaName}
               </span>
             )}
@@ -200,9 +251,9 @@ export function HabitItem({
 
           {/* Measurable progress bar */}
           {isMeasurable && dailyGoal ? (
-            <div className="mt-2 h-1.5 rounded-full bg-white/10 overflow-hidden">
+            <div className="mt-2 h-1.5 rounded-full bg-white/10 overflow-hidden ring-1 ring-inset ring-white/5">
               <div
-                className="h-full rounded-full bg-gradient-to-r from-teal-400 to-teal-500 transition-all duration-500"
+                className="h-full rounded-full bg-gradient-to-r from-teal-400 to-teal-500 shadow-[0_0_8px_hsl(172_66%_50%/0.6)] transition-all duration-500"
                 style={{ width: `${progressPct}%` }}
               />
             </div>
@@ -220,11 +271,12 @@ export function HabitItem({
                 disabled={isLoading || completedToday}
                 className={cn(
                   'w-12 h-12 rounded-2xl grid place-items-center transition-all duration-300',
+                  'ring-1 ring-inset active:scale-95',
                   'focus:outline-none focus-visible:ring-4 focus-visible:ring-cyan-400/40',
                   'disabled:cursor-not-allowed',
                   completedToday
-                    ? 'bg-gradient-to-br from-cyan-400 to-cyan-600 text-white shadow-glow-teal scale-105'
-                    : 'bg-white/[0.06] text-cyan-300 hover:bg-cyan-500/20 hover:scale-105'
+                    ? 'bg-gradient-to-br from-cyan-400 to-cyan-600 text-white ring-white/25 shadow-glow-teal shadow-[inset_0_1px_1px_rgba(255,255,255,0.4)] scale-105'
+                    : 'bg-white/[0.06] text-cyan-300 ring-white/10 hover:bg-cyan-500/20 hover:ring-cyan-400/40 hover:scale-105'
                 )}
                 aria-label={t('habits.resisted')}
                 title={t('habits.resisted')}
@@ -240,7 +292,7 @@ export function HabitItem({
                 type="button"
                 onClick={() => onRelapse?.(id)}
                 disabled={isLoading}
-                className="w-12 h-12 rounded-2xl grid place-items-center bg-white/[0.06] text-white/50 hover:bg-danger-500/20 hover:text-white transition-all duration-300 disabled:opacity-50"
+                className="w-12 h-12 rounded-2xl grid place-items-center bg-white/[0.06] text-white/50 ring-1 ring-inset ring-white/10 hover:bg-danger-500/20 hover:text-white transition-all duration-300 active:scale-95 disabled:opacity-50"
                 aria-label={t('habits.relapse')}
                 title={t('habits.relapse')}
               >
@@ -256,11 +308,12 @@ export function HabitItem({
                 disabled={isLoading || completedToday}
                 className={cn(
                   'w-12 h-12 rounded-2xl grid place-items-center transition-all duration-300 relative',
+                  'ring-1 ring-inset active:scale-95',
                   'focus:outline-none focus-visible:ring-4 focus-visible:ring-teal-400/40',
                   'disabled:cursor-not-allowed',
                   completedToday
-                    ? 'bg-gradient-to-br from-teal-400 to-teal-600 text-white shadow-glow-teal scale-105'
-                    : 'bg-white/[0.06] text-teal-300 hover:bg-teal-500/20 hover:text-white hover:scale-105'
+                    ? 'bg-gradient-to-br from-teal-400 to-teal-600 text-white ring-white/25 shadow-glow-teal shadow-[inset_0_1px_1px_rgba(255,255,255,0.4)] scale-105'
+                    : 'bg-white/[0.06] text-teal-300 ring-white/10 hover:bg-teal-500/20 hover:text-white hover:ring-teal-400/40 hover:scale-105'
                 )}
                 aria-label={isMeasurable ? t('habits.logValue') : `Mark ${name} as complete`}
                 aria-pressed={completedToday}
@@ -285,7 +338,7 @@ export function HabitItem({
                 type="button"
                 onClick={handleUncomplete}
                 disabled={isLoading || !completedToday}
-                className="w-12 h-12 rounded-2xl grid place-items-center bg-white/[0.06] text-white/50 hover:bg-danger-500/20 hover:text-white transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed"
+                className="w-12 h-12 rounded-2xl grid place-items-center bg-white/[0.06] text-white/50 ring-1 ring-inset ring-white/10 hover:bg-danger-500/20 hover:text-white transition-all duration-300 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
                 aria-label={`Mark ${name} as incomplete`}
                 aria-pressed={!completedToday}
               >

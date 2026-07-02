@@ -8,6 +8,7 @@ import {
   Moon,
   Gem,
   Check,
+  Flame,
   Compass,
   ChevronRight,
 } from 'lucide-react';
@@ -260,7 +261,7 @@ export function HabitLog() {
         {/* ── Foreground content ── */}
         <div className="relative z-10 max-w-md mx-auto px-4 pt-[calc(env(safe-area-inset-top)+1rem)]">
           {/* ── Hero card (contained: bg + character + title + level + filters) ── */}
-          <section className="relative rounded-3xl overflow-hidden mb-5 min-h-[212px]">
+          <section className="relative rounded-3xl overflow-hidden mb-5 min-h-[212px] ring-1 ring-inset ring-white/10 shadow-soft-xl">
             {/* Background scene */}
             <img
               src={HERO_BG_SRC}
@@ -346,46 +347,83 @@ export function HabitLog() {
             </div>
           </section>
 
-          {/* Racha actual card — stacked so the 7-day row never overflows on
-              narrow phones */}
+          {/* Racha actual — AAA streak tracker (flame medallion + 7-day path) */}
           <section
             aria-label={t('routines.currentStreak')}
-            className="glass-card p-4 mb-6 flex flex-col gap-3"
+            className="glass-card relative overflow-hidden p-4 mb-6 ring-1 ring-inset ring-white/[0.06]"
           >
-            <div>
-              <p className="text-white/60 text-xs font-semibold">{t('routines.currentStreak')}</p>
-              <p className="text-2xl font-extrabold text-white leading-tight mt-0.5">
-                🔥 {currentStreak} <span className="text-base font-bold text-white/80">{t('routines.days')}</span>
-              </p>
+            {/* Warm ember glow + top gloss */}
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute -top-12 -right-10 w-44 h-44 rounded-full bg-gold-500/15 blur-3xl"
+            />
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"
+            />
+
+            {/* Header: flame medallion + streak count */}
+            <div className="relative flex items-center gap-3 mb-4">
+              <div className="relative shrink-0">
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-0 rounded-2xl bg-gold-500/50 blur-md animate-glow-pulse"
+                />
+                <div className="relative w-12 h-12 rounded-2xl grid place-items-center bg-gradient-to-br from-gold-400 to-orange-600 ring-1 ring-inset ring-white/25 shadow-[inset_0_1px_1px_rgba(255,255,255,0.45)]">
+                  <Flame size={24} className="text-white fill-white/30" />
+                </div>
+              </div>
+              <div className="min-w-0">
+                <p className="text-white/55 text-[11px] font-bold uppercase tracking-wider">
+                  {t('routines.currentStreak')}
+                </p>
+                <p className="text-[26px] font-extrabold leading-none mt-0.5">
+                  <span className="text-shimmer-gold">{currentStreak}</span>{' '}
+                  <span className="text-sm font-bold text-white/70">{t('routines.days')}</span>
+                </p>
+              </div>
             </div>
 
-            {/* 7-day row */}
-            <div className="flex justify-between gap-1 min-w-0">
-              {weekdaysShort.map((day, index) => {
-                const isToday = index === weekdaysShort.length - 1;
-                const completed = lastSevenDays[index] ?? false;
-                return (
-                  <div key={`${day}-${index}`} className="flex flex-col items-center gap-1 min-w-0">
-                    <span className="text-[10px] font-medium text-white/50 truncate max-w-full">
-                      {isToday ? t('routines.today') : day}
-                    </span>
-                    {isToday && !completed ? (
+            {/* 7-day tracker: connecting path behind glowing nodes */}
+            <div className="relative">
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute left-4 right-4 top-4 -translate-y-1/2 h-0.5 rounded-full bg-white/10"
+              />
+              <div className="relative flex justify-between gap-1">
+                {weekdaysShort.map((day, index) => {
+                  const isToday = index === weekdaysShort.length - 1;
+                  const completed = lastSevenDays[index] ?? false;
+                  return (
+                    <div
+                      key={`${day}-${index}`}
+                      className="relative z-10 flex flex-col items-center gap-1.5 min-w-0"
+                    >
+                      {completed ? (
+                        <span className="w-8 h-8 rounded-full grid place-items-center bg-gradient-to-br from-success-400 to-success-600 text-white ring-1 ring-inset ring-white/25 shadow-[0_0_10px_hsl(150_55%_45%/0.55)]">
+                          <Check size={15} strokeWidth={3} />
+                        </span>
+                      ) : isToday ? (
+                        <span
+                          className="w-8 h-8 rounded-full grid place-items-center bg-teal-400/10 ring-2 ring-teal-400/60 animate-glow-pulse"
+                          aria-label={t('routines.today')}
+                        >
+                          <span className="w-1.5 h-1.5 rounded-full bg-teal-300" />
+                        </span>
+                      ) : (
+                        <span className="w-8 h-8 rounded-full bg-white/[0.04] ring-1 ring-inset ring-white/[0.06]" />
+                      )}
                       <span
-                        className="w-6 h-6 rounded-full border-2 border-white/25"
-                        aria-label={t('routines.today')}
-                      />
-                    ) : (
-                      <span
-                        className={`w-6 h-6 rounded-full flex items-center justify-center ${
-                          completed ? 'bg-success-500 text-white' : 'bg-white/10 text-white/30'
+                        className={`text-[10px] font-semibold truncate max-w-full ${
+                          isToday ? 'text-teal-300' : 'text-white/45'
                         }`}
                       >
-                        <Check size={14} strokeWidth={3} />
+                        {isToday ? t('routines.today') : day}
                       </span>
-                    )}
-                  </div>
-                );
-              })}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </section>
 
@@ -399,7 +437,7 @@ export function HabitLog() {
                 type="button"
                 onClick={handleCreateHabit}
                 disabled={isLoading}
-                className="inline-flex items-center gap-1 rounded-full bg-teal-500 text-white text-sm font-semibold px-3 py-1.5 hover:bg-teal-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="inline-flex items-center gap-1 rounded-full bg-gradient-to-br from-teal-400 to-teal-600 text-white text-sm font-semibold px-3.5 py-1.5 ring-1 ring-inset ring-white/20 shadow-glow-teal transition-all hover:brightness-110 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                 aria-label={t('routines.newRoutine')}
               >
                 <Plus size={16} />
