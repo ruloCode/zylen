@@ -4,8 +4,8 @@ import { StreaksService } from '@/services/supabase/streaks.service';
 
 export interface StreaksSlice {
   streak: Streak | null;
-  isLoading: boolean;
-  error: string | null;
+  streakLoading: boolean;
+  streakError: string | null;
 
   // Actions
   loadStreak: () => Promise<void>;
@@ -15,37 +15,37 @@ export interface StreaksSlice {
 
 export const createStreaksSlice: StateCreator<StreaksSlice> = (set, get) => ({
   streak: null,
-  isLoading: false,
-  error: null,
+  streakLoading: false,
+  streakError: null,
 
   loadStreak: async () => {
     try {
-      set({ isLoading: true, error: null });
+      set({ streakLoading: true, streakError: null });
 
       const streak = await StreaksService.getStreak();
 
-      set({ streak, isLoading: false });
+      set({ streak, streakLoading: false });
     } catch (error) {
       console.error('Error loading streak:', error);
       set({
-        error: error instanceof Error ? error.message : 'Failed to load streak',
-        isLoading: false,
+        streakError: error instanceof Error ? error.message : 'Failed to load streak',
+        streakLoading: false,
       });
     }
   },
 
-  updateStreakForToday: async (completed: boolean) => {
+  updateStreakForToday: async (_completed: boolean) => {
+    // The complete/uncomplete/relapse RPCs refresh the streak server-side and
+    // the habits slice syncs it into the store. This action now just reloads
+    // the authoritative value (the old client-side shifting corrupted the
+    // last_seven_days array when completing several habits per day).
     try {
-      set({ isLoading: true, error: null });
-
-      const updatedStreak = await StreaksService.updateStreakForToday(completed);
-
-      set({ streak: updatedStreak, isLoading: false });
+      const streak = await StreaksService.getStreak();
+      set({ streak });
     } catch (error) {
-      console.error('Error updating streak:', error);
+      console.error('Error refreshing streak:', error);
       set({
-        error: error instanceof Error ? error.message : 'Failed to update streak',
-        isLoading: false,
+        streakError: error instanceof Error ? error.message : 'Failed to update streak',
       });
     }
   },

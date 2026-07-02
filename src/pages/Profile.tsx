@@ -30,7 +30,8 @@ import {
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { supabase } from '@/lib/supabase';
-import { useUser, useLifeAreas, useHabits, useStreaks } from '@/store';
+import * as LucideIcons from 'lucide-react';
+import { useUser, useLifeAreas, useHabits, useStreaks, useAchievements } from '@/store';
 import { useLocale } from '@/hooks/useLocale';
 import * as SocialService from '@/services/supabase/social.service';
 import {
@@ -40,9 +41,10 @@ import {
   AvatarPicker,
 } from '@/features/profile/components';
 import { HabitForm } from '@/features/habits/components';
-import { ThemeSelector } from '@/features/settings/components';
+import { ThemeSelector, ReminderSettings } from '@/features/settings/components';
 import { ProgressBar } from '@/components/ui';
-import { Habit, HabitFormData, HabitWithCompletion } from '@/types';
+import { Habit, HabitFormData } from '@/types';
+import type { HabitWithCompletion } from '@/services/supabase/habits.service';
 import { ROUTES, AVATARS } from '@/constants';
 import { getLevelProgress } from '@/utils/xp';
 import { cn } from '@/utils';
@@ -76,6 +78,12 @@ export function Profile() {
   const { user, updateUserProfile } = useUser();
   const { lifeAreas, toggleLifeAreaEnabled } = useLifeAreas();
   const { habits, deleteHabit, updateHabit } = useHabits();
+  const { achievementsWithProgress, loadAchievementsWithProgress } = useAchievements();
+
+  useEffect(() => {
+    loadAchievementsWithProgress();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const { streak } = useStreaks();
   const { t } = useLocale();
 
@@ -146,16 +154,13 @@ export function Profile() {
   };
 
   const handleOpenEditHabit = (habit: HabitWithCompletion) => {
-    // Extract only Habit properties (without 'completed')
-    const habitData: Habit = {
-      id: habit.id,
-      userId: habit.userId,
-      name: habit.name,
-      lifeArea: habit.lifeArea,
-      xp: habit.xp,
-      points: habit.points,
-      createdAt: habit.createdAt,
-    };
+    // Keep EVERY habit field (iconName, habitType, unit, dailyGoal, color,
+    // timeOfDay, reminderEnabled...) — building a partial copy here used to
+    // degrade measurable/quit habits back to 'check' on save.
+    const { completedToday, todayValue, ...rest } = habit;
+    void completedToday;
+    void todayValue;
+    const habitData: Habit = { ...rest, completed: false };
     setHabitToEdit(habitData);
     setIsEditingHabit(true);
   };
@@ -242,26 +247,23 @@ export function Profile() {
     return sum;
   }, 0);
 
-  // Placeholder achievements (copy from i18n). First 4 unlocked, 5th locked.
-  const achievements = [
-    { icon: Star, titleKey: 'profile.ach.firstStep', tone: 'gold', date: '10/05/2024', locked: false },
-    { icon: Flame, titleKey: 'profile.ach.consistency', tone: 'silver', date: '12/05/2024', locked: false },
-    { icon: Mountain, titleKey: 'profile.ach.unstoppable', tone: 'blue', date: '18/05/2024', locked: false },
-    { icon: Gem, titleKey: 'profile.ach.focus', tone: 'gold', date: '22/05/2024', locked: false },
-    { icon: Lock, titleKey: 'profile.ach.elite', tone: 'locked', date: '', locked: true },
-  ] as const;
+  // Real achievements from the backend: unlocked first, then in-progress.
+  const profileAchievements = [...achievementsWithProgress]
+    .sort((a, b) => Number(b.unlocked) - Number(a.unlocked) || b.progress - a.progress)
+    .slice(0, 8);
 
   const achievementTone: Record<string, string> = {
     gold: 'from-gold-400/30 to-gold-600/10 border-gold-400/40 text-gold-300',
     silver: 'from-white/20 to-white/5 border-white/30 text-white/80',
-    blue: 'from-blue-400/30 to-blue-600/10 border-blue-400/40 text-blue-200',
+    bronze: 'from-orange-400/25 to-orange-600/10 border-orange-400/40 text-orange-300',
+    platinum: 'from-blue-400/30 to-blue-600/10 border-blue-400/40 text-blue-200',
     locked: 'from-white/[0.04] to-white/[0.02] border-white/10 text-white/30',
   };
 
+  // Reminders now has a real settings card (ReminderSettings) below.
   const tools = [
     { icon: NotebookPen, titleKey: 'profile.tools.journal', descKey: 'profile.tools.journalDesc', tone: 'bg-success-500/20 text-success-400' },
     { icon: Target, titleKey: 'profile.tools.goals', descKey: 'profile.tools.goalsDesc', tone: 'bg-purple-500/20 text-purple-300' },
-    { icon: Bell, titleKey: 'profile.tools.reminders', descKey: 'profile.tools.remindersDesc', tone: 'bg-orange-500/20 text-orange-300' },
     { icon: Wind, titleKey: 'profile.tools.breathing', descKey: 'profile.tools.breathingDesc', tone: 'bg-blue-500/20 text-blue-300' },
   ] as const;
 
@@ -398,38 +400,49 @@ export function Profile() {
           </div>
         </section>
 
-        {/* 5. Achievements */}
+        {/* 5. Achievements (real backend data) */}
         <section className={`${GLASS} p-4 mb-5`}>
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-bold text-white">{t('profile.achievementsTitle')}</h3>
             <button
               type="button"
-              onClick={comingSoon}
+              onClick={() => navigate(ROUTES.LEADERBOARD)}
               className="text-teal-300 text-sm font-semibold"
             >
               {t('profile.seeAll')}
             </button>
           </div>
-          <div className="flex gap-3 overflow-x-auto pb-1 -mx-1 px-1">
-            {achievements.map(({ icon: Icon, titleKey, tone, date, locked }) => (
-              <div key={titleKey} className="shrink-0 w-[88px] flex flex-col items-center text-center">
-                <div
-                  className={cn(
-                    'w-16 h-16 rounded-2xl bg-gradient-to-br border flex items-center justify-center',
-                    achievementTone[tone]
-                  )}
-                >
-                  <Icon size={26} />
-                </div>
-                <p className="mt-2 text-[11px] font-semibold text-white/90 leading-tight">
-                  {t(titleKey as any)}
-                </p>
-                <p className="text-[10px] text-white/40 mt-0.5">
-                  {locked ? t('profile.locked') : date}
-                </p>
-              </div>
-            ))}
-          </div>
+          {profileAchievements.length === 0 ? (
+            <p className="text-white/50 text-sm text-center py-3">{t('profile.locked')}</p>
+          ) : (
+            <div className="flex gap-3 overflow-x-auto pb-1 -mx-1 px-1">
+              {profileAchievements.map((ach) => {
+                const Icon =
+                  ((LucideIcons as Record<string, unknown>)[ach.iconName] as typeof Star) || Star;
+                const tone = ach.unlocked ? achievementTone[ach.tier] ?? achievementTone.gold : achievementTone.locked;
+                return (
+                  <div key={ach.id} className="shrink-0 w-[88px] flex flex-col items-center text-center">
+                    <div
+                      className={cn(
+                        'w-16 h-16 rounded-2xl bg-gradient-to-br border flex items-center justify-center',
+                        tone
+                      )}
+                    >
+                      {ach.unlocked ? <Icon size={26} /> : <Lock size={22} />}
+                    </div>
+                    <p className="mt-2 text-[11px] font-semibold text-white/90 leading-tight">
+                      {ach.name}
+                    </p>
+                    <p className="text-[10px] text-white/40 mt-0.5">
+                      {ach.unlocked && ach.unlockedAt
+                        ? new Date(ach.unlockedAt).toLocaleDateString()
+                        : `${Math.round(ach.progress)}%`}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </section>
 
         {/* 6. Tools */}
@@ -468,6 +481,9 @@ export function Profile() {
             ))}
           </div>
         </section>
+
+        {/* Habit reminders (local notifications) */}
+        <ReminderSettings />
 
         {/* 7. About me */}
         <section className={`${GLASS} p-5 mb-2`}>

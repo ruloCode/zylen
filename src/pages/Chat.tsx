@@ -16,7 +16,7 @@ import type { Message } from '@/types';
 
 export function Chat() {
   const messages = useAppStore((state) => state.messages);
-  const isLoading = useAppStore((state) => state.isLoading);
+  const isLoading = useAppStore((state) => state.chatLoading);
   const streamingMessageId = useAppStore((state) => state.streamingMessageId);
   const addMessage = useAppStore((state) => state.addMessage);
   const startStreamingMessage = useAppStore((state) => state.startStreamingMessage);

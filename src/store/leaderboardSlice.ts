@@ -16,8 +16,8 @@ export interface LeaderboardSlice {
     weeklyPointsEarned: number;
     habitsCompleted: number;
   } | null;
-  isLoading: boolean;
-  error: string | null;
+  leaderboardLoading: boolean;
+  leaderboardError: string | null;
 
   // Actions
   loadWeeklyLeaderboard: (userId: string, limit?: number, weekStartDate?: Date) => Promise<void>;
@@ -31,8 +31,8 @@ export const createLeaderboardSlice: StateCreator<LeaderboardSlice> = (set, get)
   weeklyLeaderboard: null,
   userRank: 0,
   userWeeklyStats: null,
-  isLoading: false,
-  error: null,
+  leaderboardLoading: false,
+  leaderboardError: null,
 
   // Load weekly leaderboard
   loadWeeklyLeaderboard: async (
@@ -40,7 +40,7 @@ export const createLeaderboardSlice: StateCreator<LeaderboardSlice> = (set, get)
     limit: number = 50,
     weekStartDate?: Date
   ) => {
-    set({ isLoading: true, error: null });
+    set({ leaderboardLoading: true, leaderboardError: null });
     try {
       const leaderboard = await LeaderboardService.getWeeklyLeaderboard(
         userId,
@@ -51,13 +51,13 @@ export const createLeaderboardSlice: StateCreator<LeaderboardSlice> = (set, get)
       set({
         weeklyLeaderboard: leaderboard,
         userRank: leaderboard.userRank,
-        isLoading: false,
+        leaderboardLoading: false,
       });
     } catch (error: any) {
       console.error('Error loading weekly leaderboard:', error);
       set({
-        error: error.message || 'Failed to load weekly leaderboard',
-        isLoading: false,
+        leaderboardError: error.message || 'Failed to load weekly leaderboard',
+        leaderboardLoading: false,
         weeklyLeaderboard: null,
       });
     }
@@ -96,6 +96,6 @@ export const createLeaderboardSlice: StateCreator<LeaderboardSlice> = (set, get)
 
   // Clear error
   clearError: () => {
-    set({ error: null });
+    set({ leaderboardError: null });
   },
 });

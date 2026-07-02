@@ -1,0 +1,28 @@
+{
+  "purpose": "New selectable heroes for AvatarPicker (today only rulo + dani exist). Each needs TWO files: a bust crop (~512x512, transparent) for the picker, and a full body (~820x1230 / 2:3, transparent) for the Dashboard hero. Register in AVATAR_OPTIONS in src/constants/config.ts.",
+  "status": "pending",
+  "shared_prompt_body": "3D Pixar-style chibi mascot, big head small body short limbs, octane render, soft studio lighting, premium mobile-game character, standing confidently, warm friendly expression, transparent background PNG, dark-fantasy jungle-explorer outfit (fitted shirt, tribal sash with wooden beads, explorer shorts, gladiator sandals, blue crystal pendant), teal and gold accents",
+  "full_body_note": "For the *-full.png files use the SAME canvas as hero-character.png: portrait 820x1230 (2:3), character horizontally centered, feet at ~93% down the canvas, so it aligns with the Dashboard platform automatically.",
+  "items": [
+    {
+      "slug": "lyra",
+      "files": ["public/avatars/lyra-avatar.png", "public/avatars/lyra-full.png"],
+      "prompt_addon": "young woman explorer, long braided copper-red hair, freckles, bright green eyes, confident smirk, a short carved wooden bow on her back"
+    },
+    {
+      "slug": "kenji",
+      "files": ["public/avatars/kenji-avatar.png", "public/avatars/kenji-full.png"],
+      "prompt_addon": "young east-asian man, short black hair with an undercut, calm focused expression, thin scar over one eyebrow, holds a simple bo staff"
+    },
+    {
+      "slug": "amara",
+      "files": ["public/avatars/amara-avatar.png", "public/avatars/amara-full.png"],
+      "prompt_addon": "black woman with voluminous natural afro hair adorned with tiny golden beads, radiant smile, gold hoop earrings, a satchel of glowing herbs"
+    },
+    {
+      "slug": "bruma",
+      "files": ["public/avatars/bruma-avatar.png", "public/avatars/bruma-full.png"],
+      "prompt_addon": "non-binary explorer with silver-grey short wavy hair, heterochromatic eyes (one teal, one amber), serene expression, a small floating teal wisp companion by their shoulder"
+    }
+  ]
+}

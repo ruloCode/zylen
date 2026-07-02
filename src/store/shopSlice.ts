@@ -6,8 +6,8 @@ import { ShopItemsService } from '@/services/supabase/shopItems.service';
 export interface ShopSlice {
   purchaseHistory: PurchaseHistory;
   shopItems: ShopItem[];
-  isLoading: boolean;
-  error: string | null;
+  shopLoading: boolean;
+  shopError: string | null;
 
   // Purchase history actions
   loadPurchaseHistory: () => Promise<void>;
@@ -26,29 +26,29 @@ export interface ShopSlice {
 export const createShopSlice: StateCreator<ShopSlice> = (set, get) => ({
   purchaseHistory: { purchases: [], totalSpent: 0 },
   shopItems: [],
-  isLoading: false,
-  error: null,
+  shopLoading: false,
+  shopError: null,
 
   // Purchase history actions
   loadPurchaseHistory: async () => {
     try {
-      set({ isLoading: true, error: null });
+      set({ shopLoading: true, shopError: null });
 
       const history = await ShopService.getPurchaseHistory();
 
-      set({ purchaseHistory: history, isLoading: false });
+      set({ purchaseHistory: history, shopLoading: false });
     } catch (error) {
       console.error('Error loading purchase history:', error);
       set({
-        error: error instanceof Error ? error.message : 'Failed to load purchase history',
-        isLoading: false,
+        shopError: error instanceof Error ? error.message : 'Failed to load purchase history',
+        shopLoading: false,
       });
     }
   },
 
   purchaseItem: async (itemId: string) => {
     try {
-      set({ isLoading: true, error: null });
+      set({ shopLoading: true, shopError: null });
 
       // This will check points, create purchase, and deduct points
       const purchase = await ShopService.addPurchase(itemId);
@@ -56,14 +56,14 @@ export const createShopSlice: StateCreator<ShopSlice> = (set, get) => ({
       // Reload purchase history
       const history = await ShopService.getPurchaseHistory();
 
-      set({ purchaseHistory: history, isLoading: false });
+      set({ purchaseHistory: history, shopLoading: false });
 
       return true;
     } catch (error) {
       console.error('Error purchasing item:', error);
       set({
-        error: error instanceof Error ? error.message : 'Failed to purchase item',
-        isLoading: false,
+        shopError: error instanceof Error ? error.message : 'Failed to purchase item',
+        shopLoading: false,
       });
       return false;
     }
@@ -75,19 +75,19 @@ export const createShopSlice: StateCreator<ShopSlice> = (set, get) => ({
 
   clearHistory: async () => {
     try {
-      set({ isLoading: true, error: null });
+      set({ shopLoading: true, shopError: null });
 
       await ShopService.clearHistory();
 
       set({
         purchaseHistory: { purchases: [], totalSpent: 0 },
-        isLoading: false,
+        shopLoading: false,
       });
     } catch (error) {
       console.error('Error clearing history:', error);
       set({
-        error: error instanceof Error ? error.message : 'Failed to clear history',
-        isLoading: false,
+        shopError: error instanceof Error ? error.message : 'Failed to clear history',
+        shopLoading: false,
       });
     }
   },
@@ -95,37 +95,37 @@ export const createShopSlice: StateCreator<ShopSlice> = (set, get) => ({
   // Shop items actions
   loadShopItems: async () => {
     try {
-      set({ isLoading: true, error: null });
+      set({ shopLoading: true, shopError: null });
 
       const items = await ShopItemsService.getShopItems();
 
-      set({ shopItems: items, isLoading: false });
+      set({ shopItems: items, shopLoading: false });
     } catch (error) {
       console.error('Error loading shop items:', error);
       set({
-        error: error instanceof Error ? error.message : 'Failed to load shop items',
-        isLoading: false,
+        shopError: error instanceof Error ? error.message : 'Failed to load shop items',
+        shopLoading: false,
       });
     }
   },
 
   addShopItem: async (item: Partial<ShopItem>) => {
     try {
-      set({ isLoading: true, error: null });
+      set({ shopLoading: true, shopError: null });
 
       await ShopItemsService.addItem(item);
 
       // Reload items
       const items = await ShopItemsService.getShopItems();
 
-      set({ shopItems: items, isLoading: false });
+      set({ shopItems: items, shopLoading: false });
 
       return true;
     } catch (error) {
       console.error('Error adding shop item:', error);
       set({
-        error: error instanceof Error ? error.message : 'Failed to add shop item',
-        isLoading: false,
+        shopError: error instanceof Error ? error.message : 'Failed to add shop item',
+        shopLoading: false,
       });
       return false;
     }
@@ -133,21 +133,21 @@ export const createShopSlice: StateCreator<ShopSlice> = (set, get) => ({
 
   updateShopItem: async (id: string, updates: Partial<ShopItem>) => {
     try {
-      set({ isLoading: true, error: null });
+      set({ shopLoading: true, shopError: null });
 
       await ShopItemsService.updateItem(id, updates);
 
       // Reload items
       const items = await ShopItemsService.getShopItems();
 
-      set({ shopItems: items, isLoading: false });
+      set({ shopItems: items, shopLoading: false });
 
       return true;
     } catch (error) {
       console.error('Error updating shop item:', error);
       set({
-        error: error instanceof Error ? error.message : 'Failed to update shop item',
-        isLoading: false,
+        shopError: error instanceof Error ? error.message : 'Failed to update shop item',
+        shopLoading: false,
       });
       return false;
     }
@@ -155,22 +155,22 @@ export const createShopSlice: StateCreator<ShopSlice> = (set, get) => ({
 
   deleteShopItem: async (id: string) => {
     try {
-      set({ isLoading: true, error: null });
+      set({ shopLoading: true, shopError: null });
 
       await ShopItemsService.deleteItem(id);
 
       // Remove from state
       set((state) => ({
         shopItems: state.shopItems.filter((item) => item.id !== id),
-        isLoading: false,
+        shopLoading: false,
       }));
 
       return true;
     } catch (error) {
       console.error('Error deleting shop item:', error);
       set({
-        error: error instanceof Error ? error.message : 'Failed to delete shop item',
-        isLoading: false,
+        shopError: error instanceof Error ? error.message : 'Failed to delete shop item',
+        shopLoading: false,
       });
       return false;
     }

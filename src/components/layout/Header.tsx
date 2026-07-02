@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { User as UserIcon, Star, Coins } from 'lucide-react';
 import { useUser } from '@/store';
+import { useAnimatedNumber } from '@/hooks/useAnimatedNumber';
 import { LanguageSwitcher } from '@/features/settings/components/LanguageSwitcher';
 import { Logo } from '@/components/branding/Logo';
 import { cn } from '@/utils';
@@ -16,6 +17,7 @@ import { ROUTES } from '@/constants/routes';
 export function Header() {
   const { user } = useUser();
   const location = useLocation();
+  const animatedPoints = useAnimatedNumber(user?.points ?? 0);
 
   // Don't show header on onboarding, or on Home (which has its own immersive header)
   if (location.pathname === ROUTES.ONBOARDING || location.pathname === ROUTES.DASHBOARD) {
@@ -43,7 +45,7 @@ export function Header() {
             <div className="flex items-center gap-2 px-3 py-1.5 bg-charcoal-700/50 rounded-lg border border-charcoal-600">
               <Coins size={18} className="text-[rgb(137,184,32)]" aria-hidden="true" />
               <span className="text-sm font-semibold text-white">
-                {user.points.toLocaleString()}
+                {animatedPoints.toLocaleString()}
               </span>
               <span className="text-xs text-gray-200">pts</span>
             </div>

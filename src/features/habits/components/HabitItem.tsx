@@ -8,10 +8,12 @@ import React, { useState } from 'react';
 import { Check, X, Loader2, Flame, Shield, Timer } from 'lucide-react';
 import { cn } from '@/utils';
 import { XPBadge } from '@/components/ui';
+import { XPBurst } from '@/components/effects/XPBurst';
 import { HABIT_ICONS } from './IconSelector';
 import { useLifeAreas } from '@/store';
 import { useLocale } from '@/hooks/useLocale';
 import type { HabitType } from '@/types';
+import type { HabitToggleResult } from '@/store/habitsSlice';
 
 const iconMap = HABIT_ICONS;
 
@@ -27,7 +29,8 @@ interface HabitItemProps {
   unit?: string;
   dailyGoal?: number;
   todayValue?: number;
-  onComplete: (id: string) => Promise<void>;
+  /** may resolve with the toggle result so the XP burst shows the real award */
+  onComplete: (id: string) => Promise<void | HabitToggleResult>;
   onUncomplete: (id: string) => Promise<void>;
   /** measurable: open the value/timer logger */
   onLog?: (id: string) => void;
@@ -58,6 +61,7 @@ export function HabitItem({
   const { t } = useLocale();
   const { lifeAreas } = useLifeAreas();
   const [isLoading, setIsLoading] = useState(false);
+  const [burst, setBurst] = useState<{ xp: number; hint?: string } | null>(null);
 
   const isQuit = habitType === 'quit';
   const isMeasurable = habitType === 'measurable';
@@ -70,7 +74,16 @@ export function HabitItem({
     }
     try {
       setIsLoading(true);
-      await onComplete(id);
+      const result = await onComplete(id);
+      const awarded = result && 'xpEarned' in result ? result.xpEarned : xp;
+      const bonusPercent =
+        result && result.streakMultiplier && result.streakMultiplier > 1
+          ? Math.round((result.streakMultiplier - 1) * 100)
+          : 0;
+      setBurst({
+        xp: awarded,
+        hint: bonusPercent > 0 ? `+${bonusPercent}%` : undefined,
+      });
     } catch (error) {
       console.error('Error completing habit:', error);
     } finally {
@@ -117,6 +130,11 @@ export function HabitItem({
       )}
       aria-label={`Habit: ${name}`}
     >
+      {/* XP burst celebration (one-shot) */}
+      {burst && (
+        <XPBurst xp={burst.xp} hint={burst.hint} onDone={() => setBurst(null)} />
+      )}
+
       {/* Completion glow wash */}
       {completedToday && (
         <div
@@ -252,7 +270,11 @@ export function HabitItem({
                 ) : isMeasurable && !completedToday ? (
                   <Timer size={20} />
                 ) : (
-                  <Check size={20} strokeWidth={completedToday ? 3 : 2} />
+                  <Check
+                    size={20}
+                    strokeWidth={completedToday ? 3 : 2}
+                    className={completedToday ? 'animate-pop-in motion-reduce:animate-none' : undefined}
+                  />
                 )}
                 {completedToday && (
                   <span className="absolute -top-1 -right-1 w-2 h-2 bg-gold-400 rounded-full animate-sparkle" />

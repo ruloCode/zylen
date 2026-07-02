@@ -342,6 +342,21 @@ module.exports = {
           "0%": { opacity: "0", transform: "translateY(8px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
+
+        // ── v1 polish: page transitions + XP feedback ──
+        "page-in": {
+          "0%": { opacity: "0", transform: "translateY(8px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        "xp-float": {
+          "0%": { opacity: "0", transform: "translateY(4px) scale(0.85)" },
+          "20%": { opacity: "1", transform: "translateY(0) scale(1.05)" },
+          "100%": { opacity: "0", transform: "translateY(-28px) scale(1)" },
+        },
+        "burst-particle": {
+          "0%": { opacity: "1", transform: "translate(0, 0) scale(1)" },
+          "100%": { opacity: "0", transform: "translate(var(--burst-x, 0), var(--burst-y, -24px)) scale(0.4)" },
+        },
       },
 
       // Animation classes - Simplified for DOFUS aesthetic
@@ -360,6 +375,9 @@ module.exports = {
         "pop-in": "pop-in 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)",
         "typing-dot": "typing-dot 1.4s ease-in-out infinite",
         "message-in": "message-in 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+        "page-in": "page-in 0.22s cubic-bezier(0.4, 0, 0.2, 1)",
+        "xp-float": "xp-float 1.1s ease-out forwards",
+        "burst-particle": "burst-particle 0.7s ease-out forwards",
       },
     },
   },

@@ -1,25 +1,45 @@
 import { StateCreator } from 'zustand';
-import { Habit } from '@/types';
+import { Habit, Streak } from '@/types';
+import type { StreakSnapshot } from '@/types/habit';
 import {
   HabitsService,
   HabitWithCompletion,
 } from '@/services/supabase/habits.service';
-import { StreaksService } from '@/services/supabase/streaks.service';
 import { AchievementsService } from '@/services/supabase/achievements.service';
+import type { AppStore } from './types';
 
 export interface HabitToggleResult {
   xpEarned: number;
   pointsEarned: number;
+  /** streak bonus applied server-side (1.0 = none, up to 2.0) */
+  streakMultiplier?: number;
+  /** true when the soft daily XP cap reduced the award */
+  capped?: boolean;
+  leveledUp?: boolean;
+  newLevel?: number;
   areaLevelUp?: {
     area: string;
     newLevel: number;
   };
 }
 
+/** Map the RPC streak snapshot to the app Streak type */
+function mapSnapshotToStreak(snapshot: StreakSnapshot): Streak {
+  return {
+    currentStreak: snapshot.current_streak,
+    weeklyStreak: snapshot.last_seven_days.filter(Boolean).length,
+    longestStreak: snapshot.longest_streak,
+    lastSevenDays: snapshot.last_seven_days,
+    lastCompletionDate: snapshot.last_completion_date
+      ? new Date(snapshot.last_completion_date)
+      : undefined,
+  };
+}
+
 export interface HabitsSlice {
   habits: HabitWithCompletion[];
-  isLoading: boolean;
-  error: string | null;
+  habitsLoading: boolean;
+  habitsError: string | null;
 
   // Actions
   loadHabits: () => Promise<void>;
@@ -28,6 +48,8 @@ export interface HabitsSlice {
   deleteHabit: (id: string) => Promise<void>;
   completeHabit: (id: string, value?: number) => Promise<HabitToggleResult>;
   uncompleteHabit: (id: string) => Promise<void>;
+  /** quit habits: revert today's completion (if any) and persist the relapse */
+  recordRelapse: (id: string) => Promise<void>;
   getTotalXPEarned: () => Promise<number>;
   getHabitHistory: (
     id: string,
@@ -35,30 +57,33 @@ export interface HabitsSlice {
   ) => Promise<import('@/types/habit').HabitDayLog[]>;
 }
 
-export const createHabitsSlice: StateCreator<HabitsSlice> = (set, get) => ({
+export const createHabitsSlice: StateCreator<AppStore, [], [], HabitsSlice> = (
+  set,
+  get
+) => ({
   habits: [],
-  isLoading: false,
-  error: null,
+  habitsLoading: false,
+  habitsError: null,
 
   loadHabits: async () => {
     try {
-      set({ isLoading: true, error: null });
+      set({ habitsLoading: true, habitsError: null });
 
       const habits = await HabitsService.getHabitsWithCompletions();
 
-      set({ habits, isLoading: false });
+      set({ habits, habitsLoading: false });
     } catch (error) {
       console.error('Error loading habits:', error);
       set({
-        error: error instanceof Error ? error.message : 'Failed to load habits',
-        isLoading: false,
+        habitsError: error instanceof Error ? error.message : 'Failed to load habits',
+        habitsLoading: false,
       });
     }
   },
 
   addHabit: async (habit: Partial<Habit>) => {
     try {
-      set({ isLoading: true, error: null });
+      set({ habitsLoading: true, habitsError: null });
 
       // Validate that lifeArea is provided (now required)
       if (!habit.lifeArea) {
@@ -70,12 +95,12 @@ export const createHabitsSlice: StateCreator<HabitsSlice> = (set, get) => ({
       // Reload habits to get updated completion status
       const habits = await HabitsService.getHabitsWithCompletions();
 
-      set({ habits, isLoading: false });
+      set({ habits, habitsLoading: false });
     } catch (error) {
       console.error('Error adding habit:', error);
       set({
-        error: error instanceof Error ? error.message : 'Failed to add habit',
-        isLoading: false,
+        habitsError: error instanceof Error ? error.message : 'Failed to add habit',
+        habitsLoading: false,
       });
       throw error; // Re-throw so UI can handle
     }
@@ -83,19 +108,19 @@ export const createHabitsSlice: StateCreator<HabitsSlice> = (set, get) => ({
 
   updateHabit: async (id: string, updates: Partial<Habit>) => {
     try {
-      set({ isLoading: true, error: null });
+      set({ habitsLoading: true, habitsError: null });
 
       await HabitsService.updateHabit(id, updates);
 
       // Reload habits to get updated data
       const habits = await HabitsService.getHabitsWithCompletions();
 
-      set({ habits, isLoading: false });
+      set({ habits, habitsLoading: false });
     } catch (error) {
       console.error('Error updating habit:', error);
       set({
-        error: error instanceof Error ? error.message : 'Failed to update habit',
-        isLoading: false,
+        habitsError: error instanceof Error ? error.message : 'Failed to update habit',
+        habitsLoading: false,
       });
       throw error;
     }
@@ -103,94 +128,231 @@ export const createHabitsSlice: StateCreator<HabitsSlice> = (set, get) => ({
 
   deleteHabit: async (id: string) => {
     try {
-      set({ isLoading: true, error: null });
+      set({ habitsLoading: true, habitsError: null });
 
       await HabitsService.deleteHabit(id);
 
       // Remove from state
       set((state) => ({
         habits: state.habits.filter((h) => h.id !== id),
-        isLoading: false,
+        habitsLoading: false,
       }));
     } catch (error) {
       console.error('Error deleting habit:', error);
       set({
-        error: error instanceof Error ? error.message : 'Failed to delete habit',
-        isLoading: false,
+        habitsError: error instanceof Error ? error.message : 'Failed to delete habit',
+        habitsLoading: false,
       });
       throw error;
     }
   },
 
   completeHabit: async (id: string, value?: number): Promise<HabitToggleResult> => {
+    const habit = get().habits.find((h) => h.id === id);
+    if (!habit) {
+      throw new Error('Habit not found');
+    }
+
+    // Optimistic update: only this habit's card re-renders. Never toggle a
+    // loading flag here — full-screen loaders must not replace the page.
+    const previousToday = {
+      completedToday: habit.completedToday,
+      completedAt: habit.completedAt,
+      todayValue: habit.todayValue,
+    };
+    const completedAt = new Date();
+    set((state) => ({
+      habits: state.habits.map((h) =>
+        h.id === id
+          ? { ...h, completedToday: true, completedAt, todayValue: value ?? h.todayValue }
+          : h
+      ),
+      habitsError: null,
+    }));
+
     try {
-      set({ isLoading: true, error: null });
-
-      const habit = get().habits.find((h) => h.id === id);
-      if (!habit) {
-        throw new Error('Habit not found');
-      }
-
-      // Complete habit via RPC (handles points, XP, life area updates)
+      // Complete habit via RPC v2: the server applies the streak bonus and
+      // the soft daily XP cap, updates level/streak/life area atomically and
+      // returns everything needed to sync the store — no refetch.
       const result = await HabitsService.completeHabit(id, value);
 
-      // Update streak
-      await StreaksService.updateStreakForToday(true);
+      const user = get().user;
+      set((state) => ({
+        streak: mapSnapshotToStreak(result.streak),
+        ...(user
+          ? {
+              user: {
+                ...user,
+                points: result.new_points,
+                totalXPEarned: result.new_total_xp,
+                level: result.new_level,
+              },
+            }
+          : {}),
+        lifeAreas: state.lifeAreas.map((area) =>
+          area.id === result.life_area.id
+            ? { ...area, totalXP: result.life_area.total_xp, level: result.life_area.level }
+            : area
+        ),
+      }));
 
-      // Check and unlock achievements automatically
-      try {
-        const achievementResult = await AchievementsService.checkAndUnlockAchievements();
-        if (achievementResult.newly_unlocked > 0) {
-          console.log(`🎉 Unlocked ${achievementResult.newly_unlocked} achievement(s)!`, achievementResult.achievements_unlocked);
-          // You could also show a notification here
-        }
-      } catch (err) {
-        console.error('Error checking achievements:', err);
-        // Don't fail the habit completion if achievement check fails
-      }
-
-      // Reload habits to get updated completion status
-      const habits = await HabitsService.getHabitsWithCompletions();
-
-      set({ habits, isLoading: false });
+      // Check achievements in the background; never block the completion.
+      AchievementsService.checkAndUnlockAchievements()
+        .then((achievementResult) => {
+          if (achievementResult.newly_unlocked > 0) {
+            console.log(
+              `🎉 Unlocked ${achievementResult.newly_unlocked} achievement(s)!`,
+              achievementResult.achievements_unlocked
+            );
+          }
+        })
+        .catch((err) => console.error('Error checking achievements:', err));
 
       return {
-        xpEarned: result.xpEarned,
-        pointsEarned: habit.points,
-        // Note: areaLevelUp info is now handled by complete_habit RPC
-        // We could extend the RPC return to include this info if needed
+        xpEarned: result.xp_awarded,
+        pointsEarned: result.points_awarded,
+        streakMultiplier: result.streak_multiplier,
+        capped: result.capped,
+        leveledUp: result.leveled_up,
+        newLevel: result.new_level,
+        ...(result.life_area.leveled_up
+          ? {
+              areaLevelUp: {
+                area: result.life_area.id,
+                newLevel: result.life_area.level,
+              },
+            }
+          : {}),
       };
     } catch (error) {
       console.error('Error completing habit:', error);
-      set({
-        error: error instanceof Error ? error.message : 'Failed to complete habit',
-        isLoading: false,
-      });
+      // Rollback the optimistic update
+      set((state) => ({
+        habits: state.habits.map((h) =>
+          h.id === id ? { ...h, ...previousToday } : h
+        ),
+        habitsError:
+          error instanceof Error ? error.message : 'Failed to complete habit',
+      }));
       throw error;
     }
   },
 
   uncompleteHabit: async (id: string) => {
+    const habit = get().habits.find((h) => h.id === id);
+    if (!habit) {
+      throw new Error('Habit not found');
+    }
+
+    // Optimistic update (see completeHabit).
+    const previousToday = {
+      completedToday: habit.completedToday,
+      completedAt: habit.completedAt,
+      todayValue: habit.todayValue,
+    };
+    set((state) => ({
+      habits: state.habits.map((h) =>
+        h.id === id
+          ? { ...h, completedToday: false, completedAt: undefined, todayValue: undefined }
+          : h
+      ),
+      habitsError: null,
+    }));
+
     try {
-      set({ isLoading: true, error: null });
+      // Uncomplete habit via RPC v2: reverts the exact XP/points awarded and
+      // refreshes the streak server-side; sync the store from the payload.
+      const result = await HabitsService.uncompleteHabit(id);
 
-      // Uncomplete habit via RPC (reverts points, XP, life area updates)
-      await HabitsService.uncompleteHabit(id);
-
-      // Check if any habits are still completed today
-      const habits = await HabitsService.getHabitsWithCompletions();
-      const anyCompleted = habits.some((h) => h.completedToday);
-
-      // Update streak based on whether any habits are still completed
-      await StreaksService.updateStreakForToday(anyCompleted);
-
-      set({ habits, isLoading: false });
+      const user = get().user;
+      set((state) => ({
+        streak: mapSnapshotToStreak(result.streak),
+        ...(user
+          ? {
+              user: {
+                ...user,
+                points: result.new_points,
+                totalXPEarned: result.new_total_xp,
+                level: result.new_level,
+              },
+            }
+          : {}),
+        lifeAreas: state.lifeAreas.map((area) =>
+          area.id === result.life_area.id
+            ? { ...area, totalXP: result.life_area.total_xp, level: result.life_area.level }
+            : area
+        ),
+      }));
     } catch (error) {
       console.error('Error uncompleting habit:', error);
-      set({
-        error: error instanceof Error ? error.message : 'Failed to uncomplete habit',
-        isLoading: false,
-      });
+      set((state) => ({
+        habits: state.habits.map((h) =>
+          h.id === id ? { ...h, ...previousToday } : h
+        ),
+        habitsError:
+          error instanceof Error ? error.message : 'Failed to uncomplete habit',
+      }));
+      throw error;
+    }
+  },
+
+  recordRelapse: async (id: string) => {
+    const habit = get().habits.find((h) => h.id === id);
+    if (!habit) {
+      throw new Error('Habit not found');
+    }
+
+    // Optimistic: clear today's completion on the card.
+    const previousToday = {
+      completedToday: habit.completedToday,
+      completedAt: habit.completedAt,
+      todayValue: habit.todayValue,
+    };
+    set((state) => ({
+      habits: state.habits.map((h) =>
+        h.id === id
+          ? { ...h, completedToday: false, completedAt: undefined, todayValue: undefined }
+          : h
+      ),
+      habitsError: null,
+    }));
+
+    try {
+      const result = await HabitsService.recordRelapse(id);
+
+      const user = get().user;
+      const reverted = result.reverted_details;
+      set((state) => ({
+        streak: mapSnapshotToStreak(result.streak),
+        ...(user && reverted
+          ? {
+              user: {
+                ...user,
+                points: reverted.new_points,
+                totalXPEarned: reverted.new_total_xp,
+                level: reverted.new_level,
+              },
+            }
+          : {}),
+        ...(reverted
+          ? {
+              lifeAreas: state.lifeAreas.map((area) =>
+                area.id === reverted.life_area.id
+                  ? { ...area, totalXP: reverted.life_area.total_xp, level: reverted.life_area.level }
+                  : area
+              ),
+            }
+          : {}),
+      }));
+    } catch (error) {
+      console.error('Error recording relapse:', error);
+      set((state) => ({
+        habits: state.habits.map((h) =>
+          h.id === id ? { ...h, ...previousToday } : h
+        ),
+        habitsError:
+          error instanceof Error ? error.message : 'Failed to record relapse',
+      }));
       throw error;
     }
   },

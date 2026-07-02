@@ -1,0 +1,115 @@
+{
+  "$schema_note": "RESUMEN de prompts de assets. Para trabajar por lotes usa la carpeta docs/prompts/ (un .json por lote, con estado pendiente/hecho y un item por imagen). Este archivo se mantiene como vista general. Los tiers del avatar tienen prompts completos en docs/avatar-tiers-prompts.md.",
+
+  "style_base": {
+    "type": "3D Pixar-style chibi / polished premium mobile-game asset",
+    "rendering": "octane render, soft studio lighting, smooth subsurface shading, high detail, clean glossy finish",
+    "world": "dark-fantasy magical jungle kingdom ('el reino de la luz'): misty jungle, faceted low-poly rocks, glowing teal runes, warm lanterns, fireflies",
+    "color_palette": {
+      "primary": "teal / emerald greens (#2DD4BF, #0d9488)",
+      "accent": "warm gold and amber (#F29C06, #E1AB3D)",
+      "highlights": "glowing electric blue",
+      "background": "deep charcoal (#101418)"
+    },
+    "reference_assets": [
+      "public/avatars/hero-avatar.png (chibi hero, face crop)",
+      "public/hero-bg.png (jungle scene)",
+      "public/avatars/tiers/tier-0.png (tier system base)"
+    ],
+    "negative_always": ["no text or labels", "no UI elements", "no watermark", "no extra people", "keep chibi proportions where characters appear"]
+  },
+
+  "avatar_tiers": {
+    "note": "NO regenerar desde aquí: usar docs/avatar-tiers-prompts.md (prompts completos con identity-lock, escala de equipo por tier y flujo image-to-image). Archivos destino: public/avatars/tiers/tier-0.png … tier-4.png (hoy solo existe tier-0). Tras generar la escena 9:16, pedir además el recorte con fondo transparente para el componente de avatar.",
+    "pending_files": ["tier-1.png", "tier-2.png", "tier-3.png", "tier-4.png"]
+  },
+
+  "selectable_avatars": {
+    "note": "Nuevos héroes seleccionables en AvatarPicker (hoy solo hay 2: rulo y dani). Cada uno necesita DOS archivos: bust crop transparente (~512x512) para el picker y cuerpo completo transparente (~9:16) para el hero del Dashboard. Destino: public/avatars/<slug>-avatar.png y <slug>-full.png, registrar en AVATAR_OPTIONS de src/constants/config.ts.",
+    "shared_prompt_body": "3D Pixar-style chibi mascot, big head small body short limbs, octane render, soft studio lighting, premium mobile-game character, standing confidently, warm friendly expression, transparent background PNG, full body visible, dark-fantasy jungle-explorer outfit (fitted shirt, tribal sash with wooden beads, explorer shorts, gladiator sandals, blue crystal pendant), teal and gold color accents",
+    "characters": [
+      {
+        "slug": "lyra",
+        "prompt_addon": "young woman explorer, long braided copper-red hair, freckles, bright green eyes, confident smirk, carries a short carved wooden bow on her back"
+      },
+      {
+        "slug": "kenji",
+        "prompt_addon": "young east-asian man, short black hair with an undercut, calm focused expression, thin scar over one eyebrow, holds a simple bo staff"
+      },
+      {
+        "slug": "amara",
+        "prompt_addon": "black woman with voluminous natural afro hair adorned with tiny golden beads, radiant smile, gold hoop earrings, carries a satchel of glowing herbs"
+      },
+      {
+        "slug": "bruma",
+        "prompt_addon": "non-binary explorer with silver-grey short wavy hair, heterochromatic eyes (one teal, one amber), serene expression, small floating teal wisp companion by their shoulder"
+      }
+    ]
+  },
+
+  "achievement_illustrations": {
+    "note": "Emblema/insignia por logro (hoy se usan iconos Lucide; estas ilustraciones suben la calidad del modal de logro). Formato: 1024x1024, fondo transparente, estilo medallón. Destino sugerido: public/achievements/<key>.png. El marco cambia por tier: bronze = marco de bronce simple, silver = marco plateado con detalle, gold = marco dorado ornamentado con gemas, platinum = marco platino radiante con aura.",
+    "shared_prompt_body": "ornate fantasy achievement medallion, 3D rendered game badge, centered emblem on a shield-shaped backplate, jungle-kingdom dark-fantasy style, teal and gold palette, glowing details, transparent background, premium mobile-game quality, no text",
+    "badges": [
+      { "key": "habit_hero", "tier": "bronze", "emblem": "a glowing teal target with an arrow striking the center, wrapped in small jungle vines" },
+      { "key": "consistency_king", "tier": "silver", "emblem": "two interlocked glowing check marks forming a crown shape" },
+      { "key": "routine_legend", "tier": "gold", "emblem": "a radiant golden laurel wreath around a glowing habit rune" },
+      { "key": "week_warrior", "tier": "bronze", "emblem": "a small lightning bolt striking a seven-notched stone tablet" },
+      { "key": "two_week_titan", "tier": "silver", "emblem": "a burning teal-orange flame held in a stone gauntlet" },
+      { "key": "month_master", "tier": "gold", "emblem": "a golden crown floating above a full moon calendar disc" },
+      { "key": "unstoppable", "tier": "platinum", "emblem": "an eternal flame trophy with orbiting runic shards and an electric-blue aura" },
+      { "key": "xp_novice", "tier": "bronze", "emblem": "a single glowing gold star rising from an open hand" },
+      { "key": "xp_expert", "tier": "silver", "emblem": "a constellation of five connected glowing stars" },
+      { "key": "xp_master", "tier": "gold", "emblem": "a supernova of golden sparkles bursting from a crystal core" },
+      { "key": "social_butterfly", "tier": "bronze", "emblem": "a luminous teal butterfly with wing patterns shaped like two joined hands" },
+      { "key": "network_builder", "tier": "silver", "emblem": "three glowing figures connected by threads of golden light" },
+      { "key": "early_bird", "tier": "bronze", "emblem": "a stylized golden bird taking flight over a rising sun" },
+      { "key": "night_owl", "tier": "bronze", "emblem": "a wise owl with glowing teal eyes perched on a crescent moon" },
+      { "key": "perfect_day", "tier": "silver", "emblem": "a flawless glowing circle of light with a check mark core, framed by dawn rays" },
+      { "key": "comeback", "tier": "gold", "emblem": "a phoenix of teal-gold fire rising from grey ashes" }
+    ]
+  },
+
+  "life_area_icons": {
+    "note": "Ilustraciones/emblemas por reino de la vida (hoy se usan iconos Lucide). 1024x1024, fondo transparente, estilo gema/tótem de reino. Destino: public/life-areas/<area>.png.",
+    "shared_prompt_body": "mystical kingdom totem gem, 3D rendered, faceted crystal core with a carved stone frame and jungle vines, teal and gold dark-fantasy palette, soft inner glow, transparent background, premium mobile-game quality, no text",
+    "areas": [
+      { "area": "health", "emblem": "a heart-shaped emerald crystal with a gentle pulse of light and a leaf motif" },
+      { "area": "finance", "emblem": "an amber-gold coin crystal with an engraved rune of abundance" },
+      { "area": "creativity", "emblem": "a violet-teal crystal shaped like a flame-brush, with floating ink sparks" },
+      { "area": "social", "emblem": "two intertwined teal crystals forming a bond, connected by a thread of light" },
+      { "area": "family", "emblem": "a warm rose-gold crystal cluster of one large and two small gems sheltered under a stone arch" },
+      { "area": "career", "emblem": "a deep-blue crystal mountain peak with a golden summit flag rune" }
+    ]
+  },
+
+  "scenes_and_marketing": {
+    "note": "Escenas de apoyo. 9:16 verticales salvo indicación. Reusar la escena de selva del style_base para coherencia.",
+    "items": [
+      {
+        "file": "public/onboarding-5.png",
+        "prompt": "misty magical jungle clearing at dawn, an empty stone pedestal with a floating glowing teal rune inviting the viewer to begin their journey, warm god-rays, fireflies, no characters, 9:16, dark-fantasy premium mobile-game splash art"
+      },
+      {
+        "file": "public/streak-celebration.png",
+        "prompt": "a great teal-orange bonfire burning bright on a stone altar in the magical jungle at night, golden sparks rising into the canopy, celebratory mood, no characters, 9:16"
+      },
+      {
+        "file": "public/og-image.png (1200x630)",
+        "prompt": "wide banner: the chibi hero from public/avatars/hero-avatar.png standing on a jungle cliff at golden hour overlooking a glowing rune-lit valley, epic but friendly, teal and gold palette, room on the left third for logo overlay, 1200x630, no text"
+      }
+    ]
+  },
+
+  "cleanup_orphans": {
+    "note": "Assets huérfanos en public/avatars/ que ya no referencia el código (AVATAR_OPTIONS solo usa hero-avatar/dani-avatar/dani-full/hero-character). Borrar o reciclar al generar los nuevos:",
+    "files": [
+      "public/avatars/avatar-explorer-1.png",
+      "public/avatars/avatar-explorer-2.png",
+      "public/avatars/avatar-explorer-3.png (¡OJO: es la referencia de cara para los tiers — conservar!)",
+      "public/avatars/rulo_avatar.png",
+      "public/avatars/daniamor_avatar.png",
+      "src/assets/rulo_avatar.png"
+    ]
+  }
+}

@@ -84,21 +84,24 @@ function ProtectedShell() {
       {/* Header */}
       <Header />
 
-      {/* Main content with proper landmark */}
+      {/* Main content with proper landmark. The keyed wrapper replays a
+          short fade+slide on every route change (page transition). */}
       <main id="main-content" className={isHome ? 'pb-28' : 'pt-16 pb-24'}>
-        <Routes>
-          <Route path={ROUTES.ONBOARDING} element={<Onboarding />} />
-          <Route path={ROUTES.PROFILE} element={<Profile />} />
-          <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
-          <Route path={ROUTES.HABITS} element={<HabitLog />} />
-          <Route path={ROUTES.STREAKS} element={<Streaks />} />
-          <Route path={ROUTES.ROOT_HABIT} element={<RootHabit />} />
-          <Route path={ROUTES.MOOD} element={<Mood />} />
-          <Route path={ROUTES.SHOP} element={<Shop />} />
-          <Route path={ROUTES.CHAT} element={<Chat />} />
-          <Route path={ROUTES.SOCIAL} element={<Social />} />
-          <Route path={ROUTES.LEADERBOARD} element={<Leaderboard />} />
-        </Routes>
+        <div key={location.pathname} className="animate-page-in motion-reduce:animate-none">
+          <Routes>
+            <Route path={ROUTES.ONBOARDING} element={<Onboarding />} />
+            <Route path={ROUTES.PROFILE} element={<Profile />} />
+            <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
+            <Route path={ROUTES.HABITS} element={<HabitLog />} />
+            <Route path={ROUTES.STREAKS} element={<Streaks />} />
+            <Route path={ROUTES.ROOT_HABIT} element={<RootHabit />} />
+            <Route path={ROUTES.MOOD} element={<Mood />} />
+            <Route path={ROUTES.SHOP} element={<Shop />} />
+            <Route path={ROUTES.CHAT} element={<Chat />} />
+            <Route path={ROUTES.SOCIAL} element={<Social />} />
+            <Route path={ROUTES.LEADERBOARD} element={<Leaderboard />} />
+          </Routes>
+        </div>
       </main>
 
       <Navigation />

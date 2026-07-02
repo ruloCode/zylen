@@ -1,10 +1,73 @@
 import path from "path";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import { VitePWA } from "vite-plugin-pwa";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    VitePWA({
+      registerType: "autoUpdate",
+      includeAssets: [
+        "favicon.ico",
+        "favicon-16x16.png",
+        "favicon-32x32.png",
+        "apple-touch-icon.png",
+      ],
+      manifest: {
+        name: "Zylen",
+        short_name: "Zylen",
+        description:
+          "Gamified habit tracking: earn XP, level up your life areas and keep your flame alive.",
+        lang: "es",
+        start_url: "/",
+        scope: "/",
+        display: "standalone",
+        orientation: "portrait",
+        theme_color: "#0d9488",
+        background_color: "#101418",
+        icons: [
+          {
+            src: "/android-chrome-192x192.png",
+            sizes: "192x192",
+            type: "image/png",
+          },
+          {
+            src: "/android-chrome-512x512.png",
+            sizes: "512x512",
+            type: "image/png",
+          },
+          {
+            src: "/android-chrome-512x512.png",
+            sizes: "512x512",
+            type: "image/png",
+            purpose: "maskable",
+          },
+        ],
+      },
+      workbox: {
+        globPatterns: ["**/*.{js,css,html,ico,svg}"],
+        navigateFallback: "/index.html",
+        maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
+        runtimeCaching: [
+          {
+            urlPattern: /\.(?:png|jpg|jpeg|webp)$/,
+            handler: "CacheFirst",
+            options: {
+              cacheName: "zylen-images",
+              expiration: { maxEntries: 60, maxAgeSeconds: 30 * 24 * 60 * 60 },
+            },
+          },
+          {
+            urlPattern: /\/locales\/.*\.json$/,
+            handler: "StaleWhileRevalidate",
+            options: { cacheName: "zylen-locales" },
+          },
+        ],
+      },
+    }),
+  ],
 
   // Development server configuration
   server: {

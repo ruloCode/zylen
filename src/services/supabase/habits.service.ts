@@ -10,7 +10,13 @@
  */
 
 import { supabase } from '@/lib/supabase';
-import type { Habit, HabitCompletion } from '@/types/habit';
+import type {
+  Habit,
+  HabitCompletion,
+  CompleteHabitResult,
+  UncompleteHabitResult,
+  RelapseResult,
+} from '@/types/habit';
 import { HabitsServiceError, HABIT_ERROR_CODES } from '@/types/errors';
 import { getAuthUserId, getTodayDateRange } from './utils';
 import { mapHabitRowToHabit, mapHabitCompletionRowToHabitCompletion } from './mappers';
@@ -134,6 +140,8 @@ export class HabitsService {
           unit: habit.unit || null,
           daily_goal: habit.dailyGoal ?? null,
           color: habit.color || null,
+          time_of_day: habit.timeOfDay || 'anytime',
+          reminder_enabled: habit.reminderEnabled ?? false,
           // points is auto-calculated by trigger (xp * 0.5)
         })
         .select()
@@ -176,6 +184,8 @@ export class HabitsService {
       if (updates.unit !== undefined) dbUpdates.unit = updates.unit || null;
       if (updates.dailyGoal !== undefined) dbUpdates.daily_goal = updates.dailyGoal ?? null;
       if (updates.color !== undefined) dbUpdates.color = updates.color || null;
+      if (updates.timeOfDay !== undefined) dbUpdates.time_of_day = updates.timeOfDay;
+      if (updates.reminderEnabled !== undefined) dbUpdates.reminder_enabled = updates.reminderEnabled;
 
       const { data, error } = await supabase
         .from('habits')
@@ -236,29 +246,26 @@ export class HabitsService {
   }
 
   /**
-   * Complete a habit (mark as done for today)
-   * This will:
-   * 1. Check if already completed today
-   * 2. Create habit_completion record
-   * 3. Update user points and XP
-   * 4. Update life area XP and level
-   * 5. Update streak (via separate service call)
-   * 6. Track completion in weekly leaderboard
+   * Complete a habit (mark as done for today) via the complete_habit v2 RPC.
+   * The server atomically: inserts the completion (with measurable value),
+   * applies the streak bonus + soft daily XP cap, updates points/XP/level,
+   * updates the life area and refreshes the streak.
+   *
+   * Returns the full sync payload so the store can update without refetching.
    *
    * @throws {HabitsServiceError} if already completed or operation fails
    */
   static async completeHabit(
     habitId: string,
     value?: number
-  ): Promise<HabitCompletion> {
+  ): Promise<CompleteHabitResult> {
     try {
       const userId = await getAuthUserId();
 
-      // Use RPC function for atomic transaction
       const { data, error } = await supabase.rpc('complete_habit', {
         p_habit_id: habitId,
-        ...(value !== undefined ? { p_value: value } : {}),
-      } as any);
+        p_value: value ?? undefined,
+      });
 
       if (error) {
         if (error.message.includes('already completed')) {
@@ -270,20 +277,19 @@ export class HabitsService {
         throw new HabitsServiceError(error.message);
       }
 
-      // Track completion in weekly leaderboard (non-blocking)
+      const result = data as unknown as CompleteHabitResult;
+
+      // Track completion in weekly leaderboard (non-blocking).
+      // Uses the XP actually awarded (bonus/cap applied server-side).
       trackHabitCompletion(
         userId,
-        data.xp_earned,
-        data.points_earned || Math.floor(data.xp_earned * 0.5)
+        result.xp_awarded,
+        result.points_awarded
       ).catch((err) => {
         console.warn('Failed to track habit completion in leaderboard:', err);
       });
 
-      return {
-        habitId,
-        completedAt: new Date(),
-        xpEarned: data.xp_earned,
-      };
+      return result;
     } catch (error) {
       if (error instanceof HabitsServiceError) throw error;
       console.error('Error in HabitsService.completeHabit:', error);
@@ -292,21 +298,14 @@ export class HabitsService {
   }
 
   /**
-   * Uncomplete a habit (remove today's completion)
-   * This will:
-   * 1. Find today's completion
-   * 2. Delete completion record
-   * 3. Revert user points and XP
-   * 4. Revert life area XP
+   * Uncomplete a habit (remove today's completion) via uncomplete_habit v2.
+   * Reverts the exact XP/points awarded and refreshes the streak server-side.
    *
    * @throws {HabitsServiceError} if not completed today or operation fails
    */
-  static async uncompleteHabit(habitId: string): Promise<boolean> {
+  static async uncompleteHabit(habitId: string): Promise<UncompleteHabitResult> {
     try {
-      const userId = await getAuthUserId();
-
-      // Use RPC function for atomic transaction
-      const { error } = await supabase.rpc('uncomplete_habit', {
+      const { data, error } = await supabase.rpc('uncomplete_habit', {
         p_habit_id: habitId,
       });
 
@@ -320,11 +319,33 @@ export class HabitsService {
         throw new HabitsServiceError(error.message);
       }
 
-      return true;
+      return data as unknown as UncompleteHabitResult;
     } catch (error) {
       if (error instanceof HabitsServiceError) throw error;
       console.error('Error in HabitsService.uncompleteHabit:', error);
       throw new HabitsServiceError('Failed to uncomplete habit');
+    }
+  }
+
+  /**
+   * Record a relapse for a quit-type habit via the record_relapse RPC.
+   * Reverts today's completion if it exists and persists the relapse event.
+   */
+  static async recordRelapse(habitId: string): Promise<RelapseResult> {
+    try {
+      const { data, error } = await supabase.rpc('record_relapse', {
+        p_habit_id: habitId,
+      });
+
+      if (error) {
+        throw new HabitsServiceError(error.message);
+      }
+
+      return data as unknown as RelapseResult;
+    } catch (error) {
+      if (error instanceof HabitsServiceError) throw error;
+      console.error('Error in HabitsService.recordRelapse:', error);
+      throw new HabitsServiceError('Failed to record relapse');
     }
   }
 

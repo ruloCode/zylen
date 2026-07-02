@@ -12,6 +12,31 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "14.5"
   }
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
   public: {
     Tables: {
       achievements: {
@@ -125,8 +150,8 @@ export type Database = {
           id: string
           points_earned: number
           user_id: string
-          xp_earned: number
           value: number | null
+          xp_earned: number
         }
         Insert: {
           completed_at?: string
@@ -134,8 +159,8 @@ export type Database = {
           id?: string
           points_earned: number
           user_id: string
-          xp_earned: number
           value?: number | null
+          xp_earned: number
         }
         Update: {
           completed_at?: string
@@ -143,12 +168,44 @@ export type Database = {
           id?: string
           points_earned?: number
           user_id?: string
-          xp_earned?: number
           value?: number | null
+          xp_earned?: number
         }
         Relationships: [
           {
             foreignKeyName: "habit_completions_habit_id_fkey"
+            columns: ["habit_id"]
+            isOneToOne: false
+            referencedRelation: "habits"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      habit_relapses: {
+        Row: {
+          habit_id: string
+          id: string
+          note: string | null
+          relapsed_at: string
+          user_id: string
+        }
+        Insert: {
+          habit_id: string
+          id?: string
+          note?: string | null
+          relapsed_at?: string
+          user_id: string
+        }
+        Update: {
+          habit_id?: string
+          id?: string
+          note?: string | null
+          relapsed_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "habit_relapses_habit_id_fkey"
             columns: ["habit_id"]
             isOneToOne: false
             referencedRelation: "habits"
@@ -206,52 +263,58 @@ export type Database = {
       }
       habits: {
         Row: {
+          color: string | null
           created_at: string
+          daily_goal: number | null
+          habit_type: string
           icon_name: string
           id: string
           is_archived: boolean
           life_area_id: string
           name: string
           points: number
+          reminder_enabled: boolean
+          time_of_day: string
+          unit: string | null
           updated_at: string
           user_id: string
           xp: number
-          habit_type: string
-          unit: string | null
-          daily_goal: number | null
-          color: string | null
         }
         Insert: {
+          color?: string | null
           created_at?: string
+          daily_goal?: number | null
+          habit_type?: string
           icon_name: string
           id?: string
           is_archived?: boolean
           life_area_id: string
           name: string
           points?: number
+          reminder_enabled?: boolean
+          time_of_day?: string
+          unit?: string | null
           updated_at?: string
           user_id: string
           xp: number
-          habit_type?: string
-          unit?: string | null
-          daily_goal?: number | null
-          color?: string | null
         }
         Update: {
+          color?: string | null
           created_at?: string
+          daily_goal?: number | null
+          habit_type?: string
           icon_name?: string
           id?: string
           is_archived?: boolean
           life_area_id?: string
           name?: string
           points?: number
+          reminder_enabled?: boolean
+          time_of_day?: string
+          unit?: string | null
           updated_at?: string
           user_id?: string
           xp?: number
-          habit_type?: string
-          unit?: string | null
-          daily_goal?: number | null
-          color?: string | null
         }
         Relationships: [
           {
@@ -654,7 +717,10 @@ export type Database = {
         Args: { p_achievement_id: string; p_user_id: string }
         Returns: Json
       }
-      complete_habit: { Args: { p_habit_id: string }; Returns: Json }
+      complete_habit: {
+        Args: { p_habit_id: string; p_value?: number }
+        Returns: Json
+      }
       generate_username_suggestions: {
         Args: { p_count?: number; p_name: string }
         Returns: string[]
@@ -686,6 +752,14 @@ export type Database = {
         Returns: {
           week_end: string
           week_start: string
+        }[]
+      }
+      get_daily_activity: {
+        Args: { p_days?: number }
+        Returns: {
+          completions: number
+          day: string
+          xp: number
         }[]
       }
       get_friend_list: {
@@ -773,6 +847,8 @@ export type Database = {
         Returns: undefined
       }
       is_username_available: { Args: { p_username: string }; Returns: boolean }
+      record_relapse: { Args: { p_habit_id: string }; Returns: Json }
+      refresh_user_streak: { Args: { p_user_id: string }; Returns: Json }
       reject_friend_request: {
         Args: { p_friendship_id: string }
         Returns: undefined
@@ -940,6 +1016,9 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
     Enums: {
       friendship_status: ["pending", "accepted", "rejected"],

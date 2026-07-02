@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import toast from 'react-hot-toast';
 import { Sunrise, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui';
 import { ProgressBar } from '@/components/ui';
@@ -25,9 +26,9 @@ export function RootHabit() {
     try {
       await checkIn();
       // Show success message or notification
-      alert(t('rootHabit.checkInSuccess'));
+      toast.success(t('rootHabit.checkInSuccess'));
     } catch (err) {
-      alert(error || t('rootHabit.checkInError'));
+      toast.error(error || t('rootHabit.checkInError'));
     }
   };
 

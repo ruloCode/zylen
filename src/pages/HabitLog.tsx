@@ -12,9 +12,9 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { HabitItem, HabitForm, TemplateLibrary, MeasureLogger, HabitAnalytics } from '@/features/habits/components';
+import { HabitItem, HabitForm, TemplateLibrary, MeasureLogger, HabitAnalytics, HabitDetailSheet } from '@/features/habits/components';
 import { LevelUpNotification, CircularProgress } from '@/components/ui';
-import { useUser, useLifeAreas, useHabits, useStreaks } from '@/store';
+import { useUser, useHabits, useStreaks } from '@/store';
 import { calculateGlobalLevelUpReward, getLevelProgress } from '@/utils/xp';
 import { useLocale } from '@/hooks/useLocale';
 import { getHeroBodySrc } from '@/constants';
@@ -37,9 +37,8 @@ export function HabitLog() {
   const { t } = useLocale();
 
   // Use the new async hooks
-  const { habits, isLoading, loadHabits, addHabit, completeHabit, uncompleteHabit } = useHabits();
+  const { habits, isLoading, loadHabits, addHabit, updateHabit, completeHabit, uncompleteHabit, recordRelapse } = useHabits();
   const { user } = useUser();
-  const { refreshLifeAreas } = useLifeAreas();
   const { streak } = useStreaks();
 
   // State for level up notifications
@@ -54,9 +53,11 @@ export function HabitLog() {
   // State for initial data from template
   const [templateInitialData, setTemplateInitialData] = useState<Partial<HabitFormData> | undefined>(undefined);
 
-  // Measurable value/timer logger + analytics modal targets
+  // Measurable value/timer logger + detail/analytics/edit modal targets
   const [loggerHabitId, setLoggerHabitId] = useState<string | null>(null);
   const [analyticsHabitId, setAnalyticsHabitId] = useState<string | null>(null);
+  const [detailHabitId, setDetailHabitId] = useState<string | null>(null);
+  const [editHabitId, setEditHabitId] = useState<string | null>(null);
 
   // Active time-of-day filter pill
   const [activeFilter, setActiveFilter] = useState<RoutineFilter>('all');
@@ -69,29 +70,31 @@ export function HabitLog() {
   /**
    * Handle habit completion
    */
-  const handleComplete = async (id: string): Promise<void> => {
+  const handleComplete = async (id: string) => {
     try {
-      const oldLevel = user?.level || 1;
+      // Complete habit — the RPC returns the awarded XP (streak bonus +
+      // daily cap applied) and whether the user leveled up.
+      const result = await completeHabit(id);
 
-      // Complete habit (this handles points, XP, life area updates)
-      await completeHabit(id);
-
-      // Refresh life areas to get updated data
-      await refreshLifeAreas();
-
-      // Check for global level up
-      const newLevel = user?.level || 1;
-      if (newLevel > oldLevel) {
-        // Show global level up notification
+      if (result.leveledUp && result.newLevel) {
         setLevelUpNotification({
           type: 'global',
-          level: newLevel,
-          pointsReward: calculateGlobalLevelUpReward(newLevel),
+          level: result.newLevel,
+          pointsReward: calculateGlobalLevelUpReward(result.newLevel),
         });
       }
 
-      // Show success toast
-      toast.success(t('habits.habitCompleted'));
+      // Success toast with the real XP awarded + bonus/cap hints
+      const bonusPercent = Math.round(((result.streakMultiplier ?? 1) - 1) * 100);
+      let message = `${t('habits.habitCompleted')} +${result.xpEarned} XP`;
+      if (bonusPercent > 0) {
+        message += ` · ${t('habits.streakBonus', { percent: bonusPercent })}`;
+      }
+      if (result.capped) {
+        toast(t('habits.xpCapped'), { icon: '🌙', duration: 3500 });
+      }
+      toast.success(message);
+      return result;
     } catch (error) {
       console.error('Error completing habit:', error);
       toast.error(t('errors.habitCompleteFailed'));
@@ -104,9 +107,6 @@ export function HabitLog() {
   const handleUncomplete = async (id: string): Promise<void> => {
     try {
       await uncompleteHabit(id);
-
-      // Refresh life areas
-      await refreshLifeAreas();
 
       // Show success toast
       toast.success(t('habits.habitUncompleted'));
@@ -122,10 +122,16 @@ export function HabitLog() {
   const handleLogValue = async (value: number): Promise<void> => {
     if (!loggerHabitId) return;
     try {
-      await completeHabit(loggerHabitId, value);
-      await refreshLifeAreas();
+      const result = await completeHabit(loggerHabitId, value);
       setLoggerHabitId(null);
-      toast.success(t('timer.logged'));
+      if (result.leveledUp && result.newLevel) {
+        setLevelUpNotification({
+          type: 'global',
+          level: result.newLevel,
+          pointsReward: calculateGlobalLevelUpReward(result.newLevel),
+        });
+      }
+      toast.success(`${t('timer.logged')} +${result.xpEarned} XP`);
     } catch (error) {
       console.error('Error logging value:', error);
       toast.error(t('errors.habitCompleteFailed'));
@@ -133,15 +139,13 @@ export function HabitLog() {
   };
 
   /**
-   * Register a relapse for a quit-habit (resets the streak)
+   * Register a relapse for a quit-habit: persists the relapse event and
+   * reverts today's completion server-side (streak recomputed).
    */
   const handleRelapse = async (id: string): Promise<void> => {
-    const habit = habits.find((h) => h.id === id);
     if (!window.confirm(t('habits.relapseConfirm'))) return;
     try {
-      if (habit?.completedToday) {
-        await uncompleteHabit(id);
-      }
+      await recordRelapse(id);
       toast(t('habits.relapseRecorded'), { icon: '💪' });
     } catch (error) {
       console.error('Error registering relapse:', error);
@@ -192,22 +196,35 @@ export function HabitLog() {
     setTemplateInitialData(undefined);
   };
 
+  /**
+   * Handle edit form submission (opened from the detail sheet)
+   */
+  const handleEditSubmit = async (data: HabitFormData): Promise<void> => {
+    if (!editHabitId) return;
+    try {
+      await updateHabit(editHabitId, data);
+      toast.success(t('habitDetail.saved'));
+      setEditHabitId(null);
+    } catch (error) {
+      console.error('Error updating habit:', error);
+      toast.error(t('errors.habitUpdateFailed'));
+    }
+  };
+
   // Level / XP ring data for the hero badge.
   const levelProgress = user
     ? getLevelProgress(user.totalXPEarned, user.level)
     : { current: 0, max: 0, percentage: 0 };
 
-  // Weekly streak data: prefer the real streak slice, fall back to a sensible
-  // mostly-complete week so the row never renders empty/crashes.
+  // Weekly streak data from the server-refreshed streak (never invented).
   const weekdaysShort = (t('routines.weekdaysShort', { returnObjects: true }) as string[]) || [];
   const lastSevenDays: boolean[] =
     streak?.lastSevenDays && streak.lastSevenDays.length === 7
       ? streak.lastSevenDays
-      : [true, true, true, true, true, true, false];
+      : [false, false, false, false, false, false, false];
   const currentStreak = streak?.currentStreak ?? 0;
 
-  // Filter pills config. Habits have no reliable time-of-day field, so the
-  // non-"all" filters are visual toggles that fall back to the full list.
+  // Filter pills config, backed by the habit's time_of_day field.
   const filters: { key: RoutineFilter; label: string; icon: typeof LayoutGrid }[] = [
     { key: 'all', label: t('routines.filterAll'), icon: LayoutGrid },
     { key: 'morning', label: t('routines.filterMorning'), icon: Sun },
@@ -215,8 +232,16 @@ export function HabitLog() {
     { key: 'night', label: t('routines.filterNight'), icon: Moon },
   ];
 
-  // No structured time-of-day on the habit model → show all for every filter.
-  const visibleHabits = habits;
+  // 'anytime' habits show under every filter; the UI's "night" maps to the
+  // model's 'evening'.
+  const visibleHabits =
+    activeFilter === 'all'
+      ? habits
+      : habits.filter((h) => {
+          const tod = h.timeOfDay ?? 'anytime';
+          if (tod === 'anytime') return true;
+          return activeFilter === 'night' ? tod === 'evening' : tod === activeFilter;
+        });
 
   return (
     <>
@@ -310,12 +335,13 @@ export function HabitLog() {
             </div>
           </section>
 
-          {/* Racha actual card */}
+          {/* Racha actual card — stacked so the 7-day row never overflows on
+              narrow phones */}
           <section
             aria-label={t('routines.currentStreak')}
-            className="glass-card p-4 mb-6 flex items-center justify-between gap-3"
+            className="glass-card p-4 mb-6 flex flex-col gap-3"
           >
-            <div className="shrink-0">
+            <div>
               <p className="text-white/60 text-xs font-semibold">{t('routines.currentStreak')}</p>
               <p className="text-2xl font-extrabold text-white leading-tight mt-0.5">
                 🔥 {currentStreak} <span className="text-base font-bold text-white/80">{t('routines.days')}</span>
@@ -323,13 +349,13 @@ export function HabitLog() {
             </div>
 
             {/* 7-day row */}
-            <div className="flex items-end gap-1.5">
+            <div className="flex justify-between gap-1 min-w-0">
               {weekdaysShort.map((day, index) => {
                 const isToday = index === weekdaysShort.length - 1;
                 const completed = lastSevenDays[index] ?? false;
                 return (
-                  <div key={`${day}-${index}`} className="flex flex-col items-center gap-1">
-                    <span className="text-[10px] font-medium text-white/50">
+                  <div key={`${day}-${index}`} className="flex flex-col items-center gap-1 min-w-0">
+                    <span className="text-[10px] font-medium text-white/50 truncate max-w-full">
                       {isToday ? t('routines.today') : day}
                     </span>
                     {isToday && !completed ? (
@@ -407,7 +433,7 @@ export function HabitLog() {
                     onUncomplete={handleUncomplete}
                     onLog={(id) => setLoggerHabitId(id)}
                     onRelapse={handleRelapse}
-                    onOpenAnalytics={(id) => setAnalyticsHabitId(id)}
+                    onOpenAnalytics={(id) => setDetailHabitId(id)}
                   />
                 ))}
               </div>
@@ -473,6 +499,43 @@ export function HabitLog() {
             dailyGoal={h.dailyGoal}
             onSave={handleLogValue}
             onClose={() => setLoggerHabitId(null)}
+          />
+        );
+      })()}
+
+      {/* Habit detail sheet (tap on a habit) */}
+      {detailHabitId && (() => {
+        const h = habits.find((x) => x.id === detailHabitId);
+        if (!h) return null;
+        return (
+          <HabitDetailSheet
+            habit={h}
+            onClose={() => setDetailHabitId(null)}
+            onOpenAnalytics={(id) => {
+              setDetailHabitId(null);
+              setAnalyticsHabitId(id);
+            }}
+            onOpenEdit={(id) => {
+              setDetailHabitId(null);
+              setEditHabitId(id);
+            }}
+            onRelapse={(id) => {
+              setDetailHabitId(null);
+              handleRelapse(id);
+            }}
+          />
+        );
+      })()}
+
+      {/* Habit Form (edit, opened from the detail sheet) */}
+      {editHabitId && (() => {
+        const h = habits.find((x) => x.id === editHabitId);
+        if (!h) return null;
+        return (
+          <HabitForm
+            habit={{ ...h, completed: h.completedToday }}
+            onSubmit={handleEditSubmit}
+            onCancel={() => setEditHabitId(null)}
           />
         );
       })()}

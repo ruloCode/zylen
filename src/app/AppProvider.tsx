@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { initializeStore, useAppStore } from '@/store';
 import { ROUTES } from '@/constants/routes';
+import { NotificationsService } from '@/services/notifications.service';
+import { useLocale } from '@/hooks/useLocale';
 
 interface AppProviderProps {
   children: React.ReactNode;
@@ -14,6 +16,7 @@ interface AppProviderProps {
 export function AppProvider({ children }: AppProviderProps) {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useLocale();
   const user = useAppStore((state) => state.user);
   const isInitialized = useAppStore((state) => state.isInitialized);
   const [isStoreInitializing, setIsStoreInitializing] = useState(true);
@@ -27,6 +30,29 @@ export function AppProvider({ children }: AppProviderProps) {
 
     init();
   }, []);
+
+  // Local habit reminders: check pending habits on app open and whenever the
+  // app returns to the foreground (see NotificationsService for limitations).
+  useEffect(() => {
+    if (!isInitialized) return;
+
+    const check = () => {
+      const habits = useAppStore.getState().habits;
+      NotificationsService.checkPendingReminders(
+        habits,
+        t('reminders.notificationTitle'),
+        (habitName) => t('reminders.notificationBody', { habit: habitName })
+      ).catch((err) => console.warn('Reminder check failed:', err));
+    };
+
+    check();
+
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') check();
+    };
+    document.addEventListener('visibilitychange', onVisible);
+    return () => document.removeEventListener('visibilitychange', onVisible);
+  }, [isInitialized, t]);
 
   useEffect(() => {
     // Redirect to onboarding if user hasn't completed it

@@ -158,6 +158,6 @@ export const FEATURES = {
   enableChat: true,
   enableShop: true,
   enableRootHabit: true,
-  enableAchievements: false, // Future feature
+  enableAchievements: true, // Real backend (achievements + user_achievements + RPCs)
   enableMultiplayer: false, // Future feature
 } as const;

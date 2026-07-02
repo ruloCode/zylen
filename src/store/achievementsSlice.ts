@@ -21,8 +21,8 @@ export interface AchievementsSlice {
   unlockedCount: number;
   availableCount: number; // Unlocked but not claimed
   claimedCount: number; // Already claimed
-  isLoading: boolean;
-  error: string | null;
+  achievementsLoading: boolean;
+  achievementsError: string | null;
 
   // Actions
   loadAchievements: () => Promise<void>;
@@ -40,12 +40,12 @@ export const createAchievementsSlice: StateCreator<AchievementsSlice> = (set) =>
   unlockedCount: 0,
   availableCount: 0,
   claimedCount: 0,
-  isLoading: false,
-  error: null,
+  achievementsLoading: false,
+  achievementsError: null,
 
   loadAchievements: async () => {
     try {
-      set({ isLoading: true, error: null });
+      set({ achievementsLoading: true, achievementsError: null });
 
       const [achievements, userAchievements, unlockedCount, availableCount, claimedCount] = await Promise.all([
         AchievementsService.getAllAchievements(),
@@ -61,20 +61,20 @@ export const createAchievementsSlice: StateCreator<AchievementsSlice> = (set) =>
         unlockedCount,
         availableCount,
         claimedCount,
-        isLoading: false,
+        achievementsLoading: false,
       });
     } catch (error) {
       console.error('Error loading achievements:', error);
       set({
-        error: error instanceof Error ? error.message : 'Failed to load achievements',
-        isLoading: false,
+        achievementsError: error instanceof Error ? error.message : 'Failed to load achievements',
+        achievementsLoading: false,
       });
     }
   },
 
   loadAchievementsWithProgress: async () => {
     try {
-      set({ isLoading: true, error: null });
+      set({ achievementsLoading: true, achievementsError: null });
 
       const [achievementsWithProgress, unlockedCount, availableCount, claimedCount] = await Promise.all([
         AchievementsService.getAchievementsWithProgress(),
@@ -88,13 +88,13 @@ export const createAchievementsSlice: StateCreator<AchievementsSlice> = (set) =>
         unlockedCount,
         availableCount,
         claimedCount,
-        isLoading: false,
+        achievementsLoading: false,
       });
     } catch (error) {
       console.error('Error loading achievements with progress:', error);
       set({
-        error: error instanceof Error ? error.message : 'Failed to load achievements',
-        isLoading: false,
+        achievementsError: error instanceof Error ? error.message : 'Failed to load achievements',
+        achievementsLoading: false,
       });
     }
   },
@@ -169,14 +169,14 @@ export const createAchievementsSlice: StateCreator<AchievementsSlice> = (set) =>
       console.error('Error claiming achievement:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Failed to claim achievement',
+        achievementsError: error instanceof Error ? error.message : 'Failed to claim achievement',
       };
     }
   },
 
   refreshAchievements: async () => {
     try {
-      set({ isLoading: true, error: null });
+      set({ achievementsLoading: true, achievementsError: null });
 
       const [achievements, userAchievements, achievementsWithProgress, unlockedCount, availableCount, claimedCount] =
         await Promise.all([
@@ -195,13 +195,13 @@ export const createAchievementsSlice: StateCreator<AchievementsSlice> = (set) =>
         unlockedCount,
         availableCount,
         claimedCount,
-        isLoading: false,
+        achievementsLoading: false,
       });
     } catch (error) {
       console.error('Error refreshing achievements:', error);
       set({
-        error: error instanceof Error ? error.message : 'Failed to refresh achievements',
-        isLoading: false,
+        achievementsError: error instanceof Error ? error.message : 'Failed to refresh achievements',
+        achievementsLoading: false,
       });
     }
   },

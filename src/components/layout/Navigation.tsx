@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { Home, CalendarCheck, TrendingUp, User, Plus, type LucideIcon } from 'lucide-react';
+import { Home, CalendarCheck, Trophy, TrendingUp, User, Plus, type LucideIcon } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/utils';
 import { useLocale } from '@/hooks/useLocale';
@@ -31,12 +31,12 @@ export function Navigation() {
     return null;
   }
 
-  const leftItems: NavItem[] = [
+  // 5 main surfaces. Ranking (leaderboard + friends) was previously only
+  // reachable from Profile — now a first-class tab.
+  const items: NavItem[] = [
     { path: ROUTES.DASHBOARD, icon: Home, label: t('navigation.home') },
     { path: ROUTES.HABITS, icon: CalendarCheck, label: t('navigation.routines') },
-  ];
-
-  const rightItems: NavItem[] = [
+    { path: ROUTES.LEADERBOARD, icon: Trophy, label: t('navigation.ranking') },
     { path: ROUTES.STREAKS, icon: TrendingUp, label: t('navigation.progress') },
     { path: ROUTES.PROFILE, icon: User, label: t('navigation.profile') },
   ];
@@ -137,22 +137,17 @@ export function Navigation() {
             }}
           />
 
-          {leftItems.map(renderItem)}
-
-          {/* Spacer for the floating FAB */}
-          <div className="w-14 shrink-0" aria-hidden="true" />
-
-          {rightItems.map(renderItem)}
+          {items.map(renderItem)}
         </div>
 
-        {/* Center FAB with glowing ring */}
+        {/* Floating quick-create FAB (right corner, above the bar) */}
         <button
           type="button"
           onClick={() => navigate(ROUTES.HABITS)}
           aria-label={t('home.addHabit')}
           className={cn(
-            'absolute left-1/2 -top-6 -translate-x-1/2',
-            'grid h-14 w-14 place-items-center rounded-full',
+            'absolute right-3 -top-16',
+            'grid h-12 w-12 place-items-center rounded-full',
             'transition-transform duration-200 hover:scale-105 active:scale-95',
             'focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-300/70'
           )}
@@ -161,10 +156,10 @@ export function Navigation() {
               'radial-gradient(circle at 35% 30%, hsl(var(--primary-hover)), hsl(var(--primary)) 70%)',
             border: '2px solid hsl(var(--primary) / 0.55)',
             boxShadow:
-              '0 0 0 4px hsl(var(--background)), 0 0 18px 2px hsl(var(--glow) / 0.7), inset 0 1px 2px hsl(0 0% 100% / 0.4)',
+              '0 0 18px 2px hsl(var(--glow) / 0.7), inset 0 1px 2px hsl(0 0% 100% / 0.4)',
           }}
         >
-          <Plus size={26} strokeWidth={2.8} className="text-primary-foreground" />
+          <Plus size={24} strokeWidth={2.8} className="text-primary-foreground" />
         </button>
       </div>
     </nav>

@@ -16,17 +16,15 @@ import {
   type LucideIcon,
   Loader2,
 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { useUser, useHabits, useStreaks, useLifeAreas } from '@/store';
 import { useLocale } from '@/hooks/useLocale';
 import { getAreaLevelProgress } from '@/utils/xp';
 import { getHeroBodySrc } from '@/constants';
+import { StatsService, type DailyActivity } from '@/services/supabase/stats.service';
 
 // The character body is resolved from the user's chosen avatar (see getHeroBodySrc).
 const HERO_BG_SRC = '/hero-bg.png';
-
-// Placeholder daily activity data (minutes). Real per-day tracking isn't stored yet.
-const ACTIVITY_DATA = [20, 35, 10, 45, 30, 50, 20];
-const ACTIVITY_MAX = 60;
 
 // Fallback accent palette for area rows lacking an explicit color.
 const AREA_COLORS = ['#4CAF6D', '#8B5CF6', '#E0A93B', '#2DD4BF', '#F472B6', '#60A5FA'];
@@ -50,6 +48,18 @@ export function Streaks() {
   const { t } = useLocale();
 
   const isLoading = userLoading || streakLoading;
+
+  // Real daily activity (XP per local day) from habit_completions.
+  const [activity, setActivity] = useState<DailyActivity[]>([]);
+  useEffect(() => {
+    let alive = true;
+    StatsService.getDailyActivity(7).then((rows) => {
+      if (alive) setActivity(rows);
+    });
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   const weekdays = t('progress.weekdaysShort', { returnObjects: true }) as string[];
   const safeWeekdays = Array.isArray(weekdays) && weekdays.length === 7
@@ -80,12 +90,11 @@ export function Streaks() {
   const longestStreak = streak?.longestStreak ?? currentStreak;
   const totalXP = user?.totalXPEarned ?? 0;
 
-  // Estimate "minutes invested" from measurable habits logged today (placeholder fallback).
-  const minutesInvested =
-    habits.reduce((sum, h) => {
-      const value = (h as { todayValue?: number }).todayValue ?? 0;
-      return h.unit === 'min' ? sum + value : sum;
-    }, 0) || 120;
+  // Minutes invested today, from measurable habits logged in 'min'.
+  const minutesInvested = habits.reduce((sum, h) => {
+    const value = (h as { todayValue?: number }).todayValue ?? 0;
+    return h.unit === 'min' ? sum + value : sum;
+  }, 0);
 
   const focusAreas = lifeAreas.filter((a) => a.enabled).slice(0, 4);
 
@@ -225,35 +234,37 @@ export function Streaks() {
         </section>
 
         {/* ── Tu racha actual ── */}
+        {/* Stacked layout: the 7-day row gets its own full-width line so the
+            circles never overflow the card on narrow phones (320-360px). */}
         <section className={`${card} mb-4`}>
           <h2 className="text-white font-bold text-base mb-3">{t('progress.currentStreakTitle')}</h2>
-          <div className="flex items-center gap-4">
-            <div className="shrink-0">
-              <div className="flex items-baseline gap-1.5">
-                <Flame size={26} className="text-orange-400 self-center" />
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-baseline gap-1.5 min-w-0">
+                <Flame size={26} className="text-orange-400 self-center shrink-0" />
                 <span className="text-3xl font-extrabold text-white leading-none">
                   {currentStreak}
                 </span>
                 <span className="text-white/60 text-sm font-semibold">{t('progress.days')}</span>
               </div>
-              <p className="text-white/55 text-xs mt-1">{t('progress.keepItUp')}</p>
+              <p className="text-white/55 text-xs text-right">{t('progress.keepItUp')}</p>
             </div>
-            <div className="flex-1 flex justify-between gap-1">
+            <div className="flex justify-between gap-1 min-w-0">
               {safeWeekdays.map((label, i) => {
                 const isToday = i === safeWeekdays.length - 1;
                 const active = lastSeven[i] === true;
                 return (
-                  <div key={i} className="flex flex-col items-center gap-1">
-                    <span className="text-[10px] font-semibold text-white/55">
+                  <div key={i} className="flex flex-col items-center gap-1 min-w-0">
+                    <span className="text-[10px] font-semibold text-white/55 truncate max-w-full">
                       {isToday ? t('progress.today') : label}
                     </span>
                     <span
-                      className={`w-7 h-7 rounded-full flex items-center justify-center ${
+                      className={`w-6 h-6 rounded-full flex items-center justify-center ${
                         active ? 'bg-orange-500/20' : 'bg-white/5'
-                      } ${isToday ? 'ring-2 ring-teal-400' : ''}`}
+                      } ${isToday ? 'ring-2 ring-inset ring-teal-400' : ''}`}
                     >
                       <Flame
-                        size={14}
+                        size={13}
                         className={active ? 'text-orange-400' : 'text-white/25'}
                       />
                     </span>
@@ -264,34 +275,42 @@ export function Streaks() {
           </div>
         </section>
 
-        {/* ── Actividad diaria (minutos) ── */}
+        {/* ── Actividad diaria (XP real por día) ── */}
         <section className={`${card} mb-4`}>
           <div className="flex items-center justify-between mb-5">
             <h2 className="text-white font-bold text-base">{t('progress.dailyActivity')}</h2>
             <span className="rounded-full bg-white/10 border border-white/10 px-3 py-1 text-white/80 text-xs font-semibold">
-              {t('progress.minutesUnit')}
+              {t('progress.xp')}
             </span>
           </div>
-          <div className="flex items-end justify-between gap-2 h-36">
-            {ACTIVITY_DATA.map((value, i) => {
-              const heightPct = Math.max((value / ACTIVITY_MAX) * 100, 6);
-              const isLast = i === ACTIVITY_DATA.length - 1;
-              return (
-                <div key={i} className="flex-1 flex flex-col items-center justify-end h-full gap-1.5">
-                  <span className="text-[10px] font-semibold text-white/70">{value}</span>
-                  <div className="w-full flex-1 flex items-end">
-                    <div
-                      className={`w-full rounded-lg bg-gradient-to-t from-teal-600 to-teal-400 transition-all ${
-                        isLast ? 'opacity-50' : ''
-                      }`}
-                      style={{ height: `${heightPct}%` }}
-                    />
-                  </div>
-                  <span className="text-[10px] font-medium text-white/50">{safeWeekdays[i]}</span>
-                </div>
-              );
-            })}
-          </div>
+          {(() => {
+            const values = activity.length === 7 ? activity.map((a) => a.xp) : Array(7).fill(0);
+            const max = Math.max(...values, 1);
+            return (
+              <div className="flex items-end justify-between gap-2 h-36">
+                {values.map((value, i) => {
+                  const heightPct = Math.max((value / max) * 100, 6);
+                  const isToday = i === values.length - 1;
+                  return (
+                    <div key={i} className="flex-1 flex flex-col items-center justify-end h-full gap-1.5 min-w-0">
+                      <span className="text-[10px] font-semibold text-white/70">{value}</span>
+                      <div className="w-full flex-1 flex items-end">
+                        <div
+                          className={`w-full rounded-lg bg-gradient-to-t from-teal-600 to-teal-400 transition-all ${
+                            isToday ? 'ring-1 ring-inset ring-teal-300/60' : ''
+                          }`}
+                          style={{ height: `${heightPct}%` }}
+                        />
+                      </div>
+                      <span className="text-[10px] font-medium text-white/50 truncate max-w-full">
+                        {safeWeekdays[i]}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })()}
         </section>
 
         {/* ── Áreas de enfoque ── */}

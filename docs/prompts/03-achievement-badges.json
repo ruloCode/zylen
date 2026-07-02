@@ -1,0 +1,109 @@
+{
+  "purpose": "One medallion per achievement (keys match the achievements table). Today the UI uses Lucide icons; these raise the quality of the achievement modal. 1024x1024, transparent background, shield-shaped backplate. Frame changes by tier.",
+  "status": "pending",
+  "shared_prompt_body": "ornate fantasy achievement medallion, 3D rendered game badge, centered emblem on a shield-shaped backplate, jungle-kingdom dark-fantasy style, teal and gold palette, glowing details, transparent background, premium mobile-game quality, no text",
+  "frames_by_tier": {
+    "bronze": "simple bronze frame",
+    "silver": "silver frame with fine detail",
+    "gold": "ornate golden frame with small gems",
+    "platinum": "radiant platinum frame with a glowing aura"
+  },
+  "items": [
+    {
+      "key": "habit_hero",
+      "tier": "bronze",
+      "file": "public/achievements/habit_hero.png",
+      "prompt": "Achievement medallion, simple bronze frame. Emblem: a glowing teal target with an arrow striking the center, wrapped in small jungle vines. Dark-fantasy jungle-kingdom style, teal and gold, glowing, transparent background, 1024x1024, no text."
+    },
+    {
+      "key": "consistency_king",
+      "tier": "silver",
+      "file": "public/achievements/consistency_king.png",
+      "prompt": "Achievement medallion, silver frame with fine detail. Emblem: two interlocked glowing check marks forming a crown shape. Dark-fantasy jungle-kingdom style, teal and gold, glowing, transparent background, 1024x1024, no text."
+    },
+    {
+      "key": "routine_legend",
+      "tier": "gold",
+      "file": "public/achievements/routine_legend.png",
+      "prompt": "Achievement medallion, ornate golden frame with small gems. Emblem: a radiant golden laurel wreath around a glowing habit rune. Dark-fantasy jungle-kingdom style, teal and gold, glowing, transparent background, 1024x1024, no text."
+    },
+    {
+      "key": "week_warrior",
+      "tier": "bronze",
+      "file": "public/achievements/week_warrior.png",
+      "prompt": "Achievement medallion, simple bronze frame. Emblem: a small lightning bolt striking a seven-notched stone tablet. Dark-fantasy jungle-kingdom style, teal and gold, glowing, transparent background, 1024x1024, no text."
+    },
+    {
+      "key": "two_week_titan",
+      "tier": "silver",
+      "file": "public/achievements/two_week_titan.png",
+      "prompt": "Achievement medallion, silver frame with fine detail. Emblem: a burning teal-orange flame held in a stone gauntlet. Dark-fantasy jungle-kingdom style, teal and gold, glowing, transparent background, 1024x1024, no text."
+    },
+    {
+      "key": "month_master",
+      "tier": "gold",
+      "file": "public/achievements/month_master.png",
+      "prompt": "Achievement medallion, ornate golden frame with small gems. Emblem: a golden crown floating above a full-moon calendar disc. Dark-fantasy jungle-kingdom style, teal and gold, glowing, transparent background, 1024x1024, no text."
+    },
+    {
+      "key": "unstoppable",
+      "tier": "platinum",
+      "file": "public/achievements/unstoppable.png",
+      "prompt": "Achievement medallion, radiant platinum frame with a glowing aura. Emblem: an eternal-flame trophy with orbiting runic shards and an electric-blue aura. Dark-fantasy jungle-kingdom style, teal and gold, glowing, transparent background, 1024x1024, no text."
+    },
+    {
+      "key": "xp_novice",
+      "tier": "bronze",
+      "file": "public/achievements/xp_novice.png",
+      "prompt": "Achievement medallion, simple bronze frame. Emblem: a single glowing gold star rising from an open hand. Dark-fantasy jungle-kingdom style, teal and gold, glowing, transparent background, 1024x1024, no text."
+    },
+    {
+      "key": "xp_expert",
+      "tier": "silver",
+      "file": "public/achievements/xp_expert.png",
+      "prompt": "Achievement medallion, silver frame with fine detail. Emblem: a constellation of five connected glowing stars. Dark-fantasy jungle-kingdom style, teal and gold, glowing, transparent background, 1024x1024, no text."
+    },
+    {
+      "key": "xp_master",
+      "tier": "gold",
+      "file": "public/achievements/xp_master.png",
+      "prompt": "Achievement medallion, ornate golden frame with small gems. Emblem: a supernova of golden sparkles bursting from a crystal core. Dark-fantasy jungle-kingdom style, teal and gold, glowing, transparent background, 1024x1024, no text."
+    },
+    {
+      "key": "social_butterfly",
+      "tier": "bronze",
+      "file": "public/achievements/social_butterfly.png",
+      "prompt": "Achievement medallion, simple bronze frame. Emblem: a luminous teal butterfly with wing patterns shaped like two joined hands. Dark-fantasy jungle-kingdom style, teal and gold, glowing, transparent background, 1024x1024, no text."
+    },
+    {
+      "key": "network_builder",
+      "tier": "silver",
+      "file": "public/achievements/network_builder.png",
+      "prompt": "Achievement medallion, silver frame with fine detail. Emblem: three glowing figures connected by threads of golden light. Dark-fantasy jungle-kingdom style, teal and gold, glowing, transparent background, 1024x1024, no text."
+    },
+    {
+      "key": "early_bird",
+      "tier": "bronze",
+      "file": "public/achievements/early_bird.png",
+      "prompt": "Achievement medallion, simple bronze frame. Emblem: a stylized golden bird taking flight over a rising sun. Dark-fantasy jungle-kingdom style, teal and gold, glowing, transparent background, 1024x1024, no text."
+    },
+    {
+      "key": "night_owl",
+      "tier": "bronze",
+      "file": "public/achievements/night_owl.png",
+      "prompt": "Achievement medallion, simple bronze frame. Emblem: a wise owl with glowing teal eyes perched on a crescent moon. Dark-fantasy jungle-kingdom style, teal and gold, glowing, transparent background, 1024x1024, no text."
+    },
+    {
+      "key": "perfect_day",
+      "tier": "silver",
+      "file": "public/achievements/perfect_day.png",
+      "prompt": "Achievement medallion, silver frame with fine detail. Emblem: a flawless glowing circle of light with a check-mark core, framed by dawn rays. Dark-fantasy jungle-kingdom style, teal and gold, glowing, transparent background, 1024x1024, no text."
+    },
+    {
+      "key": "comeback",
+      "tier": "gold",
+      "file": "public/achievements/comeback.png",
+      "prompt": "Achievement medallion, ornate golden frame with small gems. Emblem: a phoenix of teal-gold fire rising from grey ashes. Dark-fantasy jungle-kingdom style, teal and gold, glowing, transparent background, 1024x1024, no text."
+    }
+  ]
+}

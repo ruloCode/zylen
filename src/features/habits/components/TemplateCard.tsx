@@ -1,21 +1,25 @@
 import React from 'react';
-import { Plus } from 'lucide-react';
+import { Plus, FlaskConical } from 'lucide-react';
 import { HABIT_ICONS } from './IconSelector';
 import { useLocale } from '@/hooks/useLocale';
+import { findCatalogEntry } from '@/constants/habitCatalog';
 import type { HabitTemplate } from '@/types';
 import { cn } from '@/utils/cn';
 
 interface TemplateCardProps {
   template: HabitTemplate;
   onSelect: (template: HabitTemplate) => void;
+  /** open the science sheet for this template (only offered when it maps to the catalog) */
+  onLearnMore?: (template: HabitTemplate) => void;
 }
 
 /**
  * Displays a single habit template in a card format
  */
-export function TemplateCard({ template, onSelect }: TemplateCardProps) {
+export function TemplateCard({ template, onSelect, onLearnMore }: TemplateCardProps) {
   const { t } = useLocale();
   const Icon = HABIT_ICONS[template.iconName] || HABIT_ICONS['Target'];
+  const hasScience = !!findCatalogEntry(template.name);
 
   // Get translated name if key exists, otherwise use raw name
   const displayName = template.nameKey ? t(template.nameKey, template.name) : template.name;
@@ -70,17 +74,31 @@ export function TemplateCard({ template, onSelect }: TemplateCardProps) {
         </p>
       )}
 
-      {/* Life Area Badge */}
+      {/* Life Area Badge + learn more */}
       <div className="flex items-center justify-between">
         <span className="text-xs px-2 py-1 bg-white/10 text-white/70 rounded-lg">
           {t(`lifeAreas.${template.lifeAreaType.toLowerCase()}`)}
         </span>
 
-        {/* Add button (visible on hover) */}
-        <div className="flex items-center gap-1 text-teal-400 text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity">
-          <Plus className="w-4 h-4" />
-          {t('actions.add')}
-        </div>
+        {hasScience && onLearnMore ? (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onLearnMore(template);
+            }}
+            className="flex items-center gap-1 px-2 py-1 rounded-lg text-teal-300 text-xs font-semibold bg-teal-500/10 hover:bg-teal-500/20 transition-colors"
+            aria-label={`${t('habitScience.learnMore')}: ${displayName}`}
+          >
+            <FlaskConical className="w-3.5 h-3.5" />
+            {t('habitScience.learnMore')}
+          </button>
+        ) : (
+          <div className="flex items-center gap-1 text-teal-400 text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+            <Plus className="w-4 h-4" />
+            {t('actions.add')}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -97,6 +97,8 @@ export function mapHabitRowToHabit(
     unit: row.unit || undefined,
     dailyGoal: row.daily_goal ?? undefined,
     color: row.color || undefined,
+    timeOfDay: (row.time_of_day as Habit['timeOfDay']) || 'anytime',
+    reminderEnabled: row.reminder_enabled ?? false,
   };
 }
 
@@ -241,6 +243,8 @@ export function mapHabitToInsert(
     unit: habit.unit || null,
     daily_goal: habit.dailyGoal ?? null,
     color: habit.color || null,
+    time_of_day: habit.timeOfDay || 'anytime',
+    reminder_enabled: habit.reminderEnabled ?? false,
     // points is auto-calculated by trigger
   };
 }

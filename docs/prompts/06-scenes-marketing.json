@@ -1,0 +1,19 @@
+{
+  "purpose": "Support scenes and social share image. Reuse the jungle scene from 00-style-base for coherence.",
+  "status": "pending",
+  "items": [
+    {
+      "file": "public/onboarding-5.png",
+      "prompt": "Misty magical jungle clearing at dawn, an empty stone pedestal with a floating glowing teal rune inviting the viewer to begin their journey, warm god-rays, fireflies, no characters, 9:16, dark-fantasy premium mobile-game splash art"
+    },
+    {
+      "file": "public/streak-celebration.png",
+      "prompt": "A great teal-orange bonfire burning bright on a stone altar in the magical jungle at night, golden sparks rising into the canopy, celebratory mood, no characters, 9:16"
+    },
+    {
+      "file": "public/og-image.png",
+      "size": "1200x630",
+      "prompt": "Wide banner: the chibi hero from public/avatars/hero-avatar.png standing on a jungle cliff at golden hour overlooking a glowing rune-lit valley, epic but friendly, teal and gold palette, room on the left third for a logo overlay, 1200x630, no text"
+    }
+  ]
+}

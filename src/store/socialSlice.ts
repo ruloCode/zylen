@@ -13,8 +13,8 @@ export interface SocialSlice {
   pendingRequests: FriendRequest[];
   sentRequests: FriendRequest[];
   searchResults: UserSearchResult[];
-  isLoading: boolean;
-  error: string | null;
+  socialLoading: boolean;
+  socialError: string | null;
 
   // Actions
   searchUsers: (searchTerm: string) => Promise<void>;
@@ -35,8 +35,8 @@ export const createSocialSlice: StateCreator<SocialSlice> = (set, get) => ({
   pendingRequests: [],
   sentRequests: [],
   searchResults: [],
-  isLoading: false,
-  error: null,
+  socialLoading: false,
+  socialError: null,
 
   // Search users by username
   searchUsers: async (searchTerm: string) => {
@@ -45,15 +45,15 @@ export const createSocialSlice: StateCreator<SocialSlice> = (set, get) => ({
       return;
     }
 
-    set({ isLoading: true, error: null });
+    set({ socialLoading: true, socialError: null });
     try {
       const results = await SocialService.searchUsers(searchTerm);
-      set({ searchResults: results, isLoading: false });
+      set({ searchResults: results, socialLoading: false });
     } catch (error: any) {
       console.error('Error searching users:', error);
       set({
-        error: error.message || 'Failed to search users',
-        isLoading: false,
+        socialError: error.message || 'Failed to search users',
+        socialLoading: false,
         searchResults: [],
       });
     }
@@ -61,7 +61,7 @@ export const createSocialSlice: StateCreator<SocialSlice> = (set, get) => ({
 
   // Send a friend request
   sendFriendRequest: async (friendUsername: string) => {
-    set({ isLoading: true, error: null });
+    set({ socialLoading: true, socialError: null });
     try {
       await SocialService.sendFriendRequest(friendUsername);
 
@@ -75,13 +75,13 @@ export const createSocialSlice: StateCreator<SocialSlice> = (set, get) => ({
             ? { ...user, friendshipStatus: 'request_sent' as const }
             : user
         ),
-        isLoading: false,
+        socialLoading: false,
       }));
     } catch (error: any) {
       console.error('Error sending friend request:', error);
       set({
-        error: error.message || 'Failed to send friend request',
-        isLoading: false,
+        socialError: error.message || 'Failed to send friend request',
+        socialLoading: false,
       });
       throw error; // Re-throw so UI can handle it
     }
@@ -89,7 +89,7 @@ export const createSocialSlice: StateCreator<SocialSlice> = (set, get) => ({
 
   // Accept a friend request
   acceptFriendRequest: async (friendshipId: string) => {
-    set({ isLoading: true, error: null });
+    set({ socialLoading: true, socialError: null });
     try {
       await SocialService.acceptFriendRequest(friendshipId);
 
@@ -103,12 +103,12 @@ export const createSocialSlice: StateCreator<SocialSlice> = (set, get) => ({
         await Promise.all([get().loadFriends(), get().loadPendingRequests()]);
       }
 
-      set({ isLoading: false });
+      set({ socialLoading: false });
     } catch (error: any) {
       console.error('Error accepting friend request:', error);
       set({
-        error: error.message || 'Failed to accept friend request',
-        isLoading: false,
+        socialError: error.message || 'Failed to accept friend request',
+        socialLoading: false,
       });
       throw error;
     }
@@ -116,7 +116,7 @@ export const createSocialSlice: StateCreator<SocialSlice> = (set, get) => ({
 
   // Reject a friend request
   rejectFriendRequest: async (friendshipId: string) => {
-    set({ isLoading: true, error: null });
+    set({ socialLoading: true, socialError: null });
     try {
       await SocialService.rejectFriendRequest(friendshipId);
 
@@ -125,13 +125,13 @@ export const createSocialSlice: StateCreator<SocialSlice> = (set, get) => ({
         pendingRequests: state.pendingRequests.filter(
           (req) => req.friendshipId !== friendshipId
         ),
-        isLoading: false,
+        socialLoading: false,
       }));
     } catch (error: any) {
       console.error('Error rejecting friend request:', error);
       set({
-        error: error.message || 'Failed to reject friend request',
-        isLoading: false,
+        socialError: error.message || 'Failed to reject friend request',
+        socialLoading: false,
       });
       throw error;
     }
@@ -139,7 +139,7 @@ export const createSocialSlice: StateCreator<SocialSlice> = (set, get) => ({
 
   // Remove a friend
   removeFriend: async (friendshipId: string) => {
-    set({ isLoading: true, error: null });
+    set({ socialLoading: true, socialError: null });
     try {
       await SocialService.removeFriend(friendshipId);
 
@@ -148,13 +148,13 @@ export const createSocialSlice: StateCreator<SocialSlice> = (set, get) => ({
         friends: state.friends.filter(
           (friend) => friend.friendshipId !== friendshipId
         ),
-        isLoading: false,
+        socialLoading: false,
       }));
     } catch (error: any) {
       console.error('Error removing friend:', error);
       set({
-        error: error.message || 'Failed to remove friend',
-        isLoading: false,
+        socialError: error.message || 'Failed to remove friend',
+        socialLoading: false,
       });
       throw error;
     }
@@ -162,15 +162,15 @@ export const createSocialSlice: StateCreator<SocialSlice> = (set, get) => ({
 
   // Load friends list
   loadFriends: async (userId?: string) => {
-    set({ isLoading: true, error: null });
+    set({ socialLoading: true, socialError: null });
     try {
       const friends = await SocialService.getFriendsList(userId);
-      set({ friends, isLoading: false });
+      set({ friends, socialLoading: false });
     } catch (error: any) {
       console.error('Error loading friends:', error);
       set({
-        error: error.message || 'Failed to load friends',
-        isLoading: false,
+        socialError: error.message || 'Failed to load friends',
+        socialLoading: false,
         friends: [],
       });
     }
@@ -178,15 +178,15 @@ export const createSocialSlice: StateCreator<SocialSlice> = (set, get) => ({
 
   // Load pending friend requests (received)
   loadPendingRequests: async () => {
-    set({ isLoading: true, error: null });
+    set({ socialLoading: true, socialError: null });
     try {
       const pendingRequests = await SocialService.getPendingFriendRequests();
-      set({ pendingRequests, isLoading: false });
+      set({ pendingRequests, socialLoading: false });
     } catch (error: any) {
       console.error('Error loading pending requests:', error);
       set({
-        error: error.message || 'Failed to load pending requests',
-        isLoading: false,
+        socialError: error.message || 'Failed to load pending requests',
+        socialLoading: false,
         pendingRequests: [],
       });
     }
@@ -194,15 +194,15 @@ export const createSocialSlice: StateCreator<SocialSlice> = (set, get) => ({
 
   // Load sent friend requests
   loadSentRequests: async () => {
-    set({ isLoading: true, error: null });
+    set({ socialLoading: true, socialError: null });
     try {
       const sentRequests = await SocialService.getSentFriendRequests();
-      set({ sentRequests, isLoading: false });
+      set({ sentRequests, socialLoading: false });
     } catch (error: any) {
       console.error('Error loading sent requests:', error);
       set({
-        error: error.message || 'Failed to load sent requests',
-        isLoading: false,
+        socialError: error.message || 'Failed to load sent requests',
+        socialLoading: false,
         sentRequests: [],
       });
     }
@@ -215,6 +215,6 @@ export const createSocialSlice: StateCreator<SocialSlice> = (set, get) => ({
 
   // Clear error
   clearError: () => {
-    set({ error: null });
+    set({ socialError: null });
   },
 });

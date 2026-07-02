@@ -54,7 +54,42 @@ export interface CompletionTrendPoint {
   completions: number;
 }
 
+/**
+ * One local day of real activity (from the get_daily_activity RPC)
+ */
+export interface DailyActivity {
+  day: string; // YYYY-MM-DD in the user's timezone
+  completions: number;
+  xp: number;
+}
+
 export class StatsService {
+  /**
+   * Real per-day activity (completions + XP) for the last N local days.
+   * Zero-filled, oldest first. Replaces the old hardcoded chart data.
+   */
+  static async getDailyActivity(days: number = 7): Promise<DailyActivity[]> {
+    try {
+      const { data, error } = await supabase.rpc('get_daily_activity', {
+        p_days: days,
+      });
+
+      if (error) {
+        console.error('Error getting daily activity:', error);
+        return [];
+      }
+
+      return (data ?? []).map((row: { day: string; completions: number; xp: number }) => ({
+        day: row.day,
+        completions: row.completions,
+        xp: row.xp,
+      }));
+    } catch (error) {
+      console.error('Error in StatsService.getDailyActivity:', error);
+      return [];
+    }
+  }
+
   /**
    * Get comprehensive user statistics
    * Uses RPC function for efficient aggregation

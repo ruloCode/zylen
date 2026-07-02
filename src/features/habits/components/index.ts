@@ -8,3 +8,5 @@ export * from './TemplateLibrary';
 export * from './MeasureLogger';
 export * from './HabitHeatmap';
 export * from './HabitAnalytics';
+export * from './HabitDetailSheet';
+export * from './HabitScienceSheet';

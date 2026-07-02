@@ -1,7 +1,10 @@
 -- ===========================================================================
 -- Habits RPC Functions for Zylen
 -- ===========================================================================
--- These functions handle habit completion logic atomically
+-- ⚠️ SUPERSEDED: complete_habit/uncomplete_habit were replaced by v2 in
+-- migrations/20260701000003_complete_habit_v2.sql (streak bonus, soft daily
+-- XP cap, measurable value, streak refresh, enriched return payload).
+-- This file is kept for historical reference only — do NOT re-apply it.
 -- ===========================================================================
 
 -- ---------------------------------------------------------------------------

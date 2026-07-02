@@ -1,0 +1,37 @@
+{
+  "purpose": "Evolving hero avatar: same character (user's face) upgrades gear as they level up. tier-0 already exists; generate tiers 1-4.",
+  "status": "pending",
+  "detailed_source": "docs/avatar-tiers-prompts.md has the full identity-lock + per-tier prompts. This file is the short checklist; use that doc for the exact wording.",
+  "shared": {
+    "identity_reference": "public/avatars/avatar-explorer-3.png (preserve face, ignore its clothing)",
+    "keep_identical_across_tiers": ["face/identity", "misty jungle scene", "teal-gold lighting", "chibi proportions", "arms-crossed pose on a low-poly rock", "9:16 framing"],
+    "aspect_ratio": "9:16 (1024x1536)",
+    "note": "After the scene render, also request a transparent-background crop for the avatar component."
+  },
+  "items": [
+    {
+      "file": "public/avatars/tiers/tier-1.png",
+      "tier": 1,
+      "name": "Aprendiz",
+      "prompt": "Same chibi hero and jungle scene as tier-0. TIER 1: first real gear. Add a worn brown leather shoulder pad (pauldron), leather bracers, a bronze buckle on the sash, a sturdier hand-carved wooden staff with a small bronze cap; crystal pendant glowing a little brighter. Aura: faint warm amber glow at the feet only. Keep face, scene, pose and palette identical."
+    },
+    {
+      "file": "public/avatars/tiers/tier-2.png",
+      "tier": 2,
+      "name": "Adepto",
+      "prompt": "Same chibi hero and jungle scene. TIER 2: light armor + cape. Add a light teal-green leather-and-cloth chest piece over the shirt, a short traveler's cape with an emerald clasp, reinforced bracers, a wooden staff topped with a small glowing blue crystal. Aura: soft teal aura with a few floating rune motes near the staff. Keep face, scene, pose, palette identical."
+    },
+    {
+      "file": "public/avatars/tiers/tier-3.png",
+      "tier": 3,
+      "name": "Veterano",
+      "prompt": "Same chibi hero and jungle scene. TIER 3: engraved plate armor. Add ornate engraved plate armor in bronze and emerald tones (chest plate + shoulder guards), a flowing patterned cloak, glowing engraved runes along the armor edges, a polished staff with a bright crystal head. Aura: strong teal-and-gold aura, denser fireflies, slightly stronger god-rays. Keep face, scene, pose, palette identical."
+    },
+    {
+      "file": "public/avatars/tiers/tier-4.png",
+      "tier": 4,
+      "name": "Legendario",
+      "prompt": "Same chibi hero and jungle scene. TIER 4 (final): legendary hero. Full legendary armor with emerald-and-gold filigree and glowing energy seams, a majestic flowing cloak, an ornate staff crowned with a radiant electric-blue crystal, small floating runic shards orbiting the character, subtle halo of light behind the head. Aura: intense electric-blue and teal, peak volumetric god-rays. Epic but tasteful, not cluttered. Keep face, scene, pose identical."
+    }
+  ]
+}

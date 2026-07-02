@@ -9,10 +9,16 @@ import {
   ChevronRight,
   Check,
   Loader2,
+  FlaskConical,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { CircularProgress } from '@/components/ui';
+import { useAnimatedNumber } from '@/hooks/useAnimatedNumber';
+import { HabitScienceSheet, TemplateLibrary } from '@/features/habits/components';
+import { HABIT_CATALOG, findCatalogEntry } from '@/constants/habitCatalog';
+import type { HabitCatalogEntry } from '@/constants/habitCatalog';
+import type { HabitFormData, HabitTemplate } from '@/types';
 // Lazy-loaded: pulls in the markdown + syntax-highlighting bundle only when the
 // user actually opens the Coach overlay, keeping the Dashboard chunk lean.
 const CoachChat = lazy(() =>
@@ -39,10 +45,14 @@ export function Dashboard() {
   const { streak, isLoading: streakLoading } = useStreaks();
   const { t } = useLocale();
   const [isCoachOpen, setIsCoachOpen] = useState(false);
+  // Habit catalog: browse the library, or read a featured habit's science card.
+  const [isCatalogOpen, setIsCatalogOpen] = useState(false);
+  const [catalogEntry, setCatalogEntry] = useState<HabitCatalogEntry | null>(null);
 
   const levelProgress = user
     ? getLevelProgress(user.totalXPEarned, user.level)
     : { current: 0, max: 0, percentage: 0 };
+  const animatedXP = useAnimatedNumber(levelProgress.current);
 
   const isLoading = userLoading || streakLoading;
 
@@ -56,6 +66,7 @@ export function Dashboard() {
 
   const firstName = user?.name?.split(' ')[0] || '';
   const todaysHabits = habits.slice(0, 3);
+  const pendingCount = habits.filter((h) => !h.completedToday).length;
 
   // Hero cards: lighter, more translucent glass so the character shows through
   const heroCard =
@@ -141,14 +152,16 @@ export function Dashboard() {
           </div>
           <button
             type="button"
-            onClick={comingSoon}
+            onClick={() => navigate(ROUTES.HABITS)}
             aria-label={t('home.notifications')}
             className="relative shrink-0 w-11 h-11 rounded-full glass-card flex items-center justify-center text-white"
           >
             <Bell size={20} />
-            <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-danger-500 text-white text-[10px] font-bold flex items-center justify-center border border-[hsl(var(--background))]">
-              3
-            </span>
+            {pendingCount > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-danger-500 text-white text-[10px] font-bold flex items-center justify-center border border-[hsl(var(--background))]">
+                {pendingCount}
+              </span>
+            )}
           </button>
         </header>
 
@@ -199,7 +212,7 @@ export function Dashboard() {
                 <div className="flex flex-col items-center">
                   <Gem size={14} className="text-[#8Fb3ff]" />
                   <span className="text-base font-extrabold text-white leading-none">
-                    {levelProgress.current}
+                    {animatedXP}
                   </span>
                   <span className="text-white/50 text-[8px] font-medium">
                     / {levelProgress.max} XP
@@ -239,6 +252,45 @@ export function Dashboard() {
           </span>
           <ChevronRight size={20} className="text-white/40 shrink-0" />
         </button>
+
+        {/* Habit catalog — learn about science-backed habits before adding them */}
+        <section aria-labelledby="catalog-heading" className="mb-7">
+          <div className="flex items-center justify-between mb-4">
+            <h2 id="catalog-heading" className="font-sans normal-case text-xl font-bold text-white">
+              {t('catalog.homeTitle')}
+            </h2>
+            <button
+              type="button"
+              onClick={() => setIsCatalogOpen(true)}
+              className="flex items-center gap-1 text-teal-300 text-sm font-semibold"
+            >
+              {t('catalog.explore')} <ChevronRight size={16} />
+            </button>
+          </div>
+          <div className="flex gap-3 overflow-x-auto pb-1 -mx-4 px-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {HABIT_CATALOG.slice(0, 8).map((entry) => {
+              const Icon = HABIT_ICONS[entry.iconName] || Target;
+              return (
+                <button
+                  key={entry.slug}
+                  type="button"
+                  onClick={() => setCatalogEntry(entry)}
+                  className="shrink-0 w-[132px] glass-card p-3 text-left hover:border-teal-400/40 transition-colors"
+                >
+                  <span className="w-10 h-10 rounded-xl grid place-items-center bg-teal-500/15 text-teal-300 mb-2">
+                    <Icon size={20} />
+                  </span>
+                  <p className="text-white text-sm font-bold leading-tight line-clamp-2">
+                    {(t as (k: string) => string)(`habitCatalog.${entry.slug}.title`)}
+                  </p>
+                  <span className="mt-2 inline-flex items-center gap-1 text-teal-300 text-[11px] font-semibold">
+                    <FlaskConical size={12} /> {t('habitScience.learnMore')}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </section>
 
         {/* Today's path */}
         <section aria-labelledby="today-heading">
@@ -337,6 +389,31 @@ export function Dashboard() {
         <Suspense fallback={null}>
           <CoachChat onClose={() => setIsCoachOpen(false)} />
         </Suspense>
+      )}
+
+      {/* Habit catalog library (browse + learn + create) */}
+      {isCatalogOpen && (
+        <TemplateLibrary
+          onClose={() => setIsCatalogOpen(false)}
+          onSelectTemplate={(_data: Partial<HabitFormData>, _template: HabitTemplate) => {
+            // Creating from a template requires picking a life area in the form,
+            // which lives on the Rituales page. Route there to finish setup.
+            setIsCatalogOpen(false);
+            navigate(ROUTES.HABITS);
+          }}
+        />
+      )}
+
+      {/* Featured habit science card (from the Home carousel) */}
+      {catalogEntry && (
+        <HabitScienceSheet
+          entry={catalogEntry}
+          onClose={() => setCatalogEntry(null)}
+          onCreate={() => {
+            setCatalogEntry(null);
+            navigate(ROUTES.HABITS);
+          }}
+        />
       )}
     </div>
   );

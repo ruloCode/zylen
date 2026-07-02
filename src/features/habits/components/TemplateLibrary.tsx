@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { X, BookOpen, Loader2 } from 'lucide-react';
 import { TemplateCard } from './TemplateCard';
 import { TemplateFilters } from './TemplateFilters';
+import { HabitScienceSheet } from './HabitScienceSheet';
 import { useHabitTemplates } from '@/store';
 import { useLocale } from '@/hooks/useLocale';
+import { findCatalogEntry } from '@/constants/habitCatalog';
 import type { HabitTemplate, HabitFormData } from '@/types';
 import { cn } from '@/utils/cn';
 
@@ -31,6 +33,9 @@ export function TemplateLibrary({ onSelectTemplate, onClose }: TemplateLibraryPr
     clearFilters,
     incrementTemplatePopularity,
   } = useHabitTemplates();
+
+  // Science sheet target (template whose catalog entry is being read)
+  const [scienceTemplate, setScienceTemplate] = useState<HabitTemplate | null>(null);
 
   // Load templates on mount
   useEffect(() => {
@@ -168,6 +173,7 @@ export function TemplateLibrary({ onSelectTemplate, onClose }: TemplateLibraryPr
                   key={template.id}
                   template={template}
                   onSelect={handleSelectTemplate}
+                  onLearnMore={(tpl) => setScienceTemplate(tpl)}
                 />
               ))}
             </div>
@@ -181,6 +187,23 @@ export function TemplateLibrary({ onSelectTemplate, onClose }: TemplateLibraryPr
           </p>
         </div>
       </div>
+
+      {/* Science sheet: learn about the habit, then create it from here */}
+      {scienceTemplate && (() => {
+        const entry = findCatalogEntry(scienceTemplate.name);
+        if (!entry) return null;
+        return (
+          <HabitScienceSheet
+            entry={entry}
+            onClose={() => setScienceTemplate(null)}
+            onCreate={() => {
+              const tpl = scienceTemplate;
+              setScienceTemplate(null);
+              handleSelectTemplate(tpl);
+            }}
+          />
+        );
+      })()}
     </div>
   );
 }

@@ -1,0 +1,37 @@
+{
+  "purpose": "One gem/totem per life area (today the UI uses Lucide icons). 1024x1024, transparent background. area_type values match the life_areas table.",
+  "status": "pending",
+  "shared_prompt_body": "mystical kingdom totem gem, 3D rendered, faceted crystal core with a carved stone frame and jungle vines, teal and gold dark-fantasy palette, soft inner glow, transparent background, premium mobile-game quality, no text",
+  "items": [
+    {
+      "area": "health",
+      "file": "public/life-areas/health.png",
+      "prompt": "Kingdom totem gem: a heart-shaped emerald crystal with a gentle pulse of light and a leaf motif. Faceted crystal with carved stone frame and jungle vines, teal-gold dark-fantasy palette, soft inner glow, transparent background, 1024x1024, no text."
+    },
+    {
+      "area": "finance",
+      "file": "public/life-areas/finance.png",
+      "prompt": "Kingdom totem gem: an amber-gold coin crystal engraved with a rune of abundance. Faceted crystal with carved stone frame and jungle vines, teal-gold dark-fantasy palette, soft inner glow, transparent background, 1024x1024, no text."
+    },
+    {
+      "area": "creativity",
+      "file": "public/life-areas/creativity.png",
+      "prompt": "Kingdom totem gem: a violet-teal crystal shaped like a flame-brush, with floating ink sparks. Faceted crystal with carved stone frame and jungle vines, teal-gold dark-fantasy palette, soft inner glow, transparent background, 1024x1024, no text."
+    },
+    {
+      "area": "social",
+      "file": "public/life-areas/social.png",
+      "prompt": "Kingdom totem gem: two intertwined teal crystals forming a bond, connected by a thread of light. Faceted crystal with carved stone frame and jungle vines, teal-gold dark-fantasy palette, soft inner glow, transparent background, 1024x1024, no text."
+    },
+    {
+      "area": "family",
+      "file": "public/life-areas/family.png",
+      "prompt": "Kingdom totem gem: a warm rose-gold crystal cluster (one large, two small gems) sheltered under a stone arch. Faceted crystal with carved stone frame and jungle vines, teal-gold dark-fantasy palette, soft inner glow, transparent background, 1024x1024, no text."
+    },
+    {
+      "area": "career",
+      "file": "public/life-areas/career.png",
+      "prompt": "Kingdom totem gem: a deep-blue crystal mountain peak with a golden summit-flag rune. Faceted crystal with carved stone frame and jungle vines, teal-gold dark-fantasy palette, soft inner glow, transparent background, 1024x1024, no text."
+    }
+  ]
+}

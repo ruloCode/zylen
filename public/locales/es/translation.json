@@ -33,7 +33,8 @@
     "navigateTo": "Navegar a {{label}}",
     "mood": "Ánimo",
     "routines": "Rituales",
-    "progress": "Progreso"
+    "progress": "Progreso",
+    "ranking": "Ranking"
   },
   "dashboard": {
     "title": "El Reino",
@@ -221,7 +222,9 @@
     "streakLabel": "Llama",
     "relapseConfirm": "¿Registrar una recaída? Tu llama constante volverá a empezar.",
     "relapseRecorded": "La sombra ganó terreno. Pero la luz siempre puede recuperarse 💪",
-    "viewAnalytics": "Ver analíticas"
+    "viewAnalytics": "Ver analíticas",
+    "streakBonus": "+{{percent}}% por tu llama constante",
+    "xpCapped": "Has superado el límite de XP de hoy — las ganancias se reducen hasta mañana"
   },
   "habitForm": {
     "createHabit": "Crear Hábito",
@@ -260,7 +263,14 @@
     "dailyGoalHint": "Deja en blanco para registrar cualquier valor positivo.",
     "selectColor": "Seleccionar color",
     "next": "Continuar",
-    "back": "Atrás"
+    "back": "Atrás",
+    "timeOfDay": "¿En qué momento del día?",
+    "timeOfDayHint": "Los hábitos de \"Cualquiera\" aparecen en todos los filtros y los recordatorios usan este momento",
+    "timeAnytime": "Cualquiera",
+    "timeMorning": "Mañana",
+    "timeAfternoon": "Tarde",
+    "timeEvening": "Noche",
+    "color": "Color del hábito (opcional)"
   },
   "rootHabit": {
     "title": "Desafío de 30 Días",
@@ -435,7 +445,9 @@
     "authenticationFailed": "No se pudo cruzar el Portal",
     "habitCompleteFailed": "No se pudo encender la luz de este hábito",
     "habitUncompleteFailed": "No se pudo desmarcar el hábito",
-    "habitCreateFailed": "No se pudo sembrar el hábito"
+    "habitCreateFailed": "No se pudo sembrar el hábito",
+    "habitUpdateFailed": "No se pudo actualizar el hábito",
+    "habitDeleteFailed": "No se pudo eliminar el hábito"
   },
   "actions": {
     "save": "Guardar",
@@ -1025,5 +1037,590 @@
         "desc": "Cada paso fortalece el Everlight. Evoluciona, recupera reliquias y conviértete en el Guardián que llevas dentro."
       }
     ]
+  },
+  "habitDetail": {
+    "title": "Detalle del hábito",
+    "saved": "Cambios guardados",
+    "reminder": "Recordatorio",
+    "reminderHint": "Te avisaremos si aún no lo completas en su franja del día",
+    "viewAnalytics": "Ver analíticas",
+    "edit": "Editar hábito",
+    "relapse": "Registrar recaída",
+    "delete": "Eliminar hábito",
+    "deleteConfirm": "¿Eliminar este hábito? Su historial se conserva, pero desaparecerá de tus rutinas.",
+    "deleted": "Hábito eliminado"
+  },
+  "reminders": {
+    "title": "Recordatorios",
+    "enable": "Activar",
+    "granted": "Recordatorios activados",
+    "denied": "Permiso denegado — actívalo desde los ajustes del navegador",
+    "statusGranted": "Recordatorios activos",
+    "statusDenied": "Permiso denegado en el navegador",
+    "statusDefault": "Recordatorios desactivados",
+    "statusUnsupported": "Tu navegador no soporta notificaciones",
+    "habitsWithReminder": "{{count}} hábito(s) con recordatorio activo",
+    "limitationsHint": "Los recordatorios funcionan al abrir la app o al volver a ella (mejor con la app instalada). En iPhone solo suenan con la app abierta.",
+    "notificationTitle": "Zylen — tu llama te espera 🔥",
+    "notificationBody": "Aún no completas \"{{habit}}\" hoy. ¡No dejes que se apague!",
+    "testBody": "Así se verán tus recordatorios de hábitos."
+  },
+  "habitScience": {
+    "sheetTitle": "Conoce este hábito",
+    "whatScience": "Qué dice la ciencia",
+    "shortTermTitle": "Beneficios a corto plazo",
+    "longTermTitle": "A largo plazo",
+    "tipsTitle": "Cómo empezar bien",
+    "frustrationsTitle": "Frustraciones típicas (y cómo superarlas)",
+    "createCta": "Crear este hábito",
+    "learnMore": "Saber más",
+    "learnAboutHabit": "Aprende sobre este hábito"
+  },
+  "habitCatalog": {
+    "hydration": {
+      "title": "Hidratación diaria",
+      "tagline": "El hábito más simple con el retorno más rápido",
+      "summary": "Tu cuerpo es ~60% agua y hasta el cerebro lo nota: una deshidratación leve (1-2%) ya reduce concentración, ánimo y energía. Beber suficiente agua a lo largo del día es de los hábitos con efecto más inmediato.",
+      "science": "Estudios de hidratación muestran que déficits leves de agua se asocian a peor atención, más fatiga y dolores de cabeza; corregirlos revierte el efecto en horas. Las necesidades varían por cuerpo y clima: ~2L es una referencia razonable, no una ley.",
+      "shortTerm": [
+        "Más energía y concentración estables durante el día",
+        "Menos dolores de cabeza y menos hambre falsa",
+        "Mejor digestión y piel más hidratada en días"
+      ],
+      "longTerm": [
+        "Menor riesgo de cálculos renales e infecciones urinarias",
+        "Apoya el control de peso (a veces la sed se disfraza de hambre)",
+        "Riñones y articulaciones funcionando mejor con los años"
+      ],
+      "tips": [
+        "Ancla el hábito: un vaso al despertar y uno con cada comida",
+        "Ten una botella visible — la fricción cero es el truco real",
+        "Usa el modo medible de Zylen: registra vasos o litros",
+        "Si el agua sola te aburre: rodajas de limón, pepino o menta"
+      ],
+      "frustrations": [
+        "Los primeros días irás más al baño — tu cuerpo se ajusta en ~1 semana",
+        "Olvidarlo es normal: no confíes en la memoria, confía en la botella visible y el recordatorio",
+        "No sentirás un cambio dramático día a día; es un hábito de fondo que se nota cuando falta"
+      ]
+    },
+    "exercise": {
+      "title": "Ejercicio regular",
+      "tagline": "La 'pastilla' más potente que existe",
+      "summary": "Si el ejercicio fuera un medicamento, sería el más recetado del mundo: mejora ánimo, energía, sueño, memoria y protege contra casi todas las enfermedades crónicas. Y no hace falta una hora: 30 minutos de movimiento ya mueven la aguja.",
+      "science": "La evidencia es abrumadora: la actividad física regular reduce el riesgo de enfermedad cardiovascular, diabetes tipo 2 y depresión (metaanálisis la sitúan al nivel de la psicoterapia para depresión leve-moderada). La OMS recomienda 150 min semanales de intensidad moderada.",
+      "shortTerm": [
+        "Mejor ánimo el mismo día (endorfinas + dopamina)",
+        "Duermes más profundo esa misma noche",
+        "Más energía y menos estrés en 1-2 semanas"
+      ],
+      "longTerm": [
+        "Reduce el riesgo de infarto, diabetes y varios cánceres",
+        "Protege memoria y cerebro del envejecimiento",
+        "Más masa muscular = más independencia y calidad de vida a futuro"
+      ],
+      "tips": [
+        "Empieza ridículamente pequeño: 10 min cuentan, la constancia gana a la intensidad",
+        "Misma hora cada día — el ejercicio 'cuando pueda' no sobrevive la semana",
+        "Elige algo que disfrutes; el mejor ejercicio es el que repites",
+        "Deja la ropa lista la noche anterior (reduce la fricción de arranque)"
+      ],
+      "frustrations": [
+        "Las agujetas de la primera semana son normales y desaparecen",
+        "Los resultados visibles tardan 6-8 semanas; los invisibles (ánimo, sueño) llegan en días — mide esos",
+        "Habrá días sin ganas: la regla es aparecer 10 minutos; casi siempre sigues"
+      ]
+    },
+    "sleep": {
+      "title": "Dormir 7-9 horas",
+      "tagline": "El multiplicador de todos tus demás hábitos",
+      "summary": "El sueño no es tiempo perdido: es cuando el cerebro consolida memoria, regula emociones y el cuerpo se repara. Dormir bien hace más fácil TODO lo demás — comer bien, entrenar, concentrarte y estar de buen humor.",
+      "science": "Dormir menos de 6 horas de forma crónica se asocia a peor memoria, más ansiedad, más apetito (grelina/leptina desreguladas) y mayor riesgo metabólico. La regularidad del horario importa tanto como la duración: tu reloj circadiano ama la rutina.",
+      "shortTerm": [
+        "Mejor humor y menos irritabilidad al día siguiente",
+        "Más foco y memoria de trabajo",
+        "Menos antojos de azúcar y comida chatarra"
+      ],
+      "longTerm": [
+        "Menor riesgo de obesidad, diabetes y enfermedad cardiovascular",
+        "Protección de la memoria a largo plazo",
+        "Sistema inmune más fuerte"
+      ],
+      "tips": [
+        "Fija primero la hora de ACOSTARTE, no la de levantarte",
+        "Pantallas fuera 30-60 min antes (o al menos modo noche + brillo mínimo)",
+        "Habitación fresca, oscura y silenciosa — la cafeína después de las 14h sabotea",
+        "Rutina de cierre: misma secuencia cada noche le enseña al cerebro que toca dormir"
+      ],
+      "frustrations": [
+        "Los primeros días puede que des vueltas en la cama: el cuerpo tarda ~2 semanas en ajustar el reloj",
+        "Una mala noche no arruina nada — no compenses durmiendo tarde el finde (rompe el ritmo)",
+        "Series y scroll nocturno son el enemigo real: este hábito se gana a las 22h, no a las 23:45"
+      ]
+    },
+    "meditation": {
+      "title": "Meditación / mindfulness",
+      "tagline": "Entrenamiento de fuerza para tu atención",
+      "summary": "Meditar no es dejar la mente en blanco: es notar cuando te distraes y volver, una y otra vez. Ese 'volver' es la repetición que fortalece atención y regulación emocional, igual que una sentadilla fortalece las piernas.",
+      "science": "Metaanálisis de programas basados en mindfulness (como MBSR) muestran reducciones moderadas de ansiedad, estrés y rumiación, y mejoras en atención sostenida. Diez minutos diarios constantes superan a sesiones largas esporádicas.",
+      "shortTerm": [
+        "Baja el estrés del día en minutos (activa el sistema parasimpático)",
+        "Reaccionas menos en caliente; hay una pausa antes de responder",
+        "Mejor foco en la siguiente hora"
+      ],
+      "longTerm": [
+        "Menos rumiación y ansiedad basal",
+        "Mayor capacidad de concentración sostenida",
+        "Mejor relación con tus propios pensamientos y emociones"
+      ],
+      "tips": [
+        "Empieza con 3-5 min; 10 es la meta, no el inicio",
+        "Misma hora y lugar (después de despertar funciona muy bien)",
+        "Usa una app guiada al principio; el silencio total llega después",
+        "Distraerte NO es fallar: notar la distracción ES la práctica"
+      ],
+      "frustrations": [
+        "'No puedo dejar de pensar' — nadie puede; el objetivo es notar y volver, no silenciar",
+        "Algunos días se sienten inútiles: el beneficio es acumulativo, como el gimnasio",
+        "El aburrimiento es parte del entrenamiento — justo ahí está creciendo tu tolerancia"
+      ]
+    },
+    "nutrition": {
+      "title": "Comer fruta / comida real",
+      "tagline": "Suma antes de restar",
+      "summary": "En vez de empezar prohibiendo, la ciencia sugiere empezar sumando: una fruta o verdura más al día desplaza sola a los ultraprocesados y aporta fibra, vitaminas y saciedad. Es la puerta de entrada a comer mejor sin pelear contigo.",
+      "science": "Grandes estudios de cohorte asocian cada porción diaria extra de fruta/verdura con menor riesgo cardiovascular y de mortalidad general (con efecto dosis-respuesta hasta ~5 porciones). La fibra además alimenta tu microbiota y mejora la saciedad.",
+      "shortTerm": [
+        "Más saciedad → menos picoteo de ultraprocesados",
+        "Digestión más regular en días (fibra)",
+        "Energía más estable, sin picos de azúcar"
+      ],
+      "longTerm": [
+        "Menor riesgo cardiovascular y metabólico",
+        "Microbiota más diversa y sana",
+        "Un paladar reeducado: lo dulce artificial empieza a empalagar"
+      ],
+      "tips": [
+        "Pon la fruta VISIBLE (frutero en la mesa, no cajón de la nevera)",
+        "Ancla: fruta siempre con el desayuno o como primer snack",
+        "Compra fruta que te guste de verdad — no te obligues a la 'saludable' que odias",
+        "Prepárala lista para comer: la naranja pelada gana al paquete de galletas"
+      ],
+      "frustrations": [
+        "La fruta se daña si no la comes: compra poca y variada, dos veces por semana",
+        "Al principio puede no apetecer frente al snack procesado — la visibilidad y el hábito lo revierten en ~2 semanas",
+        "No es una dieta mágica: es la primera pieza de un patrón que se construye solo"
+      ]
+    },
+    "reading": {
+      "title": "Lectura diaria",
+      "tagline": "20 páginas al día = ~30 libros al año",
+      "summary": "Leer a diario es interés compuesto para tu mente: 20 páginas parecen poco, pero son ~30 libros al año. Además de conocimiento, la lectura profunda entrena la concentración que el scroll infinito te está robando.",
+      "science": "La lectura habitual se asocia a mayor vocabulario, mejor comprensión y mayor reserva cognitiva en la vejez. Estudios también muestran que leer ficción mejora la empatía (teoría de la mente), y que 6 minutos de lectura ya reducen marcadores de estrés.",
+      "shortTerm": [
+        "Relaja y baja el estrés antes de dormir (mejor que la pantalla)",
+        "Sensación de progreso real desde la primera semana",
+        "Recuperas capacidad de atención sostenida"
+      ],
+      "longTerm": [
+        "Decenas de libros al año sin esfuerzo aparente",
+        "Mayor vocabulario, criterio y reserva cognitiva",
+        "Una alternativa por defecto al doomscrolling"
+      ],
+      "tips": [
+        "Define la meta en páginas o minutos (20 pág / 15 min), no 'leer más'",
+        "Libro físico en la mesa de noche; celular cargando LEJOS de la cama",
+        "Abandona sin culpa los libros que te aburren — leer lo que te atrapa es la estrategia",
+        "Ancla: leer siempre después de acostarte / con el café de la mañana"
+      ],
+      "frustrations": [
+        "Los primeros días te dormirás a las 3 páginas: es tu déficit de atención recuperándose, mejora en 1-2 semanas",
+        "Si un libro no avanza, el problema es el libro, no tú — cámbialo",
+        "Comparar tu ritmo con el de otros mata el hábito; 10 páginas tuyas valen más que 50 ajenas"
+      ]
+    },
+    "journaling": {
+      "title": "Escribir un diario",
+      "tagline": "Pensar con las manos",
+      "summary": "Escribir lo que piensas y sientes obliga al cerebro a ordenar el caos: los problemas difusos se vuelven concretos y manejables. Cinco minutos y tres líneas honestas bastan para el efecto.",
+      "science": "La 'escritura expresiva' (Pennebaker) muestra en decenas de estudios mejoras modestas pero consistentes en ánimo, estrés e incluso marcadores de salud. Poner emociones en palabras ('affect labeling') reduce la reactividad de la amígdala en neuroimagen.",
+      "shortTerm": [
+        "Descarga mental: los pendientes dejan de dar vueltas en la cabeza",
+        "Claridad sobre qué te preocupa de verdad",
+        "Mejor cierre del día (o arranque, si escribes de mañana)"
+      ],
+      "longTerm": [
+        "Registro de tu evolución que la memoria distorsionaría",
+        "Mejor autoconocimiento y regulación emocional",
+        "Decisiones más claras: escribes tus dilemas y se desenredan"
+      ],
+      "tips": [
+        "3 líneas cuentan — la barrera de entrada debe ser mínima",
+        "Prueba una plantilla: qué pasó / qué sentí / qué agradezco",
+        "Nadie lo va a leer: escribe feo, escribe honesto",
+        "Ancla: junto al café de la mañana o justo antes de dormir"
+      ],
+      "frustrations": [
+        "'No sé qué escribir' — empieza describiendo tu día en una frase; el resto sale solo",
+        "Releer días malos puede incomodar: no estás obligado a releer",
+        "Días de una sola línea son victorias, no fracasos"
+      ]
+    },
+    "instrument": {
+      "title": "Practicar un instrumento",
+      "tagline": "El gimnasio completo del cerebro",
+      "summary": "Pocas actividades activan tanto cerebro a la vez: motricidad fina, oído, lectura, memoria y emoción trabajando juntos. Quince minutos diarios de práctica deliberada superan a la sesión maratónica del domingo.",
+      "science": "La práctica musical se asocia en neuroimagen a mayor conectividad entre hemisferios y mejoras en memoria de trabajo y atención. El factor clave según la literatura de expertise es la práctica corta, frecuente y enfocada en lo que aún no sale.",
+      "shortTerm": [
+        "Desconexión total del trabajo/estrés mientras tocas (flow)",
+        "Progreso audible en semanas con práctica diaria",
+        "Motricidad y coordinación mejorando rápido al inicio"
+      ],
+      "longTerm": [
+        "Una habilidad para toda la vida y una identidad nueva ('soy músico')",
+        "Reserva cognitiva: la música es protectora del cerebro que envejece",
+        "Fuente inagotable de reto y disfrute"
+      ],
+      "tips": [
+        "15 min diarios > 2 horas el domingo",
+        "Practica LO QUE NO TE SALE (práctica deliberada), no solo lo que ya suena bien",
+        "Instrumento fuera del estuche, visible y listo",
+        "Graba un clip semanal: oír tu progreso es el mejor combustible"
+      ],
+      "frustrations": [
+        "La meseta llega a los 2-3 meses: es la fase donde casi todos abandonan — persiste, se rompe sola",
+        "Sonar mal al principio ES el proceso, no una señal de falta de talento",
+        "Días de 5 minutos mantienen viva la cadena; no los desprecies"
+      ]
+    },
+    "drawing": {
+      "title": "Dibujar / bocetar",
+      "tagline": "Ver el mundo con otros ojos",
+      "summary": "Dibujar no es un don: es una habilidad entrenable de observación. Bocetar a diario enseña a VER de verdad — proporciones, luz, detalles — y es una de las formas más baratas de entrar en estado de flow.",
+      "science": "Las actividades artísticas muestran en estudios reducciones de cortisol tras sesiones cortas (45 min) independientemente del nivel de habilidad. La habilidad de dibujo mejora de forma medible con práctica estructurada — el 'talento' pesa menos que las horas.",
+      "shortTerm": [
+        "Relajación tipo flow desde la primera sesión",
+        "Notas que empiezas a observar mejor el mundo real",
+        "Un descanso real de las pantallas"
+      ],
+      "longTerm": [
+        "Un cuaderno lleno = prueba tangible de tu evolución",
+        "Habilidad visual útil (comunicar ideas, notas visuales, diseño)",
+        "Una vía de expresión que no depende de palabras"
+      ],
+      "tips": [
+        "Un boceto de 10 min al día; feo está permitido y esperado",
+        "Dibuja del natural (tu taza, tu mano), no solo de fotos",
+        "Cuaderno barato: los caros dan miedo de 'arruinarlos'",
+        "Fecha cada dibujo — comparar el mes 1 con el mes 3 es mágico"
+      ],
+      "frustrations": [
+        "Los primeros dibujos te parecerán horribles: es tu ojo mejorando más rápido que tu mano (señal de progreso, no de fracaso)",
+        "Compararte con artistas de años en redes es trampa mental",
+        "El bloqueo de la página en blanco se rompe con ejercicios: dibuja 5 círculos y ya empezaste"
+      ]
+    },
+    "study": {
+      "title": "Estudio / aprendizaje diario",
+      "tagline": "30 minutos que componen como interés",
+      "summary": "Media hora diaria de estudio enfocado le gana a las maratones de fin de semana: el cerebro consolida en el sueño lo que practicas, así que la frecuencia importa más que el volumen. En un año son ~180 horas de una habilidad nueva.",
+      "science": "La ciencia del aprendizaje es clara: la práctica espaciada (poco y frecuente) y el recuerdo activo (ponerte a prueba) superan por mucho al releer y subrayar. El 'efecto espaciado' es de los hallazgos más replicados de la psicología.",
+      "shortTerm": [
+        "Sensación de progreso e impulso desde la semana 1",
+        "Mejor retención que estudiando a atracones",
+        "Momentum: empezar mañana es más fácil si estudiaste hoy"
+      ],
+      "longTerm": [
+        "Habilidades que componen tu carrera y tus ingresos",
+        "Identidad de aprendiz: la confianza de saber que puedes aprender lo que sea",
+        "Ventaja acumulada que nadie te quita"
+      ],
+      "tips": [
+        "Define QUÉ estudiarás antes de sentarte (la sesión no empieza eligiendo)",
+        "Ponte a prueba: cierra el material y explícalo en voz alta (recuerdo activo)",
+        "Celular en otra habitación — la sola presencia visible drena atención",
+        "25-30 min con descanso corto le gana a 2 horas agotadoras"
+      ],
+      "frustrations": [
+        "La curva del olvido desanima: olvidar es parte del proceso, repasar espaciado lo arregla",
+        "Días en que no entra nada: baja la dificultad, no la frecuencia",
+        "El progreso en habilidades es escalonado — semanas planas y de repente un salto"
+      ]
+    },
+    "planning": {
+      "title": "Planificar el día",
+      "tagline": "10 minutos que ordenan las otras 16 horas",
+      "summary": "Decidir por adelantado qué harás elimina decenas de microdecisiones que agotan tu fuerza de voluntad durante el día. Un plan simple de 3 prioridades vence a la lista infinita de tareas.",
+      "science": "La investigación sobre 'intenciones de implementación' (Gollwitzer) muestra que planear el cuándo/dónde/cómo concreto duplica o triplica la probabilidad de ejecutar una tarea frente a solo 'tener la intención'. Escribir pendientes también reduce la carga mental (efecto Zeigarnik).",
+      "shortTerm": [
+        "Arrancas el día sin la parálisis del '¿por dónde empiezo?'",
+        "Menos sensación de caos y bomberazos",
+        "Al escribirlo, sueltas los pendientes de la cabeza"
+      ],
+      "longTerm": [
+        "Lo importante deja de perder siempre contra lo urgente",
+        "Avance constante en metas grandes (se planifican en trozos)",
+        "Percepción realista de tu tiempo: dejas de prometerte días de 30 horas"
+      ],
+      "tips": [
+        "Máximo 3 prioridades reales; el resto es lista de 'si sobra tiempo'",
+        "Planea la noche anterior o a primera hora, ANTES de abrir mensajes",
+        "Asigna la prioridad #1 a tu primera hora de energía",
+        "Revisa 2 min al final del día: ¿qué pasó con las 3? (retroalimentación)"
+      ],
+      "frustrations": [
+        "El plan se romperá muchos días — su valor es re-decidir rápido, no cumplirse perfecto",
+        "Al inicio subestimarás tiempos: en 2 semanas calibras",
+        "Planear no es procrastinar con estética: máximo 10 minutos y a ejecutar"
+      ]
+    },
+    "deep-work": {
+      "title": "Trabajo profundo sin distracciones",
+      "tagline": "Una hora enfocada vale por cuatro fragmentadas",
+      "summary": "Cada interrupción cuesta mucho más que sus segundos: el cerebro tarda varios minutos en volver a concentrarse de verdad. Bloques de trabajo sin celular ni pestañas producen en una hora lo que el multitasking en cuatro.",
+      "science": "Estudios de interrupciones en oficina (Mark et al.) estiman ~23 minutos para recuperar el foco pleno tras una interrupción. El 'residuo atencional' (Leroy) muestra que saltar entre tareas deja parte de la atención pegada en la anterior. El multitasking real no existe: es cambio rápido con costo.",
+      "shortTerm": [
+        "Terminas en una mañana lo que antes tomaba el día",
+        "Satisfacción de avanzar en lo difícil (no solo en lo trivial)",
+        "Menos fatiga mental al final del día"
+      ],
+      "longTerm": [
+        "La capacidad de concentrarse es una ventaja profesional creciente y escasa",
+        "Produces trabajo de más calidad, no solo más volumen",
+        "Recuperas la capacidad de pensar ideas largas"
+      ],
+      "tips": [
+        "Empieza con bloques de 25-45 min; 90 es nivel avanzado",
+        "Celular en OTRA habitación (en silencio sobre la mesa sigue robando atención)",
+        "Una sola pestaña/tarea; cierra el correo y el chat con hora de reapertura",
+        "Define el objetivo del bloque en una frase antes de empezar"
+      ],
+      "frustrations": [
+        "Los primeros bloques serán incómodos: la mente pide su dosis de novedad cada 3 minutos — pasa en ~1 semana",
+        "El entorno no siempre coopera: negocia señales ('audífonos = no interrumpir')",
+        "Un bloque al día ya es victoria; no intentes 8 horas profundas (nadie las tiene)"
+      ]
+    },
+    "expense-tracking": {
+      "title": "Registrar gastos",
+      "tagline": "No puedes mejorar lo que no mides",
+      "summary": "Anotar cada gasto del día toma 2 minutos y produce el insumo más valioso de tus finanzas: saber a dónde se va el dinero DE VERDAD. La consciencia sola ya cambia el comportamiento.",
+      "science": "El solo acto de auto-registrar un comportamiento lo modifica ('reactividad de la medición'): ocurre con la comida, los pasos y el gasto. La contabilidad mental (Thaler) explica por qué los gastos pequeños e invisibles son los que rompen presupuestos.",
+      "shortTerm": [
+        "Descubres fugas invisibles la primera semana (delivery, suscripciones, hormiga)",
+        "Frenas compras impulsivas solo por saber que las anotarás",
+        "Sensación de control inmediata"
+      ],
+      "longTerm": [
+        "Presupuestos realistas basados en datos, no en ilusión",
+        "Capacidad real de ahorro (sabes exactamente qué recortar)",
+        "Paz financiera: los números dejan de ser un misterio con ansiedad"
+      ],
+      "tips": [
+        "Regístralo AL MOMENTO del gasto (2 toques en el celular); 'luego lo anoto' = nunca",
+        "No juzgues las primeras 2 semanas: solo observa, los datos primero",
+        "Revisa el total una vez por semana, no obsesivamente a diario",
+        "Categorías simples: 5-6 máximo, o el sistema muere de burocracia"
+      ],
+      "frustrations": [
+        "Verás números incómodos al inicio — esa incomodidad ES la información valiosa",
+        "Olvidarás gastos: registra al momento y no reconstruyas el día de memoria",
+        "El perfeccionismo mata el hábito: un registro 90% completo sirve; uno abandonado, no"
+      ]
+    },
+    "saving": {
+      "title": "Ahorrar / no comprar por impulso",
+      "tagline": "Págate a ti primero",
+      "summary": "El ahorro que funciona no es 'lo que sobre a fin de mes' (nunca sobra): es apartarlo primero, aunque sea poco. Y contra el impulso de compra, la herramienta más efectiva es simplemente esperar 24 horas.",
+      "science": "La economía conductual muestra que automatizar el ahorro ('pagarte primero') supera por mucho a la fuerza de voluntad, y que el descuento hiperbólico nos hace sobrevalorar la recompensa inmediata. La regla de las 24-72h desactiva la mayoría de compras impulsivas.",
+      "shortTerm": [
+        "Ver crecer el fondo, aunque sea lento, motiva de inmediato",
+        "Menos arrepentimiento de compras a los 3 días",
+        "Claridad entre 'lo quiero ahora' y 'lo quiero de verdad'"
+      ],
+      "longTerm": [
+        "Fondo de emergencia = dormir tranquilo",
+        "Libertad de decisión (cambiar de trabajo, mudarte, invertir)",
+        "El interés compuesto trabajando a tu favor y no en tu contra"
+      ],
+      "tips": [
+        "Automatiza: transferencia el día que cobras, aunque sean $10",
+        "Regla 24h: lo que quieras comprar, al carrito y espera un día",
+        "Desinstala apps de compras y quita tarjetas guardadas (suma fricción)",
+        "Dale nombre a tu meta ('Japón 2027') — ahorrar 'porque sí' no motiva"
+      ],
+      "frustrations": [
+        "Al inicio la cantidad parece ridícula: el hábito importa más que el monto, el monto crece después",
+        "Habrá recaídas de compra impulsiva: registra qué la disparó y sigue",
+        "Ver a otros gastar sin freno da FOMO — recuerda que no ves sus deudas"
+      ]
+    },
+    "social-connection": {
+      "title": "Conexión social",
+      "tagline": "El predictor #1 de una vida larga y feliz",
+      "summary": "El estudio más largo de la historia sobre la felicidad (Harvard, 85+ años) llegó a una conclusión simple: la calidad de tus relaciones predice tu salud y felicidad mejor que el dinero o la fama. Una llamada, una cena, un mensaje — eso es mantenimiento de vida.",
+      "science": "La soledad crónica se asocia a un aumento de mortalidad comparable a fumar hasta 15 cigarrillos al día (Holt-Lunstad). Las relaciones se sostienen con frecuencia de contacto, no con grandes gestos: pequeños toques regulares vencen al gran reencuentro anual.",
+      "shortTerm": [
+        "Subidón de ánimo inmediato tras una buena conversación",
+        "La relación se siente viva otra vez con un solo toque",
+        "Perspectiva: tus problemas se encogen al compartirlos"
+      ],
+      "longTerm": [
+        "Red real de apoyo para cuando la vida golpee",
+        "Menor riesgo de depresión y deterioro cognitivo",
+        "Relaciones profundas que se construyeron a base de 'toques' pequeños"
+      ],
+      "tips": [
+        "Llama mientras caminas o cocinas — no esperes 'el momento perfecto'",
+        "La regla del primer paso: tú envía el mensaje, no lleves la cuenta de quién debe",
+        "Audio de voz > texto para cercanía real (y llamada > audio)",
+        "Agenda recurrente con los tuyos (domingo = llamar a papás) y deja de depender de acordarte"
+      ],
+      "frustrations": [
+        "'No tengo tiempo' — 10 minutos de llamada cuentan; la barrera es arranque, no agenda",
+        "A veces no contestan o están secos: no es rechazo, es su día — la constancia gana",
+        "Puede sentirse forzado al inicio; en 3 semanas se vuelve lo más esperado del día"
+      ]
+    },
+    "gratitude": {
+      "title": "Gratitud activa",
+      "tagline": "Reentrenar el radar del cerebro",
+      "summary": "Tu cerebro viene de fábrica con sesgo negativo: detecta amenazas y falta. La gratitud practicada — escribir 3 cosas buenas o enviar un mensaje de agradecimiento — recalibra ese radar hacia lo que sí funciona.",
+      "science": "Los experimentos clásicos de Emmons y Seligman muestran que ejercicios simples de gratitud ('tres cosas buenas', carta de agradecimiento) producen mejoras en bienestar y síntomas depresivos que persisten semanas o meses. Es de las intervenciones más baratas y replicadas de la psicología positiva.",
+      "shortTerm": [
+        "Mejora el ánimo el mismo día (más aún si el mensaje es a alguien)",
+        "Duermes mejor si lo haces antes de acostarte",
+        "Las relaciones se calientan: la gente atesora esos mensajes"
+      ],
+      "longTerm": [
+        "Sesgo atencional recalibrado: notas lo bueno por defecto",
+        "Menor rumiación y síntomas depresivos",
+        "Vínculos más fuertes (la gratitud expresada es pegamento social)"
+      ],
+      "tips": [
+        "Sé ESPECÍFICO: 'gracias por quedarte al teléfono el martes' > 'gracias por todo'",
+        "Alterna: unos días escribe 3 cosas, otros envía el mensaje a la persona",
+        "Busca cosas pequeñas y nuevas cada día (repetir 'mi familia' pierde efecto)",
+        "Ancla: con el café de la mañana o como cierre del día"
+      ],
+      "frustrations": [
+        "Se siente cursi al principio — el efecto está medido igual, hazlo de todos modos",
+        "Días malos donde 'no hay nada': busca lo mínimo (el café caliente cuenta) — justo esos días es cuando más trabaja",
+        "Si se vuelve mecánico, cambia el formato: la novedad mantiene el efecto"
+      ]
+    },
+    "quit-smoking": {
+      "title": "Dejar de fumar / vapear",
+      "tagline": "La mejor decisión de salud disponible",
+      "summary": "No hay hábito cuya eliminación pague más rápido: en 20 minutos baja tu pulso, en semanas mejora tu respiración, en un año tu riesgo cardíaco cae a la mitad. Cada día resistido es reparación literal de tu cuerpo.",
+      "science": "El tabaco es la principal causa de muerte prevenible del mundo. La buena noticia: el cuerpo se repara agresivamente al dejarlo (a los 10 años, el riesgo de cáncer de pulmón cae ~50%). Las recaídas son parte estadística del proceso — la media es de varios intentos antes del definitivo.",
+      "shortTerm": [
+        "En 48-72h: mejor gusto y olfato, más aire al subir escaleras",
+        "En 2-4 semanas: mejor circulación y menos tos",
+        "Dinero visible: calcula tu gasto mensual y mira lo que vuelve"
+      ],
+      "longTerm": [
+        "Riesgo de infarto reducido a la mitad en 1 año",
+        "Riesgo de cáncer cayendo año tras año",
+        "Años de vida recuperados — literal, no metafórico"
+      ],
+      "tips": [
+        "Identifica tus disparadores (café, alcohol, estrés, ciertas personas) y cambia la rutina alrededor",
+        "Sustituye el ritual de la mano/boca: agua, chicle, palillo",
+        "Los antojos duran 3-5 minutos: cronométralos y solo aguanta esa ola",
+        "Considera apoyo médico (parches, chicles, bupropión) — duplica las tasas de éxito, no es 'trampa'"
+      ],
+      "frustrations": [
+        "La recaída es parte del proceso, no el final: registra qué la disparó y vuelve al día 1 sin drama",
+        "Días 3-7 son el pico físico de abstinencia: irritabilidad y niebla mental TEMPORALES",
+        "El 'solo uno social' es la trampa #1 — la nicotina reactiva el circuito completo"
+      ]
+    },
+    "quit-screens": {
+      "title": "Menos pantallas / redes",
+      "tagline": "Recuperar tu atención secuestrada",
+      "summary": "Las apps de scroll infinito están diseñadas por equipos enteros para capturar tu atención con recompensas variables — la misma mecánica de las máquinas tragamonedas. Reducirlas no es fuerza de voluntad contra ti: es rediseñar el entorno.",
+      "science": "Estudios experimentales (p.ej. Hunt et al.) muestran que limitar redes sociales a ~30 min/día reduce soledad y síntomas depresivos en semanas. El uso nocturno de pantallas retrasa el sueño por luz y por estimulación. La sola presencia del teléfono visible reduce la capacidad cognitiva disponible ('brain drain').",
+      "shortTerm": [
+        "Recuperas 1-2 horas diarias reales (mira tu screen time y multiplica)",
+        "Mejor sueño si cortas pantallas 1h antes de dormir",
+        "Menos ansiedad de comparación en días"
+      ],
+      "longTerm": [
+        "Capacidad de atención sostenida reconstruida",
+        "Tiempo real para los hábitos que sí quieres (leer, crear, gente)",
+        "Relación con la tecnología en TUS términos"
+      ],
+      "tips": [
+        "Ambiente > voluntad: apps fuera de la pantalla de inicio, notificaciones OFF, escala de grises",
+        "Celular a cargar FUERA del dormitorio; despertador de $5",
+        "Sustituye, no elimines: el hueco del scroll lo llena un libro/podcast preparado de antemano",
+        "Horarios sin celular (comidas, primera hora) antes que prohibiciones totales"
+      ],
+      "frustrations": [
+        "Los primeros días buscarás el celular por reflejo puro — ese fantasma desaparece en ~1 semana",
+        "FOMO inicial: en 2 semanas descubres que no te perdiste nada importante",
+        "Las recaídas de domingo por la tarde son clásicas: ten el plan B listo (¿qué harás en su lugar?)"
+      ]
+    },
+    "quit-alcohol": {
+      "title": "Reducir / dejar el alcohol",
+      "tagline": "El sueño y la energía que no sabías que te faltaban",
+      "summary": "El alcohol es el gran saboteador silencioso del sueño: te ayuda a caer dormido pero destroza la segunda mitad de la noche. Reducirlo devuelve energía, ánimo y claridad más rápido de lo que esperas.",
+      "science": "La evidencia reciente movió el consenso: no hay nivel de consumo claramente 'beneficioso' (los supuestos beneficios cardiovasculares no resisten los análisis modernos). El alcohol suprime el sueño REM, y su eliminación mejora calidad de sueño, ansiedad basal y presión arterial en semanas.",
+      "shortTerm": [
+        "Sueño notablemente más reparador en 1-2 semanas",
+        "Mañanas sin niebla, más energía estable",
+        "Menos ansiedad basal ('hangxiety') y mejor piel"
+      ],
+      "longTerm": [
+        "Menor riesgo de varios cánceres, hígado graso e hipertensión",
+        "Control de peso más fácil (calorías líquidas invisibles)",
+        "Emociones procesadas de verdad, no anestesiadas"
+      ],
+      "tips": [
+        "Define tu regla ANTES del evento ('hoy 0' o 'máximo 1') — decidir en el bar pierde siempre",
+        "Ten un sustituto con dignidad: agua con gas + limón, cerveza 0.0, kombucha",
+        "Los primeros eventos sociales son lo difícil: llega con bebida en mano y nadie pregunta",
+        "Cuenta noches sin alcohol en Zylen — la racha visible es el mejor motivador"
+      ],
+      "frustrations": [
+        "La presión social es real: 'una y ya', 'qué aburrido' — un simple 'estoy en un reto de 30 días' desarma casi todo",
+        "El antojo aparece con el estrés del viernes: es el ritual, no la bebida — cambia el ritual",
+        "Dormirás PEOR los primeros 2-3 días si bebías a diario; luego viene la mejora real"
+      ]
+    },
+    "quit-sugar": {
+      "title": "Menos azúcar / ultraprocesados",
+      "tagline": "Estabilizar la montaña rusa de energía",
+      "summary": "El problema del azúcar no es un postre: es la dosis constante e invisible (bebidas, salsas, 'snacks saludables') que mantiene tu energía y hambre en montaña rusa. Bajarla estabiliza el apetito en un par de semanas.",
+      "science": "Las bebidas azucaradas son el vínculo más sólido entre azúcar y aumento de peso/diabetes tipo 2 en la literatura. Los picos y valles de glucosa se asocian a más hambre, antojos y fatiga; una dieta de carga glucémica más estable mejora saciedad y energía subjetiva.",
+      "shortTerm": [
+        "Energía estable sin el bajón de las 3pm en ~2 semanas",
+        "El hambre se vuelve predecible (comes por comida, no por antojo)",
+        "El paladar se recalibra: la fruta vuelve a saber dulce"
+      ],
+      "longTerm": [
+        "Menor riesgo de diabetes tipo 2 y grasa visceral",
+        "Mejor salud dental y de piel",
+        "Libertad: los antojos dejan de decidir por ti"
+      ],
+      "tips": [
+        "Empieza SOLO por las bebidas azucaradas — es el 80% del beneficio con el 20% del esfuerzo",
+        "No lo tengas en casa: la batalla se gana en el supermercado, no en la cocina a las 11pm",
+        "Lee etiquetas: el azúcar se esconde como jarabe, dextrosa, maltosa...",
+        "Antojo fuerte = a veces solo cansancio o sed; agua + fruta + 10 minutos"
+      ],
+      "frustrations": [
+        "Días 3-7: antojos intensos y humor irritable — es la recalibración, pasa",
+        "El azúcar está en TODO lo procesado: apunta a reducir, no a pureza absoluta",
+        "Una recaída con torta de cumpleaños no es fracaso: era una torta, no tu identidad — sigue al día siguiente"
+      ]
+    }
+  },
+  "catalog": {
+    "homeTitle": "Aprende hábitos",
+    "explore": "Explorar",
+    "libraryTitle": "Catálogo de hábitos"
   }
 }

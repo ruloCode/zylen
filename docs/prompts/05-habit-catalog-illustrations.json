@@ -1,0 +1,107 @@
+{
+  "purpose": "Optional header illustration for each science card in the habit catalog (HabitScienceSheet). NEW batch. 1024x1024, transparent background, single centered emblem/mini-scene. Slugs match src/constants/habitCatalog.ts and habitCatalog.<slug> in i18n. Wire up by adding an optional image to HabitCatalogEntry + rendering it in the sheet header once generated.",
+  "status": "pending",
+  "shared_prompt_body": "single centered chibi emblem / mini-scene, 3D Pixar-style, dark-fantasy jungle-kingdom vibe, teal and gold palette with soft glow, transparent background, premium mobile-game quality, wholesome and motivating, no text",
+  "items": [
+    {
+      "slug": "hydration",
+      "file": "public/catalog/hydration.png",
+      "prompt": "Habit catalog emblem for 'hydration': a chibi glass of glowing teal water with a lemon slice, droplets suspended around it. Chibi 3D Pixar style, teal-gold dark-fantasy palette, soft glow, transparent background, 1024x1024, wholesome and motivating, no text."
+    },
+    {
+      "slug": "exercise",
+      "file": "public/catalog/exercise.png",
+      "prompt": "Habit catalog emblem for 'exercise': a chibi hero mid-jump with a glowing teal energy trail, dumbbell resting on a rock. Chibi 3D Pixar style, teal-gold dark-fantasy palette, soft glow, transparent background, 1024x1024, wholesome and motivating, no text."
+    },
+    {
+      "slug": "sleep",
+      "file": "public/catalog/sleep.png",
+      "prompt": "Habit catalog emblem for 'sleep': a cozy chibi crescent-moon bed under a starry teal-gold sky, small Zzz sparkles. Chibi 3D Pixar style, teal-gold dark-fantasy palette, soft glow, transparent background, 1024x1024, wholesome and motivating, no text."
+    },
+    {
+      "slug": "meditation",
+      "file": "public/catalog/meditation.png",
+      "prompt": "Habit catalog emblem for 'meditation': a chibi figure sitting cross-legged on a floating rock, calm teal aura, a sprouting seedling glowing softly. Chibi 3D Pixar style, teal-gold dark-fantasy palette, soft glow, transparent background, 1024x1024, wholesome and motivating, no text."
+    },
+    {
+      "slug": "nutrition",
+      "file": "public/catalog/nutrition.png",
+      "prompt": "Habit catalog emblem for 'nutrition': a vibrant chibi apple and assorted fruit glowing with health, on a jungle leaf plate. Chibi 3D Pixar style, teal-gold dark-fantasy palette, soft glow, transparent background, 1024x1024, wholesome and motivating, no text."
+    },
+    {
+      "slug": "reading",
+      "file": "public/catalog/reading.png",
+      "prompt": "Habit catalog emblem for 'reading': an open chibi book with golden light and tiny glowing letters rising like fireflies. Chibi 3D Pixar style, teal-gold dark-fantasy palette, soft glow, transparent background, 1024x1024, wholesome and motivating, no text."
+    },
+    {
+      "slug": "journaling",
+      "file": "public/catalog/journaling.png",
+      "prompt": "Habit catalog emblem for 'journaling': a chibi journal with a quill, warm lantern light, a few glowing written lines. Chibi 3D Pixar style, teal-gold dark-fantasy palette, soft glow, transparent background, 1024x1024, wholesome and motivating, no text."
+    },
+    {
+      "slug": "instrument",
+      "file": "public/catalog/instrument.png",
+      "prompt": "Habit catalog emblem for 'instrument': a chibi acoustic guitar with glowing teal sound-wave rings floating from the strings. Chibi 3D Pixar style, teal-gold dark-fantasy palette, soft glow, transparent background, 1024x1024, wholesome and motivating, no text."
+    },
+    {
+      "slug": "drawing",
+      "file": "public/catalog/drawing.png",
+      "prompt": "Habit catalog emblem for 'drawing': a chibi sketchbook and pencil, a half-drawn glowing rune coming to life on the page. Chibi 3D Pixar style, teal-gold dark-fantasy palette, soft glow, transparent background, 1024x1024, wholesome and motivating, no text."
+    },
+    {
+      "slug": "study",
+      "file": "public/catalog/study.png",
+      "prompt": "Habit catalog emblem for 'study': a chibi stack of books with a glowing lightbulb and small orbiting knowledge sparks. Chibi 3D Pixar style, teal-gold dark-fantasy palette, soft glow, transparent background, 1024x1024, wholesome and motivating, no text."
+    },
+    {
+      "slug": "planning",
+      "file": "public/catalog/planning.png",
+      "prompt": "Habit catalog emblem for 'planning': a chibi checklist scroll with three glowing priority runes and a small quill. Chibi 3D Pixar style, teal-gold dark-fantasy palette, soft glow, transparent background, 1024x1024, wholesome and motivating, no text."
+    },
+    {
+      "slug": "deep-work",
+      "file": "public/catalog/deep-work.png",
+      "prompt": "Habit catalog emblem for 'deep-work': a chibi hourglass with teal sand and a focused glow, a silenced phone dimmed to the side. Chibi 3D Pixar style, teal-gold dark-fantasy palette, soft glow, transparent background, 1024x1024, wholesome and motivating, no text."
+    },
+    {
+      "slug": "expense-tracking",
+      "file": "public/catalog/expense-tracking.png",
+      "prompt": "Habit catalog emblem for 'expense-tracking': a chibi ledger with golden coins and a glowing magnifying glass over the numbers. Chibi 3D Pixar style, teal-gold dark-fantasy palette, soft glow, transparent background, 1024x1024, wholesome and motivating, no text."
+    },
+    {
+      "slug": "saving",
+      "file": "public/catalog/saving.png",
+      "prompt": "Habit catalog emblem for 'saving': a chibi treasure chest / piggy bank glowing with gold coins and a teal growth arrow. Chibi 3D Pixar style, teal-gold dark-fantasy palette, soft glow, transparent background, 1024x1024, wholesome and motivating, no text."
+    },
+    {
+      "slug": "social-connection",
+      "file": "public/catalog/social-connection.png",
+      "prompt": "Habit catalog emblem for 'social-connection': two chibi speech bubbles connected by a warm thread of golden light. Chibi 3D Pixar style, teal-gold dark-fantasy palette, soft glow, transparent background, 1024x1024, wholesome and motivating, no text."
+    },
+    {
+      "slug": "gratitude",
+      "file": "public/catalog/gratitude.png",
+      "prompt": "Habit catalog emblem for 'gratitude': a chibi heart-shaped lantern radiating warm gold light, small thank-you sparkles. Chibi 3D Pixar style, teal-gold dark-fantasy palette, soft glow, transparent background, 1024x1024, wholesome and motivating, no text."
+    },
+    {
+      "slug": "quit-smoking",
+      "file": "public/catalog/quit-smoking.png",
+      "prompt": "Habit catalog emblem for 'quit-smoking': a broken cigarette dissolving into teal healing light, fresh green sprout emerging (symbolic, tasteful). Chibi 3D Pixar style, teal-gold dark-fantasy palette, soft glow, transparent background, 1024x1024, wholesome and motivating, no text."
+    },
+    {
+      "slug": "quit-screens",
+      "file": "public/catalog/quit-screens.png",
+      "prompt": "Habit catalog emblem for 'quit-screens': a chibi phone dimmed and set down, replaced by glowing free time sparkles and an open book. Chibi 3D Pixar style, teal-gold dark-fantasy palette, soft glow, transparent background, 1024x1024, wholesome and motivating, no text."
+    },
+    {
+      "slug": "quit-alcohol",
+      "file": "public/catalog/quit-alcohol.png",
+      "prompt": "Habit catalog emblem for 'quit-alcohol': a chibi glass being set aside, replaced by sparkling water with lime glowing teal (tasteful, non-judgmental). Chibi 3D Pixar style, teal-gold dark-fantasy palette, soft glow, transparent background, 1024x1024, wholesome and motivating, no text."
+    },
+    {
+      "slug": "quit-sugar",
+      "file": "public/catalog/quit-sugar.png",
+      "prompt": "Habit catalog emblem for 'quit-sugar': a chibi soda can dimmed, replaced by glowing fresh fruit and a steady teal energy line. Chibi 3D Pixar style, teal-gold dark-fantasy palette, soft glow, transparent background, 1024x1024, wholesome and motivating, no text."
+    }
+  ]
+}

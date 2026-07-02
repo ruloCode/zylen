@@ -1,0 +1,29 @@
+{
+  "purpose": "Shared visual style referenced by every other prompt batch. Not a generation task by itself.",
+  "status": "reference",
+  "style_base": {
+    "type": "3D Pixar-style chibi / polished premium mobile-game asset",
+    "rendering": "octane render, soft studio lighting, smooth subsurface shading, high detail, clean glossy finish",
+    "world": "dark-fantasy magical jungle kingdom ('el reino de la luz'): misty jungle, faceted low-poly rocks, glowing teal runes, warm lanterns, fireflies",
+    "color_palette": {
+      "primary": "teal / emerald greens (#2DD4BF, #0d9488)",
+      "accent": "warm gold and amber (#F29C06, #E1AB3D)",
+      "highlights": "glowing electric blue",
+      "background": "deep charcoal (#101418)"
+    },
+    "reference_assets": [
+      "public/avatars/hero-avatar.png (chibi hero, face crop)",
+      "public/hero-bg.png (jungle scene)",
+      "public/avatars/tiers/tier-0.png (avatar tier base)",
+      "public/avatars/avatar-explorer-3.png (face reference for the identity avatar)"
+    ],
+    "negative_always": [
+      "no text or labels",
+      "no UI elements",
+      "no watermark",
+      "no extra people",
+      "keep chibi proportions where characters appear"
+    ]
+  },
+  "how_to_use": "Prepend the style_base to any prompt in the other files, or rely on your tool's image-to-image reference. Keep aspect ratio and transparency as each item specifies."
+}

@@ -1,36 +1,24 @@
 import { create } from 'zustand';
 import { useShallow } from 'zustand/react/shallow';
-import { createUserSlice, UserSlice } from './userSlice';
-import { createHabitsSlice, HabitsSlice } from './habitsSlice';
-import { createStreaksSlice, StreaksSlice } from './streaksSlice';
-import { createShopSlice, ShopSlice } from './shopSlice';
-import { createChatSlice, ChatSlice } from './chatSlice';
-import { createLifeAreasSlice, LifeAreasSlice } from './lifeAreasSlice';
-import { createOnboardingSlice, OnboardingSlice } from './onboardingSlice';
-import { createSocialSlice, SocialSlice } from './socialSlice';
-import { createLeaderboardSlice, LeaderboardSlice } from './leaderboardSlice';
-import { createRootHabitSlice, RootHabitSlice } from './rootHabitSlice';
-import { createAchievementsSlice, AchievementsSlice } from './achievementsSlice';
-import { createHabitTemplatesSlice, HabitTemplatesSlice } from './habitTemplatesSlice';
-import { createThemeSlice, ThemeSlice } from './themeSlice';
+import { createUserSlice } from './userSlice';
+import { createHabitsSlice } from './habitsSlice';
+import { createStreaksSlice } from './streaksSlice';
+import { createShopSlice } from './shopSlice';
+import { createChatSlice } from './chatSlice';
+import { createLifeAreasSlice } from './lifeAreasSlice';
+import { createOnboardingSlice } from './onboardingSlice';
+import { createSocialSlice } from './socialSlice';
+import { createLeaderboardSlice } from './leaderboardSlice';
+import { createRootHabitSlice } from './rootHabitSlice';
+import { createAchievementsSlice } from './achievementsSlice';
+import { createHabitTemplatesSlice } from './habitTemplatesSlice';
+import { createThemeSlice } from './themeSlice';
 import { AVATARS, LIFE_AREAS } from '@/constants';
 import type { LifeArea, Streak, User } from '@/types';
 import type { HabitWithCompletion } from '@/services/supabase/habits.service';
+import type { AppStore } from './types';
 
-// Combined store type
-type AppStore = UserSlice &
-  HabitsSlice &
-  StreaksSlice &
-  ShopSlice &
-  ChatSlice &
-  LifeAreasSlice &
-  OnboardingSlice &
-  SocialSlice &
-  LeaderboardSlice &
-  RootHabitSlice &
-  AchievementsSlice &
-  HabitTemplatesSlice &
-  ThemeSlice;
+export type { AppStore } from './types';
 
 // Create the store with all slices
 export const useAppStore = create<AppStore>()((...a) => ({
@@ -54,8 +42,8 @@ export function useUser() {
   const selector = useShallow((state: AppStore) => ({
     user: state.user,
     isInitialized: state.isInitialized,
-    isLoading: state.isLoading,
-    error: state.error,
+    isLoading: state.userLoading,
+    error: state.userError,
     initializeUser: state.initializeUser,
     updatePoints: state.updatePoints,
     updateXP: state.updateXP,
@@ -70,14 +58,15 @@ export function useUser() {
 export function useHabits() {
   const selector = useShallow((state: AppStore) => ({
     habits: state.habits,
-    isLoading: state.isLoading,
-    error: state.error,
+    isLoading: state.habitsLoading,
+    error: state.habitsError,
     loadHabits: state.loadHabits,
     addHabit: state.addHabit,
     updateHabit: state.updateHabit,
     deleteHabit: state.deleteHabit,
     completeHabit: state.completeHabit,
     uncompleteHabit: state.uncompleteHabit,
+    recordRelapse: state.recordRelapse,
     getTotalXPEarned: state.getTotalXPEarned,
     getHabitHistory: state.getHabitHistory,
   }));
@@ -87,8 +76,8 @@ export function useHabits() {
 export function useStreaks() {
   const selector = useShallow((state: AppStore) => ({
     streak: state.streak,
-    isLoading: state.isLoading,
-    error: state.error,
+    isLoading: state.streakLoading,
+    error: state.streakError,
     loadStreak: state.loadStreak,
     updateStreakForToday: state.updateStreakForToday,
     getStreakBonus: state.getStreakBonus,
@@ -100,8 +89,8 @@ export function useShop() {
   const selector = useShallow((state: AppStore) => ({
     // Purchase history
     purchaseHistory: state.purchaseHistory,
-    isLoading: state.isLoading,
-    error: state.error,
+    isLoading: state.shopLoading,
+    error: state.shopError,
     loadPurchaseHistory: state.loadPurchaseHistory,
     purchaseItem: state.purchaseItem,
     getTotalSpent: state.getTotalSpent,
@@ -120,7 +109,7 @@ export function useShop() {
 export function useChat() {
   const selector = useShallow((state: AppStore) => ({
     messages: state.messages,
-    isLoading: state.isLoading,
+    isLoading: state.chatLoading,
     addMessage: state.addMessage,
     setLoading: state.setLoading,
     clearMessages: state.clearMessages,
@@ -171,8 +160,8 @@ export function useSocial() {
     pendingRequests: state.pendingRequests,
     sentRequests: state.sentRequests,
     searchResults: state.searchResults,
-    isLoading: state.isLoading,
-    error: state.error,
+    isLoading: state.socialLoading,
+    error: state.socialError,
     searchUsers: state.searchUsers,
     sendFriendRequest: state.sendFriendRequest,
     acceptFriendRequest: state.acceptFriendRequest,
@@ -192,8 +181,8 @@ export function useLeaderboard() {
     weeklyLeaderboard: state.weeklyLeaderboard,
     userRank: state.userRank,
     userWeeklyStats: state.userWeeklyStats,
-    isLoading: state.isLoading,
-    error: state.error,
+    isLoading: state.leaderboardLoading,
+    error: state.leaderboardError,
     loadWeeklyLeaderboard: state.loadWeeklyLeaderboard,
     loadUserWeeklyStats: state.loadUserWeeklyStats,
     refreshLeaderboard: state.refreshLeaderboard,
@@ -206,8 +195,8 @@ export function useRootHabit() {
   const selector = useShallow((state: AppStore) => ({
     progress: state.progress,
     checkIns: state.checkIns,
-    isLoading: state.isLoading,
-    error: state.error,
+    isLoading: state.rootHabitLoading,
+    error: state.rootHabitError,
     canCheckIn: state.canCheckIn,
     loadProgress: state.loadProgress,
     checkIn: state.checkIn,
@@ -225,8 +214,8 @@ export function useAchievements() {
     userAchievements: state.userAchievements,
     achievementsWithProgress: state.achievementsWithProgress,
     unlockedCount: state.unlockedCount,
-    isLoading: state.isLoading,
-    error: state.error,
+    isLoading: state.achievementsLoading,
+    error: state.achievementsError,
     loadAchievements: state.loadAchievements,
     loadAchievementsWithProgress: state.loadAchievementsWithProgress,
     checkAndUnlockAchievements: state.checkAndUnlockAchievements,
@@ -338,8 +327,8 @@ export async function initializeStore() {
       useAppStore.setState({
         user: getDevUser(),
         isInitialized: true,
-        isLoading: false,
-        error: null,
+        userLoading: false,
+        userError: null,
         habits: getDevHabits(),
         streak: getDevStreak(),
         purchaseHistory: { purchases: [], totalSpent: 0 },

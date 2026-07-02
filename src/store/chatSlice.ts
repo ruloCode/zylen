@@ -3,7 +3,7 @@ import { Message } from '@/types';
 
 export interface ChatSlice {
   messages: Message[];
-  isLoading: boolean;
+  chatLoading: boolean;
   streamingMessageId: string | null;
 
   // Actions
@@ -17,7 +17,7 @@ export interface ChatSlice {
 
 export const createChatSlice: StateCreator<ChatSlice> = (set) => ({
   messages: [],
-  isLoading: false,
+  chatLoading: false,
   streamingMessageId: null,
 
   addMessage: (content: string, role: 'user' | 'assistant') => {
@@ -64,7 +64,7 @@ export const createChatSlice: StateCreator<ChatSlice> = (set) => ({
   },
 
   setLoading: (loading: boolean) => {
-    set({ isLoading: loading });
+    set({ chatLoading: loading });
   },
 
   clearMessages: () => {

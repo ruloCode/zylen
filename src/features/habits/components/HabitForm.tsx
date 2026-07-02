@@ -1,13 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { X, Check, BarChart3, Ban } from 'lucide-react';
+import { X, Check, BarChart3, Ban, Sun, CloudSun, Moon, LayoutGrid } from 'lucide-react';
 import { IconSelector, HABIT_ICONS } from './IconSelector';
 import { useLifeAreas } from '@/store';
 import { useLocale } from '@/hooks/useLocale';
-import type { Habit, HabitFormData, HabitType } from '@/types';
+import type { Habit, HabitFormData, HabitType, TimeOfDay } from '@/types';
 import { cn } from '@/utils/cn';
 import { XP_CONFIG } from '@/constants/config';
 
 const UNIT_OPTIONS = ['min', 'hr', 'sec', 'km', 'mi', 'pages', 'glasses', 'reps', 'kcal', 'words', '$'];
+
+/** Accent swatches aligned with the dark-fantasy palette */
+const COLOR_OPTIONS = [
+  '#2dd4bf', // teal
+  '#60a5fa', // blue
+  '#a78bfa', // violet
+  '#f472b6', // pink
+  '#f29c06', // gold
+  '#4ade80', // green
+  '#f87171', // red
+  '#22d3ee', // cyan
+];
 
 interface HabitFormProps {
   /** Habit to edit (if editing), undefined for new habit */
@@ -36,23 +48,39 @@ export function HabitForm({ habit, initialData, onSubmit, onCancel }: HabitFormP
   const [dailyGoal, setDailyGoal] = useState<string>(
     habit?.dailyGoal != null ? String(habit.dailyGoal) : initialData?.dailyGoal != null ? String(initialData.dailyGoal) : ''
   );
+  const [color, setColor] = useState<string>(habit?.color || initialData?.color || '');
+  const [timeOfDay, setTimeOfDay] = useState<TimeOfDay>(
+    habit?.timeOfDay || initialData?.timeOfDay || 'anytime'
+  );
 
   // Validation state
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
-  // Reset form when habit or initialData prop changes
+  // Reset form when habit or initialData prop changes.
+  // In edit mode EVERY field must be restored — omitting the v2 fields here
+  // used to silently degrade measurable/quit habits back to 'check'.
   useEffect(() => {
     if (habit) {
       setName(habit.name);
       setLifeArea(habit.lifeArea);
       setIconName(habit.iconName);
       setXp(habit.xp);
+      setHabitType(habit.habitType || 'check');
+      setUnit(habit.unit || 'min');
+      setDailyGoal(habit.dailyGoal != null ? String(habit.dailyGoal) : '');
+      setColor(habit.color || '');
+      setTimeOfDay(habit.timeOfDay || 'anytime');
     } else if (initialData) {
       if (initialData.name) setName(initialData.name);
       if (initialData.lifeArea) setLifeArea(initialData.lifeArea);
       if (initialData.iconName) setIconName(initialData.iconName);
       if (initialData.xp) setXp(initialData.xp);
+      if (initialData.habitType) setHabitType(initialData.habitType);
+      if (initialData.unit) setUnit(initialData.unit);
+      if (initialData.dailyGoal != null) setDailyGoal(String(initialData.dailyGoal));
+      if (initialData.color) setColor(initialData.color);
+      if (initialData.timeOfDay) setTimeOfDay(initialData.timeOfDay);
     }
   }, [habit, initialData]);
 
@@ -119,6 +147,9 @@ export function HabitForm({ habit, initialData, onSubmit, onCancel }: HabitFormP
           habitType === 'measurable' && dailyGoal.trim() !== ''
             ? Number(dailyGoal)
             : undefined,
+        color: color || undefined,
+        timeOfDay,
+        reminderEnabled: habit?.reminderEnabled ?? false,
       });
     }
   };
@@ -348,6 +379,69 @@ export function HabitForm({ habit, initialData, onSubmit, onCancel }: HabitFormP
               </div>
             </div>
           )}
+
+          {/* Time of day */}
+          <div>
+            <label className="block text-sm font-semibold text-white mb-2">
+              {t('habitForm.timeOfDay')}
+            </label>
+            <div className="grid grid-cols-4 gap-2">
+              {([
+                { key: 'anytime' as TimeOfDay, icon: LayoutGrid, label: t('habitForm.timeAnytime') },
+                { key: 'morning' as TimeOfDay, icon: Sun, label: t('habitForm.timeMorning') },
+                { key: 'afternoon' as TimeOfDay, icon: CloudSun, label: t('habitForm.timeAfternoon') },
+                { key: 'evening' as TimeOfDay, icon: Moon, label: t('habitForm.timeEvening') },
+              ]).map(({ key, icon: Icon, label }) => {
+                const active = timeOfDay === key;
+                return (
+                  <button
+                    key={key}
+                    type="button"
+                    onClick={() => setTimeOfDay(key)}
+                    className={cn(
+                      'flex flex-col items-center gap-1.5 p-2.5 rounded-2xl border-2 transition-all duration-200',
+                      active
+                        ? 'border-teal-400 bg-teal-500/15 text-white'
+                        : 'border-white/10 bg-white/5 text-white/60 hover:border-white/20'
+                    )}
+                    aria-pressed={active}
+                  >
+                    <Icon className="w-5 h-5" />
+                    <span className="text-[11px] font-semibold leading-tight">{label}</span>
+                  </button>
+                );
+              })}
+            </div>
+            <p className="mt-2 text-xs text-white/60">{t('habitForm.timeOfDayHint')}</p>
+          </div>
+
+          {/* Accent color */}
+          <div>
+            <label className="block text-sm font-semibold text-white mb-2">
+              {t('habitForm.color')}
+            </label>
+            <div className="flex flex-wrap items-center gap-3">
+              {COLOR_OPTIONS.map((c) => {
+                const active = color === c;
+                return (
+                  <button
+                    key={c}
+                    type="button"
+                    onClick={() => setColor(active ? '' : c)}
+                    className={cn(
+                      'w-9 h-9 rounded-full border-2 transition-transform duration-150 grid place-items-center',
+                      active ? 'border-white scale-110' : 'border-transparent hover:scale-105'
+                    )}
+                    style={{ backgroundColor: c }}
+                    aria-pressed={active}
+                    aria-label={c}
+                  >
+                    {active && <Check className="w-4 h-4 text-charcoal-500" />}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
 
           {/* XP Value */}
           <div>

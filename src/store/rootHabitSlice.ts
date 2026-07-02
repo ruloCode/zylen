@@ -12,8 +12,8 @@ import { AchievementsService } from '@/services/supabase/achievements.service';
 export interface RootHabitSlice {
   progress: RootHabitProgress | null;
   checkIns: RootHabitCheckIn[];
-  isLoading: boolean;
-  error: string | null;
+  rootHabitLoading: boolean;
+  rootHabitError: string | null;
   canCheckIn: boolean;
 
   // Actions
@@ -28,13 +28,13 @@ export interface RootHabitSlice {
 export const createRootHabitSlice: StateCreator<RootHabitSlice> = (set) => ({
   progress: null,
   checkIns: [],
-  isLoading: false,
-  error: null,
+  rootHabitLoading: false,
+  rootHabitError: null,
   canCheckIn: false,
 
   loadProgress: async () => {
     try {
-      set({ isLoading: true, error: null });
+      set({ rootHabitLoading: true, rootHabitError: null });
 
       const [progress, checkIns, canCheckIn] = await Promise.all([
         RootHabitService.getProgress(),
@@ -46,20 +46,20 @@ export const createRootHabitSlice: StateCreator<RootHabitSlice> = (set) => ({
         progress,
         checkIns,
         canCheckIn,
-        isLoading: false,
+        rootHabitLoading: false,
       });
     } catch (error) {
       console.error('Error loading root habit progress:', error);
       set({
-        error: error instanceof Error ? error.message : 'Failed to load progress',
-        isLoading: false,
+        rootHabitError: error instanceof Error ? error.message : 'Failed to load progress',
+        rootHabitLoading: false,
       });
     }
   },
 
   checkIn: async () => {
     try {
-      set({ isLoading: true, error: null });
+      set({ rootHabitLoading: true, rootHabitError: null });
 
       const { xpEarned } = await RootHabitService.checkIn();
 
@@ -84,15 +84,15 @@ export const createRootHabitSlice: StateCreator<RootHabitSlice> = (set) => ({
         progress,
         checkIns,
         canCheckIn,
-        isLoading: false,
+        rootHabitLoading: false,
       });
 
       return { xpEarned };
     } catch (error) {
       console.error('Error checking in:', error);
       set({
-        error: error instanceof Error ? error.message : 'Failed to check in',
-        isLoading: false,
+        rootHabitError: error instanceof Error ? error.message : 'Failed to check in',
+        rootHabitLoading: false,
       });
       throw error;
     }
@@ -100,7 +100,7 @@ export const createRootHabitSlice: StateCreator<RootHabitSlice> = (set) => ({
 
   checkInDay: async (dayNumber: number) => {
     try {
-      set({ isLoading: true, error: null });
+      set({ rootHabitLoading: true, rootHabitError: null });
 
       await RootHabitService.checkInDay(dayNumber);
 
@@ -115,13 +115,13 @@ export const createRootHabitSlice: StateCreator<RootHabitSlice> = (set) => ({
         progress,
         checkIns,
         canCheckIn,
-        isLoading: false,
+        rootHabitLoading: false,
       });
     } catch (error) {
       console.error('Error checking in day:', error);
       set({
-        error: error instanceof Error ? error.message : 'Failed to check in day',
-        isLoading: false,
+        rootHabitError: error instanceof Error ? error.message : 'Failed to check in day',
+        rootHabitLoading: false,
       });
       throw error;
     }
@@ -129,7 +129,7 @@ export const createRootHabitSlice: StateCreator<RootHabitSlice> = (set) => ({
 
   deleteCheckIn: async (dayNumber: number) => {
     try {
-      set({ isLoading: true, error: null });
+      set({ rootHabitLoading: true, rootHabitError: null });
 
       await RootHabitService.deleteCheckIn(dayNumber);
 
@@ -144,13 +144,13 @@ export const createRootHabitSlice: StateCreator<RootHabitSlice> = (set) => ({
         progress,
         checkIns,
         canCheckIn,
-        isLoading: false,
+        rootHabitLoading: false,
       });
     } catch (error) {
       console.error('Error deleting check-in:', error);
       set({
-        error: error instanceof Error ? error.message : 'Failed to delete check-in',
-        isLoading: false,
+        rootHabitError: error instanceof Error ? error.message : 'Failed to delete check-in',
+        rootHabitLoading: false,
       });
       throw error;
     }
@@ -158,7 +158,7 @@ export const createRootHabitSlice: StateCreator<RootHabitSlice> = (set) => ({
 
   resetChallenge: async () => {
     try {
-      set({ isLoading: true, error: null });
+      set({ rootHabitLoading: true, rootHabitError: null });
 
       await RootHabitService.resetChallenge();
 
@@ -173,13 +173,13 @@ export const createRootHabitSlice: StateCreator<RootHabitSlice> = (set) => ({
         progress,
         checkIns,
         canCheckIn,
-        isLoading: false,
+        rootHabitLoading: false,
       });
     } catch (error) {
       console.error('Error resetting challenge:', error);
       set({
-        error: error instanceof Error ? error.message : 'Failed to reset challenge',
-        isLoading: false,
+        rootHabitError: error instanceof Error ? error.message : 'Failed to reset challenge',
+        rootHabitLoading: false,
       });
       throw error;
     }

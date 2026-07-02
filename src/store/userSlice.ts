@@ -6,8 +6,8 @@ import { LifeAreasService } from '@/services/supabase/lifeAreas.service';
 export interface UserSlice {
   user: User | null;
   isInitialized: boolean;
-  isLoading: boolean;
-  error: string | null;
+  userLoading: boolean;
+  userError: string | null;
 
   // Actions
   initializeUser: () => Promise<void>;
@@ -26,12 +26,12 @@ export interface UserSlice {
 export const createUserSlice: StateCreator<UserSlice> = (set, get) => ({
   user: null,
   isInitialized: false,
-  isLoading: false,
-  error: null,
+  userLoading: false,
+  userError: null,
 
   initializeUser: async () => {
     try {
-      set({ isLoading: true, error: null });
+      set({ userLoading: true, userError: null });
 
       const user = await UserService.getUser();
 
@@ -39,22 +39,22 @@ export const createUserSlice: StateCreator<UserSlice> = (set, get) => ({
         // Sync timezone with browser automatically
         try {
           const updatedUser = await UserService.syncTimezone();
-          set({ user: updatedUser, isInitialized: true, isLoading: false });
+          set({ user: updatedUser, isInitialized: true, userLoading: false });
         } catch (tzError) {
           // If timezone sync fails, still initialize with the user we have
           console.warn('Failed to sync timezone, continuing with existing user:', tzError);
-          set({ user, isInitialized: true, isLoading: false });
+          set({ user, isInitialized: true, userLoading: false });
         }
       } else {
         // User not found - shouldn't happen if trigger works
         console.warn('User not found after authentication');
-        set({ isInitialized: true, isLoading: false });
+        set({ isInitialized: true, userLoading: false });
       }
     } catch (error) {
       console.error('Error initializing user:', error);
       set({
-        error: error instanceof Error ? error.message : 'Failed to initialize user',
-        isLoading: false,
+        userError: error instanceof Error ? error.message : 'Failed to initialize user',
+        userLoading: false,
         isInitialized: true,
       });
     }
@@ -65,19 +65,19 @@ export const createUserSlice: StateCreator<UserSlice> = (set, get) => ({
       const currentUser = get().user;
       if (!currentUser) return;
 
-      set({ isLoading: true, error: null });
+      set({ userLoading: true, userError: null });
 
       const newPoints = await UserService.updatePoints(delta);
 
       set((state) => ({
         user: state.user ? { ...state.user, points: newPoints } : null,
-        isLoading: false,
+        userLoading: false,
       }));
     } catch (error) {
       console.error('Error updating points:', error);
       set({
-        error: error instanceof Error ? error.message : 'Failed to update points',
-        isLoading: false,
+        userError: error instanceof Error ? error.message : 'Failed to update points',
+        userLoading: false,
       });
     }
   },
@@ -87,7 +87,7 @@ export const createUserSlice: StateCreator<UserSlice> = (set, get) => ({
       const currentUser = get().user;
       if (!currentUser) return;
 
-      set({ isLoading: true, error: null });
+      set({ userLoading: true, userError: null });
 
       const result = await UserService.updateXP(xp);
 
@@ -99,13 +99,13 @@ export const createUserSlice: StateCreator<UserSlice> = (set, get) => ({
               level: result.level,
             }
           : null,
-        isLoading: false,
+        userLoading: false,
       }));
     } catch (error) {
       console.error('Error updating XP:', error);
       set({
-        error: error instanceof Error ? error.message : 'Failed to update XP',
-        isLoading: false,
+        userError: error instanceof Error ? error.message : 'Failed to update XP',
+        userLoading: false,
       });
     }
   },
@@ -119,7 +119,7 @@ export const createUserSlice: StateCreator<UserSlice> = (set, get) => ({
       const currentUser = get().user;
       if (!currentUser) return;
 
-      set({ isLoading: true, error: null });
+      set({ userLoading: true, userError: null });
 
       await UserService.updateUser({ hasCompletedOnboarding: true });
 
@@ -127,13 +127,13 @@ export const createUserSlice: StateCreator<UserSlice> = (set, get) => ({
         user: state.user
           ? { ...state.user, hasCompletedOnboarding: true }
           : null,
-        isLoading: false,
+        userLoading: false,
       }));
     } catch (error) {
       console.error('Error completing onboarding:', error);
       set({
-        error: error instanceof Error ? error.message : 'Failed to complete onboarding',
-        isLoading: false,
+        userError: error instanceof Error ? error.message : 'Failed to complete onboarding',
+        userLoading: false,
       });
     }
   },
@@ -143,7 +143,7 @@ export const createUserSlice: StateCreator<UserSlice> = (set, get) => ({
       const currentUser = get().user;
       if (!currentUser) return;
 
-      set({ isLoading: true, error: null });
+      set({ userLoading: true, userError: null });
 
       const updates: Partial<User> = { name, ...extra };
       if (avatarUrl !== undefined) {
@@ -152,12 +152,12 @@ export const createUserSlice: StateCreator<UserSlice> = (set, get) => ({
 
       const updatedUser = await UserService.updateUser(updates);
 
-      set({ user: updatedUser, isLoading: false });
+      set({ user: updatedUser, userLoading: false });
     } catch (error) {
       console.error('Error updating user profile:', error);
       set({
-        error: error instanceof Error ? error.message : 'Failed to update profile',
-        isLoading: false,
+        userError: error instanceof Error ? error.message : 'Failed to update profile',
+        userLoading: false,
       });
     }
   },
@@ -167,7 +167,7 @@ export const createUserSlice: StateCreator<UserSlice> = (set, get) => ({
       const currentUser = get().user;
       if (!currentUser) return;
 
-      set({ isLoading: true, error: null });
+      set({ userLoading: true, userError: null });
 
       // Enable/disable life areas based on selection
       const allAreas = await LifeAreasService.getLifeAreas();
@@ -186,13 +186,13 @@ export const createUserSlice: StateCreator<UserSlice> = (set, get) => ({
         user: state.user
           ? { ...state.user, selectedLifeAreas: areaIds }
           : null,
-        isLoading: false,
+        userLoading: false,
       }));
     } catch (error) {
       console.error('Error updating selected life areas:', error);
       set({
-        error: error instanceof Error ? error.message : 'Failed to update life areas',
-        isLoading: false,
+        userError: error instanceof Error ? error.message : 'Failed to update life areas',
+        userLoading: false,
       });
     }
   },

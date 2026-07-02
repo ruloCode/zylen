@@ -54,34 +54,50 @@ export function LevelUpNotification({
   return (
     <div
       className={cn(
-        'fixed top-4 left-1/2 -translate-x-1/2 z-50',
+        'fixed inset-0 z-[120] grid place-items-center p-6',
         'transition-all duration-300 ease-out',
-        isVisible && !isLeaving
-          ? 'opacity-100 translate-y-0'
-          : 'opacity-0 -translate-y-4'
+        isVisible && !isLeaving ? 'opacity-100' : 'opacity-0 pointer-events-none'
       )}
+      onClick={handleClose}
+      role="dialog"
+      aria-label={title}
     >
+      {/* Dim + blur backdrop */}
+      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" aria-hidden="true" />
+
       <div
         className={cn(
-          'glass-card p-6 min-w-[320px]',
-          'bg-gradient-to-br from-gold-500/20 to-gold-600/20',
-          'border-2 border-gold-400',
-          'shadow-2xl',
-          'relative overflow-hidden'
+          'glass-card p-7 w-full max-w-[340px] relative overflow-hidden',
+          'bg-gradient-to-br from-gold-500/25 to-gold-600/10',
+          'border-2 border-gold-400 shadow-2xl',
+          'animate-pop-in motion-reduce:animate-none'
         )}
+        onClick={(e) => e.stopPropagation()}
       >
-        {/* Sparkle background effect */}
-        <div className="absolute inset-0 opacity-20">
-          <Sparkles className="absolute top-2 right-2 text-gold-300 animate-pulse" size={24} />
-          <Sparkles className="absolute bottom-2 left-2 text-gold-300 animate-pulse delay-100" size={16} />
-          <Sparkles className="absolute top-1/2 left-1/4 text-gold-300 animate-pulse delay-200" size={20} />
+        {/* Golden shimmer sweep */}
+        <div
+          className="absolute inset-0 animate-shimmer-gold motion-reduce:hidden opacity-40 pointer-events-none"
+          style={{
+            background:
+              'linear-gradient(105deg, transparent 40%, rgba(242,201,76,0.35) 50%, transparent 60%)',
+            backgroundSize: '200% 100%',
+          }}
+          aria-hidden="true"
+        />
+
+        {/* Rising sparkles */}
+        <div className="absolute inset-0 pointer-events-none motion-reduce:hidden" aria-hidden="true">
+          <Sparkles className="absolute top-4 right-5 text-gold-300 animate-sparkle-rise" size={20} />
+          <Sparkles className="absolute bottom-8 left-5 text-gold-300 animate-sparkle-rise animation-delay-200" size={14} />
+          <Sparkles className="absolute top-1/3 left-8 text-gold-300 animate-sparkle-rise animation-delay-500" size={16} />
+          <Sparkles className="absolute bottom-5 right-10 text-gold-300 animate-sparkle-rise animation-delay-300" size={12} />
         </div>
 
         {/* Content */}
         <div className="relative z-10 flex flex-col items-center gap-3 text-center">
           {/* Icon */}
-          <div className="flex items-center justify-center w-16 h-16 rounded-full bg-gold-400/20 border-2 border-gold-400">
-            <Trophy className="text-gold-300" size={32} />
+          <div className="flex items-center justify-center w-20 h-20 rounded-full bg-gold-400/20 border-2 border-gold-400 animate-glow-pulse">
+            <Trophy className="text-gold-300" size={40} />
           </div>
 
           {/* Title */}
@@ -90,7 +106,7 @@ export function LevelUpNotification({
           </h3>
 
           {/* Level Badge */}
-          <div className="px-6 py-2 rounded-full bg-gradient-to-r from-gold-400 to-gold-500 text-charcoal-900 font-bold text-xl shadow-lg">
+          <div className="px-7 py-2.5 rounded-full bg-gradient-to-r from-gold-400 to-gold-500 text-charcoal-900 font-bold text-2xl shadow-lg">
             {t('levelUp.levelLabel', { level })}
           </div>
 
@@ -102,10 +118,10 @@ export function LevelUpNotification({
             </div>
           )}
 
-          {/* Close button (click anywhere) */}
+          {/* Close */}
           <button
             onClick={handleClose}
-            className="mt-2 text-sm text-pale-200/60 hover:text-pale-100 transition-colors"
+            className="mt-2 px-6 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-sm font-semibold text-pale-100 transition-colors"
           >
             {t('levelUp.dismiss')}
           </button>
