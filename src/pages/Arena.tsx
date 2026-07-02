@@ -12,6 +12,7 @@ import {
   ARENA_GEMS,
   MAX_EQUIPPED_GEMS,
   tierRewardMultiplier,
+  AVATAR_OPTIONS,
 } from '@/constants';
 import { GEM_SPECIES } from '@/types/focus';
 import {
@@ -89,6 +90,8 @@ export function Arena() {
       weapon: progress.weaponId,
       gems: [...progress.gems, focusGemsParam].filter(Boolean).join(','),
       level: String(Math.max(1, user.level || 1)),   // the hero enters at their real Everlight level
+      // in-arena hero model mirrors the chosen app avatar (Dani → 'f', Rulo → 'm')
+      skin: AVATAR_OPTIONS.find((o) => o.url === user.avatarUrl)?.id === 'dani' ? 'f' : 'm',
     });
     if (user.avatarUrl) {
       params.set('avatar', new URL(user.avatarUrl, window.location.origin).href);
@@ -123,6 +126,8 @@ export function Arena() {
       if (event.origin !== GAME_ORIGIN) return;
       if (event.data?.source !== 'everlight-game') return;
       if (event.data.event === 'victory') void handleVictory(event.data.tier ?? tier);
+      // defeat screen's "Ir a la Armería" → back to the gear pre-lobby
+      if (event.data.event === 'armory') { setView('armory'); setLoaded(false); }
     }
     window.addEventListener('message', onMessage);
     return () => window.removeEventListener('message', onMessage);
