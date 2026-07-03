@@ -34,6 +34,7 @@ import { ROUTES, getHeroBodySrc, getHeroVideoSources, LIFE_AREA_CATALOG } from '
 import { useLocale } from '@/hooks/useLocale';
 import { getLevelProgress } from '@/utils/xp';
 import { getGreetingKey, getDailyQuoteIndex } from '@/utils/greeting';
+import { useGuardian, GuardianCard, DarknessOverlay } from '@/features/guardian';
 
 // Hero is composed of two independent layers (swappable / animatable):
 // the jungle background and the transparent character. Both live in /public.
@@ -58,6 +59,9 @@ export function Dashboard() {
     ? getLevelProgress(user.totalXPEarned, user.level)
     : { current: 0, max: 0, percentage: 0 };
   const animatedXP = useAnimatedNumber(levelProgress.current);
+
+  // El Guardián: daily guidance message + avatar darkness (0-100).
+  const { darkness, message: guardianMessage } = useGuardian();
 
   const isLoading = userLoading || streakLoading;
 
@@ -97,7 +101,18 @@ export function Dashboard() {
           fixed PERCENTAGE of the container regardless of screen size. The
           character is then placed by a percentage too, so feet always land on
           the platform centre (see ASSET ALIGNMENT note below). */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-md aspect-[941/1672] -z-0 bg-[hsl(var(--background))] overflow-hidden">
+      <div
+        className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-md aspect-[941/1672] -z-0 bg-[hsl(var(--background))] overflow-hidden"
+        // Darkness dims and desaturates the whole scene (bg + character + 3D
+        // canvas) via a plain CSS filter — the Three.js scene stays untouched.
+        style={{
+          filter:
+            darkness > 0
+              ? `grayscale(${Math.round(darkness * 0.6)}%) brightness(${100 - Math.round(darkness * 0.35)}%)`
+              : undefined,
+          transition: 'filter 700ms ease',
+        }}
+      >
         {/* Layer 0 — background scene (swappable / themable). aspect matches the
             container, so object-cover shows the whole image without cropping. */}
         <img
@@ -133,6 +148,8 @@ export function Dashboard() {
           className="absolute inset-0"
           imgClassName="absolute bottom-[24.4%] left-1/2 -translate-x-1/2 w-[58%] h-auto object-contain drop-shadow-[0_14px_14px_rgba(0,0,0,0.5)]"
         />
+        {/* Layer 2 — purple fog + particles when darkness accumulates */}
+        <DarknessOverlay darkness={darkness} />
       </div>
 
       {/* ── Foreground content ── */}
@@ -259,7 +276,7 @@ export function Dashboard() {
         <button
           type="button"
           onClick={comingSoon}
-          className="w-full glass-card p-4 flex items-center gap-3 text-left mt-3 mb-7"
+          className="w-full glass-card p-4 flex items-center gap-3 text-left mt-3 mb-3"
         >
           <span className="shrink-0 w-11 h-11 rounded-full bg-gold-500/15 flex items-center justify-center">
             <Compass size={22} className="text-gold-400" />
@@ -270,6 +287,9 @@ export function Dashboard() {
           </span>
           <ChevronRight size={20} className="text-white/40 shrink-0" />
         </button>
+
+        {/* El Guardián — daily guidance based on recent behaviour */}
+        <GuardianCard message={guardianMessage} darkness={darkness} className="mb-7" />
 
         {/* Arena — the embedded Everlight co-op game (Templo del Desorden) */}
         <section aria-labelledby="arena-heading" className="mb-7">

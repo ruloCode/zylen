@@ -467,6 +467,30 @@
     border-radius: 1.25rem;
   }
 
+  /* Guardian darkness particles — slow rise + fade over the hero */
+  @keyframes guardian-float {
+    0% {
+      transform: translateY(0);
+      opacity: 0;
+    }
+    20% {
+      opacity: 1;
+    }
+    70% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(-90px);
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .guardian-particle {
+      animation: none !important;
+    }
+  }
+
   /* Vibrant card for life areas */
   .vibrant-card {
     border-radius: 1rem;

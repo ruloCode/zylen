@@ -18,6 +18,7 @@ import { getAreaLevelProgress } from '@/utils/xp';
 import { getHeroBodySrc, getLifeAreaMeta, ROUTES } from '@/constants';
 import { getIcon } from '@/components/atoms/icons/iconMaps';
 import { StatsService, type DailyActivity } from '@/services/supabase/stats.service';
+import { CompletionTimesChart } from '@/features/streaks/components';
 
 // The character body is resolved from the user's chosen avatar (see getHeroBodySrc).
 const HERO_BG_SRC = '/hero-bg.png';
@@ -34,10 +35,15 @@ export function Streaks() {
 
   // Real daily activity (XP per local day) from habit_completions.
   const [activity, setActivity] = useState<DailyActivity[]>([]);
+  // Raw completion timestamps (last 30 days) for the time-of-day chart.
+  const [completionTimes, setCompletionTimes] = useState<Date[]>([]);
   useEffect(() => {
     let alive = true;
     StatsService.getDailyActivity(7).then((rows) => {
       if (alive) setActivity(rows);
+    });
+    StatsService.getCompletionTimestamps(30).then((times) => {
+      if (alive) setCompletionTimes(times);
     });
     return () => {
       alive = false;
@@ -295,6 +301,9 @@ export function Streaks() {
             );
           })()}
         </section>
+
+        {/* ── Horas de completado (distribución 0-23h, últimos 30 días) ── */}
+        <CompletionTimesChart timestamps={completionTimes} className={`${card} mb-4`} />
 
         {/* ── Áreas de enfoque ── */}
         <section className={`${card} mb-4`}>

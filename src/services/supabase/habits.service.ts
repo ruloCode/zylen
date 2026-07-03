@@ -18,7 +18,8 @@ import type {
   RelapseResult,
 } from '@/types/habit';
 import { HabitsServiceError, HABIT_ERROR_CODES } from '@/types/errors';
-import { getAuthUserId, getTodayDateRange } from './utils';
+import { getAuthUserId, getTodayDateRange, getDateRange } from './utils';
+import { formatDayKeyInTimeZone, getProfileTimezone } from './timezone';
 import { mapHabitRowToHabit, mapHabitCompletionRowToHabitCompletion } from './mappers';
 import { trackHabitCompletion } from './leaderboard.service';
 
@@ -391,23 +392,14 @@ export class HabitsService {
     try {
       const userId = await getAuthUserId();
 
-      const startOfDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-      const endOfDay = new Date(
-        date.getFullYear(),
-        date.getMonth(),
-        date.getDate(),
-        23,
-        59,
-        59,
-        999
-      );
+      const { start, end } = getDateRange(date);
 
       const { data, error } = await supabase
         .from('habit_completions')
         .select('*')
         .eq('user_id', userId)
-        .gte('completed_at', startOfDay.toISOString())
-        .lte('completed_at', endOfDay.toISOString());
+        .gte('completed_at', start)
+        .lte('completed_at', end);
 
       if (error) {
         throw new HabitsServiceError(error.message);
@@ -449,13 +441,11 @@ export class HabitsService {
         return [];
       }
 
-      // Aggregate by local YYYY-MM-DD
+      // Aggregate by YYYY-MM-DD in the user's stored timezone (matches backend)
+      const tz = getProfileTimezone();
       const map = new Map<string, { count: number; value: number }>();
       for (const row of data) {
-        const d = new Date(row.completed_at);
-        const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(
-          d.getDate()
-        ).padStart(2, '0')}`;
+        const key = formatDayKeyInTimeZone(tz, new Date(row.completed_at));
         const cur = map.get(key) || { count: 0, value: 0 };
         cur.count += 1;
         cur.value += Number(row.value || 0);

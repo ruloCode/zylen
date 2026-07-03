@@ -2,6 +2,7 @@ import { StateCreator } from 'zustand';
 import { User } from '@/types';
 import { UserService } from '@/services/supabase/user.service';
 import { LifeAreasService } from '@/services/supabase/lifeAreas.service';
+import { setProfileTimezone } from '@/services/supabase/timezone';
 
 export interface UserSlice {
   user: User | null;
@@ -39,10 +40,12 @@ export const createUserSlice: StateCreator<UserSlice> = (set, get) => ({
         // Sync timezone with browser automatically
         try {
           const updatedUser = await UserService.syncTimezone();
+          setProfileTimezone(updatedUser.timezone);
           set({ user: updatedUser, isInitialized: true, userLoading: false });
         } catch (tzError) {
           // If timezone sync fails, still initialize with the user we have
           console.warn('Failed to sync timezone, continuing with existing user:', tzError);
+          setProfileTimezone(user.timezone);
           set({ user, isInitialized: true, userLoading: false });
         }
       } else {
