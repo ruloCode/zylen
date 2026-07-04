@@ -9,6 +9,7 @@ import {
   type LucideIcon
 } from 'lucide-react';
 import { cn } from '@/utils/cn';
+import { useLocale } from '@/hooks/useLocale';
 
 /**
  * Available icons for habits
@@ -67,6 +68,8 @@ interface IconSelectorProps {
 }
 
 export function IconSelector({ selectedIcon, onSelectIcon }: IconSelectorProps) {
+  const { t } = useLocale();
+
   return (
     <div className="grid grid-cols-6 gap-2">
       {Object.entries(HABIT_ICONS).map(([name, Icon]) => (
@@ -82,7 +85,7 @@ export function IconSelector({ selectedIcon, onSelectIcon }: IconSelectorProps) 
               ? 'bg-teal-500 text-white scale-110 shadow-lg'
               : 'bg-white/10 text-white'
           )}
-          aria-label={name}
+          aria-label={t(`icons.${name}`, name)}
           aria-pressed={selectedIcon === name}
         >
           <Icon className="w-6 h-6" />

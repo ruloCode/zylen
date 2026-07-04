@@ -11,10 +11,8 @@ import { MoodService, localDateKey } from '@/services/mood.service';
 import { MOODS, moodByLevel, type MoodLevel, type MoodEntry } from '@/types/mood';
 import { cn } from '@/utils/cn';
 
-const WEEKDAYS_ES = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
-
 export function Mood() {
-  const { t } = useLocale();
+  const { t, language } = useLocale();
   const [entries, setEntries] = useState<MoodEntry[]>(() => MoodService.getAll());
   const todayKey = localDateKey();
   const todayEntry = entries.find((e) => e.date === todayKey);
@@ -63,7 +61,12 @@ export function Mood() {
     return cells;
   }, [month, entryMap]);
 
-  const monthLabel = month.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+  const rawWeekdays = t('mood.weekdaysNarrow', { returnObjects: true }) as string[];
+  const weekdays = Array.isArray(rawWeekdays) && rawWeekdays.length === 7
+    ? rawWeekdays
+    : ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
+
+  const monthLabel = month.toLocaleDateString(language, { month: 'long', year: 'numeric' });
   const avgMood = average !== null ? moodByLevel(Math.round(average) as MoodLevel) : null;
 
   return (
@@ -154,7 +157,7 @@ export function Mood() {
             <button
               onClick={() => setMonth(new Date(month.getFullYear(), month.getMonth() - 1, 1))}
               className="w-8 h-8 rounded-lg grid place-items-center bg-white/5 text-white/70 hover:bg-white/10"
-              aria-label="prev month"
+              aria-label={t('mood.prevMonth')}
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
@@ -162,13 +165,13 @@ export function Mood() {
             <button
               onClick={() => setMonth(new Date(month.getFullYear(), month.getMonth() + 1, 1))}
               className="w-8 h-8 rounded-lg grid place-items-center bg-white/5 text-white/70 hover:bg-white/10"
-              aria-label="next month"
+              aria-label={t('mood.nextMonth')}
             >
               <ChevronRight className="w-4 h-4" />
             </button>
           </div>
           <div className="grid grid-cols-7 gap-1.5 mb-1.5">
-            {WEEKDAYS_ES.map((d, i) => (
+            {weekdays.map((d, i) => (
               <div key={i} className="text-center text-[10px] font-semibold text-white/40">
                 {d}
               </div>

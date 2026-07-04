@@ -25,6 +25,7 @@ import {
   PORTAL_ANCHOR,
   anchorFor,
 } from '../utils/platformAnchors';
+import { displayGemName } from '../utils/displayGemName';
 
 interface VaultPlatformProps {
   /** Newest-first sessions of the selected period (pre-filtered, ≤ grid size). */
@@ -88,7 +89,9 @@ export function VaultPlatform({ sessions, periodStats }: VaultPlatformProps) {
               animationDelay: `${Math.min(i, 15) * 45}ms`,
               animationFillMode: 'backwards',
             }}
-            title={session.gemName ?? undefined}
+            title={
+              session.gemName ? displayGemName(session.gemName, t) : undefined
+            }
           >
             {/* Species-colored ground glow */}
             {!broken && (

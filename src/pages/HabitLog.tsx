@@ -40,7 +40,7 @@ export function HabitLog() {
   // Use the new async hooks
   const { habits, isLoading, loadHabits, addHabit, updateHabit, completeHabit, uncompleteHabit, recordRelapse } = useHabits();
   const { user } = useUser();
-  const { streak } = useStreaks();
+  const { streak, refreshStreak } = useStreaks();
 
   // State for level up notifications
   const [levelUpNotification, setLevelUpNotification] = useState<LevelUpState | null>(null);
@@ -63,10 +63,14 @@ export function HabitLog() {
   // Active time-of-day filter pill
   const [activeFilter, setActiveFilter] = useState<RoutineFilter>('all');
 
-  // Load habits on mount
+  // Load habits + realign the streak strip on mount. refreshStreak recomputes
+  // last_seven_days so its last slot is *today* even if nothing was completed
+  // yet — otherwise the weekly tracker could show a stale (previous) day.
+  // The midnight rollover itself is handled app-wide in AppProvider.
   useEffect(() => {
     loadHabits();
-  }, [loadHabits]);
+    refreshStreak();
+  }, [loadHabits, refreshStreak]);
 
   /**
    * Handle habit completion
@@ -87,7 +91,7 @@ export function HabitLog() {
 
       // Success toast with the real XP awarded + bonus/cap hints
       const bonusPercent = Math.round(((result.streakMultiplier ?? 1) - 1) * 100);
-      let message = `${t('habits.habitCompleted')} +${result.xpEarned} XP`;
+      let message = `${t('habits.habitCompleted')} +${result.xpEarned} ${t('common.xp')}`;
       if (bonusPercent > 0) {
         message += ` · ${t('habits.streakBonus', { percent: bonusPercent })}`;
       }
@@ -132,7 +136,7 @@ export function HabitLog() {
           pointsReward: calculateGlobalLevelUpReward(result.newLevel),
         });
       }
-      toast.success(`${t('timer.logged')} +${result.xpEarned} XP`);
+      toast.success(`${t('timer.logged')} +${result.xpEarned} ${t('common.xp')}`);
     } catch (error) {
       console.error('Error logging value:', error);
       toast.error(t('errors.habitCompleteFailed'));
@@ -229,12 +233,30 @@ export function HabitLog() {
     : { current: 0, max: 0, percentage: 0 };
 
   // Weekly streak data from the server-refreshed streak (never invented).
+  // lastSevenDays is oldest-first with index 6 = TODAY (server computes it in
+  // the user's timezone, kept in sync with the device; refreshStreak realigns
+  // it on load). We render a fixed Monday→Sunday calendar week aligned to the
+  // device's local date, so "today" lights up its real weekday column instead
+  // of always sitting in the last (Sunday) slot.
   const weekdaysShort = (t('routines.weekdaysShort', { returnObjects: true }) as string[]) || [];
   const lastSevenDays: boolean[] =
     streak?.lastSevenDays && streak.lastSevenDays.length === 7
       ? streak.lastSevenDays
       : [false, false, false, false, false, false, false];
   const currentStreak = streak?.currentStreak ?? 0;
+
+  // Monday-based index of today: JS getDay() is 0=Sun..6=Sat.
+  const todayMondayIndex = (new Date().getDay() + 6) % 7;
+  const weekDays = weekdaysShort.map((label, position) => {
+    // offset < 0 → earlier this week · 0 → today · > 0 → still to come
+    const offset = position - todayMondayIndex;
+    return {
+      label,
+      isToday: offset === 0,
+      isUpcoming: offset > 0,
+      completed: offset <= 0 ? lastSevenDays[6 + offset] ?? false : false,
+    };
+  });
 
   // Filter pills config, backed by the habit's time_of_day field.
   const filters: { key: RoutineFilter; label: string; icon: typeof LayoutGrid }[] = [
@@ -310,7 +332,7 @@ export function HabitLog() {
                         {t('home.levelLabel', { level: user?.level ?? 1 })}
                       </span>
                       <span className="text-white/55 text-[7px] font-medium mt-0.5">
-                        {levelProgress.current} / {levelProgress.max} XP
+                        {levelProgress.current} / {levelProgress.max} {t('common.xp')}
                       </span>
                     </div>
                   </CircularProgress>
@@ -391,38 +413,42 @@ export function HabitLog() {
                 className="pointer-events-none absolute left-4 right-4 top-4 -translate-y-1/2 h-0.5 rounded-full bg-white/10"
               />
               <div className="relative flex justify-between gap-1">
-                {weekdaysShort.map((day, index) => {
-                  const isToday = index === weekdaysShort.length - 1;
-                  const completed = lastSevenDays[index] ?? false;
-                  return (
-                    <div
-                      key={`${day}-${index}`}
-                      className="relative z-10 flex flex-col items-center gap-1.5 min-w-0"
-                    >
-                      {completed ? (
-                        <span className="w-8 h-8 rounded-full grid place-items-center bg-gradient-to-br from-success-400 to-success-600 text-white ring-1 ring-inset ring-white/25 shadow-[0_0_10px_hsl(150_55%_45%/0.55)]">
-                          <Check size={15} strokeWidth={3} />
-                        </span>
-                      ) : isToday ? (
-                        <span
-                          className="w-8 h-8 rounded-full grid place-items-center bg-teal-400/10 ring-2 ring-teal-400/60 animate-glow-pulse"
-                          aria-label={t('routines.today')}
-                        >
-                          <span className="w-1.5 h-1.5 rounded-full bg-teal-300" />
-                        </span>
-                      ) : (
-                        <span className="w-8 h-8 rounded-full bg-white/[0.04] ring-1 ring-inset ring-white/[0.06]" />
-                      )}
-                      <span
-                        className={`text-[10px] font-semibold truncate max-w-full ${
-                          isToday ? 'text-teal-300' : 'text-white/45'
-                        }`}
-                      >
-                        {isToday ? t('routines.today') : day}
+                {weekDays.map(({ label, isToday, isUpcoming, completed }, index) => (
+                  <div
+                    key={`${label}-${index}`}
+                    className="relative z-10 flex flex-col items-center gap-1.5 min-w-0"
+                  >
+                    {completed ? (
+                      <span className="w-8 h-8 rounded-full grid place-items-center bg-gradient-to-br from-success-400 to-success-600 text-white ring-1 ring-inset ring-white/25 shadow-[0_0_10px_hsl(150_55%_45%/0.55)]">
+                        <Check size={15} strokeWidth={3} />
                       </span>
-                    </div>
-                  );
-                })}
+                    ) : isToday ? (
+                      <span
+                        className="w-8 h-8 rounded-full grid place-items-center bg-teal-400/10 ring-2 ring-teal-400/60 animate-glow-pulse"
+                        aria-label={t('routines.today')}
+                      >
+                        <span className="w-1.5 h-1.5 rounded-full bg-teal-300" />
+                      </span>
+                    ) : (
+                      <span
+                        className={`w-8 h-8 rounded-full bg-white/[0.04] ring-1 ring-inset ring-white/[0.06] ${
+                          isUpcoming ? 'opacity-40' : ''
+                        }`}
+                      />
+                    )}
+                    <span
+                      className={`text-[10px] font-semibold truncate max-w-full ${
+                        isToday
+                          ? 'text-teal-300'
+                          : isUpcoming
+                            ? 'text-white/25'
+                            : 'text-white/45'
+                      }`}
+                    >
+                      {isToday ? t('routines.today') : label}
+                    </span>
+                  </div>
+                ))}
               </div>
             </div>
           </section>

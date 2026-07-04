@@ -21,7 +21,6 @@ import type {
 import { FocusService } from '@/services/supabase/focus.service';
 import { AchievementsService } from '@/services/supabase/achievements.service';
 import { getAreaLevelFromXP, getLevelFromXP } from '@/utils/xp';
-import i18n from '@/services/i18n';
 
 const shouldSkipAuth =
   import.meta.env.DEV && import.meta.env.VITE_SKIP_AUTH === 'true';
@@ -79,12 +78,13 @@ export const createFocusSlice: StateCreator<AppStore, [], [], FocusSlice> = (
       ]);
 
       // Invariant: the user always has at least one gem ready to grow, so
-      // the very first session needs zero setup.
+      // the very first session needs zero setup. The name is stored as the
+      // sentinel i18n key and translated at render time (displayGemName).
       let allGems = gems;
       if (gems.length === 0) {
         try {
           const starter = await FocusService.createGem({
-            name: i18n.t('focus.starterGem'),
+            name: 'focus.starterGem',
             species: 'career',
           });
           allGems = [starter];

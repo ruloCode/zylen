@@ -4,6 +4,7 @@
  */
 
 import React, { useMemo } from 'react';
+import { useLocale } from '@/hooks/useLocale';
 import type { HabitDayLog } from '@/types';
 
 interface HabitHeatmapProps {
@@ -25,10 +26,17 @@ function dateKey(d: Date): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
-const MONTHS_ES = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
-
 export function HabitHeatmap({ history, weeks = 26, accent = 'teal' }: HabitHeatmapProps) {
+  const { language } = useLocale();
   const colors = ACCENTS[accent] || ACCENTS.teal;
+
+  const monthNames = useMemo(() => {
+    const formatter = new Intl.DateTimeFormat(language === 'en' ? 'en' : 'es', { month: 'short' });
+    return Array.from({ length: 12 }, (_, m) => {
+      const label = formatter.format(new Date(2024, m, 1)).replace('.', '');
+      return label.charAt(0).toUpperCase() + label.slice(1);
+    });
+  }, [language]);
 
   const { columns, monthLabels } = useMemo(() => {
     const map = new Map(history.map((h) => [h.date, h]));
@@ -63,14 +71,14 @@ export function HabitHeatmap({ history, weeks = 26, accent = 'teal' }: HabitHeat
         col.push({ date: cur, key, level, inFuture: cur > today });
         // month label on first row when month changes
         if (d === 0 && cur.getMonth() !== lastMonth) {
-          labels.push({ col: colIndex, text: MONTHS_ES[cur.getMonth()] });
+          labels.push({ col: colIndex, text: monthNames[cur.getMonth()] });
           lastMonth = cur.getMonth();
         }
       }
       cols.push(col);
     }
     return { columns: cols, monthLabels: labels };
-  }, [history, weeks]);
+  }, [history, weeks, monthNames]);
 
   return (
     <div className="overflow-x-auto">

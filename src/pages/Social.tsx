@@ -82,7 +82,7 @@ export function Social() {
   };
 
   const handleRemoveFriend = async (friendshipId: string, username: string) => {
-    if (confirm(t('social.removeFriend') + ` @${username}?`)) {
+    if (confirm(t('social.confirmRemoveFriend', { username }))) {
       try {
         await removeFriend(friendshipId);
         toast.success(t('social.friendRemoved', { username }));
@@ -165,7 +165,7 @@ export function Social() {
                         <div>
                           <p className="font-semibold text-white">@{friend.username}</p>
                           <p className="text-sm text-white/70">
-                            {t('common.level')} {friend.level} • {friend.currentStreak} {t('streaks.current')}
+                            {t('common.level')} {friend.level} • {t('social.streakDays', { count: friend.currentStreak })}
                           </p>
                         </div>
                       </div>
@@ -306,7 +306,7 @@ export function Social() {
                           <div>
                             <p className="font-semibold text-white">@{user.username}</p>
                             <p className="text-sm text-white/70">
-                              {t('common.level')} {user.level} • {user.currentStreak} {t('streaks.current')}
+                              {t('common.level')} {user.level} • {t('social.streakDays', { count: user.currentStreak })}
                             </p>
                           </div>
                         </div>

@@ -50,16 +50,16 @@ export function Login() {
       return;
     }
     setSubmitting(true);
-    const { success, error } =
+    const res =
       mode === 'signup'
         ? await signUpWithPassword(value, password)
         : await signInWithPassword(value, password);
     setSubmitting(false);
-    if (success) {
+    if (res.success) {
       toast.success(mode === 'signup' ? t('auth.accountCreated') : t('auth.welcomeBack'));
       // Navigation happens via the auth state effect once the session is set.
     } else {
-      toast.error(error || t('errors.authenticationFailed'));
+      toast.error(t((res.errorKey ?? 'errors.authenticationFailed') as any));
     }
   };
 

@@ -7,12 +7,58 @@
 
 import { supabase } from '@/lib/supabase';
 import type { Streak, StreakData } from '@/types/streak';
+import type { StreakSnapshot } from '@/types/habit';
 import { StreaksServiceError, STREAK_ERROR_CODES } from '@/types/errors';
 import { STREAK_CONFIG } from '@/constants';
 import { getAuthUserId } from './utils';
 import { mapStreakRowToStreak } from './mappers';
 
 export class StreaksService {
+  /**
+   * Recompute the streak from habit_completions in the user's timezone.
+   *
+   * The stored `last_seven_days` array is only rewritten when a habit is
+   * completed/uncompleted (via refresh_user_streak inside those RPCs). On a
+   * fresh day where nothing has been completed yet, the stored array's last
+   * slot still points at the previous active day. Calling this realigns the
+   * array so index 6 is *today* — which the weekly strip relies on — and
+   * recomputes the current streak (a streak ending yesterday stays alive).
+   */
+  static async refreshStreak(): Promise<Streak | null> {
+    try {
+      const userId = await getAuthUserId();
+
+      const { data, error } = await supabase.rpc('refresh_user_streak', {
+        p_user_id: userId,
+      });
+
+      if (error) {
+        throw new StreaksServiceError(
+          error.message,
+          STREAK_ERROR_CODES.UPDATE_FAILED
+        );
+      }
+
+      const snapshot = data as unknown as StreakSnapshot;
+      return {
+        currentStreak: snapshot.current_streak,
+        weeklyStreak: snapshot.last_seven_days.filter(Boolean).length,
+        longestStreak: snapshot.longest_streak,
+        lastSevenDays: snapshot.last_seven_days,
+        lastCompletionDate: snapshot.last_completion_date
+          ? new Date(snapshot.last_completion_date)
+          : undefined,
+      };
+    } catch (error) {
+      if (error instanceof StreaksServiceError) throw error;
+      console.error('Error in StreaksService.refreshStreak:', error);
+      throw new StreaksServiceError(
+        'Failed to refresh streak',
+        STREAK_ERROR_CODES.UPDATE_FAILED
+      );
+    }
+  }
+
   /**
    * Get current user's streak data
    */

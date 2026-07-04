@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { X } from 'lucide-react';
 import { cn } from '@/utils/cn';
+import { useLocale } from '@/hooks/useLocale';
 
 export interface ModalProps {
   /** Whether the modal is open */
@@ -36,6 +37,8 @@ export function Modal({
   showCloseButton = true,
   className,
 }: ModalProps) {
+  const { t } = useLocale();
+
   // Handle ESC key press
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -93,7 +96,7 @@ export function Modal({
                 type="button"
                 onClick={onClose}
                 className="p-2 rounded-xl hover:bg-white/10 transition-colors ml-auto"
-                aria-label="Close modal"
+                aria-label={t('common.close')}
               >
                 <X className="w-6 h-6 text-white" />
               </button>

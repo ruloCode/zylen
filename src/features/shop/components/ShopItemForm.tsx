@@ -24,7 +24,7 @@ export function ShopItemForm({ item, onSubmit, onCancel }: ShopItemFormProps) {
   };
 
   // Check if this is a predefined/default item
-  const isPredefinedItem = item?.id?.startsWith('default-') || false;
+  const isPredefinedItem = item ? isTranslationKey(item.name) : false;
 
   // Get initial values - translate if it's a translation key
   const getInitialName = () => {
@@ -171,9 +171,9 @@ export function ShopItemForm({ item, onSubmit, onCancel }: ShopItemFormProps) {
             <div className="flex items-start gap-3 p-4 bg-warning/10 border border-warning/30 rounded-xl">
               <AlertCircle className="w-5 h-5 text-warning flex-shrink-0 mt-0.5" />
               <div className="text-sm">
-                <p className="font-semibold text-charcoal-500 mb-1">Default Item</p>
+                <p className="font-semibold text-charcoal-500 mb-1">{t('shopManager.defaultItemTitle')}</p>
                 <p className="text-gray-600">
-                  You can modify the cost, icon, and category. Name and description will remain as defined in translations.
+                  {t('shopManager.defaultItemBody')}
                 </p>
               </div>
             </div>
@@ -183,7 +183,7 @@ export function ShopItemForm({ item, onSubmit, onCancel }: ShopItemFormProps) {
           <div>
             <label htmlFor="item-name" className="block text-sm font-semibold text-charcoal-500 mb-2">
               {t('shopManager.itemName')}
-              {isPredefinedItem && <span className="ml-2 text-xs text-gray-500">(Read-only for default items)</span>}
+              {isPredefinedItem && <span className="ml-2 text-xs text-gray-500">{t('shopManager.defaultItemReadOnly')}</span>}
             </label>
             <input
               id="item-name"
@@ -216,7 +216,7 @@ export function ShopItemForm({ item, onSubmit, onCancel }: ShopItemFormProps) {
           <div>
             <label htmlFor="description" className="block text-sm font-semibold text-charcoal-500 mb-2">
               {t('shopManager.description')}
-              {isPredefinedItem && <span className="ml-2 text-xs text-gray-500">(Read-only for default items)</span>}
+              {isPredefinedItem && <span className="ml-2 text-xs text-gray-500">{t('shopManager.defaultItemReadOnly')}</span>}
             </label>
             <textarea
               id="description"
@@ -309,7 +309,7 @@ export function ShopItemForm({ item, onSubmit, onCancel }: ShopItemFormProps) {
                 {SelectedIcon && <SelectedIcon className="w-6 h-6 text-white" />}
               </div>
               <span className="text-sm font-medium text-charcoal-500">
-                {t('shopManager.selectedIcon')}: <span className="text-gold-700">{iconName}</span>
+                {t('shopManager.selectedIcon')}
               </span>
             </div>
             <IconSelector selectedIcon={iconName} onSelectIcon={setIconName} />

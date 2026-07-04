@@ -20,6 +20,7 @@ import type {
 } from '@/types/focus';
 import { useFocusTimer, formatCountdown } from '../hooks/useFocusTimer';
 import { gemStageImage, speciesMeta, stageForProgress } from '../utils/gemAssets';
+import { displayGemName } from '../utils/displayGemName';
 
 interface FocusSessionScreenProps {
   onCompleted: (result: CompleteFocusSessionResult) => void;
@@ -164,7 +165,7 @@ export function FocusSessionScreen({
         {/* Gem name + stage label */}
         <div className="text-center">
           <p className="text-white font-bold text-lg">
-            {activeFocusSession.gemName}
+            {displayGemName(activeFocusSession.gemName, t)}
           </p>
           <p className="text-sm font-semibold mt-0.5" style={{ color: meta.color }}>
             {t(`focus.stage${stage}`)}

@@ -106,9 +106,7 @@ export function Onboarding() {
       navigate(ROUTES.DASHBOARD, { replace: true });
     } catch (error) {
       console.error('Error completing onboarding:', error);
-      toast.error(
-        t('errors.onboardingFailed') || 'Error al completar el onboarding. Por favor, intenta de nuevo.'
-      );
+      toast.error(t('errors.onboardingFailed'));
     } finally {
       setIsSubmitting(false);
     }

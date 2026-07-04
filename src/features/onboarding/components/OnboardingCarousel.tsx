@@ -90,13 +90,13 @@ export function OnboardingCarousel() {
     // so the same form works for new and returning users.
     let res = await signUpWithPassword(value, password);
     let returning = false;
-    if (!res.success && /already|registered|exist/i.test(res.error || '')) {
+    if (!res.success && res.errorCode === 'user_already_exists') {
       returning = true;
       res = await signInWithPassword(value, password);
     }
     setSubmitting(false);
     if (res.success) toast.success(returning ? t('auth.welcomeBack') : t('auth.accountCreated'));
-    else toast.error(res.error || t('errors.authenticationFailed'));
+    else toast.error(t((res.errorKey ?? 'errors.authenticationFailed') as any));
   };
 
   const isAuthSlide = step === authIndex;

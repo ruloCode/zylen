@@ -23,7 +23,7 @@ export function Chat() {
   const updateStreamingMessage = useAppStore((state) => state.updateStreamingMessage);
   const finishStreamingMessage = useAppStore((state) => state.finishStreamingMessage);
   const setLoading = useAppStore((state) => state.setLoading);
-  const { t } = useLocale();
+  const { t, language } = useLocale();
   const [input, setInput] = useState('');
   const [error, setError] = useState<string | null>(null);
 
@@ -40,7 +40,7 @@ export function Chat() {
 
     // Check if OpenAI is configured
     if (!OpenAIService.isConfigured()) {
-      setError('OpenAI API key not configured. Please add your API key to .env.local');
+      setError(t('chat.errors.apiKeyMissing'));
       return;
     }
 
@@ -73,7 +73,7 @@ export function Chat() {
       finishStreamingMessage();
     } catch (err) {
       console.error('Error streaming chat completion:', err);
-      setError(err instanceof Error ? err.message : 'Failed to get AI response');
+      setError(t('chat.errors.streamFailed'));
       finishStreamingMessage();
     } finally {
       setLoading(false);
@@ -110,7 +110,7 @@ export function Chat() {
               />
             ) : (
               <section aria-labelledby="messages-heading" className="space-y-0 flex-1">
-                <h2 className="sr-only" id="messages-heading">Chat Messages</h2>
+                <h2 className="sr-only" id="messages-heading">{t('chat.messagesHeading')}</h2>
                 {messages.map((msg) => (
                   <ChatBubble
                     key={msg.id}
@@ -119,7 +119,7 @@ export function Chat() {
                     accent="teal"
                     copyLabel={t('chat.copy')}
                     copiedLabel={t('chat.copied')}
-                    timestamp={new Date(msg.timestamp).toLocaleTimeString([], {
+                    timestamp={new Date(msg.timestamp).toLocaleTimeString(language, {
                       hour: '2-digit',
                       minute: '2-digit',
                     })}

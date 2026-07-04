@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
+import { useLocale } from '@/hooks/useLocale';
 
 interface ProgressBarProps {
   current: number;
@@ -27,6 +28,7 @@ export function ProgressBar({
   withGlow = true,
   withShimmer = true
 }: ProgressBarProps) {
+  const { t } = useLocale();
   const percentage = Math.min((current / max) * 100, 100);
 
   const heights = {
@@ -111,8 +113,8 @@ export function ProgressBar({
             labelSizes[size]
           )}
         >
-          <span>{current.toLocaleString()} XP</span>
-          <span className="text-white/70">{max.toLocaleString()} XP</span>
+          <span>{current.toLocaleString()} {t('common.xp')}</span>
+          <span className="text-white/70">{max.toLocaleString()} {t('common.xp')}</span>
         </div>
       )}
     </div>

@@ -32,6 +32,20 @@ const HERMES_API_KEY = import.meta.env.VITE_HERMES_API_KEY || '';
 const SESSION_STORAGE_KEY = 'everlight_hermes_session_id';
 
 /**
+ * Error thrown when the Hermes API responds with a non-OK status. Carries a
+ * stable `code` so the UI can map it to a translated message instead of
+ * rendering raw technical (English) detail.
+ */
+export class HermesApiError extends Error {
+  readonly code = 'HERMES_UNAVAILABLE';
+
+  constructor(readonly status: number) {
+    super(`HERMES_UNAVAILABLE (${status})`);
+    this.name = 'HermesApiError';
+  }
+}
+
+/**
  * Returns a stable session id for this browser/user, creating and persisting
  * one on first use so Hermes can keep conversation memory across reloads.
  */
@@ -92,9 +106,10 @@ export async function streamChatCompletion(
   });
 
   if (!response.ok || !response.body) {
-    throw new Error(
+    console.error(
       `Hermes API error (${response.status}). Make sure the Hermes API server is running at ${HERMES_API_URL}.`
     );
+    throw new HermesApiError(response.status);
   }
 
   const reader = response.body.getReader();

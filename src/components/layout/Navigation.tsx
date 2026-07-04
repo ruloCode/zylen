@@ -114,7 +114,7 @@ export function Navigation() {
   return (
     <nav
       className="fixed bottom-0 left-0 right-0 z-50 pb-[env(safe-area-inset-bottom)]"
-      aria-label="Main navigation"
+      aria-label={t('navigation.mainNavigation')}
     >
       <div className="relative mx-auto max-w-md">
         {/* Bar surface */}

@@ -86,7 +86,7 @@ export function OnboardingStep2({ onNext, onPrev }: OnboardingStep2Props) {
               type="button"
               onClick={() => toggleArea(area.id)}
               aria-pressed={isSelected}
-              aria-label={`${isSelected ? 'Deselect' : 'Select'} ${t(`lifeAreas.${area.area.toLowerCase()}`)}`}
+              aria-label={t(`lifeAreas.${area.area.toLowerCase()}`)}
               className={cn(
                 'p-4 rounded-xl border-2 transition-all duration-200 min-h-[120px]',
                 'flex flex-col items-center gap-3',

@@ -8,6 +8,7 @@ import { cn } from '@/utils/cn';
 import { useLocale } from '@/hooks/useLocale';
 import type { FocusGem } from '@/types/focus';
 import { gemStageImage, speciesMeta } from '../utils/gemAssets';
+import { displayGemName } from '../utils/displayGemName';
 
 interface GemPickerProps {
   gems: FocusGem[];
@@ -62,7 +63,7 @@ export function GemPicker({
               />
             </div>
             <span className="text-white text-xs font-bold leading-tight truncate w-full text-center">
-              {gem.name}
+              {displayGemName(gem.name, t)}
             </span>
             <span
               className="text-[10px] font-semibold truncate w-full text-center"

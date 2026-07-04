@@ -250,7 +250,7 @@ export function Dashboard() {
                     {animatedXP}
                   </span>
                   <span className="text-white/50 text-[8px] font-medium">
-                    / {levelProgress.max} XP
+                    / {levelProgress.max} {t('progress.xp')}
                   </span>
                 </div>
               </CircularProgress>
@@ -449,10 +449,12 @@ export function Dashboard() {
                 const value = habit.todayValue ?? 0;
                 const goal = habit.dailyGoal ?? 0;
                 const pct = goal > 0 ? Math.min((value / goal) * 100, 100) : 0;
-                const unitLong = habit.unit === 'min' ? t('home.minutes') : habit.unit ?? '';
+                const unitLabel = habit.unit
+                  ? t(`habits.units.${habit.unit}`, { defaultValue: habit.unit })
+                  : '';
                 const subtitle = habit.dailyGoal
-                  ? `${goal} ${unitLong}`.trim()
-                  : `+${habit.xp} XP`;
+                  ? `${goal} ${unitLabel}`.trim()
+                  : `+${habit.xp} ${t('progress.xp')}`;
 
                 return (
                   <div
@@ -480,7 +482,7 @@ export function Dashboard() {
                       <div className="w-28 shrink-0">
                         <p className="text-right text-white text-sm font-semibold mb-1">
                           <span className="text-white">{value}</span>
-                          <span className="text-white/50"> / {goal} {habit.unit}</span>
+                          <span className="text-white/50"> / {goal} {unitLabel}</span>
                         </p>
                         <div className="h-2 w-full rounded-full bg-white/10 overflow-hidden">
                           <div

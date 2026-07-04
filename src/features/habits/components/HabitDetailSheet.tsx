@@ -134,7 +134,7 @@ export function HabitDetailSheet({
           <div className="flex-1 min-w-0">
             <h3 className="text-lg font-bold text-white truncate">{habit.name}</h3>
             <p className="text-xs text-white/50 flex items-center gap-1.5">
-              <TypeIcon className="w-3.5 h-3.5" /> {typeMeta.label} · {habit.xp} XP
+              <TypeIcon className="w-3.5 h-3.5" /> {typeMeta.label} · {habit.xp} {t('common.xp')}
             </p>
           </div>
           <button

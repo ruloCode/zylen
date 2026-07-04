@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
+import { useLocale } from '@/hooks/useLocale';
 
 interface BadgeProps {
   children: React.ReactNode;
@@ -103,10 +104,11 @@ interface XPBadgeProps {
 }
 
 export function XPBadge({ xp, size = 'md', className = '', showPlus = true }: XPBadgeProps) {
+  const { t } = useLocale();
   return (
     <Badge variant="xp" size={size} className={cn('animate-glow-pulse', className)} withGlow>
       <span className="drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] font-extrabold">
-        {showPlus && '+'}{xp} XP
+        {showPlus && '+'}{xp} {t('common.xp')}
       </span>
     </Badge>
   );

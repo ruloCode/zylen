@@ -316,7 +316,7 @@ export function HabitForm({ habit, initialData, onSubmit, onCancel }: HabitFormP
               </div>
               <div className="text-sm text-white">
                 <div className="font-semibold">{t('habitForm.selectedIcon')}</div>
-                <div className="text-white/70">{iconName}</div>
+                <div className="text-white/70">{t(`icons.${iconName}`, iconName)}</div>
               </div>
             </div>
             <IconSelector
@@ -353,7 +353,7 @@ export function HabitForm({ habit, initialData, onSubmit, onCancel }: HabitFormP
                           : 'bg-white/5 border-white/15 text-white/70 hover:border-white/30'
                       )}
                     >
-                      {u}
+                      {t(`habits.units.${u}`, u)}
                     </button>
                   ))}
                 </div>
@@ -373,7 +373,7 @@ export function HabitForm({ habit, initialData, onSubmit, onCancel }: HabitFormP
                     placeholder="0"
                     className="w-32 px-4 py-3 rounded-xl border-2 border-white/20 bg-white/5 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
-                  <span className="text-blue-300 font-semibold">{unit}</span>
+                  <span className="text-blue-300 font-semibold">{t(`habits.units.${unit}`, unit)}</span>
                 </div>
                 <p className="mt-2 text-xs text-white/60">{t('habitForm.dailyGoalHint')}</p>
               </div>

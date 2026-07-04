@@ -9,6 +9,8 @@ export interface StreaksSlice {
 
   // Actions
   loadStreak: () => Promise<void>;
+  /** Recompute the streak server-side (realigns last_seven_days to today). */
+  refreshStreak: () => Promise<void>;
   updateStreakForToday: (completed: boolean) => Promise<void>;
   getStreakBonus: () => Promise<number>;
 }
@@ -31,6 +33,16 @@ export const createStreaksSlice: StateCreator<StreaksSlice> = (set, get) => ({
         streakError: error instanceof Error ? error.message : 'Failed to load streak',
         streakLoading: false,
       });
+    }
+  },
+
+  refreshStreak: async () => {
+    try {
+      const streak = await StreaksService.refreshStreak();
+      if (streak) set({ streak });
+    } catch (error) {
+      console.error('Error refreshing streak:', error);
+      // Non-fatal: keep the last known streak rather than blanking the strip.
     }
   },
 

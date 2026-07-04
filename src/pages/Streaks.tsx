@@ -55,6 +55,13 @@ export function Streaks() {
     ? weekdays
     : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
+  // lastSevenDays / getDailyActivity(7) end at today, so rotate the static
+  // Mon-Sun labels so slot 6 = today's weekday.
+  const todayIdx = (new Date().getDay() + 6) % 7;
+  const rotatedWeekdays = safeWeekdays.map(
+    (_, i) => safeWeekdays[(todayIdx + 1 + i) % 7]
+  );
+
   // Glass cards (slightly translucent so the page background shows through).
   const card = 'glass-card rounded-2xl p-4';
   const heroChip =
@@ -116,7 +123,7 @@ export function Streaks() {
       iconColor: 'text-gold-400',
       ring: 'bg-gold-500/15',
       big: `${longestStreak}`,
-      small: t('progress.days'),
+      small: t('progress.daysCount', { count: longestStreak }),
       label: t('progress.bestStreak'),
     },
     {
@@ -172,7 +179,7 @@ export function Streaks() {
               className={`${heroChip} shrink-0 flex items-center gap-1.5 px-3 py-1.5 text-white text-xs font-bold`}
             >
               <Flame size={14} className="text-orange-400" />
-              {currentStreak} {t('progress.streakChip')}
+              {currentStreak} {t('progress.streakChip', { count: currentStreak })}
             </span>
           </div>
           {/* Motivational quote */}
@@ -234,13 +241,15 @@ export function Streaks() {
                 <span className="text-3xl font-extrabold text-white leading-none">
                   {currentStreak}
                 </span>
-                <span className="text-white/60 text-sm font-semibold">{t('progress.days')}</span>
+                <span className="text-white/60 text-sm font-semibold">
+                  {t('progress.daysCount', { count: currentStreak })}
+                </span>
               </div>
               <p className="text-white/55 text-xs text-right">{t('progress.keepItUp')}</p>
             </div>
             <div className="flex justify-between gap-1 min-w-0">
-              {safeWeekdays.map((label, i) => {
-                const isToday = i === safeWeekdays.length - 1;
+              {rotatedWeekdays.map((label, i) => {
+                const isToday = i === rotatedWeekdays.length - 1;
                 const active = lastSeven[i] === true;
                 return (
                   <div key={i} className="flex flex-col items-center gap-1 min-w-0">
@@ -292,7 +301,7 @@ export function Streaks() {
                         />
                       </div>
                       <span className="text-[10px] font-medium text-white/50 truncate max-w-full">
-                        {safeWeekdays[i]}
+                        {isToday ? t('progress.today') : rotatedWeekdays[i]}
                       </span>
                     </div>
                   );
@@ -319,7 +328,7 @@ export function Streaks() {
             </button>
           </div>
           {focusAreas.length === 0 ? (
-            <p className="text-white/50 text-sm text-center py-4">{t('progress.subtitle')}</p>
+            <p className="text-white/50 text-sm text-center py-4">{t('progress.noFocusAreas')}</p>
           ) : (
             <div className="space-y-3">
               {focusAreas.map((area) => {
@@ -377,7 +386,7 @@ export function Streaks() {
                           />
                         </span>
                         <span className="text-white/50 text-[10px] font-medium shrink-0">
-                          {prog.current} / {prog.max} XP
+                          {prog.current} / {prog.max} {t('common.xp')}
                         </span>
                       </span>
                     </span>

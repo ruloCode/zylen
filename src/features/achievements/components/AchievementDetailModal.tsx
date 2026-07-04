@@ -74,6 +74,7 @@ export function AchievementDetailModal({ achievement, isOpen, onClose }: Achieve
   if (!isOpen) return null;
 
   const {
+    key,
     name,
     description,
     iconName,
@@ -87,6 +88,11 @@ export function AchievementDetailModal({ achievement, isOpen, onClose }: Achieve
     unlockedAt,
     claimedAt,
   } = achievement;
+
+  // Resolve localized name/description via the achievement key, falling back
+  // to the DB values for achievements without translations
+  const displayName = t(`achievements.list.${key}.name`, { defaultValue: name });
+  const displayDescription = t(`achievements.list.${key}.description`, { defaultValue: description });
 
   // Get icon component
   const IconComponent = (LucideIcons as any)[iconName] || LucideIcons.Award;
@@ -113,7 +119,7 @@ export function AchievementDetailModal({ achievement, isOpen, onClose }: Achieve
 
       if (result.success) {
         toast.success(t('achievements.toast.claimed', {
-          name,
+          name: displayName,
           xp: xpReward,
           points: pointsReward
         }));
@@ -166,7 +172,7 @@ export function AchievementDetailModal({ achievement, isOpen, onClose }: Achieve
             <button
               onClick={onClose}
               className="p-2 rounded-lg hover:bg-white/10 transition-colors"
-              aria-label="Close"
+              aria-label={t('common.close')}
             >
               <X size={24} className="text-white/70" />
             </button>
@@ -189,7 +195,7 @@ export function AchievementDetailModal({ achievement, isOpen, onClose }: Achieve
 
             <div className="flex-1">
               <h3 className={`text-2xl font-bold mb-2 ${locked ? 'text-white/70' : tierStyle.text}`}>
-                {name}
+                {displayName}
               </h3>
               <div className="flex items-center gap-2">
                 {/* Tier Badge */}
@@ -226,7 +232,7 @@ export function AchievementDetailModal({ achievement, isOpen, onClose }: Achieve
               {t('achievements.modal.description')}
             </h4>
             <p className="text-white/90 leading-relaxed">
-              {description}
+              {displayDescription}
             </p>
           </div>
 
@@ -285,7 +291,7 @@ export function AchievementDetailModal({ achievement, isOpen, onClose }: Achieve
               `}>
                 <div className="flex items-center gap-2 mb-2">
                   <Zap size={20} className={locked ? 'text-white/50' : 'text-teal-400'} />
-                  <span className="text-sm font-medium text-white/70">XP</span>
+                  <span className="text-sm font-medium text-white/70">{t('common.xp')}</span>
                 </div>
                 <p className={`text-2xl font-bold ${locked ? 'text-white/50' : 'text-teal-400'}`}>
                   +{xpReward}
@@ -299,7 +305,7 @@ export function AchievementDetailModal({ achievement, isOpen, onClose }: Achieve
               `}>
                 <div className="flex items-center gap-2 mb-2">
                   <Star size={20} className={locked ? 'text-white/50' : 'text-gold-400'} />
-                  <span className="text-sm font-medium text-white/70">Points</span>
+                  <span className="text-sm font-medium text-white/70">{t('common.points')}</span>
                 </div>
                 <p className={`text-2xl font-bold ${locked ? 'text-white/50' : 'text-gold-400'}`}>
                   +{pointsReward}

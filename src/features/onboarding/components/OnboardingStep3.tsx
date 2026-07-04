@@ -167,7 +167,8 @@ export function OnboardingStep3({ onNext, onPrev }: OnboardingStep3Props) {
               <div className="flex-1">
                 <h3 className="font-semibold text-white">{habit.name}</h3>
                 <p className="text-sm text-gray-400">
-                  {habit.xp} XP • {area?.area || 'Sin área'}
+                  {habit.xp} {t('common.xp')} •{' '}
+                  {area ? t(`lifeAreas.${area.area.toLowerCase()}`) : t('common.noArea')}
                 </p>
               </div>
               <button
@@ -218,7 +219,7 @@ export function OnboardingStep3({ onNext, onPrev }: OnboardingStep3Props) {
                 aria-valuemin={10}
                 aria-valuemax={100}
                 aria-valuenow={newHabit.xp}
-                aria-valuetext={`${newHabit.xp} XP`}
+                aria-valuetext={`${newHabit.xp} ${t('common.xp')}`}
                 className="w-full h-2 accent-teal-500"
               />
               <p className="text-center text-white font-semibold mt-1" aria-live="polite">{newHabit.xp}</p>
@@ -236,7 +237,7 @@ export function OnboardingStep3({ onNext, onPrev }: OnboardingStep3Props) {
               >
                 {selectedAreas.map((area) => (
                   <option key={area.id} value={area.id}>
-                    {area.area}
+                    {t(`lifeAreas.${area.area.toLowerCase()}`)}
                   </option>
                 ))}
               </select>

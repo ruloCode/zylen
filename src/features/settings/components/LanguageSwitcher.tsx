@@ -33,7 +33,7 @@ interface LanguageSwitcherProps {
  * ```
  */
 export function LanguageSwitcher({ variant = 'compact', className }: LanguageSwitcherProps) {
-  const { language, changeLanguage } = useLocale();
+  const { t, language, changeLanguage } = useLocale();
 
   if (variant === 'compact') {
     return (
@@ -49,7 +49,11 @@ export function LanguageSwitcher({ variant = 'compact', className }: LanguageSwi
           'focus:outline-none focus:ring-2 focus:ring-gold-400',
           className
         )}
-        aria-label={`Switch to ${language === 'es' ? 'English' : 'Spanish'}`}
+        aria-label={t(
+          language === 'es'
+            ? 'settings.language.switchToEnglish'
+            : 'settings.language.switchToSpanish'
+        )}
       >
         <Languages size={18} className="text-gray-600" aria-hidden="true" />
         <span className="text-sm font-semibold text-gray-700 uppercase">
@@ -73,7 +77,7 @@ export function LanguageSwitcher({ variant = 'compact', className }: LanguageSwi
             ? 'bg-gradient-to-br from-gold-500 to-gold-600 text-white shadow-lg scale-105'
             : 'bg-white/80 text-gray-600 border border-gray-200 hover:bg-gray-50'
         )}
-        aria-label="Switch to Spanish"
+        aria-label={t('settings.language.switchToSpanish')}
         aria-pressed={language === 'es'}
       >
         🇪🇸 Español
@@ -89,7 +93,7 @@ export function LanguageSwitcher({ variant = 'compact', className }: LanguageSwi
             ? 'bg-gradient-to-br from-gold-500 to-gold-600 text-white shadow-lg scale-105'
             : 'bg-white/80 text-gray-600 border border-gray-200 hover:bg-gray-50'
         )}
-        aria-label="Switch to English"
+        aria-label={t('settings.language.switchToEnglish')}
         aria-pressed={language === 'en'}
       >
         🇺🇸 English

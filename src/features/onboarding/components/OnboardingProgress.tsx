@@ -1,6 +1,7 @@
 import React from 'react';
 import { Check } from 'lucide-react';
 import { cn } from '@/utils';
+import { useLocale } from '@/hooks/useLocale';
 import { TOTAL_ONBOARDING_STEPS } from '@/types';
 
 interface OnboardingProgressProps {
@@ -14,10 +15,11 @@ interface OnboardingProgressProps {
  * Shows a visual progress indicator for the onboarding flow
  */
 export function OnboardingProgress({ currentStep, completedSteps }: OnboardingProgressProps) {
+  const { t } = useLocale();
   const steps = Array.from({ length: TOTAL_ONBOARDING_STEPS }, (_, i) => i);
 
   return (
-    <nav aria-label="Onboarding progress" className="w-full max-w-md mx-auto">
+    <nav aria-label={t('onboarding.progress.ariaLabel')} className="w-full max-w-md mx-auto">
       <ol className="flex items-center justify-between">
         {steps.map((step, index) => {
           const isCompleted = completedSteps.includes(step);
@@ -54,7 +56,7 @@ export function OnboardingProgress({ currentStep, completedSteps }: OnboardingPr
                     isCurrent ? 'text-teal-300' : 'text-gray-500'
                   )}
                 >
-                  Paso {step + 1}
+                  {t('onboarding.progress.step', { number: step + 1 })}
                 </span>
               </li>
 
@@ -76,7 +78,10 @@ export function OnboardingProgress({ currentStep, completedSteps }: OnboardingPr
       {/* Progress Text */}
       <div className="mt-4 text-center">
         <p className="text-sm text-gray-400" aria-live="polite">
-          Paso {currentStep + 1} de {TOTAL_ONBOARDING_STEPS}
+          {t('onboarding.progress.stepOf', {
+            current: currentStep + 1,
+            total: TOTAL_ONBOARDING_STEPS,
+          })}
         </p>
       </div>
     </nav>

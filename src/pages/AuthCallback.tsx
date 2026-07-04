@@ -15,7 +15,7 @@ import { ROUTES } from '@/constants/routes';
 export function AuthCallback() {
   const navigate = useNavigate();
   const { t } = useLocale();
-  const [error, setError] = useState<string | null>(null);
+  const [failed, setFailed] = useState(false);
 
   useEffect(() => {
     const handleCallback = async () => {
@@ -75,7 +75,7 @@ export function AuthCallback() {
         }
       } catch (err) {
         console.error('Auth callback error:', err);
-        setError(err instanceof Error ? err.message : 'Authentication failed');
+        setFailed(true);
 
         // Redirect to login after 3 seconds
         setTimeout(() => {
@@ -94,13 +94,13 @@ export function AuthCallback() {
           <Logo size="lg" />
         </div>
 
-        {error ? (
+        {failed ? (
           <>
             <div className="text-danger-400 text-6xl mb-4">⚠️</div>
             <h1 className="text-2xl font-bold text-pale-50 mb-2">
               {t('errors.authenticationFailed')}
             </h1>
-            <p className="text-pale-400 mb-4">{error}</p>
+            <p className="text-pale-400 mb-4">{t('auth.callbackErrorHint')}</p>
             <p className="text-sm text-pale-500">
               {t('auth.redirectingToLogin')}
             </p>

@@ -127,7 +127,7 @@ export function UsernameSelector({
       onUsernameSet?.(username);
     } catch (err: any) {
       console.error('Error setting username:', err);
-      setError(err.message || t('username.error'));
+      setError(t(err?.code === 'username_taken' ? 'username.taken' : 'username.error'));
     } finally {
       setIsSubmitting(false);
     }

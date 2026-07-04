@@ -1,5 +1,6 @@
 import { Trophy } from 'lucide-react';
 import { cn } from '@/utils';
+import { useLocale } from '@/hooks/useLocale';
 
 interface LevelBadgeProps {
   level: number;
@@ -17,6 +18,7 @@ export function LevelBadge({
   showIcon = true,
   className,
 }: LevelBadgeProps) {
+  const { t } = useLocale();
   const sizeClasses = {
     sm: 'px-2 py-0.5 text-xs',
     md: 'px-3 py-1 text-sm',
@@ -41,7 +43,7 @@ export function LevelBadge({
       )}
     >
       {showIcon && <Trophy size={iconSizes[size]} className="flex-shrink-0" />}
-      <span className="text-white">LVL {level}</span>
+      <span className="text-white">{t('common.level')} {level}</span>
     </div>
   );
 }

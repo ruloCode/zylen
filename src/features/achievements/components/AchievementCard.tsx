@@ -64,6 +64,11 @@ export function AchievementCard({ achievement, onClick }: AchievementCardProps) 
   const { t } = useLocale();
   const { key, name, description, iconName, tier, requirementValue, xpReward, pointsReward, progress } = achievement;
 
+  // Resolve localized name/description via the achievement key, falling back
+  // to the DB values for achievements without translations
+  const displayName = t(`achievements.list.${key}.name`, { defaultValue: name });
+  const displayDescription = t(`achievements.list.${key}.description`, { defaultValue: description });
+
   // Get achievement states
   const locked = isAchievementLocked(achievement);
   const available = isAchievementAvailable(achievement);
@@ -137,7 +142,7 @@ export function AchievementCard({ achievement, onClick }: AchievementCardProps) 
           text-lg font-bold flex-1
           ${locked ? 'text-white/70' : tierStyle.text}
         `}>
-          {name}
+          {displayName}
         </h3>
         {available && (
           <span className="px-2 py-1 rounded-md text-xs font-bold bg-green-600 text-white animate-pulse">
@@ -148,7 +153,7 @@ export function AchievementCard({ achievement, onClick }: AchievementCardProps) 
 
       {/* Description */}
       <p className="text-sm text-white/80 mb-4 line-clamp-2">
-        {description}
+        {displayDescription}
       </p>
 
       {/* Progress Bar - Only show when locked */}

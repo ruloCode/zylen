@@ -15,7 +15,10 @@
     "progress": "Progreso",
     "pts": "ess",
     "noArea": "Sin reino",
-    "close": "Cerrar"
+    "close": "Cerrar",
+    "saving": "Guardando...",
+    "awakening": "El reino despierta…",
+    "levelShort": "Nv."
   },
   "app": {
     "name": "Everlight",
@@ -34,7 +37,9 @@
     "mood": "Ánimo",
     "routines": "Rituales",
     "progress": "Progreso",
-    "ranking": "Ranking"
+    "ranking": "Ranking",
+    "goToDashboard": "Ir al inicio",
+    "mainNavigation": "Navegación principal"
   },
   "dashboard": {
     "title": "El Reino",
@@ -181,7 +186,75 @@
     },
     "noAchievements": "No hay reliquias disponibles",
     "loadingAchievements": "Cargando reliquias...",
-    "errorLoading": "Error al cargar reliquias"
+    "errorLoading": "Error al cargar reliquias",
+    "availableCount_one": "{{count}} disponible",
+    "availableCount_other": "{{count}} disponibles",
+    "list": {
+      "week_warrior": {
+        "name": "Guardián de la Semana",
+        "description": "Completa 7 días seguidos"
+      },
+      "two_week_titan": {
+        "name": "Titán de Dos Semanas",
+        "description": "Completa 14 días seguidos"
+      },
+      "month_master": {
+        "name": "Maestro del Mes",
+        "description": "Completa 30 días seguidos"
+      },
+      "unstoppable": {
+        "name": "Llama Imparable",
+        "description": "Completa 100 días seguidos"
+      },
+      "habit_hero": {
+        "name": "Héroe de los Hábitos",
+        "description": "Completa 50 hábitos en total"
+      },
+      "consistency_king": {
+        "name": "Custodio de la Constancia",
+        "description": "Completa 200 hábitos en total"
+      },
+      "routine_legend": {
+        "name": "Leyenda de la Rutina",
+        "description": "Completa 500 hábitos en total"
+      },
+      "xp_novice": {
+        "name": "Aprendiz de Luz",
+        "description": "Gana 1.000 de Luz en total"
+      },
+      "xp_expert": {
+        "name": "Experto en Luz",
+        "description": "Gana 5.000 de Luz en total"
+      },
+      "xp_master": {
+        "name": "Maestro de la Luz",
+        "description": "Gana 10.000 de Luz en total"
+      },
+      "social_butterfly": {
+        "name": "Mariposa Social",
+        "description": "Añade 5 amigos"
+      },
+      "network_builder": {
+        "name": "Tejedor de Alianzas",
+        "description": "Añade 10 amigos"
+      },
+      "early_bird": {
+        "name": "Madrugador",
+        "description": "Completa un hábito antes de las 8 de la mañana"
+      },
+      "night_owl": {
+        "name": "Búho Nocturno",
+        "description": "Completa un hábito después de las 10 de la noche"
+      },
+      "perfect_day": {
+        "name": "Día Perfecto",
+        "description": "Completa todos tus hábitos en un solo día"
+      },
+      "comeback": {
+        "name": "Renacer",
+        "description": "Completa el Desafío de 30 Días del Hábito Raíz"
+      }
+    }
   },
   "levelUp": {
     "title": "Tu luz ha evolucionado.",
@@ -224,7 +297,22 @@
     "relapseRecorded": "La sombra ganó terreno. Pero la luz siempre puede recuperarse 💪",
     "viewAnalytics": "Ver analíticas",
     "streakBonus": "+{{percent}}% por tu llama constante",
-    "xpCapped": "Has superado el límite de XP de hoy — las ganancias se reducen hasta mañana"
+    "xpCapped": "Has superado el límite de XP de hoy — las ganancias se reducen hasta mañana",
+    "units": {
+      "min": "min",
+      "hr": "h",
+      "sec": "seg",
+      "km": "km",
+      "mi": "mi",
+      "pages": "páginas",
+      "glasses": "vasos",
+      "reps": "reps",
+      "kcal": "kcal",
+      "words": "palabras"
+    },
+    "habitAria": "Hábito: {{name}}",
+    "markComplete": "Marcar {{name}} como completado",
+    "markIncomplete": "Marcar {{name}} como no completado"
   },
   "habitForm": {
     "createHabit": "Crear Hábito",
@@ -329,7 +417,9 @@
         "name": "Café Extra",
         "description": "Tercera taza del día"
       }
-    }
+    },
+    "availableRewards": "Recompensas disponibles",
+    "reminderAria": "Recordatorio importante"
   },
   "shopManager": {
     "title": "Gestionar Recompensas",
@@ -366,7 +456,12 @@
       "costTooLow": "El costo mínimo es {{min}} de Esencia",
       "costTooHigh": "El costo máximo es {{max}} de Esencia",
       "iconRequired": "Debes seleccionar un ícono"
-    }
+    },
+    "emptyStateHint": "Añade tu primera recompensa para empezar",
+    "createFirstHint": "Crea tu primera recompensa para empezar",
+    "defaultItemTitle": "Recompensa predefinida",
+    "defaultItemBody": "Puedes cambiar el coste, el icono y la categoría. El nombre y la descripción se mantienen según las traducciones.",
+    "defaultItemReadOnly": "(Solo lectura en recompensas predefinidas)"
   },
   "chat": {
     "title": "El Mentor",
@@ -393,7 +488,14 @@
       "2": "Tu viaje me llena de orgullo. La constancia es la que mantiene viva la llama. 🌟",
       "3": "Lo estás haciendo admirablemente. Sigue fortaleciendo el Everlight, un día a la vez.",
       "4": "Ese es el espíritu de un Guardián. Estaré contigo en cada paso del sendero."
-    }
+    },
+    "errors": {
+      "apiKeyMissing": "Falta la clave de OpenAI. Añade tu clave API en .env.local",
+      "streamFailed": "No se pudo obtener la respuesta. Por favor, intenta de nuevo.",
+      "coachUnavailable": "No se pudo conectar con Hermes. Comprueba tu conexión e inténtalo de nuevo."
+    },
+    "messagesHeading": "Mensajes del chat",
+    "coachMessagesHeading": "Mensajes del coach"
   },
   "auth": {
     "welcomeBack": "El reino te esperaba.",
@@ -435,7 +537,8 @@
     "privacyPolicy": "Política de privacidad",
     "emailSent": "¡Revisa tu correo! Te enviamos un enlace para cruzar el Portal.",
     "enterEmail": "Ingresa tu correo electrónico",
-    "continueWithApple": "Continuar con Apple"
+    "continueWithApple": "Continuar con Apple",
+    "callbackErrorHint": "No pudimos completar el inicio de sesión. Inténtalo de nuevo."
   },
   "errors": {
     "general": "La luz titiló un instante. Por favor, intenta de nuevo.",
@@ -447,7 +550,18 @@
     "habitUncompleteFailed": "No se pudo desmarcar el hábito",
     "habitCreateFailed": "No se pudo sembrar el hábito",
     "habitUpdateFailed": "No se pudo actualizar el hábito",
-    "habitDeleteFailed": "No se pudo eliminar el hábito"
+    "habitDeleteFailed": "No se pudo eliminar el hábito",
+    "templatesLoadFailed": "No se pudieron cargar las plantillas",
+    "auth": {
+      "invalidCredentials": "Correo o contraseña incorrectos.",
+      "userAlreadyExists": "Ya existe una cuenta con este correo. Inicia sesión.",
+      "weakPassword": "La contraseña es demasiado débil. Usa al menos 6 caracteres.",
+      "rateLimited": "Demasiados intentos. Espera un momento e inténtalo de nuevo.",
+      "emailRateLimited": "Se han enviado demasiados correos. Espera unos minutos e inténtalo de nuevo.",
+      "signupDisabled": "El registro está deshabilitado por el momento.",
+      "confirmEmail": "Cuenta creada. Revisa tu correo para confirmar tu cuenta."
+    },
+    "onboardingFailed": "Error al completar el onboarding. Por favor, intenta de nuevo."
   },
   "actions": {
     "save": "Guardar",
@@ -535,7 +649,8 @@
       "habitNamePlaceholder": "Nombre del hábito (ej: Meditar 10 min)",
       "lifeAreaLabel": "Reino de la Vida",
       "addButton": "Agregar",
-      "addHabitButton": "+ Sembrar Hábito"
+      "addHabitButton": "+ Sembrar Hábito",
+      "suggestionsTitle": "Hábitos comunes"
     },
     "step4": {
       "title": "¿Cómo funciona Everlight?",
@@ -554,6 +669,11 @@
       "readyTitle_male": "¡Ya estás listo, Guardián!",
       "readyTitle_female": "¡Ya estás lista, Guardiana!",
       "readyDescription": "El reino te esperaba. Tu viaje comienza aquí."
+    },
+    "progress": {
+      "ariaLabel": "Progreso de la configuración",
+      "step": "Paso {{number}}",
+      "stepOf": "Paso {{current}} de {{total}}"
     }
   },
   "profile": {
@@ -648,7 +768,8 @@
       "dani": "Dani",
       "explorer1": "Aventurero",
       "explorer2": "Aventurera",
-      "explorer3": "Explorador"
+      "explorer3": "Explorador",
+      "saved": "Avatar actualizado"
     },
     "ach": {
       "firstStep": "Primera chispa",
@@ -753,7 +874,10 @@
       "rejectRequest": "Error al rechazar solicitud",
       "removeFriend": "Error al quitar aliado",
       "searchUsers": "Error al buscar Guardianes"
-    }
+    },
+    "streakDays_one": "{{count}} día de llama",
+    "streakDays_other": "{{count}} días de llama",
+    "confirmRemoveFriend": "¿Quitar a @{{username}} de tus aliados?"
   },
   "templates": {
     "title": "Plantillas de Hábitos",
@@ -943,7 +1067,18 @@
     "edit": "Editar",
     "subtitle": "Registra cómo te sientes cada día",
     "distribution": "Distribución",
-    "last7": "Últimos 7 días"
+    "last7": "Últimos 7 días",
+    "weekdaysNarrow": [
+      "L",
+      "M",
+      "X",
+      "J",
+      "V",
+      "S",
+      "D"
+    ],
+    "prevMonth": "Mes anterior",
+    "nextMonth": "Mes siguiente"
   },
   "progress": {
     "title": "Progreso",
@@ -962,7 +1097,7 @@
     "currentStreakTitle": "Tu llama constante",
     "keepItUp": "Mantén viva la llama. 🔥",
     "today": "Hoy",
-    "dailyActivity": "Actividad diaria (minutos)",
+    "dailyActivity": "Actividad diaria (Luz)",
     "minutesUnit": "Minutos",
     "focusAreas": "Reinos de enfoque",
     "seeDetail": "Ver detalle",
@@ -980,7 +1115,12 @@
       "Vie",
       "Sáb",
       "Dom"
-    ]
+    ],
+    "noFocusAreas": "Aún no tienes reinos activos. Actívalos desde tu Perfil.",
+    "daysCount_one": "día",
+    "daysCount_other": "días",
+    "streakChip_one": "día de llama",
+    "streakChip_other": "días de llama"
   },
   "guardian": {
     "title": "El Guardián",
@@ -1117,9 +1257,10 @@
     "statusDenied": "Permiso denegado en el navegador",
     "statusDefault": "Recordatorios desactivados",
     "statusUnsupported": "Tu navegador no soporta notificaciones",
-    "habitsWithReminder": "{{count}} hábito(s) con recordatorio activo",
+    "habitsWithReminder_one": "{{count}} hábito con recordatorio activo",
+    "habitsWithReminder_other": "{{count}} hábitos con recordatorio activo",
     "limitationsHint": "Los recordatorios funcionan al abrir la app o al volver a ella (mejor con la app instalada). En iPhone solo suenan con la app abierta.",
-    "notificationTitle": "Zylen — tu llama te espera 🔥",
+    "notificationTitle": "Everlight — tu llama te espera 🔥",
     "notificationBody": "Aún no completas \"{{habit}}\" hoy. ¡No dejes que se apague!",
     "testBody": "Así se verán tus recordatorios de hábitos."
   },
@@ -1153,7 +1294,7 @@
       "tips": [
         "Ancla el hábito: un vaso al despertar y uno con cada comida",
         "Ten una botella visible — la fricción cero es el truco real",
-        "Usa el modo medible de Zylen: registra vasos o litros",
+        "Usa el modo medible de Everlight: registra vasos o litros",
         "Si el agua sola te aburre: rodajas de limón, pepino o menta"
       ],
       "frustrations": [
@@ -1640,7 +1781,7 @@
         "Define tu regla ANTES del evento ('hoy 0' o 'máximo 1') — decidir en el bar pierde siempre",
         "Ten un sustituto con dignidad: agua con gas + limón, cerveza 0.0, kombucha",
         "Los primeros eventos sociales son lo difícil: llega con bebida en mano y nadie pregunta",
-        "Cuenta noches sin alcohol en Zylen — la racha visible es el mejor motivador"
+        "Cuenta noches sin alcohol en Everlight — la racha visible es el mejor motivador"
       ],
       "frustrations": [
         "La presión social es real: 'una y ya', 'qué aburrido' — un simple 'estoy en un reto de 30 días' desarma casi todo",
@@ -1813,7 +1954,7 @@
       "insufficientPoints": "Te falta Esencia — gánala completando hábitos."
     },
     "notificationTitle": "¡Tu gema ha crecido! 💎",
-    "notificationBody": "Sesión de enfoque completada. Vuelve a Zylen para reclamar tu Luz.",
+    "notificationBody": "Sesión de enfoque completada. Vuelve a Everlight para reclamar tu Luz.",
     "errors": {
       "alreadyRunning": "Ya tienes una sesión en curso.",
       "startFailed": "No se pudo iniciar la sesión. Intenta de nuevo.",
@@ -1842,5 +1983,47 @@
     "habitsCount_other": "{{count}} hábitos",
     "dormant": "Reino dormido",
     "empty": "Aún no hay reinos que iluminar."
+  },
+  "icons": {
+    "Dumbbell": "Mancuerna",
+    "Bike": "Bicicleta",
+    "Heart": "Corazón",
+    "Apple": "Manzana",
+    "Droplets": "Gotas",
+    "Bed": "Cama",
+    "Utensils": "Cubiertos",
+    "Brain": "Cerebro",
+    "Book": "Libro",
+    "Pencil": "Lápiz",
+    "Code": "Código",
+    "Target": "Diana",
+    "Sparkles": "Destellos",
+    "Users": "Personas",
+    "MessageCircle": "Mensaje",
+    "Home": "Casa",
+    "Gift": "Regalo",
+    "Briefcase": "Maletín",
+    "DollarSign": "Dólar",
+    "Trophy": "Trofeo",
+    "Star": "Estrella",
+    "TrendingUp": "Tendencia al alza",
+    "Palette": "Paleta",
+    "Music": "Música",
+    "Camera": "Cámara",
+    "Coffee": "Café",
+    "Flame": "Llama",
+    "Zap": "Rayo",
+    "Moon": "Luna",
+    "Sunrise": "Amanecer",
+    "CheckCircle2": "Verificación",
+    "Award": "Medalla",
+    "ShoppingCart": "Carrito",
+    "Candy": "Caramelo"
+  },
+  "settings": {
+    "language": {
+      "switchToEnglish": "Cambiar a inglés",
+      "switchToSpanish": "Cambiar a español"
+    }
   }
 }

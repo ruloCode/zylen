@@ -6,6 +6,7 @@
 
 import { useEffect, useState } from 'react';
 import { Sparkles } from 'lucide-react';
+import { useLocale } from '@/hooks/useLocale';
 
 interface XPBurstProps {
   xp: number;
@@ -23,6 +24,7 @@ const PARTICLES = [
 ];
 
 export function XPBurst({ xp, hint, onDone }: XPBurstProps) {
+  const { t } = useLocale();
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
@@ -44,7 +46,7 @@ export function XPBurst({ xp, hint, onDone }: XPBurstProps) {
         {/* Floating +XP chip */}
         <div className="animate-xp-float flex flex-col items-center">
           <span className="px-2.5 py-1 rounded-full bg-gold-500/90 text-charcoal-900 text-sm font-extrabold shadow-lg whitespace-nowrap">
-            +{xp} XP
+            +{xp} {t('common.xp')}
           </span>
           {hint && (
             <span className="mt-0.5 text-[10px] font-bold text-gold-300 drop-shadow whitespace-nowrap">

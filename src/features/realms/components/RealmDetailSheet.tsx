@@ -175,7 +175,7 @@ export function RealmDetailSheet({ area, onClose }: RealmDetailSheetProps) {
                           {habit.name}
                         </span>
                         <span className="block text-xs text-gold-400/90 font-medium">
-                          +{habit.xp} XP
+                          +{habit.xp} {t('progress.xp')}
                         </span>
                       </span>
                       {habit.completedToday ? (

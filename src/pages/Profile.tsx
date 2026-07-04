@@ -150,7 +150,7 @@ export function Profile() {
     updateUserProfile(user.name, pickerAvatar);
     setIsAvatarPickerOpen(false);
     setSelectedAvatar(pickerAvatar);
-    toast.success(t('username.success'));
+    toast.success(t('profile.avatars.saved'));
   };
 
   const handleOpenEditHabit = (habit: HabitWithCompletion) => {
@@ -209,7 +209,7 @@ export function Profile() {
       toast.success(t('username.success'));
     } catch (error: any) {
       console.error('Error updating username:', error);
-      toast.error(error.message || t('username.error'));
+      toast.error(t(error?.code === 'username_taken' ? 'username.taken' : 'username.error'));
     }
   };
 
@@ -356,7 +356,7 @@ export function Profile() {
               showLabel={false}
             />
             <p className="text-right text-white/50 text-xs mt-1 font-medium">
-              {levelProgress.current} / {levelProgress.max} XP
+              {levelProgress.current} / {levelProgress.max} {t('common.xp')}
             </p>
           </div>
         </section>
@@ -451,7 +451,7 @@ export function Profile() {
                       )}
                     </div>
                     <p className="mt-2 text-[11px] font-semibold text-white/90 leading-tight">
-                      {ach.name}
+                      {t(`achievements.list.${ach.key}.name` as any, { defaultValue: ach.name })}
                     </p>
                     <p className="text-[10px] text-white/40 mt-0.5">
                       {ach.unlocked && ach.unlockedAt
@@ -923,7 +923,7 @@ export function Profile() {
                         <div>
                           <p className="font-semibold text-white">{areaName}</p>
                           <p className="text-sm text-white/70">
-                            {t('common.level')} {area.level} • {area.totalXP} XP
+                            {t('common.level')} {area.level} • {area.totalXP} {t('common.xp')}
                           </p>
                         </div>
                         <label className="relative inline-flex items-center cursor-pointer">
@@ -980,7 +980,7 @@ export function Profile() {
                               {habit.name}
                             </p>
                             <p className="text-sm text-white/70">
-                              {habit.xp} XP • {habit.points} {t('common.pts')} • {areaName}
+                              {habit.xp} {t('common.xp')} • {habit.points} {t('common.pts')} • {areaName}
                             </p>
                           </div>
                           <div className="flex gap-2">

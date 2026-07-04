@@ -146,7 +146,7 @@ export function Leaderboard() {
   };
 
   const handleRemoveFriend = async (friendshipId: string, username: string) => {
-    if (confirm(t('social.removeFriend') + ` @${username}?`)) {
+    if (confirm(t('social.confirmRemoveFriend', { username }))) {
       try {
         await removeFriend(friendshipId);
         toast.success(t('social.friendRemoved', { username }));
@@ -439,7 +439,7 @@ export function Leaderboard() {
                               <div>
                                 <p className="font-semibold text-white">@{friend.username}</p>
                                 <p className="text-sm text-white">
-                                  {t('common.level')} {friend.level} • {friend.currentStreak} {t('streaks.current')}
+                                  {t('common.level')} {friend.level} • {t('social.streakDays', { count: friend.currentStreak })}
                                 </p>
                               </div>
                             </div>
@@ -580,7 +580,7 @@ export function Leaderboard() {
                                 <div>
                                   <p className="font-semibold text-white">@{user.username}</p>
                                   <p className="text-sm text-white">
-                                    {t('common.level')} {user.level} • {user.currentStreak} {t('streaks.current')}
+                                    {t('common.level')} {user.level} • {t('social.streakDays', { count: user.currentStreak })}
                                   </p>
                                 </div>
                               </div>
@@ -659,7 +659,7 @@ export function Leaderboard() {
                   </h2>
                   <div className="flex items-center gap-3 text-sm">
                     <span className="px-3 py-1 rounded-full bg-green-600/20 text-green-400 font-medium">
-                      {streakAchievements.filter(a => a.unlocked && !a.claimedAt).length} {t('achievements.available').toLowerCase()}
+                      {t('achievements.availableCount', { count: streakAchievements.filter(a => a.unlocked && !a.claimedAt).length })}
                     </span>
                     <span className="px-3 py-1 rounded-full bg-white/10 text-white/70 font-medium">
                       {streakAchievements.filter(a => a.claimedAt).length} / {streakAchievements.length}

@@ -129,7 +129,7 @@ export function HabitItem({
             : 'border-teal-400/50 shadow-glow-teal'
           : 'hover:-translate-y-0.5 hover:shadow-soft-lg'
       )}
-      aria-label={`Habit: ${name}`}
+      aria-label={t('habits.habitAria', { name })}
     >
       {/* XP burst celebration (one-shot) */}
       {burst && (
@@ -239,7 +239,7 @@ export function HabitItem({
             {isMeasurable && (
               <span className="inline-flex items-center gap-1 px-1.5 py-0.5 text-[11px] font-semibold rounded-md bg-teal-500/20 text-teal-200 ring-1 ring-inset ring-teal-400/20">
                 {todayValue ? `${todayValue}` : '0'}
-                {dailyGoal ? `/${dailyGoal}` : ''} {unit || ''}
+                {dailyGoal ? `/${dailyGoal}` : ''} {unit ? t(`habits.units.${unit}`, unit) : ''}
               </span>
             )}
             {!isQuit && !isMeasurable && lifeAreaName && (
@@ -315,7 +315,7 @@ export function HabitItem({
                     ? 'bg-gradient-to-br from-teal-400 to-teal-600 text-white ring-white/25 shadow-glow-teal shadow-[inset_0_1px_1px_rgba(255,255,255,0.4)] scale-105'
                     : 'bg-white/[0.06] text-teal-300 ring-white/10 hover:bg-teal-500/20 hover:text-white hover:ring-teal-400/40 hover:scale-105'
                 )}
-                aria-label={isMeasurable ? t('habits.logValue') : `Mark ${name} as complete`}
+                aria-label={isMeasurable ? t('habits.logValue') : t('habits.markComplete', { name })}
                 aria-pressed={completedToday}
               >
                 {isLoading && !completedToday ? (
@@ -339,7 +339,7 @@ export function HabitItem({
                 onClick={handleUncomplete}
                 disabled={isLoading || !completedToday}
                 className="w-12 h-12 rounded-2xl grid place-items-center bg-white/[0.06] text-white/50 ring-1 ring-inset ring-white/10 hover:bg-danger-500/20 hover:text-white transition-all duration-300 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
-                aria-label={`Mark ${name} as incomplete`}
+                aria-label={t('habits.markIncomplete', { name })}
                 aria-pressed={!completedToday}
               >
                 {isLoading && completedToday ? (

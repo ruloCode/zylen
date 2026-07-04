@@ -4,6 +4,7 @@ import { initializeStore, useAppStore } from '@/store';
 import { ROUTES } from '@/constants/routes';
 import { NotificationsService } from '@/services/notifications.service';
 import { useLocale } from '@/hooks/useLocale';
+import { useDailyReset } from '@/hooks/useDailyReset';
 
 interface AppProviderProps {
   children: React.ReactNode;
@@ -54,6 +55,16 @@ export function AppProvider({ children }: AppProviderProps) {
     return () => document.removeEventListener('visibilitychange', onVisible);
   }, [isInitialized, t]);
 
+  // Hard daily reset at 00:00 device time: refetch habit completions (which are
+  // date-scoped, so they clear for the new day) and realign the streak strip.
+  // Fires app-wide, so a session left open across midnight resets on any page.
+  useDailyReset(() => {
+    if (!isInitialized) return;
+    const state = useAppStore.getState();
+    state.loadHabits();
+    state.refreshStreak();
+  });
+
   useEffect(() => {
     // Redirect to onboarding if user hasn't completed it
     if (isInitialized && user) {
@@ -72,7 +83,7 @@ export function AppProvider({ children }: AppProviderProps) {
       <div className="flex items-center justify-center min-h-screen bg-charcoal-950">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-teal-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-pale-100 text-lg">El reino despierta…</p>
+          <p className="text-pale-100 text-lg">{t('common.awakening', { defaultValue: 'El reino despierta…' })}</p>
         </div>
       </div>
     );

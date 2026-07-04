@@ -81,7 +81,7 @@ export function TemplateCard({ template, onSelect, onLearnMore }: TemplateCardPr
           )}
         </div>
         <div className="flex items-center gap-1 px-2 py-1 bg-gold-500/20 text-gold-400 rounded-lg text-sm font-semibold">
-          +{template.suggestedXp} XP
+          +{template.suggestedXp} {t('common.xp')}
         </div>
       </div>
 

@@ -73,7 +73,7 @@ export const createHabitTemplatesSlice: StateCreator<HabitTemplatesSlice> = (set
     } catch (error) {
       console.error('Error loading templates:', error);
       set({
-        templatesError: error instanceof Error ? error.message : 'Failed to load templates',
+        templatesError: 'templatesLoadFailed',
         templatesLoading: false,
       });
     }

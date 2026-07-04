@@ -169,7 +169,7 @@ export function HabitAnalytics({ habitId, habitName, iconEmoji, habitType = 'che
               <div className="rounded-2xl p-3 bg-white/[0.04] border border-white/10 flex items-center justify-between">
                 <span className="text-sm text-white/60">{t('analytics.totalValue')}</span>
                 <span className="text-lg font-bold text-teal-300">
-                  {Math.round((stats?.totalValue ?? 0) * 100) / 100} {unit}
+                  {Math.round((stats?.totalValue ?? 0) * 100) / 100} {unit ? t(`habits.units.${unit}`, unit) : ''}
                 </span>
               </div>
             )}

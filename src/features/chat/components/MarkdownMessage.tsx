@@ -3,6 +3,7 @@ import ReactMarkdown, { type Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
 import { Check, Copy } from 'lucide-react';
+import { useLocale } from '@/hooks/useLocale';
 import 'highlight.js/styles/atom-one-dark.css';
 
 type Accent = 'teal' | 'gold';
@@ -27,6 +28,7 @@ function nodeToString(node: ReactNode): string {
 
 /** Fenced code block with a hover "copy" affordance and syntax highlighting. */
 function CodeBlock({ children, accent }: { children: ReactNode; accent: Accent }) {
+  const { t } = useLocale();
   const [copied, setCopied] = useState(false);
   const code = nodeToString(children).replace(/\n$/, '');
 
@@ -47,7 +49,7 @@ function CodeBlock({ children, accent }: { children: ReactNode; accent: Accent }
       <button
         type="button"
         onClick={handleCopy}
-        aria-label={copied ? 'Copied' : 'Copy code'}
+        aria-label={copied ? t('chat.copied') : t('chat.copy')}
         className={`absolute right-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-lg bg-black/40 text-white/70 opacity-0 backdrop-blur-sm transition-all duration-200 hover:bg-black/60 hover:text-white focus:outline-none focus-visible:opacity-100 focus-visible:ring-2 group-hover/code:opacity-100 ${ring}`}
       >
         {copied ? <Check size={14} className="text-green-400" /> : <Copy size={14} />}

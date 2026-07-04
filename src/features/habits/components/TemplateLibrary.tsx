@@ -171,7 +171,7 @@ export function TemplateLibrary({ onSelectTemplate, onClose, onCreateCustom }: T
           {/* Error state */}
           {templatesError && (
             <div className="flex flex-col items-center justify-center py-12 text-red-400">
-              <p>{templatesError}</p>
+              <p>{t('errors.templatesLoadFailed')}</p>
               <button
                 type="button"
                 onClick={() => loadTemplates()}

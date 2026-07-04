@@ -11,6 +11,7 @@ import type {
   GemSpecies,
 } from '@/types/focus';
 import { gemStageImage, speciesMeta } from '../utils/gemAssets';
+import { displayGemName } from '../utils/displayGemName';
 
 interface SessionCelebrationProps {
   result: CompleteFocusSessionResult;
@@ -69,7 +70,7 @@ export function SessionCelebration({
         />
         {/* Floating XP */}
         <span className="absolute -top-3 text-shimmer-gold text-xl font-extrabold animate-xp-float motion-reduce:animate-none">
-          +{result.xpAwarded} XP
+          +{result.xpAwarded} {t('common.xp')}
         </span>
       </div>
 
@@ -78,7 +79,9 @@ export function SessionCelebration({
           <Sparkles size={20} className="text-gold-400" />
           {t('focus.completeTitle')}
         </h2>
-        <p className="text-white/70 text-sm font-semibold mt-1">{gemName}</p>
+        <p className="text-white/70 text-sm font-semibold mt-1">
+          {displayGemName(gemName, t)}
+        </p>
         <p className="text-gold-300 font-bold text-lg mt-3 tabular-nums">
           {t('focus.completeReward', {
             xp: animatedXP,

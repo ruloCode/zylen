@@ -113,7 +113,7 @@ export function OnboardingStep4({ onFinish, onPrev, isSubmitting = false }: Onbo
           {isSubmitting ? (
             <>
               <Loader2 size={20} className="animate-spin" />
-              {t('common.saving') || 'Guardando...'}
+              {t('common.saving')}
             </>
           ) : (
             <>

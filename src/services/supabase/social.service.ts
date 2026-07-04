@@ -71,10 +71,14 @@ export async function updateUsername(
   } catch (error: any) {
     console.error('Error updating username:', error);
     if (error.code === '23505') {
-      // Unique constraint violation
-      throw new Error('Username is already taken');
+      // Unique constraint violation — coded error so the UI can map it to i18n
+      const takenError = new Error('username_taken');
+      (takenError as any).code = 'username_taken';
+      throw takenError;
     }
-    throw new Error('Failed to update username');
+    const updateError = new Error('username_update_failed');
+    (updateError as any).code = 'username_update_failed';
+    throw updateError;
   }
 }
 

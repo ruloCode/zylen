@@ -85,6 +85,7 @@ export function useStreaks() {
     isLoading: state.streakLoading,
     error: state.streakError,
     loadStreak: state.loadStreak,
+    refreshStreak: state.refreshStreak,
     updateStreakForToday: state.updateStreakForToday,
     getStreakBonus: state.getStreakBonus,
   }));

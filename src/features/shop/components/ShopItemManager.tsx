@@ -108,7 +108,7 @@ export function ShopItemManager() {
    * Check if item is predefined (default)
    */
   const isPredefined = (item: ShopItem): boolean => {
-    return item.id.startsWith('default-');
+    return isTranslationKey(item.name);
   };
 
   return (
@@ -137,7 +137,7 @@ export function ShopItemManager() {
           <div className="text-center py-16 glass-card rounded-2xl border-2 border-gold-200/30">
             <Package className="w-16 h-16 text-white/60 mx-auto mb-4" />
             <p className="text-white text-lg mb-2">{t('shopManager.noItems')}</p>
-            <p className="text-white/80 text-sm mb-6">Create your first reward to get started</p>
+            <p className="text-white/80 text-sm mb-6">{t('shopManager.createFirstHint')}</p>
             <button
               onClick={handleCreate}
               className="px-6 py-3 rounded-xl bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-600 hover:to-gold-700 text-white font-semibold shadow-glow-gold transition-all duration-200 hover:scale-105"

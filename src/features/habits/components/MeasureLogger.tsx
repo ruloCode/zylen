@@ -160,7 +160,7 @@ export function MeasureLogger({ habitName, unit, dailyGoal, onSave, onClose }: M
                 placeholder="0"
                 className="w-full bg-transparent text-center text-5xl font-bold text-teal-300 focus:outline-none placeholder:text-teal-300/30"
               />
-              <span className="text-teal-300/80 font-semibold">{unit}</span>
+              <span className="text-teal-300/80 font-semibold">{t(`habits.units.${unit}`, unit)}</span>
             </div>
           </div>
         )}
@@ -234,7 +234,7 @@ export function MeasureLogger({ habitName, unit, dailyGoal, onSave, onClose }: M
           {t('timer.save')}
           {resolvedValue > 0 && (
             <span className="opacity-80">
-              · {resolvedValue} {unit}
+              · {resolvedValue} {t(`habits.units.${unit}`, unit)}
             </span>
           )}
         </button>

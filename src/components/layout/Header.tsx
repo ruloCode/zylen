@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { User as UserIcon, Star, Coins } from 'lucide-react';
 import { useUser } from '@/store';
 import { useAnimatedNumber } from '@/hooks/useAnimatedNumber';
+import { useLocale } from '@/hooks/useLocale';
 import { LanguageSwitcher } from '@/features/settings/components/LanguageSwitcher';
 import { Logo } from '@/components/branding/Logo';
 import { cn } from '@/utils';
@@ -16,6 +17,7 @@ import { ROUTES } from '@/constants/routes';
  */
 export function Header() {
   const { user } = useUser();
+  const { t } = useLocale();
   const location = useLocation();
   const animatedPoints = useAnimatedNumber(user?.points ?? 0);
 
@@ -34,7 +36,7 @@ export function Header() {
           <Link
             to={ROUTES.DASHBOARD}
             className="flex items-center gap-2 hover:opacity-80 transition-opacity"
-            aria-label="Go to dashboard"
+            aria-label={t('navigation.goToDashboard')}
           >
             <Logo size="sm" />
           </Link>
@@ -47,14 +49,14 @@ export function Header() {
               <span className="text-sm font-semibold text-white">
                 {animatedPoints.toLocaleString()}
               </span>
-              <span className="text-xs text-gray-200">pts</span>
+              <span className="text-xs text-gray-200">{t('common.pts')}</span>
             </div>
 
             {/* Level */}
             <div className="flex items-center gap-2 px-3 py-1.5 bg-charcoal-700/50 rounded-lg border border-charcoal-600">
               <Star size={18} className="text-[rgb(137,184,32)]" aria-hidden="true" />
               <span className="text-sm font-semibold text-white">
-                Nv. {user.level}
+                {t('common.levelShort')} {user.level}
               </span>
             </div>
           </div>
@@ -75,20 +77,20 @@ export function Header() {
                   ? 'bg-[rgb(137,184,32)]/20 border border-[rgb(137,184,32)]/50'
                   : 'bg-white/10 border border-white/20 hover:bg-white/20'
               )}
-              aria-label="View profile"
+              aria-label={t('navigation.profile')}
               aria-current={location.pathname === ROUTES.PROFILE ? 'page' : undefined}
             >
               {user.avatarUrl ? (
                 <img
                   src={user.avatarUrl}
-                  alt={user.name || 'User avatar'}
+                  alt={user.name || t('navigation.profile')}
                   className="w-6 h-6 rounded-full object-cover"
                 />
               ) : (
                 <UserIcon size={18} className="text-white" aria-hidden="true" />
               )}
               <span className="hidden sm:inline text-sm font-medium text-white">
-                {user.name || 'Perfil'}
+                {user.name || t('navigation.profile')}
               </span>
             </Link>
           </div>

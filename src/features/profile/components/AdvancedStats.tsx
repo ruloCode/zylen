@@ -164,7 +164,7 @@ export function AdvancedStats() {
                           {translatedName}
                         </span>
                         <span className="text-white/70 font-medium">
-                          {area.totalXP} XP ({area.percentage}%)
+                          {area.totalXP} {t('common.xp')} ({area.percentage}%)
                         </span>
                       </div>
                       {/* Progress bar */}

@@ -11,7 +11,6 @@ export function RootHabit() {
   const {
     progress,
     isLoading,
-    error,
     canCheckIn,
     loadProgress,
     checkIn,
@@ -28,7 +27,14 @@ export function RootHabit() {
       // Show success message or notification
       toast.success(t('rootHabit.checkInSuccess'));
     } catch (err) {
-      toast.error(error || t('rootHabit.checkInError'));
+      const message = err instanceof Error ? err.message : '';
+      if (message === 'Day already checked in') {
+        toast.error(t('rootHabit.alreadyCheckedIn'));
+      } else if (message === 'Challenge already completed') {
+        toast.error(t('rootHabit.completed'));
+      } else {
+        toast.error(t('rootHabit.checkInError'));
+      }
     }
   };
 
@@ -59,7 +65,7 @@ export function RootHabit() {
             {t('rootHabit.challengeTitle')}
           </h2>
           <div className="mb-6">
-            <ProgressBar current={currentDay} max={30} variant="gold" size="lg" />
+            <ProgressBar current={currentDay} max={30} variant="gold" size="lg" showLabel={false} />
           </div>
           <div className="flex justify-between text-white mb-4">
             <span>{t('rootHabit.dayCount', { current: currentDay, total: 30 })}</span>

@@ -27,7 +27,7 @@ interface CoachChatProps {
  * message together with a persisted `session_id` so Hermes remembers context.
  */
 export function CoachChat({ onClose }: CoachChatProps) {
-  const { t } = useLocale();
+  const { t, language } = useLocale();
   const { user } = useUser();
   // Hermes "speaks" to you wearing the same hero the user picked on the Home.
   const hermesAvatar = getHeroBodySrc(user?.avatarUrl);
@@ -81,7 +81,7 @@ export function CoachChat({ onClose }: CoachChatProps) {
       });
     } catch (err) {
       console.error('Error streaming Hermes response:', err);
-      setError(err instanceof Error ? err.message : 'No se pudo conectar con Hermes.');
+      setError(t('chat.errors.coachUnavailable'));
     } finally {
       setIsLoading(false);
       setStreamingId(null);
@@ -139,7 +139,7 @@ export function CoachChat({ onClose }: CoachChatProps) {
                 onSuggestion={sendMessage}
               />
             ) : (
-              <section aria-label="Coach messages" className="flex-1">
+              <section aria-label={t('chat.coachMessagesHeading')} className="flex-1">
                 {messages.map((msg) => (
                   <ChatBubble
                     key={msg.id}
@@ -149,7 +149,7 @@ export function CoachChat({ onClose }: CoachChatProps) {
                     avatarSrc={hermesAvatar}
                     copyLabel={t('chat.copy')}
                     copiedLabel={t('chat.copied')}
-                    timestamp={new Date(msg.timestamp).toLocaleTimeString([], {
+                    timestamp={new Date(msg.timestamp).toLocaleTimeString(language, {
                       hour: '2-digit',
                       minute: '2-digit',
                     })}

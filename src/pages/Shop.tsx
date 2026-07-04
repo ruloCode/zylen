@@ -161,13 +161,13 @@ export function Shop() {
             {/* Shop Items */}
             <section aria-labelledby="items-heading" className="mb-8">
               <h2 className="sr-only" id="items-heading">
-                Available Rewards
+                {t('shop.availableRewards')}
               </h2>
               {displayItems.length === 0 ? (
                 <div className="glass-card rounded-2xl p-12 text-center border-2 border-gold-200/30">
                   <ShoppingBag className="w-16 h-16 text-white/50 mx-auto mb-4" />
                   <p className="text-white text-lg mb-2">{t('shopManager.noItems')}</p>
-                  <p className="text-white/80 text-sm mb-6">Add your first reward to get started</p>
+                  <p className="text-white/80 text-sm mb-6">{t('shopManager.emptyStateHint')}</p>
                   <button
                     onClick={() => setIsManaging(true)}
                     className="px-6 py-3 rounded-xl bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-600 hover:to-gold-700 text-white font-semibold shadow-glow-gold transition-all duration-200 hover:scale-105"
@@ -188,7 +188,7 @@ export function Shop() {
             <aside
               className="glass-card rounded-3xl p-6 bg-gradient-to-br from-warning/10 to-danger/10 border-2 border-warning/30 relative overflow-hidden group hover:border-warning/50 transition-all duration-200"
               role="note"
-              aria-label="Important reminder"
+              aria-label={t('shop.reminderAria')}
             >
               {/* Warning icon with animation */}
               <div className="absolute top-4 right-4 opacity-20 group-hover:opacity-30 transition-opacity">
