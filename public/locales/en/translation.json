@@ -1827,6 +1827,15 @@
       "enter": "Enter Arena {{tier}}",
       "back": "Armory"
     },
+    "invite": {
+      "title": "Play with allies",
+      "hint": "Share your link: allies join YOUR room with their own hero, level and gems. Up to 3 guardians.",
+      "copy": "Copy link",
+      "copied": "Link copied! Send it to your ally.",
+      "share": "Share",
+      "shareText": "Join my expedition in the Temple of Disorder ⚔",
+      "joiningAlly": "You're joining an ally's room — the arena is set by whoever lights the flame first."
+    },
     "gear": {
       "staff_novice": {
         "name": "Initiate's Staff",

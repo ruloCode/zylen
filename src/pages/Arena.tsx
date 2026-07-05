@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Loader2, Swords, Gem, ChevronRight, Check, Lock, ShieldCheck } from 'lucide-react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { ArrowLeft, Loader2, Swords, Gem, ChevronRight, Check, Lock, ShieldCheck, Users, Copy, Share2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useUser, useArena, useFocus } from '@/store';
 import { useLocale } from '@/hooks/useLocale';
@@ -63,6 +63,31 @@ export function Arena() {
   useEffect(() => { void loadArenaProgress(); }, [loadArenaProgress]);
   useEffect(() => { void loadFocusData(); }, [loadFocusData]);
 
+  // Ally invites: /arena?room=el-xxxx joins a friend's room WITH your own identity
+  // (name/avatar/skin/level/gear). ProtectedRoute stashes the room for logged-out
+  // invitees so it survives the login redirect.
+  const [searchParams] = useSearchParams();
+  const [stashedRoom] = useState(() => sessionStorage.getItem('el_invite_room') ?? '');
+  useEffect(() => { sessionStorage.removeItem('el_invite_room'); }, []);
+  const myRoom = user
+    ? `el-${user.id.replace(/[^a-z0-9]/gi, '').slice(0, 8).toLowerCase()}`
+    : '';
+  const rawRoom = (searchParams.get('room') ?? stashedRoom).toLowerCase();
+  const inviteRoom = /^el-[a-z0-9]{1,12}$/.test(rawRoom) && rawRoom !== myRoom ? rawRoom : null;
+
+  const inviteLink = `${window.location.origin}${ROUTES.ARENA}?room=${myRoom}`;
+  const copyInvite = async () => {
+    try {
+      await navigator.clipboard.writeText(inviteLink);
+      toast.success(t('arena.invite.copied'));
+    } catch {
+      window.prompt(t('arena.invite.copy'), inviteLink);
+    }
+  };
+  const shareInvite = () => {
+    void navigator.share?.({ title: t('arena.title'), text: t('arena.invite.shareText'), url: inviteLink }).catch(() => {});
+  };
+
   // Focus gems grown per species -> in-game buffs (species:count entries share
   // the `gems` URL param with the armory gear names; the game tells them apart).
   const speciesCounts = focusStats?.speciesCounts ?? {};
@@ -79,9 +104,8 @@ export function Arena() {
 
   const gameSrc = useMemo(() => {
     if (!user || view !== 'playing') return null;
-    const room = `el-${user.id.replace(/[^a-z0-9]/gi, '').slice(0, 8).toLowerCase()}`;
     const params = new URLSearchParams({
-      room,
+      room: inviteRoom ?? myRoom,   // an invite link drops you into your ally's room
       name: user.name.slice(0, 16),
       origin: window.location.origin,
       rxp: String(Math.round(GAME_CONFIG.victoryXP * tierRewardMultiplier(tier))),
@@ -90,15 +114,17 @@ export function Arena() {
       weapon: progress.weaponId,
       gems: [...progress.gems, focusGemsParam].filter(Boolean).join(','),
       level: String(Math.max(1, user.level || 1)),   // the hero enters at their real Everlight level
-      // in-arena hero model mirrors the chosen app avatar (Dani → 'f', Rulo → 'm')
-      skin: AVATAR_OPTIONS.find((o) => o.url === user.avatarUrl)?.id === 'dani' ? 'f' : 'm',
+      // in-arena hero model mirrors the chosen app avatar (Dani → 'f', Rulo → 'm');
+      // gender survives legacy/default avatarUrl values that the URL match misses
+      skin: user.gender === 'female'
+        || AVATAR_OPTIONS.find((o) => o.url === user.avatarUrl)?.id === 'dani' ? 'f' : 'm',
     });
     if (user.avatarUrl) {
       params.set('avatar', new URL(user.avatarUrl, window.location.origin).href);
     }
     return `${GAME_CONFIG.url}?${params.toString()}`;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, view, tier, progress.weaponId, progress.gems.join(','), focusGemsParam]);
+  }, [user, view, tier, inviteRoom, myRoom, progress.weaponId, progress.gems.join(','), focusGemsParam]);
 
   const handleVictory = useCallback(async (wonTier: number) => {
     // persist the ladder first — unlock is independent from the daily reward cap
@@ -208,6 +234,14 @@ export function Arena() {
           ◆ {points}
         </span>
       </header>
+
+      {/* joining an ally's room via invite link */}
+      {inviteRoom && (
+        <div className="glass-card px-3 py-2.5 mb-4 flex items-center gap-2.5 border border-teal-400/40">
+          <Users size={15} className="text-teal-300 shrink-0" />
+          <p className="text-white/75 text-[11px] leading-snug">{t('arena.invite.joiningAlly')}</p>
+        </div>
+      )}
 
       {/* Focus-gem powers (grown in "Enfoque del día") */}
       <div className="glass-card px-3 py-2.5 mb-4 flex items-center gap-2.5">
@@ -359,6 +393,34 @@ export function Arena() {
               })}
             </div>
             <p className="text-white/45 text-[10.5px] mt-1.5">{t('arena.armory.gemSlots', { max: MAX_EQUIPPED_GEMS })}</p>
+          </section>
+
+          {/* play with allies — share your room's deep link */}
+          <section className="mb-6">
+            <h2 className="text-white font-bold text-sm mb-2 flex items-center gap-1.5">
+              <Users size={15} className="text-teal-300" /> {t('arena.invite.title')}
+            </h2>
+            <div className="glass-card p-3">
+              <p className="text-white/55 text-[11px] leading-snug mb-2.5">{t('arena.invite.hint')}</p>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => void copyInvite()}
+                  className="flex-1 flex items-center justify-center gap-1.5 text-xs font-bold text-white bg-teal-600/60 rounded-lg px-3 py-2"
+                >
+                  <Copy size={13} /> {t('arena.invite.copy')}
+                </button>
+                {'share' in navigator && (
+                  <button
+                    type="button"
+                    onClick={shareInvite}
+                    className="flex-1 flex items-center justify-center gap-1.5 text-xs font-bold text-white bg-purple-600/60 rounded-lg px-3 py-2"
+                  >
+                    <Share2 size={13} /> {t('arena.invite.share')}
+                  </button>
+                )}
+              </div>
+            </div>
           </section>
 
           <button

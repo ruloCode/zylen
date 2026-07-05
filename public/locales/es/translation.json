@@ -1850,6 +1850,15 @@
       "enter": "Entrar a la Arena {{tier}}",
       "back": "Armería"
     },
+    "invite": {
+      "title": "Jugar con aliados",
+      "hint": "Comparte tu enlace: tus aliados entran a TU sala con su propio héroe, nivel y gemas. Hasta 3 guardianes.",
+      "copy": "Copiar enlace",
+      "copied": "¡Enlace copiado! Envíaselo a tu aliado.",
+      "share": "Compartir",
+      "shareText": "Únete a mi expedición en el Templo del Desorden ⚔",
+      "joiningAlly": "Te unes a la sala de un aliado — la arena la fija quien enciende la luz primero."
+    },
     "gear": {
       "staff_novice": {
         "name": "Bastón del Iniciado",

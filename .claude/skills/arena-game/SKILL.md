@@ -132,5 +132,10 @@ en la función SQL `arena_item_cost` (migración `20260702120000_arena_progressi
   cada jugador ve el modelo de los demás vía snapshot idx17.
 - Playwright MCP a veces deja el perfil bloqueado: `pkill -f mcp-chrome-a1d8ab0` +
   borrar `SingletonLock`.
-- El panel de sala vive tras el chip 👥 del header (no restaurar paneles fijos);
-  el enlace compartible es canónico: `origin+path?room=` sin params de debug.
+- El panel de sala vive tras el chip 👥 del header (no restaurar paneles fijos).
+  Enlace de invitación: si el juego está embebido (param `origin`) es el deep
+  link del APP `${origin}/arena?room=…` (el invitado entra con SU identidad —
+  Arena.tsx lee `?room=` y ProtectedRoute lo stashea si no hay sesión);
+  standalone usa el link crudo `origin+path?room=` sin params de debug.
+- Roster de avatares: mensaje aparte `{type:'roster'}` en cada join (NO va en el
+  snapshot 10Hz). Snapshot de minions = 7 campos, idx6 = maxHp (barras de vida).

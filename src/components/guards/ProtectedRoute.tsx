@@ -35,6 +35,12 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
   // Redirect unauthenticated users to the Welcome splash (entry point).
   // /login stays reachable from there for returning users.
   if (!user) {
+    // Arena invite links must survive the login redirect (the login flow drops
+    // state.from) — stash the room; Arena consumes and clears it after login.
+    if (location.pathname === ROUTES.ARENA) {
+      const room = new URLSearchParams(location.search).get('room');
+      if (room) sessionStorage.setItem('el_invite_room', room);
+    }
     return <Navigate to={ROUTES.WELCOME} state={{ from: location }} replace />;
   }
 
