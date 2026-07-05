@@ -15,7 +15,6 @@ import { createHabitTemplatesSlice } from './habitTemplatesSlice';
 import { createThemeSlice } from './themeSlice';
 import { createArenaSlice } from './arenaSlice';
 import { createFocusSlice } from './focusSlice';
-import { createGuardianSlice } from './guardianSlice';
 import { AVATARS, LIFE_AREAS } from '@/constants';
 import type { LifeArea, Streak, User } from '@/types';
 import type { HabitWithCompletion } from '@/services/supabase/habits.service';
@@ -40,7 +39,6 @@ export const useAppStore = create<AppStore>()((...a) => ({
   ...createThemeSlice(...a),
   ...createArenaSlice(...a),
   ...createFocusSlice(...a),
-  ...createGuardianSlice(...a),
 }));
 
 // Typed hooks for easier access

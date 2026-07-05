@@ -196,11 +196,6 @@ export const createHabitsSlice: StateCreator<AppStore, [], [], HabitsSlice> = (
         ),
       }));
 
-      // Let the Guardian celebrate today's level-up on the Dashboard.
-      if (result.leveled_up) {
-        get().setLastLevelUp(result.new_level);
-      }
-
       // Check achievements in the background; never block the completion.
       AchievementsService.checkAndUnlockAchievements()
         .then((achievementResult) => {

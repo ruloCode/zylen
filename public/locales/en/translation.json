@@ -1099,58 +1099,6 @@
     "streakChip_one": "day streak",
     "streakChip_other": "day streak"
   },
-  "guardian": {
-    "title": "The Guardian",
-    "rules": {
-      "streakMilestone": [
-        "{{streak}} days of flame, {{name}}! Your consistency makes the darkness tremble.",
-        "The flame has burned for {{streak}} days. The whole realm bows before you.",
-        "{{streak}} days without fading. Few lights shine this bright in the Everlight."
-      ],
-      "levelUp": [
-        "You have ascended to level {{level}}. The Everlight grows with you.",
-        "Level {{level}} reached. Your avatar radiates new strength.",
-        "The realm celebrates your rise to level {{level}}. Keep forging your legend."
-      ],
-      "allDone": [
-        "All your rituals complete. Today the darkness found no cracks.",
-        "Ritual by ritual, you sealed the day with light. Rest proud.",
-        "Nothing left undone. The Everlight shines full tonight."
-      ],
-      "darknessHigh": [
-        "Darkness wraps around your avatar... Complete a ritual and push back the fog.",
-        "The fog is thick, {{name}}. A single ritual can relight your flame.",
-        "Your flame is nearly out. Don't abandon it — today is the day to reclaim it."
-      ],
-      "darknessMedium": [
-        "A purple fog is starting to surround your avatar. There's still time to clear it.",
-        "The darkness creeps forward slowly. Complete your rituals and stop it.",
-        "I see shadows approaching your avatar. One ritual today will keep them away."
-      ],
-      "partialProgress": [
-        "{{done}} of {{total}} rituals. The light advances — don't stop now.",
-        "Good step: {{done}} of {{total}}. Every ritual pushes the fog back a little more.",
-        "You've lit {{done}} of {{total}} flames. Finish today's path."
-      ],
-      "kickoff": [
-        "The day begins. Light your first flame.",
-        "Dawn breaks over the realm, {{name}}. Your rituals await.",
-        "New day, new light. Start with the simplest ritual."
-      ],
-      "idle": [
-        "The Guardian watches over you. Your rituals await.",
-        "There's still time. One ritual today keeps the darkness at bay.",
-        "The Everlight awaits your step today, {{name}}."
-      ]
-    },
-    "darkness": {
-      "label": "Avatar's light",
-      "clear": "Radiant",
-      "low": "Faint fog",
-      "medium": "Growing darkness",
-      "high": "Dense darkness"
-    }
-  },
   "routines": {
     "title": "Routines",
     "subtitle": "Small actions, big transformations.",

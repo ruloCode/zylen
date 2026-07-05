@@ -1122,58 +1122,6 @@
     "streakChip_one": "día de llama",
     "streakChip_other": "días de llama"
   },
-  "guardian": {
-    "title": "El Guardián",
-    "rules": {
-      "streakMilestone": [
-        "¡{{streak}} días de llama, {{name}}! Tu constancia hace temblar a la oscuridad.",
-        "La llama lleva {{streak}} días encendida. El reino entero se inclina ante ti.",
-        "{{streak}} días sin apagarse. Pocas luces brillan tanto en el Everlight."
-      ],
-      "levelUp": [
-        "Has ascendido al nivel {{level}}. La luz del Everlight crece contigo.",
-        "Nivel {{level}} alcanzado. Tu avatar irradia una fuerza nueva.",
-        "El reino celebra tu ascenso al nivel {{level}}. Sigue forjando tu leyenda."
-      ],
-      "allDone": [
-        "Todos tus rituales completados. Hoy la oscuridad no encontró grietas.",
-        "Ritual tras ritual, sellaste el día con luz. Descansa con orgullo.",
-        "Nada quedó pendiente. El Everlight brilla pleno esta noche."
-      ],
-      "darknessHigh": [
-        "La oscuridad envuelve a tu avatar... Completa un ritual y haz retroceder la niebla.",
-        "La niebla es densa, {{name}}. Un solo ritual puede volver a encender tu luz.",
-        "Tu llama casi se apaga. No la abandones: hoy es el día de recuperarla."
-      ],
-      "darknessMedium": [
-        "Una niebla púrpura empieza a rodear a tu avatar. Aún estás a tiempo de disiparla.",
-        "La oscuridad avanza despacio. Completa tus rituales y detenla.",
-        "Veo sombras acercarse a tu avatar. Un ritual hoy las mantendrá lejos."
-      ],
-      "partialProgress": [
-        "{{done}} de {{total}} rituales. La luz avanza, no te detengas.",
-        "Buen paso: {{done}} de {{total}}. Cada ritual empuja la niebla un poco más.",
-        "Ya encendiste {{done}} de {{total}} llamas. Termina el camino de hoy."
-      ],
-      "kickoff": [
-        "El día comienza. Enciende tu primera llama.",
-        "Amanece en el reino, {{name}}. Tus rituales esperan.",
-        "Nueva jornada, nueva luz. Empieza por el ritual más simple."
-      ],
-      "idle": [
-        "El Guardián vela por ti. Tus rituales esperan.",
-        "Aún hay tiempo. Un ritual hoy mantiene la oscuridad a raya.",
-        "El Everlight aguarda tu paso de hoy, {{name}}."
-      ]
-    },
-    "darkness": {
-      "label": "Luz del avatar",
-      "clear": "Radiante",
-      "low": "Niebla leve",
-      "medium": "Oscuridad creciente",
-      "high": "Oscuridad densa"
-    }
-  },
   "routines": {
     "title": "Rituales",
     "subtitle": "Pequeñas acciones, grandes transformaciones.",
