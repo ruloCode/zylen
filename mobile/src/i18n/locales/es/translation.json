@@ -1,0 +1,1976 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "points": "Esencia",
+    "totalPoints": "Esencia Total",
+    "level": "Nivel",
+    "xp": "Luz",
+    "totalXP": "Luz total",
+    "days": "Días",
+    "day": "Día",
+    "skip": "Saltar al contenido principal",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "cancel": "Cancelar",
+    "progress": "Progreso",
+    "pts": "ess",
+    "noArea": "Sin reino",
+    "close": "Cerrar",
+    "saving": "Guardando...",
+    "awakening": "El reino despierta…",
+    "levelShort": "Nv."
+  },
+  "app": {
+    "name": "Everlight",
+    "tagline": "Restaura el reino con cada paso"
+  },
+  "navigation": {
+    "home": "Inicio",
+    "habits": "Hábitos",
+    "streaks": "Llama constante",
+    "shop": "Santuario",
+    "social": "Aliados",
+    "leaderboard": "Guardianes",
+    "profile": "Legado",
+    "chat": "Mentor",
+    "navigateTo": "Navegar a {{label}}",
+    "mood": "Ánimo",
+    "routines": "Rituales",
+    "progress": "Progreso",
+    "ranking": "Ranking",
+    "goToDashboard": "Ir al inicio",
+    "mainNavigation": "Navegación principal"
+  },
+  "dashboard": {
+    "title": "El Reino",
+    "lifeAreas": "Reinos de la Vida",
+    "logHabits": "Sembrar la luz de hoy",
+    "keepGoing": "El Everlight brilla contigo, Guardián. 💪",
+    "keepGoing_female": "El Everlight brilla contigo, Guardiana. 💪"
+  },
+  "home": {
+    "greetingMorning": "Buenos días, Guardián {{name}}.",
+    "greetingMorning_male": "Buenos días, Guardián {{name}}.",
+    "greetingMorning_female": "Buenos días, Guardiana {{name}}.",
+    "greetingAfternoon": "Te damos la bienvenida, Guardián {{name}}.",
+    "greetingAfternoon_male": "Bienvenido, Guardián {{name}}.",
+    "greetingAfternoon_female": "Bienvenida, Guardiana {{name}}.",
+    "greetingEvening": "Buenas noches, Guardián {{name}}.",
+    "greetingEvening_male": "Buenas noches, Guardián {{name}}.",
+    "greetingEvening_female": "Buenas noches, Guardiana {{name}}.",
+    "subtitle": "Hoy la luz necesita un paso más de ti.",
+    "notifications": "Mensajes del reino",
+    "streakLabel": "Llama constante",
+    "streakKeepGoing": "Mantén viva la llama.",
+    "levelLabel": "Guardián Nivel {{level}}",
+    "levelLabel_male": "Guardián Nivel {{level}}",
+    "levelLabel_female": "Guardiana Nivel {{level}}",
+    "focusOfDay": "Enfoque del día",
+    "personalJournal": "Coach Personal",
+    "todayPath": "Tu sendero de hoy",
+    "seeAll": "Ver todo",
+    "noHabits": "Aún no hay hábitos que enciendan la luz hoy",
+    "comingSoon": "Próximamente",
+    "addHabit": "Añadir hábito",
+    "minutes": "minutos",
+    "quoteSubtitle": "Pequeñas acciones, grandes cambios.",
+    "quotes": [
+      "Enfócate en avanzar, no en ser perfecto. Cada decisión deja una huella.",
+      "Pequeños pasos cada día hacen retroceder a la oscuridad.",
+      "La constancia mantiene viva la llama.",
+      "Hoy es un buen día para encender una nueva luz.",
+      "El Guardián que serás te lo agradecerá."
+    ]
+  },
+  "lifeAreas": {
+    "health": "Salud",
+    "finance": "Finanzas",
+    "creativity": "Creatividad",
+    "social": "Social",
+    "family": "Familia",
+    "career": "Carrera"
+  },
+  "lifeAreaModal": {
+    "title": "Detalles del Reino",
+    "totalXP": "Luz total",
+    "xpToNextLevel": "Luz para Nivel {{level}}",
+    "habitsInArea": "Hábitos en este reino",
+    "completedToday": "Completados Hoy",
+    "noHabits": "Este reino aún espera su primera luz",
+    "viewAllHabits": "Ver Todos los Hábitos",
+    "close": "Cerrar"
+  },
+  "streaks": {
+    "title": "Tu Llama constante",
+    "subtitle": "Mantén la llama encendida.",
+    "current": "Llama actual",
+    "best": "Llama más larga",
+    "achievements": "Reliquias",
+    "onFire": "Tu llama arde con fuerza. 🔥",
+    "motivation": "La luz se restaura con pequeños esfuerzos repetidos día tras día.",
+    "streakAchievements": "🏆 Reliquias de la Llama",
+    "achievementsUnlocked": "recuperadas",
+    "noAchievementsAvailable": "No hay reliquias disponibles",
+    "progress": "Progreso",
+    "unlocked": "✓ Recuperada",
+    "badges": {
+      "weekWarrior": "Guardián de la Semana",
+      "weekWarrior_female": "Guardiana de la Semana",
+      "consistencyKing": "Custodio de la Constancia",
+      "unstoppable": "Llama Imparable"
+    }
+  },
+  "achievements": {
+    "title": "Reliquias",
+    "subtitle": "Recupera reliquias y fortalece el Everlight",
+    "locked": "Sellada",
+    "available": "¡Disponible!",
+    "claimed": "✓ Recuperada",
+    "claimReward": "Recuperar Reliquia",
+    "claimNow": "Recuperar Ahora",
+    "viewDetails": "Ver Detalles",
+    "progress": "Progreso",
+    "requirement": "Requisito",
+    "requirements": "Requisitos",
+    "rewards": "Recompensas",
+    "unlockedOn": "Revelada el {{date}}",
+    "claimedOn": "Recuperada el {{date}}",
+    "availableCount": "{{count}} disponibles",
+    "claimedCount": "{{count}} recuperadas",
+    "totalCount": "{{count}} totales",
+    "categories": {
+      "all": "Todas",
+      "streak": "Llama constante",
+      "habit": "Hábitos",
+      "xp": "Luz",
+      "social": "Aliados",
+      "special": "Especiales"
+    },
+    "tiers": {
+      "bronze": "Bronce",
+      "silver": "Plata",
+      "gold": "Oro",
+      "platinum": "Platino"
+    },
+    "states": {
+      "locked": "Sellada",
+      "available": "Disponible",
+      "claimed": "Recuperada"
+    },
+    "modal": {
+      "title": "Detalles de la Reliquia",
+      "description": "Descripción",
+      "category": "Categoría",
+      "tier": "Nivel",
+      "status": "Estado",
+      "yourProgress": "Tu Progreso",
+      "requirementsMet": "¡Requisitos cumplidos!",
+      "keepGoing": "La luz necesita un paso más para revelarla.",
+      "close": "Cerrar"
+    },
+    "requirementTypes": {
+      "current_streak": "Mantén tu llama constante {{value}} días seguidos",
+      "total_habit_completions": "Completa {{value}} hábitos en total",
+      "total_xp": "Acumula {{value}} de Luz en total",
+      "friends_count": "Suma {{value}} aliados a tu causa",
+      "root_habit_complete": "Completa el Renacer de la Luz de 30 días",
+      "early_completion": "Enciende una luz antes de las 8 AM",
+      "late_completion": "Enciende una luz después de las 10 PM",
+      "perfect_day": "Completa todos tus hábitos en un día"
+    },
+    "toast": {
+      "unlocked": "🎉 ¡Nueva reliquia revelada: {{name}}!",
+      "claimed": "✨ ¡Recuperaste {{name}}! +{{xp}} Luz, +{{points}} Esencia",
+      "error": "❌ Error al recuperar la reliquia: {{error}}",
+      "alreadyClaimed": "⚠️ Ya recuperaste esta reliquia"
+    },
+    "noAchievements": "No hay reliquias disponibles",
+    "loadingAchievements": "Cargando reliquias...",
+    "errorLoading": "Error al cargar reliquias",
+    "availableCount_one": "{{count}} disponible",
+    "availableCount_other": "{{count}} disponibles",
+    "list": {
+      "week_warrior": {
+        "name": "Guardián de la Semana",
+        "description": "Completa 7 días seguidos"
+      },
+      "two_week_titan": {
+        "name": "Titán de Dos Semanas",
+        "description": "Completa 14 días seguidos"
+      },
+      "month_master": {
+        "name": "Maestro del Mes",
+        "description": "Completa 30 días seguidos"
+      },
+      "unstoppable": {
+        "name": "Llama Imparable",
+        "description": "Completa 100 días seguidos"
+      },
+      "habit_hero": {
+        "name": "Héroe de los Hábitos",
+        "description": "Completa 50 hábitos en total"
+      },
+      "consistency_king": {
+        "name": "Custodio de la Constancia",
+        "description": "Completa 200 hábitos en total"
+      },
+      "routine_legend": {
+        "name": "Leyenda de la Rutina",
+        "description": "Completa 500 hábitos en total"
+      },
+      "xp_novice": {
+        "name": "Aprendiz de Luz",
+        "description": "Gana 1.000 de Luz en total"
+      },
+      "xp_expert": {
+        "name": "Experto en Luz",
+        "description": "Gana 5.000 de Luz en total"
+      },
+      "xp_master": {
+        "name": "Maestro de la Luz",
+        "description": "Gana 10.000 de Luz en total"
+      },
+      "social_butterfly": {
+        "name": "Mariposa Social",
+        "description": "Añade 5 amigos"
+      },
+      "network_builder": {
+        "name": "Tejedor de Alianzas",
+        "description": "Añade 10 amigos"
+      },
+      "early_bird": {
+        "name": "Madrugador",
+        "description": "Completa un hábito antes de las 8 de la mañana"
+      },
+      "night_owl": {
+        "name": "Búho Nocturno",
+        "description": "Completa un hábito después de las 10 de la noche"
+      },
+      "perfect_day": {
+        "name": "Día Perfecto",
+        "description": "Completa todos tus hábitos en un solo día"
+      },
+      "comeback": {
+        "name": "Renacer",
+        "description": "Completa el Desafío de 30 Días del Hábito Raíz"
+      }
+    }
+  },
+  "levelUp": {
+    "title": "Tu luz ha evolucionado.",
+    "areaTitle": "{{area}}: tu luz ha evolucionado.",
+    "levelLabel": "Guardián Nivel {{level}}",
+    "levelLabel_female": "Guardiana Nivel {{level}}",
+    "essenceReward": "+{{points}} Esencia",
+    "dismiss": "Toca para continuar"
+  },
+  "habits": {
+    "title": "Registro de Hábitos",
+    "daily": "Diario",
+    "weekly": "Semanal",
+    "noHabits": "No hay hábitos para hoy",
+    "noHabitsYet": "Aún no has sembrado ningún hábito",
+    "addHabit": "Agregar Hábito",
+    "createFirstHabit": "Sembrar tu primer hábito",
+    "complete": "Completar",
+    "completed": "Completado",
+    "habitCompleted": "El Everlight brilla con más fuerza.",
+    "habitUncompleted": "Hábito desmarcado",
+    "habitCreated": "¡Nueva virtud sembrada con éxito!",
+    "skip": "Omitir",
+    "dailyQuests": "Misiones Diarias",
+    "completedToday": "Completados Hoy",
+    "xpEarned": "Luz acumulada",
+    "yourDailyHabits": "Tus Hábitos Diarios",
+    "completeHabitsToEarnXP": "Completa tus hábitos para acumular Luz",
+    "perfectDay": "🎉 ¡Día perfecto! El reino florece contigo.",
+    "greatProgress": "💪 ¡Gran progreso! La oscuridad retrocede.",
+    "everyStepCounts": "🌟 Cada decisión deja una huella. Tu viaje continúa.",
+    "addYourFirstHabit": "Siembra tu primer hábito para comenzar",
+    "coachBelievesInYou": "Tu mentor del Everlight cree en ti",
+    "quitBadge": "Dejar",
+    "resisted": "Resistido",
+    "relapse": "Recaída",
+    "logValue": "Registrar",
+    "streakLabel": "Llama",
+    "relapseConfirm": "¿Registrar una recaída? Tu llama constante volverá a empezar.",
+    "relapseRecorded": "La sombra ganó terreno. Pero la luz siempre puede recuperarse 💪",
+    "viewAnalytics": "Ver analíticas",
+    "streakBonus": "+{{percent}}% por tu llama constante",
+    "xpCapped": "Has superado el límite de XP de hoy — las ganancias se reducen hasta mañana",
+    "units": {
+      "min": "min",
+      "hr": "h",
+      "sec": "seg",
+      "km": "km",
+      "mi": "mi",
+      "pages": "páginas",
+      "glasses": "vasos",
+      "reps": "reps",
+      "kcal": "kcal",
+      "words": "palabras"
+    },
+    "habitAria": "Hábito: {{name}}",
+    "markComplete": "Marcar {{name}} como completado",
+    "markIncomplete": "Marcar {{name}} como no completado"
+  },
+  "habitForm": {
+    "createHabit": "Crear Hábito",
+    "editHabit": "Editar Hábito",
+    "habitName": "Nombre del Hábito",
+    "habitNamePlaceholder": "Ej: Meditar 10 minutos",
+    "lifeArea": "Área de Vida",
+    "selectLifeArea": "Selecciona un área de vida",
+    "icon": "Ícono",
+    "selectedIcon": "Ícono seleccionado",
+    "xpValue": "Luz que otorga",
+    "xpDescription": "Elige entre {{min}} y {{max}} de Luz según la dificultad",
+    "errors": {
+      "nameRequired": "El nombre es obligatorio",
+      "nameTooShort": "El nombre debe tener al menos 3 caracteres",
+      "nameTooLong": "El nombre no puede tener más de 50 caracteres",
+      "lifeAreaRequired": "Elige un reino de la vida",
+      "iconRequired": "Debes seleccionar un ícono",
+      "xpTooLow": "La Luz mínima es {{min}}",
+      "xpTooHigh": "La Luz máxima es {{max}}"
+    },
+    "whatType": "¿Qué tipo de hábito?",
+    "typeCheck": "Marca",
+    "typeCheckDesc": "Seguimiento sí o no por día",
+    "typeMeasurable": "Medible",
+    "typeMeasurableDesc": "Seguimiento de números, distancia o tiempo",
+    "typeQuit": "Dejar un hábito",
+    "typeQuitDesc": "Rompe un patrón. Resiste a diario; las recaídas reinician tu llama constante",
+    "createGood": "Crear un hábito",
+    "quitBad": "Dejar un hábito",
+    "howTrack": "¿Cómo lo sigues?",
+    "unit": "Unidad",
+    "custom": "Personalizado…",
+    "dailyGoal": "Meta diaria",
+    "dailyGoalOptional": "Meta diaria (opcional)",
+    "dailyGoalHint": "Deja en blanco para registrar cualquier valor positivo.",
+    "selectColor": "Seleccionar color",
+    "next": "Continuar",
+    "back": "Atrás",
+    "timeOfDay": "¿En qué momento del día?",
+    "timeOfDayHint": "Los hábitos de \"Cualquiera\" aparecen en todos los filtros y los recordatorios usan este momento",
+    "timeAnytime": "Cualquiera",
+    "timeMorning": "Mañana",
+    "timeAfternoon": "Tarde",
+    "timeEvening": "Noche",
+    "color": "Color del hábito (opcional)"
+  },
+  "rootHabit": {
+    "title": "Desafío de 30 Días",
+    "subtitle": "Tu viaje hacia la maestría",
+    "progress": "Progreso",
+    "daysCompleted": "días completados",
+    "keepGoing": "Mantén viva la llama.",
+    "reviveTitle": "El Renacer de la Luz",
+    "reviveSubtitle": "Incluso en la oscuridad más profunda, una chispa basta para encender de nuevo el reino. Cada día regresas un poco más fuerte.",
+    "challengeTitle": "Desafío de 30 Días",
+    "dailyProgress": "Progreso diario",
+    "quote": "Hasta la noche más larga termina en amanecer.",
+    "quoteSub": "Cada día es un paso hacia tu transformación.",
+    "loading": "Cargando…",
+    "completed": "¡Desafío completado! 🎉",
+    "checkInToday": "Encender la llama de hoy",
+    "alreadyCheckedIn": "La llama de hoy ya arde",
+    "dayCount": "Día {{current}} de {{total}}",
+    "percentComplete": "{{percent}}% iluminado",
+    "checkInSuccess": "Has encendido la llama de hoy. El Everlight brilla con más fuerza.",
+    "checkInError": "La llama no prendió esta vez. Inténtalo de nuevo, Guardián."
+  },
+  "shop": {
+    "title": "Santuario de Recompensas",
+    "subtitle": "Honra tu esfuerzo (de vez en cuando)",
+    "balance": "Esencia",
+    "buyNow": "Canjear",
+    "purchased": "Canjeado",
+    "notEnoughPoints": "Aún no reúnes suficiente Esencia. Completa más hábitos para acumularla.",
+    "confirmPurchase": "¿Confirmar el canje?",
+    "purchaseConfirmed": "¡Recompensa concedida! Disfrútala con consciencia 😊",
+    "spendWisely": "Gasta tu Esencia con sabiduría, Guardián ⚖️",
+    "rememberGoals": "⚠️ Recuerda tu Viaje",
+    "indulgenceWarning": "Estas recompensas honran tu esfuerzo, no son hábitos. Úsalas con consciencia para que la luz siga creciendo.",
+    "toast": {
+      "purchaseSuccess": "🎉 ¡{{name}} canjeado! -{{cost}} Esencia",
+      "purchaseError": "❌ Aún no reúnes suficiente Esencia. Te faltan {{needed}}",
+      "itemAdded": "✨ Recompensa \"{{name}}\" agregada exitosamente",
+      "itemUpdated": "✅ Recompensa \"{{name}}\" actualizada",
+      "itemDeleted": "🗑️ Recompensa \"{{name}}\" eliminada"
+    },
+    "items": {
+      "sweetTreat": {
+        "name": "Dulce Especial",
+        "description": "Disfruta un pequeño postre"
+      },
+      "impulseBuy": {
+        "name": "Compra Impulsiva",
+        "description": "Compra pequeña menor a $20"
+      },
+      "stayUpLate": {
+        "name": "Trasnochar",
+        "description": "Dormir después de medianoche"
+      },
+      "extraCoffee": {
+        "name": "Café Extra",
+        "description": "Tercera taza del día"
+      }
+    },
+    "availableRewards": "Recompensas disponibles",
+    "reminderAria": "Recordatorio importante"
+  },
+  "shopManager": {
+    "title": "Gestionar Recompensas",
+    "subtitle": "Crea y edita tus recompensas personalizadas",
+    "addItem": "Agregar Recompensa",
+    "noItems": "No hay recompensas disponibles",
+    "addFirstItem": "Agregar Primera Recompensa",
+    "editItem": "Editar Recompensa",
+    "createItem": "Crear Recompensa",
+    "itemName": "Nombre de la Recompensa",
+    "itemNamePlaceholder": "Ej: Postre especial",
+    "description": "Descripción",
+    "descriptionPlaceholder": "Describe la recompensa...",
+    "cost": "Costo en Esencia",
+    "costDescription": "Entre {{min}} y {{max}} de Esencia",
+    "category": "Categoría",
+    "categories": {
+      "food": "Comida",
+      "leisure": "Ocio",
+      "shopping": "Compras",
+      "other": "Otro"
+    },
+    "icon": "Ícono",
+    "selectedIcon": "Ícono seleccionado",
+    "manageItems": "Gestionar recompensas",
+    "default": "Por defecto",
+    "confirmDelete": "¿Estás seguro de que quieres eliminar \"{{name}}\"?",
+    "errors": {
+      "nameRequired": "El nombre es obligatorio",
+      "nameTooShort": "El nombre debe tener al menos 3 caracteres",
+      "nameTooLong": "El nombre no puede tener más de 50 caracteres",
+      "descriptionRequired": "La descripción es obligatoria",
+      "descriptionTooLong": "La descripción no puede tener más de 200 caracteres",
+      "costTooLow": "El costo mínimo es {{min}} de Esencia",
+      "costTooHigh": "El costo máximo es {{max}} de Esencia",
+      "iconRequired": "Debes seleccionar un ícono"
+    },
+    "emptyStateHint": "Añade tu primera recompensa para empezar",
+    "createFirstHint": "Crea tu primera recompensa para empezar",
+    "defaultItemTitle": "Recompensa predefinida",
+    "defaultItemBody": "Puedes cambiar el coste, el icono y la categoría. El nombre y la descripción se mantienen según las traducciones.",
+    "defaultItemReadOnly": "(Solo lectura en recompensas predefinidas)"
+  },
+  "chat": {
+    "title": "El Mentor",
+    "subtitle": "El sabio del Everlight te acompaña",
+    "typeMessage": "Confía tu pensamiento al Mentor...",
+    "send": "Enviar",
+    "thinking": "Reflexionando...",
+    "copy": "Copiar",
+    "copied": "¡Copiado!",
+    "newMessages": "Mensajes nuevos",
+    "messagesHeading": "Mensajes del chat",
+    "coachMessagesHeading": "Mensajes del coach",
+    "errors": {
+      "apiKeyMissing": "Falta la clave de OpenAI. Añade tu clave API en .env.local",
+      "streamFailed": "No se pudo obtener la respuesta. Por favor, intenta de nuevo.",
+      "coachUnavailable": "No se pudo conectar con Hermes. Comprueba tu conexión e inténtalo de nuevo."
+    },
+    "emptyTitle": "¿Cómo está tu luz hoy, Guardián?",
+    "emptySubtitle": "El sabio del Everlight te escucha. Comparte lo que llevas dentro y caminaremos juntos.",
+    "suggestions": [
+      "¿Cómo mantengo viva mi llama?",
+      "Hoy me cuesta avanzar",
+      "Dame un ritual para empezar el día",
+      "Quiero celebrar un logro"
+    ],
+    "welcomeMessage": "Te doy la bienvenida, Guardián. 💪 Camino a tu lado en este viaje. ¿Cómo se encuentra tu luz hoy?",
+    "welcomeMessage_male": "Bienvenido, Guardián. 💪 Camino a tu lado en este viaje. ¿Cómo se encuentra tu luz hoy?",
+    "welcomeMessage_female": "Bienvenida, Guardiana. 💪 Camino a tu lado en este viaje. ¿Cómo se encuentra tu luz hoy?",
+    "responses": {
+      "1": "Me alegra escucharlo. Cada decisión deja una huella; sigue iluminando el reino.",
+      "2": "Tu viaje me llena de orgullo. La constancia es la que mantiene viva la llama. 🌟",
+      "3": "Lo estás haciendo admirablemente. Sigue fortaleciendo el Everlight, un día a la vez.",
+      "4": "Ese es el espíritu de un Guardián. Estaré contigo en cada paso del sendero."
+    }
+  },
+  "auth": {
+    "welcomeBack": "El reino te esperaba.",
+    "continueWithGoogle": "Continuar con Google",
+    "continueWithGitHub": "Continuar con GitHub",
+    "privacyNotice": "Al cruzar el Portal, aceptas nuestros Términos de Servicio y Política de Privacidad",
+    "completingSignIn": "Cruzando el Portal",
+    "pleaseWait": "Espera un instante mientras abrimos el Portal...",
+    "redirectingToLogin": "Volviendo al Portal...",
+    "signOut": "Cerrar sesión",
+    "feature1Title": "Siembra tus hábitos",
+    "feature1Desc": "Completa hábitos diarios y acumula Luz para evolucionar",
+    "feature2Title": "Honra tu esfuerzo",
+    "feature2Desc": "Canjea Esencia por recompensas conscientes",
+    "feature3Title": "Mantén la llama",
+    "feature3Desc": "La constancia multiplica tu Luz",
+    "tagline": "Restaura el reino,",
+    "taglineAccent": "ilumina tu camino",
+    "heroFeature1Title": "Siembra hábitos",
+    "heroFeature1Desc": "que te transforman",
+    "heroFeature2Title": "Haz retroceder",
+    "heroFeature2Desc": "la oscuridad cada día",
+    "heroFeature3Title": "Despierta tu",
+    "heroFeature3Desc": "luz interior",
+    "orContinueWith": "o continúa con",
+    "emailPlaceholder": "Correo electrónico",
+    "passwordPlaceholder": "Contraseña",
+    "passwordTooShort": "La contraseña debe tener al menos 6 caracteres",
+    "signIn": "Iniciar sesión",
+    "createAccount": "Crear cuenta",
+    "accountCreated": "¡Cuenta creada! Tu viaje comienza.",
+    "haveAccount": "¿Ya tienes cuenta?",
+    "continue": "Continuar",
+    "noAccount": "¿Aún no cruzas el Portal?",
+    "register": "Cruza el Portal",
+    "termsPrefix": "Al cruzar el Portal aceptas nuestros",
+    "termsOfService": "Términos de servicio",
+    "and": "y",
+    "privacyPolicy": "Política de privacidad",
+    "emailSent": "¡Revisa tu correo! Te enviamos un enlace para cruzar el Portal.",
+    "enterEmail": "Ingresa tu correo electrónico",
+    "continueWithApple": "Continuar con Apple",
+    "callbackErrorHint": "No pudimos completar el inicio de sesión. Inténtalo de nuevo."
+  },
+  "errors": {
+    "general": "La luz titiló un instante. Por favor, intenta de nuevo.",
+    "notFound": "Sendero no encontrado",
+    "unauthorized": "El Portal aún no se abre para ti",
+    "network": "Se perdió la conexión con el reino. Verifica tu internet.",
+    "authenticationFailed": "No se pudo cruzar el Portal",
+    "habitCompleteFailed": "No se pudo encender la luz de este hábito",
+    "habitUncompleteFailed": "No se pudo desmarcar el hábito",
+    "habitCreateFailed": "No se pudo sembrar el hábito",
+    "habitUpdateFailed": "No se pudo actualizar el hábito",
+    "habitDeleteFailed": "No se pudo eliminar el hábito",
+    "templatesLoadFailed": "No se pudieron cargar las plantillas",
+    "auth": {
+      "invalidCredentials": "Correo o contraseña incorrectos.",
+      "userAlreadyExists": "Ya existe una cuenta con este correo. Inicia sesión.",
+      "weakPassword": "La contraseña es demasiado débil. Usa al menos 6 caracteres.",
+      "rateLimited": "Demasiados intentos. Espera un momento e inténtalo de nuevo.",
+      "emailRateLimited": "Se han enviado demasiados correos. Espera unos minutos e inténtalo de nuevo.",
+      "signupDisabled": "El registro está deshabilitado por el momento.",
+      "confirmEmail": "Cuenta creada. Revisa tu correo para confirmar tu cuenta."
+    },
+    "onboardingFailed": "Error al completar el onboarding. Por favor, intenta de nuevo."
+  },
+  "actions": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "confirm": "Confirmar",
+    "back": "Volver",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "close": "Cerrar",
+    "create": "Crear",
+    "saveChanges": "Guardar Cambios",
+    "skip": "Omitir",
+    "select": "Seleccionar",
+    "add": "Agregar",
+    "retry": "Reintentar",
+    "clear": "Limpiar"
+  },
+  "onboarding": {
+    "prevButton": "Anterior",
+    "nextButton": "Siguiente",
+    "finishButton": "Comienza tu viaje",
+    "completedSuccess": "¡Tu viaje ha comenzado, Guardián!",
+    "completedSuccess_male": "¡Tu viaje ha comenzado, Guardián!",
+    "completedSuccess_female": "¡Tu viaje ha comenzado, Guardiana!",
+    "identity": {
+      "label": "¿Cómo prefieres que te tratemos?",
+      "hint": "Adaptamos el lenguaje del reino a ti. Puedes cambiarlo luego.",
+      "female": "Guardiana",
+      "male": "Guardián",
+      "neutral": "Prefiero neutro",
+      "error": "Elige una opción para personalizar tu trato"
+    },
+    "aboutYou": {
+      "title": "Cuéntanos sobre ti",
+      "description": "Esto nos ayuda a acompañarte mejor en tu viaje.",
+      "motivationLabel": "¿Qué te trae al reino?",
+      "experienceLabel": "¿Tu experiencia con los hábitos?",
+      "ageLabel": "¿Tu rango de edad?",
+      "motivations": {
+        "health": "Salud",
+        "discipline": "Disciplina",
+        "focus": "Enfoque",
+        "wellbeing": "Bienestar",
+        "productivity": "Productividad"
+      },
+      "experience": {
+        "beginner": "Principiante",
+        "intermediate": "Intermedio",
+        "advanced": "Avanzado"
+      },
+      "ageRanges": {
+        "teen": "13-17",
+        "youngAdult": "18-24",
+        "adult": "25-34",
+        "midAdult": "35-44",
+        "mature": "45-54",
+        "senior": "55+"
+      }
+    },
+    "step1": {
+      "title": "Te damos la bienvenida a Everlight, Guardián",
+      "title_male": "Bienvenido a Everlight, Guardián",
+      "title_female": "Bienvenida a Everlight, Guardiana",
+      "description": "Tu viaje comienza aquí: restaura el reino con cada paso real.",
+      "nameLabel": "¿Cómo te llaman, Guardián?",
+      "namePlaceholder": "Ingresa tu nombre",
+      "nameError": "El nombre debe tener al menos 2 caracteres",
+      "nextButton": "Continuar",
+      "helperText": "Este nombre acompañará tu legado",
+      "avatarLabel": "Elige tu avatar",
+      "avatarMale": "Hombre",
+      "avatarFemale": "Mujer"
+    },
+    "step2": {
+      "title": "Elige tus reinos de la vida",
+      "description": "Selecciona los reinos que quieres iluminar primero",
+      "areasSelected": "reinos seleccionados"
+    },
+    "step3": {
+      "title": "Siembra tus primeros hábitos",
+      "description": "Siembra al menos un hábito para iniciar tu viaje",
+      "noHabits": "Aún no has sembrado ningún hábito",
+      "habitNamePlaceholder": "Nombre del hábito (ej: Meditar 10 min)",
+      "lifeAreaLabel": "Reino de la Vida",
+      "addButton": "Agregar",
+      "addHabitButton": "+ Sembrar Hábito",
+      "suggestionsTitle": "Hábitos comunes"
+    },
+    "step4": {
+      "title": "¿Cómo funciona Everlight?",
+      "description": "Conoce las leyes del reino",
+      "xpTitle": "Acumula Luz",
+      "xpDescription": "Completa hábitos cada día para acumular Luz y hacer retroceder la oscuridad",
+      "pointsTitle": "Reúne Esencia",
+      "pointsDescription": "Tu Luz se transforma en Esencia para honrar tu esfuerzo",
+      "levelsTitle": "Evoluciona",
+      "levelsDescription": "Tu nivel global y el de cada reino crecen con cada paso",
+      "shopTitle": "Honra tu esfuerzo",
+      "shopDescription": "Usa tu Esencia para recompensas conscientes",
+      "streaksTitle": "Mantén la llama",
+      "streaksDescription": "La constancia multiplica tu Luz",
+      "readyTitle": "¡Todo a punto, Guardián!",
+      "readyTitle_male": "¡Ya estás listo, Guardián!",
+      "readyTitle_female": "¡Ya estás lista, Guardiana!",
+      "readyDescription": "El reino te esperaba. Tu viaje comienza aquí."
+    },
+    "progress": {
+      "ariaLabel": "Progreso de la configuración",
+      "step": "Paso {{number}}",
+      "stepOf": "Paso {{current}} de {{total}}"
+    }
+  },
+  "profile": {
+    "editProfile": "Editar tu Legado",
+    "nameLabel": "Nombre",
+    "avatarLabel": "Avatar",
+    "changeAvatar": "Cambiar avatar",
+    "avatarMale": "Hombre",
+    "avatarFemale": "Mujer",
+    "lifeAreasTitle": "Reinos de la Vida Activos",
+    "habitsTitle": "Mis Hábitos",
+    "settingsTitle": "Archivos del Guardián",
+    "exploreTitle": "Explorar",
+    "languageLabel": "Idioma",
+    "languageHint": "Puedes cambiar el idioma desde el icono en el encabezado",
+    "noHabits": "Aún no has sembrado hábitos",
+    "deleteHabitConfirm": "¿Estás seguro de que quieres eliminar este hábito?",
+    "stats": {
+      "title": "Estadísticas",
+      "longestStreak": "Llama Más Larga",
+      "currentStreak": "Llama Actual",
+      "activeDays": "Días Activos",
+      "last7Days": "últimos 7 días",
+      "dailyAverage": "Promedio Diario",
+      "habitsPerDay": "hábitos/día",
+      "totalHabits": "Total de Hábitos",
+      "habits": "hábitos",
+      "xpDistribution": "Distribución de Luz"
+    },
+    "dangerZone": {
+      "title": "Zona de Peligro",
+      "description": "Acciones irreversibles que afectan tus datos",
+      "resetTitle": "Eliminar Todos los Datos",
+      "resetDescription": "Borra permanentemente todo tu legado y progreso",
+      "resetButton": "Eliminar Todo",
+      "deleteList": {
+        "habits": "Todos tus hábitos y su historial",
+        "streaks": "Todas tus llamas constantes",
+        "progress": "Todo el progreso de los reinos de la vida",
+        "purchases": "Historial de canjes",
+        "profile": "Tu legado de Guardián",
+        "settings": "Todos los archivos del Guardián"
+      }
+    },
+    "resetModal": {
+      "title": "⚠️ Confirmar Eliminación",
+      "subtitle": "Esta acción NO se puede deshacer",
+      "warning": "Se eliminarán permanentemente los siguientes datos:",
+      "inputLabel": "Para confirmar, escribe \"{{text}}\" exactamente:",
+      "inputError": "El texto no coincide. Escribe exactamente como se indica.",
+      "confirmButton": "Eliminar Permanentemente"
+    },
+    "subtitle": "Tu viaje, tu legado.",
+    "subtitle2": "El reino florece contigo cada día.",
+    "levelLabel": "Guardián Nivel {{level}}",
+    "levelLabel_female": "Guardiana Nivel {{level}}",
+    "quote": "No se trata de ser perfecto, sino de mantener viva la llama.",
+    "quoteAccent": "La luz está en ti.",
+    "statStreakDays": "días de llama",
+    "statStreakHint": "Mantén viva la llama.",
+    "statMinutes": "minutos invertidos",
+    "statMinutesHint": "esta semana",
+    "statTotalXp": "Luz total",
+    "statTotalXpHint": "acumulada",
+    "statHabits": "hábitos completados",
+    "achievementsTitle": "Reliquias",
+    "seeAll": "Ver todas",
+    "seeAllTools": "Ver todas",
+    "locked": "Sellada",
+    "toolsTitle": "Mis herramientas",
+    "comingSoon": "Próximamente 🚧",
+    "aboutTitle": "Sobre este Guardián",
+    "aboutTitle_female": "Sobre esta Guardiana",
+    "aboutDefault": "Guardián entregado al crecimiento, la constancia y a vivir con propósito.",
+    "aboutDefault_female": "Guardiana entregada al crecimiento, la constancia y a vivir con propósito.",
+    "settingsSubtitle": "Archivos del Guardián",
+    "settingsSubtitle_female": "Archivos de la Guardiana",
+    "tools": {
+      "journal": "Crónica personal",
+      "journalDesc": "Escribe, reflexiona y crece.",
+      "goals": "Metas",
+      "goalsDesc": "Define y sigue tus objetivos.",
+      "reminders": "Recordatorios",
+      "remindersDesc": "Activa notificaciones y no te saltes nada.",
+      "breathing": "Respiración",
+      "breathingDesc": "Ejercicios de respiración y mindfulness."
+    },
+    "avatars": {
+      "pickTitle": "Elige tu avatar",
+      "save": "Guardar",
+      "saved": "Avatar actualizado",
+      "rulo": "Rulo",
+      "dani": "Dani",
+      "explorer1": "Aventurero",
+      "explorer2": "Aventurera",
+      "explorer3": "Explorador"
+    },
+    "ach": {
+      "firstStep": "Primera chispa",
+      "firstStepDesc": "Enciende tu primer hábito",
+      "consistency": "Constancia",
+      "consistencyDesc": "7 días de llama constante",
+      "unstoppable": "Llama Imparable",
+      "unstoppableDesc": "10 días de llama constante",
+      "focus": "Enfoque total",
+      "focusDesc": "100 minutos en una semana",
+      "elite": "Guardián de Élite",
+      "eliteDesc": "30 días de llama constante"
+    }
+  },
+  "username": {
+    "title": "Nombre de Guardián",
+    "choose": "Elige tu nombre de Guardián",
+    "description": "Este será tu identificador único en Everlight",
+    "placeholder": "tuNombreGuardian",
+    "available": "✓ Disponible",
+    "taken": "✗ No disponible",
+    "checking": "Verificando...",
+    "suggestions": "Sugerencias:",
+    "validation": {
+      "tooShort": "Mínimo 3 caracteres",
+      "tooLong": "Máximo 20 caracteres",
+      "invalidChars": "Solo letras, números y _"
+    },
+    "success": "¡Nombre de Guardián guardado exitosamente!",
+    "error": "Error al guardar el nombre de Guardián"
+  },
+  "themes": {
+    "title": "Tema",
+    "ariaLabel": "Seleccionar tema",
+    "onboardingPrompt": "Elige tu apariencia",
+    "onboardingHint": "Puedes cambiar el tema en cualquier momento desde Configuración",
+    "list": {
+      "nous": {
+        "name": "Nous",
+        "desc": "Neutros de vidrio con acentos azul Nous"
+      },
+      "midnight": {
+        "name": "Medianoche",
+        "desc": "Azul violeta profundo con acentos fríos"
+      },
+      "ember": {
+        "name": "Brasa",
+        "desc": "Carmesí cálido y bronce — vibra de forja"
+      },
+      "mono": {
+        "name": "Mono",
+        "desc": "Escala de grises limpia — minimal y enfocado"
+      },
+      "cyberpunk": {
+        "name": "Cyberpunk",
+        "desc": "Verde neón sobre negro — terminal matrix"
+      },
+      "slate": {
+        "name": "Pizarra",
+        "desc": "Azul pizarra frío — tema de desarrollador"
+      }
+    }
+  },
+  "social": {
+    "title": "Aliados",
+    "friends": "Aliados",
+    "findFriends": "Buscar Aliados",
+    "searchPlaceholder": "Buscar por nombre de Guardián...",
+    "noFriends": "Aún no tienes aliados en tu causa",
+    "noRequests": "No tienes solicitudes pendientes",
+    "noResults": "No se encontraron Guardianes",
+    "addFriend": "Sumar Aliado",
+    "removeFriend": "Quitar Aliado",
+    "acceptRequest": "Aceptar",
+    "rejectRequest": "Rechazar",
+    "cancelRequest": "Cancelar",
+    "requestSent": "Solicitud enviada",
+    "requestReceived": "Solicitud recibida",
+    "tabs": {
+      "friends": "Aliados",
+      "requests": "Solicitudes",
+      "search": "Buscar"
+    },
+    "requestsSent": "Enviadas",
+    "requestsReceived": "Recibidas",
+    "friendAdded": "¡{{username}} se ha unido a tu causa!",
+    "friendRemoved": "{{username}} ya no es tu aliado",
+    "requestAccepted": "Aceptaste la solicitud de {{username}}",
+    "requestRejected": "Solicitud rechazada",
+    "requestCancelled": "Solicitud cancelada",
+    "streakDays_one": "{{count}} día de llama",
+    "streakDays_other": "{{count}} días de llama",
+    "confirmRemoveFriend": "¿Quitar a @{{username}} de tus aliados?",
+    "stats": {
+      "currentStreak": "Llama Actual",
+      "longestStreak": "Llama Más Larga",
+      "totalXP": "Luz total",
+      "points": "Esencia",
+      "level": "Nivel"
+    },
+    "errors": {
+      "loadFriends": "Error al cargar la lista de aliados",
+      "sendRequest": "Error al enviar la solicitud de alianza",
+      "acceptRequest": "Error al aceptar solicitud",
+      "rejectRequest": "Error al rechazar solicitud",
+      "removeFriend": "Error al quitar aliado",
+      "searchUsers": "Error al buscar Guardianes"
+    },
+    "requests": "Solicitudes",
+    "search": "Buscar"
+  },
+  "templates": {
+    "title": "Plantillas de Hábitos",
+    "subtitle": "Elige un hábito predefinido para comenzar",
+    "browseTemplates": "Ver Plantillas",
+    "searchPlaceholder": "Buscar plantillas...",
+    "featured": "Destacado",
+    "noResults": "No se encontraron plantillas",
+    "tryDifferentFilters": "Intenta con otros filtros o busca algo diferente",
+    "clearFilters": "Limpiar filtros",
+    "addToMyHabits": "Agregar a Mis Hábitos",
+    "footerHint": "Selecciona una plantilla y personalízala según tus necesidades",
+    "createCustomTitle": "Crear hábito personalizado",
+    "createCustomSubtitle": "¿No encuentras lo que buscas? Créalo desde cero",
+    "filters": {
+      "all": "Todos"
+    },
+    "health": {
+      "meditate": "Meditar 10 minutos",
+      "meditate_desc": "Despeja tu mente con una sesión corta de meditación",
+      "exercise": "Ejercicio 30 minutos",
+      "exercise_desc": "Muévete con cualquier actividad física",
+      "water": "Beber 8 vasos de agua",
+      "water_desc": "Mantente hidratado durante el día",
+      "sleep": "Dormir 8 horas",
+      "sleep_desc": "Descansa bien para recuperarte",
+      "breakfast": "Desayuno saludable",
+      "breakfast_desc": "Empieza el día con comida nutritiva",
+      "walk": "Caminar 15-30 minutos",
+      "walk_desc": "Camina al aire libre",
+      "stretch": "Rutina de estiramientos",
+      "stretch_desc": "10 minutos de estiramientos"
+    },
+    "finance": {
+      "expenses": "Revisar gastos",
+      "expenses_desc": "Revisa y categoriza tus gastos diarios",
+      "save": "Ahorrar dinero",
+      "save_desc": "Transfiere a tu cuenta de ahorros",
+      "no_impulse": "Sin compras impulsivas",
+      "no_impulse_desc": "Evita gastos no planeados hoy",
+      "news": "Leer noticias financieras",
+      "news_desc": "Mantente informado sobre mercados"
+    },
+    "creativity": {
+      "write": "Escribir 500 palabras",
+      "write_desc": "Diario, blog o escritura creativa",
+      "music": "Practicar instrumento",
+      "music_desc": "30 minutos de práctica musical",
+      "draw": "Dibujar o bocetear",
+      "draw_desc": "Crea arte visual por 20 minutos",
+      "photos": "Tomar fotos",
+      "photos_desc": "Practica fotografía",
+      "learn": "Aprender algo nuevo",
+      "learn_desc": "Dedica 30 min a aprender una habilidad",
+      "code": "Programar 1 hora",
+      "code_desc": "Trabaja en un proyecto personal"
+    },
+    "social": {
+      "call_friend": "Llamar a un amigo",
+      "call_friend_desc": "Conecta con alguien que te importa",
+      "meet_new": "Conocer alguien nuevo",
+      "meet_new_desc": "Preséntate a alguien",
+      "compliment": "Hacer un cumplido",
+      "compliment_desc": "Difunde positividad con palabras amables",
+      "help": "Ayudar a alguien",
+      "help_desc": "Ofrece asistencia a otros"
+    },
+    "family": {
+      "dinner": "Cena familiar",
+      "dinner_desc": "Comparte una comida con la familia",
+      "kids": "Tiempo de calidad con hijos",
+      "kids_desc": "30 minutos de atención plena",
+      "call_parents": "Llamar a los padres",
+      "call_parents_desc": "Comunícate con tus padres",
+      "plan": "Planear actividad familiar",
+      "plan_desc": "Organiza algo divertido juntos"
+    },
+    "career": {
+      "deep_work": "Sesión de trabajo profundo",
+      "deep_work_desc": "2 horas de trabajo enfocado sin distracciones",
+      "read": "Leer contenido profesional",
+      "read_desc": "30 minutos de lectura profesional",
+      "resume": "Actualizar CV/portafolio",
+      "resume_desc": "Mantén tu perfil profesional actualizado",
+      "linkedin": "Networking en LinkedIn",
+      "linkedin_desc": "Interactúa con tu comunidad profesional",
+      "plan": "Planear el día siguiente",
+      "plan_desc": "Establece prioridades para mañana"
+    }
+  },
+  "leaderboard": {
+    "title": "Guardianes",
+    "weekly": "Semanal",
+    "viewHistory": "Ver Historial",
+    "thisWeek": "Esta Semana",
+    "weekOf": "Semana del {{date}}",
+    "rank": "Puesto",
+    "username": "Guardián",
+    "weeklyXP": "Luz Semanal",
+    "weeklyPoints": "Esencia Semanal",
+    "habitsCompleted": "Hábitos",
+    "yourRank": "Tu Puesto",
+    "notRanked": "Completa hábitos para unirte a los Guardianes",
+    "topPlayers": "Guardianes Destacados",
+    "you": "TÚ",
+    "medal": {
+      "first": "🥇",
+      "second": "🥈",
+      "third": "🥉"
+    },
+    "tabs": {
+      "rankings": "Guardianes",
+      "social": "Aliados",
+      "streaks": "Llama constante"
+    },
+    "stats": {
+      "yourWeeklyXP": "Tu Luz Semanal",
+      "yourWeeklyPoints": "Tu Esencia Semanal",
+      "yourHabitsCompleted": "Hábitos Completados",
+      "rank": "Puesto #{{rank}}"
+    },
+    "errors": {
+      "loadLeaderboard": "Error al cargar el salón de Guardianes",
+      "loadStats": "Error al cargar tus estadísticas"
+    }
+  },
+  "analytics": {
+    "title": "Analíticas",
+    "currentStreak": "llama actual",
+    "bestStreak": "llama más larga",
+    "completed": "completados",
+    "trend": "Tendencia",
+    "last30": "30 días",
+    "last90": "90 días",
+    "year": "Año",
+    "noData": "Aún no hay datos. ¡Enciende la luz de este hábito para ver tu progreso!",
+    "total": "Total",
+    "totalValue": "Total registrado",
+    "thisWeek": "Esta semana",
+    "thisMonth": "Este mes",
+    "completionRate": "Tasa de cumplimiento",
+    "history": "Historial"
+  },
+  "timer": {
+    "logTime": "Registrar tiempo",
+    "logValue": "Registrar valor",
+    "manual": "Manual",
+    "stopwatch": "Cronómetro",
+    "countdown": "Cuenta regresiva",
+    "start": "Iniciar",
+    "startTimer": "Iniciar temporizador",
+    "startCountdown": "Iniciar cuenta regresiva",
+    "pause": "Pausar",
+    "resume": "Reanudar",
+    "stop": "Detener",
+    "reset": "Reiniciar",
+    "paused": "PAUSADO",
+    "running": "EN CURSO",
+    "hours": "HORAS",
+    "minutes": "MINUTOS",
+    "seconds": "SEGUNDOS",
+    "enterValue": "Ingresa un valor",
+    "save": "Guardar",
+    "saved": "¡Registrado!",
+    "logged": "Registrado correctamente"
+  },
+  "mood": {
+    "title": "Estado de ánimo",
+    "howAreYou": "¿Cómo te sientes hoy?",
+    "save": "Guardar",
+    "saved": "Estado de ánimo guardado",
+    "today": "Hoy",
+    "rad": "Genial",
+    "good": "Bien",
+    "meh": "Normal",
+    "bad": "Mal",
+    "awful": "Fatal",
+    "note": "Nota",
+    "notePlaceholder": "¿Qué hizo que tu día fuera así? (opcional)",
+    "calendar": "Calendario",
+    "stats": "Estadísticas",
+    "entries": "registros",
+    "averageMood": "Ánimo promedio",
+    "noEntries": "Aún no hay registros de ánimo",
+    "moodStreak": "Llama de registro",
+    "addEntry": "Registrar ánimo",
+    "edit": "Editar",
+    "subtitle": "Registra cómo te sientes cada día",
+    "distribution": "Distribución",
+    "last7": "Últimos 7 días",
+    "weekdaysNarrow": [
+      "L",
+      "M",
+      "X",
+      "J",
+      "V",
+      "S",
+      "D"
+    ],
+    "prevMonth": "Mes anterior",
+    "nextMonth": "Mes siguiente"
+  },
+  "progress": {
+    "title": "Progreso",
+    "subtitle": "Pequeños hábitos, grandes transformaciones.",
+    "streakChip": "días de llama",
+    "weeklySummary": "Resumen semanal",
+    "thisWeek": "Esta semana",
+    "habitsCompleted": "Hábitos completados",
+    "of": "de",
+    "minutesInvested": "Minutos invertidos",
+    "min": "min",
+    "bestStreak": "Llama más larga",
+    "days": "días",
+    "xpEarned": "Luz acumulada",
+    "xp": "Luz",
+    "currentStreakTitle": "Tu llama constante",
+    "keepItUp": "Mantén viva la llama. 🔥",
+    "today": "Hoy",
+    "dailyActivity": "Actividad diaria (minutos)",
+    "minutesUnit": "Minutos",
+    "focusAreas": "Reinos de enfoque",
+    "seeDetail": "Ver detalle",
+    "bannerTitle": "Cada paso fortalece el Everlight.",
+    "bannerSubtitle": "Sigue iluminando tu camino.",
+    "weekdaysShort": [
+      "Lun",
+      "Mar",
+      "Mié",
+      "Jue",
+      "Vie",
+      "Sáb",
+      "Dom"
+    ],
+    "noFocusAreas": "Aún no tienes reinos activos. Actívalos desde tu Perfil.",
+    "daysCount_one": "día",
+    "daysCount_other": "días",
+    "streakChip_one": "día de llama",
+    "streakChip_other": "días de llama"
+  },
+  "routines": {
+    "title": "Rituales",
+    "subtitle": "Pequeñas acciones, grandes transformaciones.",
+    "filterAll": "Todos",
+    "filterMorning": "Mañana",
+    "filterAfternoon": "Tarde",
+    "filterNight": "Noche",
+    "currentStreak": "Llama actual",
+    "days": "días",
+    "today": "Hoy",
+    "myRoutines": "Mis rituales",
+    "newRoutine": "Nuevo ritual",
+    "empty": "Aún no tienes rituales. ¡Crea el primero!",
+    "bannerTitle": "La constancia mantiene viva la llama.",
+    "bannerSubtitle": "Sigue así; cada día el reino florece contigo.",
+    "weekdaysShort": [
+      "Lun",
+      "Mar",
+      "Mié",
+      "Jue",
+      "Vie",
+      "Sáb",
+      "Dom"
+    ]
+  },
+  "welcome": {
+    "tagline": "Restaura el reino, ilumina tu camino",
+    "heroTitle1": "Pequeños hábitos,",
+    "heroTitle2": "grandes transformaciones.",
+    "heroSubtitle": "Siembra hábitos positivos, haz retroceder la oscuridad y despierta tu luz interior cada día.",
+    "cta": "Comienza tu viaje",
+    "haveAccount": "¿Ya cruzaste el Portal?",
+    "signIn": "Inicia sesión"
+  },
+  "onboardingCarousel": {
+    "skip": "Saltar",
+    "next": "Siguiente",
+    "authTitle": "Cruza el Portal",
+    "continueWithApple": "Continuar con Apple",
+    "slides": [
+      {
+        "title": "Te damos la bienvenida, Guardián,",
+        "accent": "a tu viaje",
+        "desc": "Everlight es tu compañero para sembrar hábitos positivos y restaurar la luz del reino."
+      },
+      {
+        "title": "Ilumina",
+        "accent": "nuevos reinos",
+        "desc": "Cada hábito hace evolucionar tu luz. Descubre reinos asombrosos mientras creces cada día."
+      },
+      {
+        "title": "Haz retroceder",
+        "accent": "la oscuridad cada día",
+        "desc": "Misiones diarias, desafíos y metas diseñadas para mantener viva tu llama constante."
+      },
+      {
+        "title": "Honra tu esfuerzo",
+        "accent": "y despierta tu luz interior",
+        "desc": "Cada paso fortalece el Everlight. Evoluciona, recupera reliquias y conviértete en el Guardián que llevas dentro."
+      }
+    ]
+  },
+  "habitDetail": {
+    "title": "Detalle del hábito",
+    "saved": "Cambios guardados",
+    "reminder": "Recordatorio",
+    "reminderHint": "Te avisaremos si aún no lo completas en su franja del día",
+    "viewAnalytics": "Ver analíticas",
+    "edit": "Editar hábito",
+    "relapse": "Registrar recaída",
+    "delete": "Eliminar hábito",
+    "deleteConfirm": "¿Eliminar este hábito? Su historial se conserva, pero desaparecerá de tus rutinas.",
+    "deleted": "Hábito eliminado"
+  },
+  "reminders": {
+    "title": "Recordatorios",
+    "enable": "Activar",
+    "granted": "Recordatorios activados",
+    "denied": "Permiso denegado — actívalo desde los ajustes del navegador",
+    "statusGranted": "Recordatorios activos",
+    "statusDenied": "Permiso denegado en el navegador",
+    "statusDefault": "Recordatorios desactivados",
+    "statusUnsupported": "Tu navegador no soporta notificaciones",
+    "habitsWithReminder": "{{count}} hábito(s) con recordatorio activo",
+    "limitationsHint": "Los recordatorios funcionan al abrir la app o al volver a ella (mejor con la app instalada). En iPhone solo suenan con la app abierta.",
+    "notificationTitle": "Zylen — tu llama te espera 🔥",
+    "notificationBody": "Aún no completas \"{{habit}}\" hoy. ¡No dejes que se apague!",
+    "testBody": "Así se verán tus recordatorios de hábitos.",
+    "habitsWithReminder_one": "{{count}} hábito con recordatorio activo",
+    "habitsWithReminder_other": "{{count}} hábitos con recordatorio activo"
+  },
+  "habitScience": {
+    "sheetTitle": "Conoce este hábito",
+    "whatScience": "Qué dice la ciencia",
+    "shortTermTitle": "Beneficios a corto plazo",
+    "longTermTitle": "A largo plazo",
+    "tipsTitle": "Cómo empezar bien",
+    "frustrationsTitle": "Frustraciones típicas (y cómo superarlas)",
+    "createCta": "Crear este hábito",
+    "learnMore": "Saber más",
+    "learnAboutHabit": "Aprende sobre este hábito"
+  },
+  "habitCatalog": {
+    "hydration": {
+      "title": "Hidratación diaria",
+      "tagline": "El hábito más simple con el retorno más rápido",
+      "summary": "Tu cuerpo es ~60% agua y hasta el cerebro lo nota: una deshidratación leve (1-2%) ya reduce concentración, ánimo y energía. Beber suficiente agua a lo largo del día es de los hábitos con efecto más inmediato.",
+      "science": "Estudios de hidratación muestran que déficits leves de agua se asocian a peor atención, más fatiga y dolores de cabeza; corregirlos revierte el efecto en horas. Las necesidades varían por cuerpo y clima: ~2L es una referencia razonable, no una ley.",
+      "shortTerm": [
+        "Más energía y concentración estables durante el día",
+        "Menos dolores de cabeza y menos hambre falsa",
+        "Mejor digestión y piel más hidratada en días"
+      ],
+      "longTerm": [
+        "Menor riesgo de cálculos renales e infecciones urinarias",
+        "Apoya el control de peso (a veces la sed se disfraza de hambre)",
+        "Riñones y articulaciones funcionando mejor con los años"
+      ],
+      "tips": [
+        "Ancla el hábito: un vaso al despertar y uno con cada comida",
+        "Ten una botella visible — la fricción cero es el truco real",
+        "Usa el modo medible de Zylen: registra vasos o litros",
+        "Si el agua sola te aburre: rodajas de limón, pepino o menta"
+      ],
+      "frustrations": [
+        "Los primeros días irás más al baño — tu cuerpo se ajusta en ~1 semana",
+        "Olvidarlo es normal: no confíes en la memoria, confía en la botella visible y el recordatorio",
+        "No sentirás un cambio dramático día a día; es un hábito de fondo que se nota cuando falta"
+      ]
+    },
+    "exercise": {
+      "title": "Ejercicio regular",
+      "tagline": "La 'pastilla' más potente que existe",
+      "summary": "Si el ejercicio fuera un medicamento, sería el más recetado del mundo: mejora ánimo, energía, sueño, memoria y protege contra casi todas las enfermedades crónicas. Y no hace falta una hora: 30 minutos de movimiento ya mueven la aguja.",
+      "science": "La evidencia es abrumadora: la actividad física regular reduce el riesgo de enfermedad cardiovascular, diabetes tipo 2 y depresión (metaanálisis la sitúan al nivel de la psicoterapia para depresión leve-moderada). La OMS recomienda 150 min semanales de intensidad moderada.",
+      "shortTerm": [
+        "Mejor ánimo el mismo día (endorfinas + dopamina)",
+        "Duermes más profundo esa misma noche",
+        "Más energía y menos estrés en 1-2 semanas"
+      ],
+      "longTerm": [
+        "Reduce el riesgo de infarto, diabetes y varios cánceres",
+        "Protege memoria y cerebro del envejecimiento",
+        "Más masa muscular = más independencia y calidad de vida a futuro"
+      ],
+      "tips": [
+        "Empieza ridículamente pequeño: 10 min cuentan, la constancia gana a la intensidad",
+        "Misma hora cada día — el ejercicio 'cuando pueda' no sobrevive la semana",
+        "Elige algo que disfrutes; el mejor ejercicio es el que repites",
+        "Deja la ropa lista la noche anterior (reduce la fricción de arranque)"
+      ],
+      "frustrations": [
+        "Las agujetas de la primera semana son normales y desaparecen",
+        "Los resultados visibles tardan 6-8 semanas; los invisibles (ánimo, sueño) llegan en días — mide esos",
+        "Habrá días sin ganas: la regla es aparecer 10 minutos; casi siempre sigues"
+      ]
+    },
+    "sleep": {
+      "title": "Dormir 7-9 horas",
+      "tagline": "El multiplicador de todos tus demás hábitos",
+      "summary": "El sueño no es tiempo perdido: es cuando el cerebro consolida memoria, regula emociones y el cuerpo se repara. Dormir bien hace más fácil TODO lo demás — comer bien, entrenar, concentrarte y estar de buen humor.",
+      "science": "Dormir menos de 6 horas de forma crónica se asocia a peor memoria, más ansiedad, más apetito (grelina/leptina desreguladas) y mayor riesgo metabólico. La regularidad del horario importa tanto como la duración: tu reloj circadiano ama la rutina.",
+      "shortTerm": [
+        "Mejor humor y menos irritabilidad al día siguiente",
+        "Más foco y memoria de trabajo",
+        "Menos antojos de azúcar y comida chatarra"
+      ],
+      "longTerm": [
+        "Menor riesgo de obesidad, diabetes y enfermedad cardiovascular",
+        "Protección de la memoria a largo plazo",
+        "Sistema inmune más fuerte"
+      ],
+      "tips": [
+        "Fija primero la hora de ACOSTARTE, no la de levantarte",
+        "Pantallas fuera 30-60 min antes (o al menos modo noche + brillo mínimo)",
+        "Habitación fresca, oscura y silenciosa — la cafeína después de las 14h sabotea",
+        "Rutina de cierre: misma secuencia cada noche le enseña al cerebro que toca dormir"
+      ],
+      "frustrations": [
+        "Los primeros días puede que des vueltas en la cama: el cuerpo tarda ~2 semanas en ajustar el reloj",
+        "Una mala noche no arruina nada — no compenses durmiendo tarde el finde (rompe el ritmo)",
+        "Series y scroll nocturno son el enemigo real: este hábito se gana a las 22h, no a las 23:45"
+      ]
+    },
+    "meditation": {
+      "title": "Meditación / mindfulness",
+      "tagline": "Entrenamiento de fuerza para tu atención",
+      "summary": "Meditar no es dejar la mente en blanco: es notar cuando te distraes y volver, una y otra vez. Ese 'volver' es la repetición que fortalece atención y regulación emocional, igual que una sentadilla fortalece las piernas.",
+      "science": "Metaanálisis de programas basados en mindfulness (como MBSR) muestran reducciones moderadas de ansiedad, estrés y rumiación, y mejoras en atención sostenida. Diez minutos diarios constantes superan a sesiones largas esporádicas.",
+      "shortTerm": [
+        "Baja el estrés del día en minutos (activa el sistema parasimpático)",
+        "Reaccionas menos en caliente; hay una pausa antes de responder",
+        "Mejor foco en la siguiente hora"
+      ],
+      "longTerm": [
+        "Menos rumiación y ansiedad basal",
+        "Mayor capacidad de concentración sostenida",
+        "Mejor relación con tus propios pensamientos y emociones"
+      ],
+      "tips": [
+        "Empieza con 3-5 min; 10 es la meta, no el inicio",
+        "Misma hora y lugar (después de despertar funciona muy bien)",
+        "Usa una app guiada al principio; el silencio total llega después",
+        "Distraerte NO es fallar: notar la distracción ES la práctica"
+      ],
+      "frustrations": [
+        "'No puedo dejar de pensar' — nadie puede; el objetivo es notar y volver, no silenciar",
+        "Algunos días se sienten inútiles: el beneficio es acumulativo, como el gimnasio",
+        "El aburrimiento es parte del entrenamiento — justo ahí está creciendo tu tolerancia"
+      ]
+    },
+    "nutrition": {
+      "title": "Comer fruta / comida real",
+      "tagline": "Suma antes de restar",
+      "summary": "En vez de empezar prohibiendo, la ciencia sugiere empezar sumando: una fruta o verdura más al día desplaza sola a los ultraprocesados y aporta fibra, vitaminas y saciedad. Es la puerta de entrada a comer mejor sin pelear contigo.",
+      "science": "Grandes estudios de cohorte asocian cada porción diaria extra de fruta/verdura con menor riesgo cardiovascular y de mortalidad general (con efecto dosis-respuesta hasta ~5 porciones). La fibra además alimenta tu microbiota y mejora la saciedad.",
+      "shortTerm": [
+        "Más saciedad → menos picoteo de ultraprocesados",
+        "Digestión más regular en días (fibra)",
+        "Energía más estable, sin picos de azúcar"
+      ],
+      "longTerm": [
+        "Menor riesgo cardiovascular y metabólico",
+        "Microbiota más diversa y sana",
+        "Un paladar reeducado: lo dulce artificial empieza a empalagar"
+      ],
+      "tips": [
+        "Pon la fruta VISIBLE (frutero en la mesa, no cajón de la nevera)",
+        "Ancla: fruta siempre con el desayuno o como primer snack",
+        "Compra fruta que te guste de verdad — no te obligues a la 'saludable' que odias",
+        "Prepárala lista para comer: la naranja pelada gana al paquete de galletas"
+      ],
+      "frustrations": [
+        "La fruta se daña si no la comes: compra poca y variada, dos veces por semana",
+        "Al principio puede no apetecer frente al snack procesado — la visibilidad y el hábito lo revierten en ~2 semanas",
+        "No es una dieta mágica: es la primera pieza de un patrón que se construye solo"
+      ]
+    },
+    "reading": {
+      "title": "Lectura diaria",
+      "tagline": "20 páginas al día = ~30 libros al año",
+      "summary": "Leer a diario es interés compuesto para tu mente: 20 páginas parecen poco, pero son ~30 libros al año. Además de conocimiento, la lectura profunda entrena la concentración que el scroll infinito te está robando.",
+      "science": "La lectura habitual se asocia a mayor vocabulario, mejor comprensión y mayor reserva cognitiva en la vejez. Estudios también muestran que leer ficción mejora la empatía (teoría de la mente), y que 6 minutos de lectura ya reducen marcadores de estrés.",
+      "shortTerm": [
+        "Relaja y baja el estrés antes de dormir (mejor que la pantalla)",
+        "Sensación de progreso real desde la primera semana",
+        "Recuperas capacidad de atención sostenida"
+      ],
+      "longTerm": [
+        "Decenas de libros al año sin esfuerzo aparente",
+        "Mayor vocabulario, criterio y reserva cognitiva",
+        "Una alternativa por defecto al doomscrolling"
+      ],
+      "tips": [
+        "Define la meta en páginas o minutos (20 pág / 15 min), no 'leer más'",
+        "Libro físico en la mesa de noche; celular cargando LEJOS de la cama",
+        "Abandona sin culpa los libros que te aburren — leer lo que te atrapa es la estrategia",
+        "Ancla: leer siempre después de acostarte / con el café de la mañana"
+      ],
+      "frustrations": [
+        "Los primeros días te dormirás a las 3 páginas: es tu déficit de atención recuperándose, mejora en 1-2 semanas",
+        "Si un libro no avanza, el problema es el libro, no tú — cámbialo",
+        "Comparar tu ritmo con el de otros mata el hábito; 10 páginas tuyas valen más que 50 ajenas"
+      ]
+    },
+    "journaling": {
+      "title": "Escribir un diario",
+      "tagline": "Pensar con las manos",
+      "summary": "Escribir lo que piensas y sientes obliga al cerebro a ordenar el caos: los problemas difusos se vuelven concretos y manejables. Cinco minutos y tres líneas honestas bastan para el efecto.",
+      "science": "La 'escritura expresiva' (Pennebaker) muestra en decenas de estudios mejoras modestas pero consistentes en ánimo, estrés e incluso marcadores de salud. Poner emociones en palabras ('affect labeling') reduce la reactividad de la amígdala en neuroimagen.",
+      "shortTerm": [
+        "Descarga mental: los pendientes dejan de dar vueltas en la cabeza",
+        "Claridad sobre qué te preocupa de verdad",
+        "Mejor cierre del día (o arranque, si escribes de mañana)"
+      ],
+      "longTerm": [
+        "Registro de tu evolución que la memoria distorsionaría",
+        "Mejor autoconocimiento y regulación emocional",
+        "Decisiones más claras: escribes tus dilemas y se desenredan"
+      ],
+      "tips": [
+        "3 líneas cuentan — la barrera de entrada debe ser mínima",
+        "Prueba una plantilla: qué pasó / qué sentí / qué agradezco",
+        "Nadie lo va a leer: escribe feo, escribe honesto",
+        "Ancla: junto al café de la mañana o justo antes de dormir"
+      ],
+      "frustrations": [
+        "'No sé qué escribir' — empieza describiendo tu día en una frase; el resto sale solo",
+        "Releer días malos puede incomodar: no estás obligado a releer",
+        "Días de una sola línea son victorias, no fracasos"
+      ]
+    },
+    "instrument": {
+      "title": "Practicar un instrumento",
+      "tagline": "El gimnasio completo del cerebro",
+      "summary": "Pocas actividades activan tanto cerebro a la vez: motricidad fina, oído, lectura, memoria y emoción trabajando juntos. Quince minutos diarios de práctica deliberada superan a la sesión maratónica del domingo.",
+      "science": "La práctica musical se asocia en neuroimagen a mayor conectividad entre hemisferios y mejoras en memoria de trabajo y atención. El factor clave según la literatura de expertise es la práctica corta, frecuente y enfocada en lo que aún no sale.",
+      "shortTerm": [
+        "Desconexión total del trabajo/estrés mientras tocas (flow)",
+        "Progreso audible en semanas con práctica diaria",
+        "Motricidad y coordinación mejorando rápido al inicio"
+      ],
+      "longTerm": [
+        "Una habilidad para toda la vida y una identidad nueva ('soy músico')",
+        "Reserva cognitiva: la música es protectora del cerebro que envejece",
+        "Fuente inagotable de reto y disfrute"
+      ],
+      "tips": [
+        "15 min diarios > 2 horas el domingo",
+        "Practica LO QUE NO TE SALE (práctica deliberada), no solo lo que ya suena bien",
+        "Instrumento fuera del estuche, visible y listo",
+        "Graba un clip semanal: oír tu progreso es el mejor combustible"
+      ],
+      "frustrations": [
+        "La meseta llega a los 2-3 meses: es la fase donde casi todos abandonan — persiste, se rompe sola",
+        "Sonar mal al principio ES el proceso, no una señal de falta de talento",
+        "Días de 5 minutos mantienen viva la cadena; no los desprecies"
+      ]
+    },
+    "drawing": {
+      "title": "Dibujar / bocetar",
+      "tagline": "Ver el mundo con otros ojos",
+      "summary": "Dibujar no es un don: es una habilidad entrenable de observación. Bocetar a diario enseña a VER de verdad — proporciones, luz, detalles — y es una de las formas más baratas de entrar en estado de flow.",
+      "science": "Las actividades artísticas muestran en estudios reducciones de cortisol tras sesiones cortas (45 min) independientemente del nivel de habilidad. La habilidad de dibujo mejora de forma medible con práctica estructurada — el 'talento' pesa menos que las horas.",
+      "shortTerm": [
+        "Relajación tipo flow desde la primera sesión",
+        "Notas que empiezas a observar mejor el mundo real",
+        "Un descanso real de las pantallas"
+      ],
+      "longTerm": [
+        "Un cuaderno lleno = prueba tangible de tu evolución",
+        "Habilidad visual útil (comunicar ideas, notas visuales, diseño)",
+        "Una vía de expresión que no depende de palabras"
+      ],
+      "tips": [
+        "Un boceto de 10 min al día; feo está permitido y esperado",
+        "Dibuja del natural (tu taza, tu mano), no solo de fotos",
+        "Cuaderno barato: los caros dan miedo de 'arruinarlos'",
+        "Fecha cada dibujo — comparar el mes 1 con el mes 3 es mágico"
+      ],
+      "frustrations": [
+        "Los primeros dibujos te parecerán horribles: es tu ojo mejorando más rápido que tu mano (señal de progreso, no de fracaso)",
+        "Compararte con artistas de años en redes es trampa mental",
+        "El bloqueo de la página en blanco se rompe con ejercicios: dibuja 5 círculos y ya empezaste"
+      ]
+    },
+    "study": {
+      "title": "Estudio / aprendizaje diario",
+      "tagline": "30 minutos que componen como interés",
+      "summary": "Media hora diaria de estudio enfocado le gana a las maratones de fin de semana: el cerebro consolida en el sueño lo que practicas, así que la frecuencia importa más que el volumen. En un año son ~180 horas de una habilidad nueva.",
+      "science": "La ciencia del aprendizaje es clara: la práctica espaciada (poco y frecuente) y el recuerdo activo (ponerte a prueba) superan por mucho al releer y subrayar. El 'efecto espaciado' es de los hallazgos más replicados de la psicología.",
+      "shortTerm": [
+        "Sensación de progreso e impulso desde la semana 1",
+        "Mejor retención que estudiando a atracones",
+        "Momentum: empezar mañana es más fácil si estudiaste hoy"
+      ],
+      "longTerm": [
+        "Habilidades que componen tu carrera y tus ingresos",
+        "Identidad de aprendiz: la confianza de saber que puedes aprender lo que sea",
+        "Ventaja acumulada que nadie te quita"
+      ],
+      "tips": [
+        "Define QUÉ estudiarás antes de sentarte (la sesión no empieza eligiendo)",
+        "Ponte a prueba: cierra el material y explícalo en voz alta (recuerdo activo)",
+        "Celular en otra habitación — la sola presencia visible drena atención",
+        "25-30 min con descanso corto le gana a 2 horas agotadoras"
+      ],
+      "frustrations": [
+        "La curva del olvido desanima: olvidar es parte del proceso, repasar espaciado lo arregla",
+        "Días en que no entra nada: baja la dificultad, no la frecuencia",
+        "El progreso en habilidades es escalonado — semanas planas y de repente un salto"
+      ]
+    },
+    "planning": {
+      "title": "Planificar el día",
+      "tagline": "10 minutos que ordenan las otras 16 horas",
+      "summary": "Decidir por adelantado qué harás elimina decenas de microdecisiones que agotan tu fuerza de voluntad durante el día. Un plan simple de 3 prioridades vence a la lista infinita de tareas.",
+      "science": "La investigación sobre 'intenciones de implementación' (Gollwitzer) muestra que planear el cuándo/dónde/cómo concreto duplica o triplica la probabilidad de ejecutar una tarea frente a solo 'tener la intención'. Escribir pendientes también reduce la carga mental (efecto Zeigarnik).",
+      "shortTerm": [
+        "Arrancas el día sin la parálisis del '¿por dónde empiezo?'",
+        "Menos sensación de caos y bomberazos",
+        "Al escribirlo, sueltas los pendientes de la cabeza"
+      ],
+      "longTerm": [
+        "Lo importante deja de perder siempre contra lo urgente",
+        "Avance constante en metas grandes (se planifican en trozos)",
+        "Percepción realista de tu tiempo: dejas de prometerte días de 30 horas"
+      ],
+      "tips": [
+        "Máximo 3 prioridades reales; el resto es lista de 'si sobra tiempo'",
+        "Planea la noche anterior o a primera hora, ANTES de abrir mensajes",
+        "Asigna la prioridad #1 a tu primera hora de energía",
+        "Revisa 2 min al final del día: ¿qué pasó con las 3? (retroalimentación)"
+      ],
+      "frustrations": [
+        "El plan se romperá muchos días — su valor es re-decidir rápido, no cumplirse perfecto",
+        "Al inicio subestimarás tiempos: en 2 semanas calibras",
+        "Planear no es procrastinar con estética: máximo 10 minutos y a ejecutar"
+      ]
+    },
+    "deep-work": {
+      "title": "Trabajo profundo sin distracciones",
+      "tagline": "Una hora enfocada vale por cuatro fragmentadas",
+      "summary": "Cada interrupción cuesta mucho más que sus segundos: el cerebro tarda varios minutos en volver a concentrarse de verdad. Bloques de trabajo sin celular ni pestañas producen en una hora lo que el multitasking en cuatro.",
+      "science": "Estudios de interrupciones en oficina (Mark et al.) estiman ~23 minutos para recuperar el foco pleno tras una interrupción. El 'residuo atencional' (Leroy) muestra que saltar entre tareas deja parte de la atención pegada en la anterior. El multitasking real no existe: es cambio rápido con costo.",
+      "shortTerm": [
+        "Terminas en una mañana lo que antes tomaba el día",
+        "Satisfacción de avanzar en lo difícil (no solo en lo trivial)",
+        "Menos fatiga mental al final del día"
+      ],
+      "longTerm": [
+        "La capacidad de concentrarse es una ventaja profesional creciente y escasa",
+        "Produces trabajo de más calidad, no solo más volumen",
+        "Recuperas la capacidad de pensar ideas largas"
+      ],
+      "tips": [
+        "Empieza con bloques de 25-45 min; 90 es nivel avanzado",
+        "Celular en OTRA habitación (en silencio sobre la mesa sigue robando atención)",
+        "Una sola pestaña/tarea; cierra el correo y el chat con hora de reapertura",
+        "Define el objetivo del bloque en una frase antes de empezar"
+      ],
+      "frustrations": [
+        "Los primeros bloques serán incómodos: la mente pide su dosis de novedad cada 3 minutos — pasa en ~1 semana",
+        "El entorno no siempre coopera: negocia señales ('audífonos = no interrumpir')",
+        "Un bloque al día ya es victoria; no intentes 8 horas profundas (nadie las tiene)"
+      ]
+    },
+    "expense-tracking": {
+      "title": "Registrar gastos",
+      "tagline": "No puedes mejorar lo que no mides",
+      "summary": "Anotar cada gasto del día toma 2 minutos y produce el insumo más valioso de tus finanzas: saber a dónde se va el dinero DE VERDAD. La consciencia sola ya cambia el comportamiento.",
+      "science": "El solo acto de auto-registrar un comportamiento lo modifica ('reactividad de la medición'): ocurre con la comida, los pasos y el gasto. La contabilidad mental (Thaler) explica por qué los gastos pequeños e invisibles son los que rompen presupuestos.",
+      "shortTerm": [
+        "Descubres fugas invisibles la primera semana (delivery, suscripciones, hormiga)",
+        "Frenas compras impulsivas solo por saber que las anotarás",
+        "Sensación de control inmediata"
+      ],
+      "longTerm": [
+        "Presupuestos realistas basados en datos, no en ilusión",
+        "Capacidad real de ahorro (sabes exactamente qué recortar)",
+        "Paz financiera: los números dejan de ser un misterio con ansiedad"
+      ],
+      "tips": [
+        "Regístralo AL MOMENTO del gasto (2 toques en el celular); 'luego lo anoto' = nunca",
+        "No juzgues las primeras 2 semanas: solo observa, los datos primero",
+        "Revisa el total una vez por semana, no obsesivamente a diario",
+        "Categorías simples: 5-6 máximo, o el sistema muere de burocracia"
+      ],
+      "frustrations": [
+        "Verás números incómodos al inicio — esa incomodidad ES la información valiosa",
+        "Olvidarás gastos: registra al momento y no reconstruyas el día de memoria",
+        "El perfeccionismo mata el hábito: un registro 90% completo sirve; uno abandonado, no"
+      ]
+    },
+    "saving": {
+      "title": "Ahorrar / no comprar por impulso",
+      "tagline": "Págate a ti primero",
+      "summary": "El ahorro que funciona no es 'lo que sobre a fin de mes' (nunca sobra): es apartarlo primero, aunque sea poco. Y contra el impulso de compra, la herramienta más efectiva es simplemente esperar 24 horas.",
+      "science": "La economía conductual muestra que automatizar el ahorro ('pagarte primero') supera por mucho a la fuerza de voluntad, y que el descuento hiperbólico nos hace sobrevalorar la recompensa inmediata. La regla de las 24-72h desactiva la mayoría de compras impulsivas.",
+      "shortTerm": [
+        "Ver crecer el fondo, aunque sea lento, motiva de inmediato",
+        "Menos arrepentimiento de compras a los 3 días",
+        "Claridad entre 'lo quiero ahora' y 'lo quiero de verdad'"
+      ],
+      "longTerm": [
+        "Fondo de emergencia = dormir tranquilo",
+        "Libertad de decisión (cambiar de trabajo, mudarte, invertir)",
+        "El interés compuesto trabajando a tu favor y no en tu contra"
+      ],
+      "tips": [
+        "Automatiza: transferencia el día que cobras, aunque sean $10",
+        "Regla 24h: lo que quieras comprar, al carrito y espera un día",
+        "Desinstala apps de compras y quita tarjetas guardadas (suma fricción)",
+        "Dale nombre a tu meta ('Japón 2027') — ahorrar 'porque sí' no motiva"
+      ],
+      "frustrations": [
+        "Al inicio la cantidad parece ridícula: el hábito importa más que el monto, el monto crece después",
+        "Habrá recaídas de compra impulsiva: registra qué la disparó y sigue",
+        "Ver a otros gastar sin freno da FOMO — recuerda que no ves sus deudas"
+      ]
+    },
+    "social-connection": {
+      "title": "Conexión social",
+      "tagline": "El predictor #1 de una vida larga y feliz",
+      "summary": "El estudio más largo de la historia sobre la felicidad (Harvard, 85+ años) llegó a una conclusión simple: la calidad de tus relaciones predice tu salud y felicidad mejor que el dinero o la fama. Una llamada, una cena, un mensaje — eso es mantenimiento de vida.",
+      "science": "La soledad crónica se asocia a un aumento de mortalidad comparable a fumar hasta 15 cigarrillos al día (Holt-Lunstad). Las relaciones se sostienen con frecuencia de contacto, no con grandes gestos: pequeños toques regulares vencen al gran reencuentro anual.",
+      "shortTerm": [
+        "Subidón de ánimo inmediato tras una buena conversación",
+        "La relación se siente viva otra vez con un solo toque",
+        "Perspectiva: tus problemas se encogen al compartirlos"
+      ],
+      "longTerm": [
+        "Red real de apoyo para cuando la vida golpee",
+        "Menor riesgo de depresión y deterioro cognitivo",
+        "Relaciones profundas que se construyeron a base de 'toques' pequeños"
+      ],
+      "tips": [
+        "Llama mientras caminas o cocinas — no esperes 'el momento perfecto'",
+        "La regla del primer paso: tú envía el mensaje, no lleves la cuenta de quién debe",
+        "Audio de voz > texto para cercanía real (y llamada > audio)",
+        "Agenda recurrente con los tuyos (domingo = llamar a papás) y deja de depender de acordarte"
+      ],
+      "frustrations": [
+        "'No tengo tiempo' — 10 minutos de llamada cuentan; la barrera es arranque, no agenda",
+        "A veces no contestan o están secos: no es rechazo, es su día — la constancia gana",
+        "Puede sentirse forzado al inicio; en 3 semanas se vuelve lo más esperado del día"
+      ]
+    },
+    "gratitude": {
+      "title": "Gratitud activa",
+      "tagline": "Reentrenar el radar del cerebro",
+      "summary": "Tu cerebro viene de fábrica con sesgo negativo: detecta amenazas y falta. La gratitud practicada — escribir 3 cosas buenas o enviar un mensaje de agradecimiento — recalibra ese radar hacia lo que sí funciona.",
+      "science": "Los experimentos clásicos de Emmons y Seligman muestran que ejercicios simples de gratitud ('tres cosas buenas', carta de agradecimiento) producen mejoras en bienestar y síntomas depresivos que persisten semanas o meses. Es de las intervenciones más baratas y replicadas de la psicología positiva.",
+      "shortTerm": [
+        "Mejora el ánimo el mismo día (más aún si el mensaje es a alguien)",
+        "Duermes mejor si lo haces antes de acostarte",
+        "Las relaciones se calientan: la gente atesora esos mensajes"
+      ],
+      "longTerm": [
+        "Sesgo atencional recalibrado: notas lo bueno por defecto",
+        "Menor rumiación y síntomas depresivos",
+        "Vínculos más fuertes (la gratitud expresada es pegamento social)"
+      ],
+      "tips": [
+        "Sé ESPECÍFICO: 'gracias por quedarte al teléfono el martes' > 'gracias por todo'",
+        "Alterna: unos días escribe 3 cosas, otros envía el mensaje a la persona",
+        "Busca cosas pequeñas y nuevas cada día (repetir 'mi familia' pierde efecto)",
+        "Ancla: con el café de la mañana o como cierre del día"
+      ],
+      "frustrations": [
+        "Se siente cursi al principio — el efecto está medido igual, hazlo de todos modos",
+        "Días malos donde 'no hay nada': busca lo mínimo (el café caliente cuenta) — justo esos días es cuando más trabaja",
+        "Si se vuelve mecánico, cambia el formato: la novedad mantiene el efecto"
+      ]
+    },
+    "quit-smoking": {
+      "title": "Dejar de fumar / vapear",
+      "tagline": "La mejor decisión de salud disponible",
+      "summary": "No hay hábito cuya eliminación pague más rápido: en 20 minutos baja tu pulso, en semanas mejora tu respiración, en un año tu riesgo cardíaco cae a la mitad. Cada día resistido es reparación literal de tu cuerpo.",
+      "science": "El tabaco es la principal causa de muerte prevenible del mundo. La buena noticia: el cuerpo se repara agresivamente al dejarlo (a los 10 años, el riesgo de cáncer de pulmón cae ~50%). Las recaídas son parte estadística del proceso — la media es de varios intentos antes del definitivo.",
+      "shortTerm": [
+        "En 48-72h: mejor gusto y olfato, más aire al subir escaleras",
+        "En 2-4 semanas: mejor circulación y menos tos",
+        "Dinero visible: calcula tu gasto mensual y mira lo que vuelve"
+      ],
+      "longTerm": [
+        "Riesgo de infarto reducido a la mitad en 1 año",
+        "Riesgo de cáncer cayendo año tras año",
+        "Años de vida recuperados — literal, no metafórico"
+      ],
+      "tips": [
+        "Identifica tus disparadores (café, alcohol, estrés, ciertas personas) y cambia la rutina alrededor",
+        "Sustituye el ritual de la mano/boca: agua, chicle, palillo",
+        "Los antojos duran 3-5 minutos: cronométralos y solo aguanta esa ola",
+        "Considera apoyo médico (parches, chicles, bupropión) — duplica las tasas de éxito, no es 'trampa'"
+      ],
+      "frustrations": [
+        "La recaída es parte del proceso, no el final: registra qué la disparó y vuelve al día 1 sin drama",
+        "Días 3-7 son el pico físico de abstinencia: irritabilidad y niebla mental TEMPORALES",
+        "El 'solo uno social' es la trampa #1 — la nicotina reactiva el circuito completo"
+      ]
+    },
+    "quit-screens": {
+      "title": "Menos pantallas / redes",
+      "tagline": "Recuperar tu atención secuestrada",
+      "summary": "Las apps de scroll infinito están diseñadas por equipos enteros para capturar tu atención con recompensas variables — la misma mecánica de las máquinas tragamonedas. Reducirlas no es fuerza de voluntad contra ti: es rediseñar el entorno.",
+      "science": "Estudios experimentales (p.ej. Hunt et al.) muestran que limitar redes sociales a ~30 min/día reduce soledad y síntomas depresivos en semanas. El uso nocturno de pantallas retrasa el sueño por luz y por estimulación. La sola presencia del teléfono visible reduce la capacidad cognitiva disponible ('brain drain').",
+      "shortTerm": [
+        "Recuperas 1-2 horas diarias reales (mira tu screen time y multiplica)",
+        "Mejor sueño si cortas pantallas 1h antes de dormir",
+        "Menos ansiedad de comparación en días"
+      ],
+      "longTerm": [
+        "Capacidad de atención sostenida reconstruida",
+        "Tiempo real para los hábitos que sí quieres (leer, crear, gente)",
+        "Relación con la tecnología en TUS términos"
+      ],
+      "tips": [
+        "Ambiente > voluntad: apps fuera de la pantalla de inicio, notificaciones OFF, escala de grises",
+        "Celular a cargar FUERA del dormitorio; despertador de $5",
+        "Sustituye, no elimines: el hueco del scroll lo llena un libro/podcast preparado de antemano",
+        "Horarios sin celular (comidas, primera hora) antes que prohibiciones totales"
+      ],
+      "frustrations": [
+        "Los primeros días buscarás el celular por reflejo puro — ese fantasma desaparece en ~1 semana",
+        "FOMO inicial: en 2 semanas descubres que no te perdiste nada importante",
+        "Las recaídas de domingo por la tarde son clásicas: ten el plan B listo (¿qué harás en su lugar?)"
+      ]
+    },
+    "quit-alcohol": {
+      "title": "Reducir / dejar el alcohol",
+      "tagline": "El sueño y la energía que no sabías que te faltaban",
+      "summary": "El alcohol es el gran saboteador silencioso del sueño: te ayuda a caer dormido pero destroza la segunda mitad de la noche. Reducirlo devuelve energía, ánimo y claridad más rápido de lo que esperas.",
+      "science": "La evidencia reciente movió el consenso: no hay nivel de consumo claramente 'beneficioso' (los supuestos beneficios cardiovasculares no resisten los análisis modernos). El alcohol suprime el sueño REM, y su eliminación mejora calidad de sueño, ansiedad basal y presión arterial en semanas.",
+      "shortTerm": [
+        "Sueño notablemente más reparador en 1-2 semanas",
+        "Mañanas sin niebla, más energía estable",
+        "Menos ansiedad basal ('hangxiety') y mejor piel"
+      ],
+      "longTerm": [
+        "Menor riesgo de varios cánceres, hígado graso e hipertensión",
+        "Control de peso más fácil (calorías líquidas invisibles)",
+        "Emociones procesadas de verdad, no anestesiadas"
+      ],
+      "tips": [
+        "Define tu regla ANTES del evento ('hoy 0' o 'máximo 1') — decidir en el bar pierde siempre",
+        "Ten un sustituto con dignidad: agua con gas + limón, cerveza 0.0, kombucha",
+        "Los primeros eventos sociales son lo difícil: llega con bebida en mano y nadie pregunta",
+        "Cuenta noches sin alcohol en Zylen — la racha visible es el mejor motivador"
+      ],
+      "frustrations": [
+        "La presión social es real: 'una y ya', 'qué aburrido' — un simple 'estoy en un reto de 30 días' desarma casi todo",
+        "El antojo aparece con el estrés del viernes: es el ritual, no la bebida — cambia el ritual",
+        "Dormirás PEOR los primeros 2-3 días si bebías a diario; luego viene la mejora real"
+      ]
+    },
+    "quit-sugar": {
+      "title": "Menos azúcar / ultraprocesados",
+      "tagline": "Estabilizar la montaña rusa de energía",
+      "summary": "El problema del azúcar no es un postre: es la dosis constante e invisible (bebidas, salsas, 'snacks saludables') que mantiene tu energía y hambre en montaña rusa. Bajarla estabiliza el apetito en un par de semanas.",
+      "science": "Las bebidas azucaradas son el vínculo más sólido entre azúcar y aumento de peso/diabetes tipo 2 en la literatura. Los picos y valles de glucosa se asocian a más hambre, antojos y fatiga; una dieta de carga glucémica más estable mejora saciedad y energía subjetiva.",
+      "shortTerm": [
+        "Energía estable sin el bajón de las 3pm en ~2 semanas",
+        "El hambre se vuelve predecible (comes por comida, no por antojo)",
+        "El paladar se recalibra: la fruta vuelve a saber dulce"
+      ],
+      "longTerm": [
+        "Menor riesgo de diabetes tipo 2 y grasa visceral",
+        "Mejor salud dental y de piel",
+        "Libertad: los antojos dejan de decidir por ti"
+      ],
+      "tips": [
+        "Empieza SOLO por las bebidas azucaradas — es el 80% del beneficio con el 20% del esfuerzo",
+        "No lo tengas en casa: la batalla se gana en el supermercado, no en la cocina a las 11pm",
+        "Lee etiquetas: el azúcar se esconde como jarabe, dextrosa, maltosa...",
+        "Antojo fuerte = a veces solo cansancio o sed; agua + fruta + 10 minutos"
+      ],
+      "frustrations": [
+        "Días 3-7: antojos intensos y humor irritable — es la recalibración, pasa",
+        "El azúcar está en TODO lo procesado: apunta a reducir, no a pureza absoluta",
+        "Una recaída con torta de cumpleaños no es fracaso: era una torta, no tu identidad — sigue al día siguiente"
+      ]
+    }
+  },
+  "catalog": {
+    "homeTitle": "Aprende hábitos",
+    "explore": "Explorar",
+    "libraryTitle": "Catálogo de hábitos"
+  },
+  "arena": {
+    "title": "Templo del Desorden",
+    "badge": "Arena co-op",
+    "cardTitle": "Templo del Desorden",
+    "cardSubtitle": "Entra a la arena 3D, combate tus vicios con hasta 3 héroes y vence a la Pereza Suprema.",
+    "cardCta": "Entrar a la arena",
+    "loading": "Abriendo el portal al Templo…",
+    "victoryReward": "¡Venciste a la Pereza Suprema! +{{xp}} XP · +{{points}} puntos",
+    "dailyCapReached": "La luz del Templo descansa por hoy — vuelve mañana por más recompensas.",
+    "rewardError": "No se pudo entregar la recompensa. Revisa tu conexión.",
+    "armory": {
+      "title": "Armería del Guardián",
+      "subtitle": "Tus hábitos forjan tu poder — compra con tus puntos.",
+      "selectTier": "Elige tu arena",
+      "tierLabel": "Arena {{tier}}",
+      "tierHint": "Recompensa por victoria: +{{xp}} XP · +{{points}} puntos",
+      "weapons": "Bastones",
+      "gems": "Gemas",
+      "gemSlots": "Hasta {{max}} gemas engarzadas a la vez.",
+      "equipped": "Equipado",
+      "equip": "Equipar",
+      "unequip": "Quitar",
+      "insufficient": "Puntos insuficientes — completa más hábitos.",
+      "purchased": "¡Comprado! El poder de tus hábitos toma forma.",
+      "purchaseError": "No se pudo completar la compra.",
+      "enter": "Entrar a la Arena {{tier}}",
+      "back": "Armería"
+    },
+    "gear": {
+      "staff_novice": {
+        "name": "Bastón del Iniciado",
+        "desc": "Tu primera luz. Daño base."
+      },
+      "staff_adept": {
+        "name": "Bastón del Adepto",
+        "desc": "+30% de daño."
+      },
+      "staff_guardian": {
+        "name": "Bastón del Guardián",
+        "desc": "+60% de daño · ataque 10% más rápido."
+      },
+      "staff_everlight": {
+        "name": "Bastón Everlight",
+        "desc": "Daño ×2 · ataque 20% más rápido."
+      },
+      "vitality": {
+        "name": "Gema de Vitalidad",
+        "desc": "+30 HP máximo."
+      },
+      "swift": {
+        "name": "Gema Veloz",
+        "desc": "+12% velocidad de movimiento."
+      },
+      "wisdom": {
+        "name": "Gema de Sabiduría",
+        "desc": "+30% XP en la arena."
+      },
+      "wrath": {
+        "name": "Gema de Ira",
+        "desc": "+50% daño de Nova de Luz."
+      },
+      "haste": {
+        "name": "Gema de Celeridad",
+        "desc": "−25% cooldowns de hechizos."
+      },
+      "leech": {
+        "name": "Gema Sangrante",
+        "desc": "Robas 10% del daño como vida."
+      }
+    },
+    "gemPowerActive": "Poder de gemas activo",
+    "gemPowerNone": "Cultiva gemas en Enfoque para ganar poderes"
+  },
+  "focus": {
+    "title": "Enfoque del día",
+    "subtitle": "Cultiva gemas con sesiones de enfoque profundo",
+    "pickGem": "Elige tu gema",
+    "newGem": "Nueva gema",
+    "noGems": "Crea tu primera gema: dale un nombre y elige a qué reino alimenta.",
+    "duration": "Duración",
+    "start": "Cultivar gema",
+    "stage1": "Semilla de cristal",
+    "stage2": "Brotando",
+    "stage3": "Formándose",
+    "stage4": "Gema completa",
+    "keepGrowing": "Tu gema está creciendo… mantén el enfoque",
+    "keepGrowingCta": "Seguir cultivando",
+    "pauseBudget": "Pausa restante: {{time}}",
+    "abandon": "Abandonar",
+    "abandonTitle": "¿Abandonar la sesión?",
+    "abandonBody": "Si abandonas ahora, tu gema se romperá y no ganarás Luz.",
+    "abandonConfirm": "Romper la gema",
+    "completeTitle": "¡Tu gema ha crecido!",
+    "completeReward": "+{{xp}} Luz · +{{points}} Esencia",
+    "completeCapped": "Alcanzaste el límite diario: recompensa reducida.",
+    "growAnother": "Cultivar otra gema",
+    "brokenTitle": "Tu gema se rompió",
+    "brokenPause": "La pausa duró demasiado y la gema perdió su luz. La próxima vez, vuelve antes de 3 minutos.",
+    "brokenAbandon": "Abandonaste la sesión antes de tiempo. Cada gema necesita tu enfoque completo para crecer.",
+    "brokenExpired": "La sesión quedó abandonada demasiado tiempo. Vuelve a intentarlo con una nueva gema.",
+    "retry": "Intentar de nuevo",
+    "vault": "Bóveda de gemas",
+    "vaultToday": "Hoy",
+    "vaultWeek": "Semana",
+    "statsGems": "Gemas",
+    "statsMinutes": "Minutos",
+    "statsBroken": "Rotas",
+    "vaultEmpty": "Aún no hay gemas en este período. ¡Cultiva la primera!",
+    "speciesTotals": "Colección por reino",
+    "arenaPower": "Poder en la Arena",
+    "arenaPowerHint": "Cada gema cultivada fortalece a tu héroe en el Templo del Desorden: más vida, daño y poderes.",
+    "shieldProgress": "Escudo de Luz: {{count}}/{{total}} gemas",
+    "creator": {
+      "title": "Nueva gema",
+      "name": "Nombre",
+      "namePlaceholder": "Ej. Estudiar, Leer, Meditar…",
+      "linkHabit": "Vincular a un hábito (opcional)",
+      "noHabit": "Sin hábito — actividad libre",
+      "activity": "Actividad",
+      "activityPlaceholder": "¿En qué te vas a enfocar?",
+      "species": "Reino de la gema",
+      "speciesLocked": "El reino se hereda del hábito vinculado.",
+      "create": "Crear gema",
+      "unlockTitle": "¿Desbloquear gema de {{species}}?",
+      "unlockBody": "Desbloquéala por ◆{{price}} Esencia y podrás sembrarla para siempre.",
+      "unlock": "Desbloquear",
+      "unlockCta": "Desbloquear {{species}} por ◆{{price}}",
+      "unlocked": "¡Especie desbloqueada!",
+      "unlockFailed": "No se pudo desbloquear. Intenta de nuevo.",
+      "insufficientPoints": "Te falta Esencia — gánala completando hábitos."
+    },
+    "notificationTitle": "¡Tu gema ha crecido! 💎",
+    "notificationBody": "Sesión de enfoque completada. Vuelve a Zylen para reclamar tu Luz.",
+    "errors": {
+      "alreadyRunning": "Ya tienes una sesión en curso.",
+      "startFailed": "No se pudo iniciar la sesión. Intenta de nuevo.",
+      "completeFailed": "No se pudo completar la sesión.",
+      "createFailed": "No se pudo crear la gema."
+    },
+    "starterGem": "Enfoque",
+    "vaultMonth": "Mes",
+    "vaultYear": "Año",
+    "vaultLatest": "Última gema",
+    "vaultOverflow": "+{{count}}",
+    "vaultInfo": "Cada sesión de enfoque cultiva una gema en la plataforma. Las rotas también dejan huella. Cambia el período para ver tu cosecha.",
+    "vaultChipLight": "Luz",
+    "vaultChipEssence": "Esencia",
+    "vaultChipGems": "Gemas cultivadas"
+  },
+  "realms": {
+    "title": "Reinos de enfoque",
+    "subtitle": "Cada hábito completado alimenta la luz de un reino. Hazlos crecer todos.",
+    "cardBadge": "Reinos",
+    "cardTitle": "Reinos de enfoque",
+    "cardSubtitle": "Observa cómo tu luz fortalece cada dominio de tu vida.",
+    "cardCta": "Ver mis reinos",
+    "levelLabel": "Nivel {{level}}",
+    "habitsCount_one": "{{count}} hábito",
+    "habitsCount_other": "{{count}} hábitos",
+    "dormant": "Reino dormido",
+    "empty": "Aún no hay reinos que iluminar."
+  },
+  "icons": {
+    "Dumbbell": "Mancuerna",
+    "Bike": "Bicicleta",
+    "Heart": "Corazón",
+    "Apple": "Manzana",
+    "Droplets": "Gotas",
+    "Bed": "Cama",
+    "Utensils": "Cubiertos",
+    "Brain": "Cerebro",
+    "Book": "Libro",
+    "Pencil": "Lápiz",
+    "Code": "Código",
+    "Target": "Diana",
+    "Sparkles": "Destellos",
+    "Users": "Personas",
+    "MessageCircle": "Mensaje",
+    "Home": "Casa",
+    "Gift": "Regalo",
+    "Briefcase": "Maletín",
+    "DollarSign": "Dólar",
+    "Trophy": "Trofeo",
+    "Star": "Estrella",
+    "TrendingUp": "Tendencia al alza",
+    "Palette": "Paleta",
+    "Music": "Música",
+    "Camera": "Cámara",
+    "Coffee": "Café",
+    "Flame": "Llama",
+    "Zap": "Rayo",
+    "Moon": "Luna",
+    "Sunrise": "Amanecer",
+    "CheckCircle2": "Verificación",
+    "Award": "Medalla",
+    "ShoppingCart": "Carrito",
+    "Candy": "Caramelo"
+  },
+  "settings": {
+    "language": {
+      "switchToEnglish": "Cambiar a inglés",
+      "switchToSpanish": "Cambiar a español"
+    }
+  }
+}

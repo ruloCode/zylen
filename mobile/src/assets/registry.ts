@@ -1,0 +1,107 @@
+/**
+ * Static image registry — maps the web app's public/ paths to bundled
+ * native assets. Metro requires static require() calls, so every dynamic
+ * web path (e.g. habit icons, gem sprites, avatars) resolves through here.
+ *
+ * AUTO-GENERATED from public/ — regenerate by re-running the copy script
+ * (see mobile/README.md) after adding images to the web app.
+ */
+
+export const IMAGES: Record<string, number> = {
+  '/achievements/comeback.png': require('../../assets/images/achievements/comeback.png'),
+  '/achievements/consistency_king.png': require('../../assets/images/achievements/consistency_king.png'),
+  '/achievements/early_bird.png': require('../../assets/images/achievements/early_bird.png'),
+  '/achievements/habit_hero.png': require('../../assets/images/achievements/habit_hero.png'),
+  '/achievements/month_master.png': require('../../assets/images/achievements/month_master.png'),
+  '/achievements/network_builder.png': require('../../assets/images/achievements/network_builder.png'),
+  '/achievements/night_owl.png': require('../../assets/images/achievements/night_owl.png'),
+  '/achievements/perfect_day.png': require('../../assets/images/achievements/perfect_day.png'),
+  '/achievements/routine_legend.png': require('../../assets/images/achievements/routine_legend.png'),
+  '/achievements/social_butterfly.png': require('../../assets/images/achievements/social_butterfly.png'),
+  '/achievements/two_week_titan.png': require('../../assets/images/achievements/two_week_titan.png'),
+  '/achievements/unstoppable.png': require('../../assets/images/achievements/unstoppable.png'),
+  '/achievements/week_warrior.png': require('../../assets/images/achievements/week_warrior.png'),
+  '/achievements/xp_expert.png': require('../../assets/images/achievements/xp_expert.png'),
+  '/achievements/xp_master.png': require('../../assets/images/achievements/xp_master.png'),
+  '/achievements/xp_novice.png': require('../../assets/images/achievements/xp_novice.png'),
+  '/avatars/avatar-explorer-1.png': require('../../assets/images/avatars/avatar-explorer-1.png'),
+  '/avatars/avatar-explorer-2.png': require('../../assets/images/avatars/avatar-explorer-2.png'),
+  '/avatars/avatar-explorer-3.png': require('../../assets/images/avatars/avatar-explorer-3.png'),
+  '/avatars/dani-avatar.png': require('../../assets/images/avatars/dani-avatar.png'),
+  '/avatars/dani-full.png': require('../../assets/images/avatars/dani-full.png'),
+  '/avatars/daniamor_avatar.png': require('../../assets/images/avatars/daniamor_avatar.png'),
+  '/avatars/hero-avatar.png': require('../../assets/images/avatars/hero-avatar.png'),
+  '/avatars/rulo_avatar.png': require('../../assets/images/avatars/rulo_avatar.png'),
+  '/avatars/tiers/tier-0.png': require('../../assets/images/avatars/tiers/tier-0.png'),
+  '/catalog/deep-work.png': require('../../assets/images/catalog/deep-work.png'),
+  '/catalog/drawing.png': require('../../assets/images/catalog/drawing.png'),
+  '/catalog/exercise.png': require('../../assets/images/catalog/exercise.png'),
+  '/catalog/expense-tracking.png': require('../../assets/images/catalog/expense-tracking.png'),
+  '/catalog/gratitude.png': require('../../assets/images/catalog/gratitude.png'),
+  '/catalog/hydration.png': require('../../assets/images/catalog/hydration.png'),
+  '/catalog/instrument.png': require('../../assets/images/catalog/instrument.png'),
+  '/catalog/journaling.png': require('../../assets/images/catalog/journaling.png'),
+  '/catalog/meditation.png': require('../../assets/images/catalog/meditation.png'),
+  '/catalog/nutrition.png': require('../../assets/images/catalog/nutrition.png'),
+  '/catalog/planning.png': require('../../assets/images/catalog/planning.png'),
+  '/catalog/quit-alcohol.png': require('../../assets/images/catalog/quit-alcohol.png'),
+  '/catalog/quit-screens.png': require('../../assets/images/catalog/quit-screens.png'),
+  '/catalog/quit-smoking.png': require('../../assets/images/catalog/quit-smoking.png'),
+  '/catalog/quit-sugar.png': require('../../assets/images/catalog/quit-sugar.png'),
+  '/catalog/reading.png': require('../../assets/images/catalog/reading.png'),
+  '/catalog/saving.png': require('../../assets/images/catalog/saving.png'),
+  '/catalog/sleep.png': require('../../assets/images/catalog/sleep.png'),
+  '/catalog/social-connection.png': require('../../assets/images/catalog/social-connection.png'),
+  '/catalog/study.png': require('../../assets/images/catalog/study.png'),
+  '/gems/broken.png': require('../../assets/images/gems/broken.png'),
+  '/gems/career-stage-1.png': require('../../assets/images/gems/career-stage-1.png'),
+  '/gems/career-stage-2.png': require('../../assets/images/gems/career-stage-2.png'),
+  '/gems/career-stage-3.png': require('../../assets/images/gems/career-stage-3.png'),
+  '/gems/career-stage-4.png': require('../../assets/images/gems/career-stage-4.png'),
+  '/gems/creativity-stage-1.png': require('../../assets/images/gems/creativity-stage-1.png'),
+  '/gems/creativity-stage-2.png': require('../../assets/images/gems/creativity-stage-2.png'),
+  '/gems/creativity-stage-3.png': require('../../assets/images/gems/creativity-stage-3.png'),
+  '/gems/creativity-stage-4.png': require('../../assets/images/gems/creativity-stage-4.png'),
+  '/gems/family-stage-1.png': require('../../assets/images/gems/family-stage-1.png'),
+  '/gems/family-stage-2.png': require('../../assets/images/gems/family-stage-2.png'),
+  '/gems/family-stage-3.png': require('../../assets/images/gems/family-stage-3.png'),
+  '/gems/family-stage-4.png': require('../../assets/images/gems/family-stage-4.png'),
+  '/gems/finance-stage-1.png': require('../../assets/images/gems/finance-stage-1.png'),
+  '/gems/finance-stage-2.png': require('../../assets/images/gems/finance-stage-2.png'),
+  '/gems/finance-stage-3.png': require('../../assets/images/gems/finance-stage-3.png'),
+  '/gems/finance-stage-4.png': require('../../assets/images/gems/finance-stage-4.png'),
+  '/gems/focus-bg.jpg': require('../../assets/images/gems/focus-bg.jpg'),
+  '/gems/health-stage-1.png': require('../../assets/images/gems/health-stage-1.png'),
+  '/gems/health-stage-2.png': require('../../assets/images/gems/health-stage-2.png'),
+  '/gems/health-stage-3.png': require('../../assets/images/gems/health-stage-3.png'),
+  '/gems/health-stage-4.png': require('../../assets/images/gems/health-stage-4.png'),
+  '/gems/social-stage-1.png': require('../../assets/images/gems/social-stage-1.png'),
+  '/gems/social-stage-2.png': require('../../assets/images/gems/social-stage-2.png'),
+  '/gems/social-stage-3.png': require('../../assets/images/gems/social-stage-3.png'),
+  '/gems/social-stage-4.png': require('../../assets/images/gems/social-stage-4.png'),
+  '/gems/vault-platform.jpg': require('../../assets/images/gems/vault-platform.jpg'),
+  '/hero-bg.png': require('../../assets/images/hero-bg.png'),
+  '/hero-character.png': require('../../assets/images/hero-character.png'),
+  '/home-hero.png': require('../../assets/images/home-hero.png'),
+  '/images/arena-cover.png': require('../../assets/images/images/arena-cover.png'),
+  '/life-areas/career.png': require('../../assets/images/life-areas/career.png'),
+  '/life-areas/creativity.png': require('../../assets/images/life-areas/creativity.png'),
+  '/life-areas/family.png': require('../../assets/images/life-areas/family.png'),
+  '/life-areas/finance.png': require('../../assets/images/life-areas/finance.png'),
+  '/life-areas/health.png': require('../../assets/images/life-areas/health.png'),
+  '/life-areas/social.png': require('../../assets/images/life-areas/social.png'),
+  '/login-bg.png': require('../../assets/images/login-bg.png'),
+  '/onboarding-1.png': require('../../assets/images/onboarding-1.png'),
+  '/onboarding-2.png': require('../../assets/images/onboarding-2.png'),
+  '/onboarding-3.png': require('../../assets/images/onboarding-3.png'),
+  '/onboarding-4.png': require('../../assets/images/onboarding-4.png'),
+};
+
+/**
+ * Resolve a web-style image path ('/gems/amber.png') to a bundled asset.
+ * Returns undefined for unknown paths so callers can fall back.
+ */
+export function img(path: string | null | undefined): number | undefined {
+  if (!path) return undefined;
+  return IMAGES[path];
+}

@@ -1,0 +1,1953 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "points": "Points",
+    "totalPoints": "Total Points",
+    "level": "Level",
+    "xp": "XP",
+    "totalXP": "Total XP",
+    "days": "Days",
+    "day": "Day",
+    "skip": "Skip to main content",
+    "edit": "Edit",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "progress": "Progress",
+    "pts": "pts",
+    "noArea": "No area",
+    "close": "Close",
+    "saving": "Saving...",
+    "awakening": "The realm awakens…",
+    "levelShort": "Lv."
+  },
+  "app": {
+    "name": "Everlight",
+    "tagline": "Level up your life"
+  },
+  "navigation": {
+    "home": "Home",
+    "habits": "Habits",
+    "streaks": "Streaks",
+    "shop": "Shop",
+    "chat": "Chat",
+    "social": "Social",
+    "leaderboard": "Leaderboard",
+    "profile": "Profile",
+    "navigateTo": "Navigate to {{label}}",
+    "mood": "Mood",
+    "routines": "Routines",
+    "progress": "Progress",
+    "ranking": "Ranking",
+    "goToDashboard": "Go to dashboard",
+    "mainNavigation": "Main navigation"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "lifeAreas": "Life Areas",
+    "logHabits": "Log Today's Habits",
+    "keepGoing": "Keep going, Champion! 💪"
+  },
+  "home": {
+    "greetingMorning": "Good morning, {{name}}!",
+    "greetingAfternoon": "Hi, {{name}}!",
+    "greetingEvening": "Good evening, {{name}}!",
+    "subtitle": "Today is a great day to be your best self.",
+    "notifications": "Notifications",
+    "streakLabel": "Current streak",
+    "streakKeepGoing": "Keep it up!",
+    "levelLabel": "Level {{level}}",
+    "focusOfDay": "Focus of the day",
+    "personalJournal": "Personal Coach",
+    "todayPath": "Your path today",
+    "seeAll": "See all",
+    "noHabits": "No habits for today yet",
+    "comingSoon": "Coming soon",
+    "addHabit": "Add habit",
+    "minutes": "minutes",
+    "quoteSubtitle": "Small actions, big changes.",
+    "quotes": [
+      "Focus on progress, not perfection.",
+      "Small steps every day build big changes.",
+      "Consistency beats talent.",
+      "Today is a good day to start.",
+      "Your future self will thank you."
+    ]
+  },
+  "lifeAreas": {
+    "health": "Health",
+    "finance": "Finance",
+    "creativity": "Creativity",
+    "social": "Social",
+    "family": "Family",
+    "career": "Career"
+  },
+  "lifeAreaModal": {
+    "title": "Life Area Details",
+    "totalXP": "Total XP",
+    "xpToNextLevel": "XP to Level {{level}}",
+    "habitsInArea": "Habits in this area",
+    "completedToday": "Completed Today",
+    "noHabits": "No habits in this area yet",
+    "viewAllHabits": "View All Habits",
+    "close": "Close"
+  },
+  "streaks": {
+    "title": "Your Streak",
+    "subtitle": "Don't break the chain!",
+    "current": "Current Streak",
+    "best": "Best Streak",
+    "achievements": "Achievements",
+    "onFire": "You're on fire! 🔥",
+    "motivation": "Success is the sum of small efforts repeated day in and day out.",
+    "streakAchievements": "🏆 Streak Achievements",
+    "achievementsUnlocked": "unlocked",
+    "noAchievementsAvailable": "No achievements available",
+    "progress": "Progress",
+    "unlocked": "✓ Unlocked",
+    "badges": {
+      "weekWarrior": "Week Warrior",
+      "consistencyKing": "Consistency King",
+      "unstoppable": "Unstoppable"
+    }
+  },
+  "achievements": {
+    "title": "Achievements",
+    "subtitle": "Unlock badges and earn rewards",
+    "locked": "Locked",
+    "available": "Available!",
+    "claimed": "✓ Claimed",
+    "claimReward": "Claim Reward",
+    "claimNow": "Claim Now",
+    "viewDetails": "View Details",
+    "progress": "Progress",
+    "requirement": "Requirement",
+    "requirements": "Requirements",
+    "rewards": "Rewards",
+    "unlockedOn": "Unlocked on {{date}}",
+    "claimedOn": "Claimed on {{date}}",
+    "availableCount": "{{count}} available",
+    "claimedCount": "{{count}} claimed",
+    "totalCount": "{{count}} total",
+    "categories": {
+      "all": "All",
+      "streak": "Streaks",
+      "habit": "Habits",
+      "xp": "Experience",
+      "social": "Social",
+      "special": "Special"
+    },
+    "tiers": {
+      "bronze": "Bronze",
+      "silver": "Silver",
+      "gold": "Gold",
+      "platinum": "Platinum"
+    },
+    "states": {
+      "locked": "Locked",
+      "available": "Available",
+      "claimed": "Claimed"
+    },
+    "modal": {
+      "title": "Achievement Details",
+      "description": "Description",
+      "category": "Category",
+      "tier": "Tier",
+      "status": "Status",
+      "yourProgress": "Your Progress",
+      "requirementsMet": "Requirements met!",
+      "keepGoing": "Keep going to unlock!",
+      "close": "Close"
+    },
+    "requirementTypes": {
+      "current_streak": "Maintain a streak of {{value}} consecutive days",
+      "total_habit_completions": "Complete {{value}} total habits",
+      "total_xp": "Earn {{value}} total XP",
+      "friends_count": "Add {{value}} friends",
+      "root_habit_complete": "Complete the 30-day challenge",
+      "early_completion": "Complete a habit before 8 AM",
+      "late_completion": "Complete a habit after 10 PM",
+      "perfect_day": "Complete all your habits in one day"
+    },
+    "toast": {
+      "unlocked": "🎉 New achievement unlocked: {{name}}!",
+      "claimed": "✨ You claimed {{name}}! +{{xp}} XP, +{{points}} pts",
+      "error": "❌ Error claiming achievement: {{error}}",
+      "alreadyClaimed": "⚠️ You already claimed this achievement"
+    },
+    "noAchievements": "No achievements available",
+    "loadingAchievements": "Loading achievements...",
+    "errorLoading": "Error loading achievements",
+    "availableCount_one": "{{count}} available",
+    "availableCount_other": "{{count}} available",
+    "list": {
+      "week_warrior": {
+        "name": "Week Warrior",
+        "description": "Complete 7 days in a row"
+      },
+      "two_week_titan": {
+        "name": "Two Week Titan",
+        "description": "Complete 14 days in a row"
+      },
+      "month_master": {
+        "name": "Month Master",
+        "description": "Complete 30 days in a row"
+      },
+      "unstoppable": {
+        "name": "Unstoppable",
+        "description": "Complete 100 days in a row"
+      },
+      "habit_hero": {
+        "name": "Habit Hero",
+        "description": "Complete 50 total habits"
+      },
+      "consistency_king": {
+        "name": "Consistency King",
+        "description": "Complete 200 total habits"
+      },
+      "routine_legend": {
+        "name": "Routine Legend",
+        "description": "Complete 500 total habits"
+      },
+      "xp_novice": {
+        "name": "XP Novice",
+        "description": "Earn 1,000 total XP"
+      },
+      "xp_expert": {
+        "name": "XP Expert",
+        "description": "Earn 5,000 total XP"
+      },
+      "xp_master": {
+        "name": "XP Master",
+        "description": "Earn 10,000 total XP"
+      },
+      "social_butterfly": {
+        "name": "Social Butterfly",
+        "description": "Add 5 friends"
+      },
+      "network_builder": {
+        "name": "Network Builder",
+        "description": "Add 10 friends"
+      },
+      "early_bird": {
+        "name": "Early Bird",
+        "description": "Complete a habit before 8 AM"
+      },
+      "night_owl": {
+        "name": "Night Owl",
+        "description": "Complete a habit after 10 PM"
+      },
+      "perfect_day": {
+        "name": "Perfect Day",
+        "description": "Complete all your habits in a single day"
+      },
+      "comeback": {
+        "name": "Comeback",
+        "description": "Complete the 30-day Root Habit challenge"
+      }
+    }
+  },
+  "habits": {
+    "title": "Habit Log",
+    "daily": "Daily",
+    "weekly": "Weekly",
+    "noHabits": "No habits for today",
+    "noHabitsYet": "You haven't created any habits yet",
+    "addHabit": "Add Habit",
+    "createFirstHabit": "Create first habit",
+    "complete": "Complete",
+    "completed": "Completed",
+    "habitCompleted": "Habit completed!",
+    "habitUncompleted": "Habit uncompleted",
+    "habitCreated": "Habit created successfully!",
+    "skip": "Skip",
+    "dailyQuests": "Daily Quests",
+    "completedToday": "Completed Today",
+    "xpEarned": "XP Earned",
+    "yourDailyHabits": "Your Daily Habits",
+    "completeHabitsToEarnXP": "Complete your habits to earn XP",
+    "perfectDay": "🎉 Perfect day! You're unstoppable!",
+    "greatProgress": "💪 Great progress! Keep it up!",
+    "everyStepCounts": "🌟 Every step counts. You've got this!",
+    "addYourFirstHabit": "Add your first habit to get started",
+    "coachBelievesInYou": "Your AI coach believes in you",
+    "quitBadge": "Quit",
+    "resisted": "Resisted",
+    "relapse": "Relapse",
+    "logValue": "Log",
+    "streakLabel": "Streak",
+    "relapseConfirm": "Record a relapse? This will reset your streak.",
+    "relapseRecorded": "Relapse recorded. Tomorrow is a fresh start 💪",
+    "viewAnalytics": "View analytics",
+    "streakBonus": "+{{percent}}% streak bonus",
+    "xpCapped": "You passed today's XP cap — gains are reduced until tomorrow",
+    "units": {
+      "min": "min",
+      "hr": "hr",
+      "sec": "sec",
+      "km": "km",
+      "mi": "mi",
+      "pages": "pages",
+      "glasses": "glasses",
+      "reps": "reps",
+      "kcal": "kcal",
+      "words": "words"
+    },
+    "habitAria": "Habit: {{name}}",
+    "markComplete": "Mark {{name}} as complete",
+    "markIncomplete": "Mark {{name}} as incomplete"
+  },
+  "habitForm": {
+    "createHabit": "Create Habit",
+    "editHabit": "Edit Habit",
+    "habitName": "Habit Name",
+    "habitNamePlaceholder": "E.g., Meditate 10 minutes",
+    "lifeArea": "Life Area",
+    "selectLifeArea": "Select a life area",
+    "icon": "Icon",
+    "selectedIcon": "Selected icon",
+    "xpValue": "XP Value",
+    "xpDescription": "Choose between {{min}} and {{max}} XP based on difficulty",
+    "errors": {
+      "nameRequired": "Name is required",
+      "nameTooShort": "Name must be at least 3 characters",
+      "nameTooLong": "Name cannot be longer than 50 characters",
+      "lifeAreaRequired": "You must select a life area",
+      "iconRequired": "You must select an icon",
+      "xpTooLow": "Minimum XP is {{min}}",
+      "xpTooHigh": "Maximum XP is {{max}}"
+    },
+    "whatType": "What type of habit?",
+    "typeCheck": "Check",
+    "typeCheckDesc": "Yes/no tracking per day",
+    "typeMeasurable": "Measurable",
+    "typeMeasurableDesc": "Track numbers, distance or time",
+    "typeQuit": "Quit a habit",
+    "typeQuitDesc": "Break a pattern. Resist daily; relapses reset your streak",
+    "createGood": "Build a habit",
+    "quitBad": "Quit a habit",
+    "howTrack": "How do you track it?",
+    "unit": "Unit",
+    "custom": "Custom…",
+    "dailyGoal": "Daily goal",
+    "dailyGoalOptional": "Daily goal (optional)",
+    "dailyGoalHint": "Leave blank to log any positive value.",
+    "selectColor": "Select color",
+    "next": "Continue",
+    "back": "Back",
+    "timeOfDay": "What time of day?",
+    "timeOfDayHint": "\"Anytime\" habits show under every filter and reminders use this time slot",
+    "timeAnytime": "Anytime",
+    "timeMorning": "Morning",
+    "timeAfternoon": "Afternoon",
+    "timeEvening": "Evening",
+    "color": "Habit color (optional)"
+  },
+  "rootHabit": {
+    "title": "30-Day Challenge",
+    "subtitle": "Your journey to mastery",
+    "progress": "Progress",
+    "daysCompleted": "days completed",
+    "keepGoing": "Keep it up!",
+    "reviveTitle": "The Rekindling",
+    "reviveSubtitle": "Even in the deepest dark, a single spark is enough to light the realm again. Each day you return a little stronger.",
+    "challengeTitle": "30-Day Challenge",
+    "dailyProgress": "Daily progress",
+    "quote": "Even the longest night ends in dawn.",
+    "quoteSub": "Every day is a step toward your transformation.",
+    "loading": "Loading…",
+    "completed": "Challenge complete! 🎉",
+    "checkInToday": "Light today's flame",
+    "alreadyCheckedIn": "Today's flame already burns",
+    "dayCount": "Day {{current}} of {{total}}",
+    "percentComplete": "{{percent}}% lit",
+    "checkInSuccess": "You've lit today's flame. The Everlight shines brighter.",
+    "checkInError": "The flame didn't catch this time. Try again, Guardian."
+  },
+  "levelUp": {
+    "title": "Your light has evolved.",
+    "areaTitle": "{{area}}: your light has evolved.",
+    "levelLabel": "Guardian Level {{level}}",
+    "essenceReward": "+{{points}} Essence",
+    "dismiss": "Tap to continue"
+  },
+  "shop": {
+    "title": "Indulgence Shop",
+    "subtitle": "Treat yourself (occasionally)",
+    "balance": "Balance",
+    "buyNow": "Buy",
+    "purchased": "Purchased",
+    "notEnoughPoints": "Not enough points! Complete more habits to earn points.",
+    "confirmPurchase": "Confirm purchase?",
+    "purchaseConfirmed": "Purchase confirmed! Enjoy responsibly 😊",
+    "spendWisely": "Spend wisely, hero ⚖️",
+    "rememberGoals": "⚠️ Remember Your Goals",
+    "indulgenceWarning": "These indulgences are rewards, not habits. Use them mindfully to maintain your progress.",
+    "toast": {
+      "purchaseSuccess": "🎉 {{name}} purchased! -{{cost}} points",
+      "purchaseError": "❌ Not enough points! Need {{needed}} more",
+      "itemAdded": "✨ Reward \"{{name}}\" added successfully",
+      "itemUpdated": "✅ Reward \"{{name}}\" updated",
+      "itemDeleted": "🗑️ Reward \"{{name}}\" deleted"
+    },
+    "items": {
+      "sweetTreat": {
+        "name": "Sweet Treat",
+        "description": "Enjoy a small dessert"
+      },
+      "impulseBuy": {
+        "name": "Impulse Buy",
+        "description": "Small purchase under $20"
+      },
+      "stayUpLate": {
+        "name": "Stay Up Late",
+        "description": "Sleep after midnight"
+      },
+      "extraCoffee": {
+        "name": "Extra Coffee",
+        "description": "Third cup of the day"
+      }
+    },
+    "availableRewards": "Available Rewards",
+    "reminderAria": "Important reminder"
+  },
+  "shopManager": {
+    "title": "Manage Rewards",
+    "subtitle": "Create and edit your custom rewards",
+    "addItem": "Add Reward",
+    "noItems": "No rewards available",
+    "addFirstItem": "Add First Reward",
+    "editItem": "Edit Reward",
+    "createItem": "Create Reward",
+    "itemName": "Reward Name",
+    "itemNamePlaceholder": "E.g., Special dessert",
+    "description": "Description",
+    "descriptionPlaceholder": "Describe the reward...",
+    "cost": "Cost in Points",
+    "costDescription": "Between {{min}} and {{max}} points",
+    "category": "Category",
+    "categories": {
+      "food": "Food",
+      "leisure": "Leisure",
+      "shopping": "Shopping",
+      "other": "Other"
+    },
+    "icon": "Icon",
+    "selectedIcon": "Selected icon",
+    "manageItems": "Manage rewards",
+    "default": "Default",
+    "confirmDelete": "Are you sure you want to delete \"{{name}}\"?",
+    "errors": {
+      "nameRequired": "Name is required",
+      "nameTooShort": "Name must be at least 3 characters",
+      "nameTooLong": "Name cannot be longer than 50 characters",
+      "descriptionRequired": "Description is required",
+      "descriptionTooLong": "Description cannot be longer than 200 characters",
+      "costTooLow": "Minimum cost is {{min}} points",
+      "costTooHigh": "Maximum cost is {{max}} points",
+      "iconRequired": "You must select an icon"
+    },
+    "emptyStateHint": "Add your first reward to get started",
+    "createFirstHint": "Create your first reward to get started",
+    "defaultItemTitle": "Default Item",
+    "defaultItemBody": "You can modify the cost, icon, and category. Name and description will remain as defined in translations.",
+    "defaultItemReadOnly": "(Read-only for default items)"
+  },
+  "chat": {
+    "title": "AI Coach",
+    "subtitle": "Your personal mentor is here",
+    "typeMessage": "Ask your coach anything...",
+    "send": "Send",
+    "thinking": "Thinking...",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "newMessages": "New messages",
+    "messagesHeading": "Chat messages",
+    "coachMessagesHeading": "Coach messages",
+    "errors": {
+      "apiKeyMissing": "OpenAI API key not configured. Please add your API key to .env.local",
+      "streamFailed": "Couldn't get a response. Please try again.",
+      "coachUnavailable": "Couldn't reach Hermes. Check your connection and try again."
+    },
+    "emptyTitle": "How's your light today, Guardian?",
+    "emptySubtitle": "The Everlight sage is listening. Share what's on your mind and we'll walk it together.",
+    "suggestions": [
+      "How do I keep my flame alive?",
+      "I'm struggling to move forward today",
+      "Give me a ritual to start the day",
+      "I want to celebrate a win"
+    ],
+    "welcomeMessage": "Hey there, champion! 💪 I'm here to support you on your journey. How are you feeling today?",
+    "responses": {
+      "1": "That's great to hear! Remember, every small step counts. Keep up the amazing work!",
+      "2": "I'm proud of your progress! Consistency is the key to success. 🌟",
+      "3": "You're doing amazing! Keep building those healthy habits one day at a time.",
+      "4": "That's the spirit! Remember, I'm here to support you every step of the way."
+    }
+  },
+  "auth": {
+    "welcomeBack": "Welcome Back!",
+    "continueWithGoogle": "Continue with Google",
+    "continueWithGitHub": "Continue with GitHub",
+    "privacyNotice": "By continuing, you agree to our Terms of Service and Privacy Policy",
+    "completingSignIn": "Completing sign in",
+    "pleaseWait": "Please wait while we authenticate you...",
+    "redirectingToLogin": "Redirecting to login...",
+    "signOut": "Sign out",
+    "feature1Title": "Track your habits",
+    "feature1Desc": "Complete daily habits and earn XP to level up",
+    "feature2Title": "Earn rewards",
+    "feature2Desc": "Redeem points for controlled indulgences",
+    "feature3Title": "Maintain streaks",
+    "feature3Desc": "Consistency gives you XP multipliers",
+    "tagline": "Your best self,",
+    "taglineAccent": "your greatest adventure",
+    "heroFeature1Title": "Build habits",
+    "heroFeature1Desc": "that transform you",
+    "heroFeature2Title": "Beat challenges",
+    "heroFeature2Desc": "every day",
+    "heroFeature3Title": "Unlock your",
+    "heroFeature3Desc": "best version",
+    "orContinueWith": "or continue with",
+    "emailPlaceholder": "Email address",
+    "passwordPlaceholder": "Password",
+    "passwordTooShort": "Password must be at least 6 characters",
+    "signIn": "Sign in",
+    "createAccount": "Create account",
+    "accountCreated": "Account created! Your journey begins.",
+    "haveAccount": "Already have an account?",
+    "continue": "Continue",
+    "noAccount": "Don't have an account?",
+    "register": "Sign up",
+    "termsPrefix": "By continuing you accept our",
+    "termsOfService": "Terms of Service",
+    "and": "and",
+    "privacyPolicy": "Privacy Policy",
+    "emailSent": "Check your inbox! We sent you a sign-in link.",
+    "enterEmail": "Enter your email address",
+    "continueWithApple": "Continue with Apple",
+    "callbackErrorHint": "We couldn't complete the sign-in. Please try again."
+  },
+  "errors": {
+    "general": "Something went wrong. Please try again.",
+    "notFound": "Page not found",
+    "unauthorized": "Unauthorized",
+    "network": "Connection error. Check your internet.",
+    "authenticationFailed": "Authentication failed",
+    "habitCompleteFailed": "Failed to complete habit",
+    "habitUncompleteFailed": "Failed to uncomplete habit",
+    "habitCreateFailed": "Failed to create habit",
+    "habitUpdateFailed": "Could not update the habit",
+    "habitDeleteFailed": "Could not delete the habit",
+    "templatesLoadFailed": "Failed to load templates",
+    "auth": {
+      "invalidCredentials": "Incorrect email or password.",
+      "userAlreadyExists": "An account with this email already exists. Try signing in.",
+      "weakPassword": "Password is too weak. Use at least 6 characters.",
+      "rateLimited": "Too many attempts. Please wait a moment and try again.",
+      "emailRateLimited": "Too many emails sent. Please wait a few minutes and try again.",
+      "signupDisabled": "Sign-ups are currently disabled.",
+      "confirmEmail": "Account created. Check your email to confirm your account."
+    },
+    "onboardingFailed": "Failed to complete onboarding. Please try again."
+  },
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "close": "Close",
+    "create": "Create",
+    "saveChanges": "Save Changes",
+    "skip": "Skip",
+    "select": "Select",
+    "add": "Add",
+    "retry": "Retry",
+    "clear": "Clear"
+  },
+  "onboarding": {
+    "prevButton": "Previous",
+    "nextButton": "Next",
+    "finishButton": "Get Started",
+    "completedSuccess": "Your journey has begun, Guardian!",
+    "identity": {
+      "label": "How would you like to be addressed?",
+      "hint": "We tailor the realm's language to you. You can change it later.",
+      "female": "Guardian (she)",
+      "male": "Guardian (he)",
+      "neutral": "Prefer neutral",
+      "error": "Pick an option to personalize how we address you"
+    },
+    "aboutYou": {
+      "title": "Tell us about you",
+      "description": "This helps us guide you better on your journey.",
+      "motivationLabel": "What brings you to the realm?",
+      "experienceLabel": "Your experience with habits?",
+      "ageLabel": "Your age range?",
+      "motivations": {
+        "health": "Health",
+        "discipline": "Discipline",
+        "focus": "Focus",
+        "wellbeing": "Wellbeing",
+        "productivity": "Productivity"
+      },
+      "experience": {
+        "beginner": "Beginner",
+        "intermediate": "Intermediate",
+        "advanced": "Advanced"
+      },
+      "ageRanges": {
+        "teen": "13-17",
+        "youngAdult": "18-24",
+        "adult": "25-34",
+        "midAdult": "35-44",
+        "mature": "45-54",
+        "senior": "55+"
+      }
+    },
+    "step1": {
+      "title": "Welcome to Everlight!",
+      "description": "Your journey to a better version of yourself starts here",
+      "nameLabel": "What's your name?",
+      "namePlaceholder": "Enter your name",
+      "nameError": "Name must be at least 2 characters",
+      "nextButton": "Continue",
+      "helperText": "This name will be shown on your profile",
+      "avatarLabel": "Choose your avatar",
+      "avatarMale": "Male",
+      "avatarFemale": "Female"
+    },
+    "step2": {
+      "title": "Choose your life areas",
+      "description": "Select the areas you want to focus on",
+      "areasSelected": "areas selected"
+    },
+    "step3": {
+      "title": "Create your first habits",
+      "description": "Add at least one habit to start your journey",
+      "noHabits": "You haven't added any habits yet",
+      "habitNamePlaceholder": "Habit name (e.g., Meditate 10 min)",
+      "lifeAreaLabel": "Life Area",
+      "addButton": "Add",
+      "addHabitButton": "+ Add Habit",
+      "suggestionsTitle": "Common habits"
+    },
+    "step4": {
+      "title": "How Everlight works",
+      "description": "Learn about the game mechanics",
+      "xpTitle": "Earn XP",
+      "xpDescription": "Complete habits daily to earn experience points",
+      "pointsTitle": "Accumulate Points",
+      "pointsDescription": "Convert your XP into points to spend on rewards",
+      "levelsTitle": "Level Up",
+      "levelsDescription": "Your global and area levels increase with every achievement",
+      "shopTitle": "Redeem Rewards",
+      "shopDescription": "Use your points to treat yourself in a controlled way",
+      "streaksTitle": "Maintain Streaks",
+      "streaksDescription": "Consistency gives you XP multipliers",
+      "readyTitle": "All set!",
+      "readyDescription": "It's time to start your transformation"
+    },
+    "progress": {
+      "ariaLabel": "Onboarding progress",
+      "step": "Step {{number}}",
+      "stepOf": "Step {{current}} of {{total}}"
+    }
+  },
+  "profile": {
+    "editProfile": "Edit Profile",
+    "nameLabel": "Name",
+    "avatarLabel": "Avatar",
+    "changeAvatar": "Change avatar",
+    "avatarMale": "Male",
+    "avatarFemale": "Female",
+    "lifeAreasTitle": "Active Life Areas",
+    "habitsTitle": "My Habits",
+    "settingsTitle": "Settings",
+    "exploreTitle": "Explore",
+    "languageLabel": "Language",
+    "languageHint": "You can change the language from the icon in the header",
+    "noHabits": "You don't have any habits created",
+    "deleteHabitConfirm": "Are you sure you want to delete this habit?",
+    "stats": {
+      "title": "Statistics",
+      "longestStreak": "Longest Streak",
+      "currentStreak": "Current Streak",
+      "activeDays": "Active Days",
+      "last7Days": "last 7 days",
+      "dailyAverage": "Daily Average",
+      "habitsPerDay": "habits/day",
+      "totalHabits": "Total Habits",
+      "habits": "habits",
+      "xpDistribution": "XP Distribution"
+    },
+    "dangerZone": {
+      "title": "Danger Zone",
+      "description": "Irreversible actions that affect your data",
+      "resetTitle": "Delete All Data",
+      "resetDescription": "Permanently erase all your information and progress",
+      "resetButton": "Delete Everything",
+      "deleteList": {
+        "habits": "All your habits and their history",
+        "streaks": "All your streaks",
+        "progress": "All life area progress",
+        "purchases": "Purchase history",
+        "profile": "Your user profile",
+        "settings": "All settings"
+      }
+    },
+    "resetModal": {
+      "title": "⚠️ Confirm Deletion",
+      "subtitle": "This action CANNOT be undone",
+      "warning": "The following data will be permanently deleted:",
+      "inputLabel": "To confirm, type \"{{text}}\" exactly:",
+      "inputError": "Text doesn't match. Type exactly as shown.",
+      "confirmButton": "Delete Permanently"
+    },
+    "subtitle": "Your journey, your story.",
+    "subtitle2": "Keep growing every day.",
+    "levelLabel": "Level {{level}}",
+    "quote": "It's not about being perfect, it's about being consistent.",
+    "quoteAccent": "You got this.",
+    "statStreakDays": "day streak",
+    "statStreakHint": "Keep it up!",
+    "statMinutes": "minutes invested",
+    "statMinutesHint": "this week",
+    "statTotalXp": "total XP",
+    "statTotalXpHint": "earned",
+    "statHabits": "habits completed",
+    "achievementsTitle": "Achievements",
+    "seeAll": "See all",
+    "seeAllTools": "See all",
+    "locked": "Locked",
+    "toolsTitle": "My tools",
+    "comingSoon": "Coming soon 🚧",
+    "aboutTitle": "About me",
+    "aboutDefault": "Passionate about personal growth, discipline and living with purpose.",
+    "settingsSubtitle": "Settings & account",
+    "tools": {
+      "journal": "Personal journal",
+      "journalDesc": "Write, reflect and grow.",
+      "goals": "Goals",
+      "goalsDesc": "Define and track your objectives.",
+      "reminders": "Reminders",
+      "remindersDesc": "Turn on notifications and never miss a thing.",
+      "breathing": "Breathing",
+      "breathingDesc": "Breathing and mindfulness exercises."
+    },
+    "avatars": {
+      "pickTitle": "Choose your avatar",
+      "save": "Save",
+      "saved": "Avatar updated",
+      "rulo": "Rulo",
+      "dani": "Dani",
+      "explorer1": "Adventurer",
+      "explorer2": "Adventuress",
+      "explorer3": "Explorer"
+    },
+    "ach": {
+      "firstStep": "First step",
+      "firstStepDesc": "Complete your first habit",
+      "consistency": "Consistency",
+      "consistencyDesc": "7 day streak",
+      "unstoppable": "Unstoppable",
+      "unstoppableDesc": "10 day streak",
+      "focus": "Total focus",
+      "focusDesc": "100 minutes in a week",
+      "elite": "Elite discipline",
+      "eliteDesc": "30 day streak"
+    }
+  },
+  "username": {
+    "title": "Username",
+    "choose": "Choose your username",
+    "description": "This will be your unique identifier in Everlight",
+    "placeholder": "yourUsername",
+    "available": "✓ Available",
+    "taken": "✗ Already taken",
+    "checking": "Checking...",
+    "suggestions": "Suggestions:",
+    "validation": {
+      "tooShort": "Minimum 3 characters",
+      "tooLong": "Maximum 20 characters",
+      "invalidChars": "Only letters, numbers and _"
+    },
+    "success": "Username set successfully!",
+    "error": "Failed to set username"
+  },
+  "themes": {
+    "title": "Theme",
+    "ariaLabel": "Select theme",
+    "onboardingPrompt": "Choose your look",
+    "onboardingHint": "You can change the theme anytime from Settings",
+    "list": {
+      "nous": {
+        "name": "Nous",
+        "desc": "Glass neutrals with Nous blue accents"
+      },
+      "midnight": {
+        "name": "Midnight",
+        "desc": "Deep blue-violet with cool accents"
+      },
+      "ember": {
+        "name": "Ember",
+        "desc": "Warm crimson and bronze — forge vibes"
+      },
+      "mono": {
+        "name": "Mono",
+        "desc": "Clean grayscale — minimal and focused"
+      },
+      "cyberpunk": {
+        "name": "Cyberpunk",
+        "desc": "Neon green on black — matrix terminal"
+      },
+      "slate": {
+        "name": "Slate",
+        "desc": "Cool slate blue — focused developer theme"
+      }
+    }
+  },
+  "social": {
+    "title": "Social",
+    "friends": "Friends",
+    "findFriends": "Find Friends",
+    "searchPlaceholder": "Search by username...",
+    "noFriends": "You haven't added friends yet",
+    "noRequests": "No pending requests",
+    "noResults": "No users found",
+    "addFriend": "Add Friend",
+    "removeFriend": "Remove Friend",
+    "acceptRequest": "Accept",
+    "rejectRequest": "Reject",
+    "cancelRequest": "Cancel",
+    "requestSent": "Request Sent",
+    "requestReceived": "Request Received",
+    "tabs": {
+      "friends": "Friends",
+      "requests": "Requests",
+      "search": "Find"
+    },
+    "requestsSent": "Sent",
+    "requestsReceived": "Received",
+    "friendAdded": "{{username}} added to your friends!",
+    "friendRemoved": "{{username}} removed from friends",
+    "requestAccepted": "You accepted {{username}}'s request",
+    "requestRejected": "Request rejected",
+    "requestCancelled": "Request cancelled",
+    "streakDays_one": "{{count}}-day streak",
+    "streakDays_other": "{{count}}-day streak",
+    "confirmRemoveFriend": "Remove @{{username}} from your friends?",
+    "stats": {
+      "currentStreak": "Current Streak",
+      "longestStreak": "Best Streak",
+      "totalXP": "Total XP",
+      "points": "Points",
+      "level": "Level"
+    },
+    "errors": {
+      "loadFriends": "Failed to load friends list",
+      "sendRequest": "Failed to send friend request",
+      "acceptRequest": "Failed to accept request",
+      "rejectRequest": "Failed to reject request",
+      "removeFriend": "Failed to remove friend",
+      "searchUsers": "Failed to search users"
+    },
+    "requests": "Requests",
+    "search": "Search"
+  },
+  "templates": {
+    "title": "Habit Templates",
+    "subtitle": "Choose a predefined habit to get started",
+    "browseTemplates": "Browse Templates",
+    "searchPlaceholder": "Search templates...",
+    "featured": "Featured",
+    "noResults": "No templates found",
+    "tryDifferentFilters": "Try different filters or search for something else",
+    "clearFilters": "Clear filters",
+    "addToMyHabits": "Add to My Habits",
+    "footerHint": "Select a template and customize it to fit your needs",
+    "createCustomTitle": "Create custom habit",
+    "createCustomSubtitle": "Can't find what you're looking for? Build it from scratch",
+    "filters": {
+      "all": "All"
+    },
+    "health": {
+      "meditate": "Meditate 10 minutes",
+      "meditate_desc": "Clear your mind with a short meditation session",
+      "exercise": "Exercise 30 minutes",
+      "exercise_desc": "Get moving with any physical activity",
+      "water": "Drink 8 glasses of water",
+      "water_desc": "Stay hydrated throughout the day",
+      "sleep": "Sleep 8 hours",
+      "sleep_desc": "Get quality rest for recovery",
+      "breakfast": "Healthy breakfast",
+      "breakfast_desc": "Start your day with nutritious food",
+      "walk": "Walk 15-30 minutes",
+      "walk_desc": "Take a walk outdoors",
+      "stretch": "Stretching routine",
+      "stretch_desc": "10 minutes of stretching"
+    },
+    "finance": {
+      "expenses": "Review expenses",
+      "expenses_desc": "Check and categorize daily spending",
+      "save": "Save money",
+      "save_desc": "Transfer to savings account",
+      "no_impulse": "No impulse purchases",
+      "no_impulse_desc": "Avoid unplanned spending today",
+      "news": "Read financial news",
+      "news_desc": "Stay informed about markets"
+    },
+    "creativity": {
+      "write": "Write 500 words",
+      "write_desc": "Journal, blog, or creative writing",
+      "music": "Practice instrument",
+      "music_desc": "30 minutes of music practice",
+      "draw": "Draw or sketch",
+      "draw_desc": "Create visual art for 20 minutes",
+      "photos": "Take photos",
+      "photos_desc": "Practice photography",
+      "learn": "Learn something new",
+      "learn_desc": "Spend 30 min learning a skill",
+      "code": "Code for 1 hour",
+      "code_desc": "Work on a personal coding project"
+    },
+    "social": {
+      "call_friend": "Call a friend",
+      "call_friend_desc": "Connect with someone you care about",
+      "meet_new": "Meet someone new",
+      "meet_new_desc": "Introduce yourself to someone",
+      "compliment": "Give a compliment",
+      "compliment_desc": "Spread positivity with kind words",
+      "help": "Help someone",
+      "help_desc": "Offer assistance to others"
+    },
+    "family": {
+      "dinner": "Family dinner",
+      "dinner_desc": "Share a meal with family",
+      "kids": "Quality time with kids",
+      "kids_desc": "30 minutes of undivided attention",
+      "call_parents": "Call parents",
+      "call_parents_desc": "Check in with your parents",
+      "plan": "Plan family activity",
+      "plan_desc": "Organize something fun together"
+    },
+    "career": {
+      "deep_work": "Deep work session",
+      "deep_work_desc": "2 hours of focused work without distractions",
+      "read": "Read professional content",
+      "read_desc": "30 minutes of professional reading",
+      "resume": "Update resume/portfolio",
+      "resume_desc": "Keep your professional profile current",
+      "linkedin": "Network on LinkedIn",
+      "linkedin_desc": "Engage with professional community",
+      "plan": "Plan tomorrow",
+      "plan_desc": "Set priorities for the next day"
+    }
+  },
+  "leaderboard": {
+    "title": "Leaderboard",
+    "weekly": "Weekly",
+    "viewHistory": "View History",
+    "thisWeek": "This Week",
+    "weekOf": "Week of {{date}}",
+    "rank": "Rank",
+    "username": "User",
+    "weeklyXP": "Weekly XP",
+    "weeklyPoints": "Weekly Points",
+    "habitsCompleted": "Habits",
+    "yourRank": "Your Rank",
+    "notRanked": "Complete habits to appear on the leaderboard",
+    "topPlayers": "Top Players",
+    "you": "You",
+    "medal": {
+      "first": "🥇",
+      "second": "🥈",
+      "third": "🥉"
+    },
+    "tabs": {
+      "rankings": "Rankings",
+      "social": "Social",
+      "streaks": "Streaks"
+    },
+    "stats": {
+      "yourWeeklyXP": "Your Weekly XP",
+      "yourWeeklyPoints": "Your Weekly Points",
+      "yourHabitsCompleted": "Habits Completed",
+      "rank": "Rank #{{rank}}"
+    },
+    "errors": {
+      "loadLeaderboard": "Failed to load leaderboard",
+      "loadStats": "Failed to load your stats"
+    }
+  },
+  "analytics": {
+    "title": "Analytics",
+    "currentStreak": "current streak",
+    "bestStreak": "best streak",
+    "completed": "completed",
+    "trend": "Trend",
+    "last30": "30 days",
+    "last90": "90 days",
+    "year": "Year",
+    "noData": "No data yet. Complete the habit to see your progress!",
+    "total": "Total",
+    "totalValue": "Total logged",
+    "thisWeek": "This week",
+    "thisMonth": "This month",
+    "completionRate": "Completion rate",
+    "history": "History"
+  },
+  "timer": {
+    "logTime": "Log time",
+    "logValue": "Log value",
+    "manual": "Manual",
+    "stopwatch": "Stopwatch",
+    "countdown": "Countdown",
+    "start": "Start",
+    "startTimer": "Start timer",
+    "startCountdown": "Start countdown",
+    "pause": "Pause",
+    "resume": "Resume",
+    "stop": "Stop",
+    "reset": "Reset",
+    "paused": "PAUSED",
+    "running": "RUNNING",
+    "hours": "HOURS",
+    "minutes": "MINUTES",
+    "seconds": "SECONDS",
+    "enterValue": "Enter a value",
+    "save": "Save",
+    "saved": "Logged!",
+    "logged": "Logged successfully"
+  },
+  "mood": {
+    "title": "Mood",
+    "howAreYou": "How do you feel today?",
+    "save": "Save",
+    "saved": "Mood saved",
+    "today": "Today",
+    "rad": "Rad",
+    "good": "Good",
+    "meh": "Meh",
+    "bad": "Bad",
+    "awful": "Awful",
+    "note": "Note",
+    "notePlaceholder": "What made your day like this? (optional)",
+    "calendar": "Calendar",
+    "stats": "Stats",
+    "entries": "entries",
+    "averageMood": "Average mood",
+    "noEntries": "No mood entries yet",
+    "moodStreak": "Logging streak",
+    "addEntry": "Log mood",
+    "edit": "Edit",
+    "subtitle": "Track how you feel each day",
+    "distribution": "Distribution",
+    "last7": "Last 7 days",
+    "weekdaysNarrow": [
+      "M",
+      "T",
+      "W",
+      "T",
+      "F",
+      "S",
+      "S"
+    ],
+    "prevMonth": "Previous month",
+    "nextMonth": "Next month"
+  },
+  "progress": {
+    "title": "Progress",
+    "subtitle": "Small habits, big transformations.",
+    "streakChip": "day streak",
+    "weeklySummary": "Weekly summary",
+    "thisWeek": "This week",
+    "habitsCompleted": "Habits completed",
+    "of": "of",
+    "minutesInvested": "Minutes invested",
+    "min": "min",
+    "bestStreak": "Best streak",
+    "days": "days",
+    "xpEarned": "XP earned",
+    "xp": "XP",
+    "currentStreakTitle": "Your current streak",
+    "keepItUp": "Keep it up! 🔥",
+    "today": "Today",
+    "dailyActivity": "Daily activity (minutes)",
+    "minutesUnit": "Minutes",
+    "focusAreas": "Focus areas",
+    "seeDetail": "See detail",
+    "bannerTitle": "Every step brings you closer to your best self.",
+    "bannerSubtitle": "Keep building your path.",
+    "weekdaysShort": [
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri",
+      "Sat",
+      "Sun"
+    ],
+    "noFocusAreas": "No focus realms active yet. Enable them from your Profile.",
+    "daysCount_one": "day",
+    "daysCount_other": "days",
+    "streakChip_one": "day streak",
+    "streakChip_other": "day streak"
+  },
+  "routines": {
+    "title": "Routines",
+    "subtitle": "Small actions, big transformations.",
+    "filterAll": "All",
+    "filterMorning": "Morning",
+    "filterAfternoon": "Afternoon",
+    "filterNight": "Night",
+    "currentStreak": "Current streak",
+    "days": "days",
+    "today": "Today",
+    "myRoutines": "My routines",
+    "newRoutine": "New routine",
+    "empty": "You don't have routines yet. Create your first one!",
+    "bannerTitle": "Consistency is your superpower.",
+    "bannerSubtitle": "Keep going, every day you get closer to your best self.",
+    "weekdaysShort": [
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri",
+      "Sat",
+      "Sun"
+    ]
+  },
+  "welcome": {
+    "tagline": "Your best self, your greatest adventure",
+    "heroTitle1": "Small habits,",
+    "heroTitle2": "big transformations.",
+    "heroSubtitle": "Build positive habits, overcome challenges and unlock your best self every day.",
+    "cta": "Begin the adventure",
+    "haveAccount": "Already have an account?",
+    "signIn": "Sign in"
+  },
+  "onboardingCarousel": {
+    "skip": "Skip",
+    "next": "Next",
+    "authTitle": "Join the adventure",
+    "continueWithApple": "Continue with Apple",
+    "slides": [
+      {
+        "title": "Welcome",
+        "accent": "to your adventure",
+        "desc": "Everlight is your companion to build positive habits and reach your best self."
+      },
+      {
+        "title": "Explore",
+        "accent": "new worlds",
+        "desc": "Each habit takes you to a new level. Discover amazing worlds as you grow every day."
+      },
+      {
+        "title": "Overcome",
+        "accent": "challenges every day",
+        "desc": "Daily missions, challenges and goals designed to push you to be consistent and disciplined."
+      },
+      {
+        "title": "Earn rewards",
+        "accent": "and unlock your best self",
+        "desc": "Every achievement brings you closer to your Supreme Avatar. Evolve, unlock and become your best self."
+      }
+    ]
+  },
+  "habitDetail": {
+    "title": "Habit detail",
+    "saved": "Changes saved",
+    "reminder": "Reminder",
+    "reminderHint": "We'll nudge you if it's still pending during its time slot",
+    "viewAnalytics": "View analytics",
+    "edit": "Edit habit",
+    "relapse": "Record relapse",
+    "delete": "Delete habit",
+    "deleteConfirm": "Delete this habit? Its history is kept, but it will disappear from your routines.",
+    "deleted": "Habit deleted"
+  },
+  "reminders": {
+    "title": "Reminders",
+    "enable": "Enable",
+    "granted": "Reminders enabled",
+    "denied": "Permission denied — enable it in your browser settings",
+    "statusGranted": "Reminders active",
+    "statusDenied": "Permission denied in the browser",
+    "statusDefault": "Reminders off",
+    "statusUnsupported": "Your browser doesn't support notifications",
+    "habitsWithReminder": "{{count}} habit(s) with reminder on",
+    "limitationsHint": "Reminders fire when you open or return to the app (best when installed as an app). On iPhone they only work with the app open.",
+    "notificationTitle": "Zylen — your flame awaits 🔥",
+    "notificationBody": "You haven't completed \"{{habit}}\" today. Keep the flame alive!",
+    "testBody": "This is how your habit reminders will look.",
+    "habitsWithReminder_one": "{{count}} habit with reminder on",
+    "habitsWithReminder_other": "{{count}} habits with reminder on"
+  },
+  "habitScience": {
+    "sheetTitle": "Get to know this habit",
+    "whatScience": "What the science says",
+    "shortTermTitle": "Short-term benefits",
+    "longTermTitle": "Long term",
+    "tipsTitle": "How to start well",
+    "frustrationsTitle": "Common frustrations (and how to beat them)",
+    "createCta": "Create this habit",
+    "learnMore": "Learn more",
+    "learnAboutHabit": "Learn about this habit"
+  },
+  "habitCatalog": {
+    "hydration": {
+      "title": "Daily hydration",
+      "tagline": "The simplest habit with the fastest payoff",
+      "summary": "Your body is ~60% water and even your brain notices: mild dehydration (1-2%) already lowers focus, mood and energy. Drinking enough water through the day is one of the habits with the most immediate effect.",
+      "science": "Hydration studies show mild water deficits are linked to worse attention, more fatigue and headaches; fixing them reverses the effect within hours. Needs vary by body and climate: ~2L is a reasonable reference, not a law.",
+      "shortTerm": [
+        "Steadier energy and focus through the day",
+        "Fewer headaches and less fake hunger",
+        "Better digestion and more hydrated skin within days"
+      ],
+      "longTerm": [
+        "Lower risk of kidney stones and urinary infections",
+        "Supports weight control (thirst often disguises as hunger)",
+        "Kidneys and joints working better over the years"
+      ],
+      "tips": [
+        "Anchor it: one glass on waking and one with each meal",
+        "Keep a bottle visible — zero friction is the real trick",
+        "Use Zylen's measurable mode: log glasses or liters",
+        "Plain water boring? Add lemon, cucumber or mint"
+      ],
+      "frustrations": [
+        "More bathroom trips the first days — your body adjusts in ~1 week",
+        "Forgetting is normal: trust the visible bottle and the reminder, not your memory",
+        "You won't feel a dramatic daily change; it's a background habit you notice when it's missing"
+      ]
+    },
+    "exercise": {
+      "title": "Regular exercise",
+      "tagline": "The most powerful 'pill' there is",
+      "summary": "If exercise were a drug it would be the most prescribed in the world: it improves mood, energy, sleep and memory, and protects against nearly every chronic disease. And you don't need an hour — 30 minutes of movement already moves the needle.",
+      "science": "The evidence is overwhelming: regular physical activity lowers the risk of cardiovascular disease, type 2 diabetes and depression (meta-analyses put it on par with therapy for mild-moderate depression). The WHO recommends 150 weekly minutes of moderate intensity.",
+      "shortTerm": [
+        "Better mood the same day (endorphins + dopamine)",
+        "Deeper sleep that very night",
+        "More energy and less stress within 1-2 weeks"
+      ],
+      "longTerm": [
+        "Lower risk of heart attack, diabetes and several cancers",
+        "Protects memory and the aging brain",
+        "More muscle = more independence and quality of life later on"
+      ],
+      "tips": [
+        "Start ridiculously small: 10 min counts — consistency beats intensity",
+        "Same time every day; 'whenever I can' doesn't survive the week",
+        "Pick something you enjoy; the best exercise is the one you repeat",
+        "Lay out your clothes the night before (kills starting friction)"
+      ],
+      "frustrations": [
+        "First-week soreness is normal and fades",
+        "Visible results take 6-8 weeks; invisible ones (mood, sleep) arrive in days — measure those",
+        "Zero-motivation days happen: the rule is show up for 10 minutes; you'll almost always continue"
+      ]
+    },
+    "sleep": {
+      "title": "Sleep 7-9 hours",
+      "tagline": "The multiplier for every other habit",
+      "summary": "Sleep isn't lost time: it's when the brain consolidates memory, regulates emotion and the body repairs. Sleeping well makes EVERYTHING else easier — eating well, training, focusing and staying in a good mood.",
+      "science": "Chronically sleeping under 6 hours is linked to worse memory, more anxiety, bigger appetite (dysregulated ghrelin/leptin) and higher metabolic risk. Schedule regularity matters as much as duration: your circadian clock loves routine.",
+      "shortTerm": [
+        "Better mood and less irritability the next day",
+        "Sharper focus and working memory",
+        "Fewer sugar and junk-food cravings"
+      ],
+      "longTerm": [
+        "Lower risk of obesity, diabetes and cardiovascular disease",
+        "Long-term memory protection",
+        "Stronger immune system"
+      ],
+      "tips": [
+        "Fix your BEDTIME first, not your wake time",
+        "Screens off 30-60 min before (or at least night mode + minimum brightness)",
+        "Cool, dark, quiet room — and caffeine after 2pm sabotages you",
+        "Wind-down routine: the same sequence every night teaches your brain it's time"
+      ],
+      "frustrations": [
+        "You may toss and turn the first nights: the body takes ~2 weeks to adjust its clock",
+        "One bad night ruins nothing — don't compensate by sleeping in on weekends (breaks the rhythm)",
+        "Late-night shows and scrolling are the real enemy: this habit is won at 10pm, not 11:45pm"
+      ]
+    },
+    "meditation": {
+      "title": "Meditation / mindfulness",
+      "tagline": "Strength training for your attention",
+      "summary": "Meditating isn't blanking your mind: it's noticing you got distracted and coming back, again and again. That 'coming back' is the rep that strengthens attention and emotional regulation, just like a squat strengthens your legs.",
+      "science": "Meta-analyses of mindfulness-based programs (like MBSR) show moderate reductions in anxiety, stress and rumination, plus better sustained attention. Ten consistent daily minutes beat occasional long sessions.",
+      "shortTerm": [
+        "Lowers the day's stress in minutes (activates the parasympathetic system)",
+        "You react less on impulse; a pause appears before responding",
+        "Better focus for the next hour"
+      ],
+      "longTerm": [
+        "Less rumination and baseline anxiety",
+        "Greater sustained concentration",
+        "A better relationship with your own thoughts and emotions"
+      ],
+      "tips": [
+        "Start with 3-5 min; 10 is the goal, not the start",
+        "Same time and place (right after waking works great)",
+        "Use a guided app at first; full silence comes later",
+        "Getting distracted is NOT failing: noticing the distraction IS the practice"
+      ],
+      "frustrations": [
+        "'I can't stop thinking' — nobody can; the goal is to notice and return, not to silence",
+        "Some days feel useless: the benefit compounds, like the gym",
+        "Boredom is part of the training — that's exactly where your tolerance grows"
+      ]
+    },
+    "nutrition": {
+      "title": "Eat fruit / real food",
+      "tagline": "Add before you subtract",
+      "summary": "Instead of starting with bans, science suggests starting by adding: one more fruit or vegetable a day naturally displaces ultra-processed food and brings fiber, vitamins and satiety. It's the gateway to eating better without fighting yourself.",
+      "science": "Large cohort studies link each extra daily serving of fruit/vegetables to lower cardiovascular and all-cause mortality risk (dose-response up to ~5 servings). Fiber also feeds your microbiome and improves satiety.",
+      "shortTerm": [
+        "More satiety → less ultra-processed snacking",
+        "More regular digestion within days (fiber)",
+        "Steadier energy without sugar spikes"
+      ],
+      "longTerm": [
+        "Lower cardiovascular and metabolic risk",
+        "A more diverse, healthier microbiome",
+        "A retrained palate: artificial sweetness starts feeling like too much"
+      ],
+      "tips": [
+        "Keep fruit VISIBLE (bowl on the table, not the fridge drawer)",
+        "Anchor: fruit always with breakfast or as the first snack",
+        "Buy fruit you genuinely like — don't force the 'healthy' one you hate",
+        "Prep it ready to eat: a peeled orange beats the cookie pack"
+      ],
+      "frustrations": [
+        "Fruit spoils if you don't eat it: buy small and varied, twice a week",
+        "At first it may not tempt you next to processed snacks — visibility and habit flip that in ~2 weeks",
+        "It's not a magic diet: it's the first piece of a pattern that builds itself"
+      ]
+    },
+    "reading": {
+      "title": "Daily reading",
+      "tagline": "20 pages a day ≈ 30 books a year",
+      "summary": "Daily reading is compound interest for your mind: 20 pages feels small, but it's ~30 books a year. Beyond knowledge, deep reading rebuilds the concentration that infinite scroll is stealing from you.",
+      "science": "Habitual reading is associated with bigger vocabulary, better comprehension and greater cognitive reserve in old age. Studies also show fiction improves empathy (theory of mind), and just 6 minutes of reading already lowers stress markers.",
+      "shortTerm": [
+        "Relaxes you and lowers stress before bed (better than a screen)",
+        "A real sense of progress from week one",
+        "You recover sustained attention"
+      ],
+      "longTerm": [
+        "Dozens of books a year with no apparent effort",
+        "Bigger vocabulary, judgment and cognitive reserve",
+        "A default alternative to doomscrolling"
+      ],
+      "tips": [
+        "Set the goal in pages or minutes (20 pages / 15 min), not 'read more'",
+        "Physical book on the nightstand; phone charging FAR from bed",
+        "Quit boring books guilt-free — reading what hooks you is the strategy",
+        "Anchor: always read after getting in bed / with your morning coffee"
+      ],
+      "frustrations": [
+        "The first days you'll doze off at page 3: that's your attention deficit recovering, improves in 1-2 weeks",
+        "If a book drags, the problem is the book, not you — swap it",
+        "Comparing your pace with others kills the habit; your 10 pages beat their 50"
+      ]
+    },
+    "journaling": {
+      "title": "Journaling",
+      "tagline": "Thinking with your hands",
+      "summary": "Writing what you think and feel forces the brain to order the chaos: fuzzy problems become concrete and manageable. Five minutes and three honest lines are enough for the effect.",
+      "science": "Expressive writing research (Pennebaker) shows modest but consistent improvements in mood, stress and even health markers across dozens of studies. Putting emotions into words ('affect labeling') reduces amygdala reactivity in neuroimaging.",
+      "shortTerm": [
+        "Mental unload: to-dos stop circling in your head",
+        "Clarity about what actually worries you",
+        "Better closure of the day (or kickoff, if you write in the morning)"
+      ],
+      "longTerm": [
+        "A record of your evolution that memory would distort",
+        "Better self-knowledge and emotional regulation",
+        "Clearer decisions: written dilemmas untangle themselves"
+      ],
+      "tips": [
+        "3 lines count — the entry barrier must be minimal",
+        "Try a template: what happened / what I felt / what I'm grateful for",
+        "Nobody will read it: write ugly, write honest",
+        "Anchor: with your morning coffee or right before sleep"
+      ],
+      "frustrations": [
+        "'I don't know what to write' — start describing your day in one sentence; the rest follows",
+        "Re-reading bad days can sting: you're not obligated to re-read",
+        "One-line days are wins, not failures"
+      ]
+    },
+    "instrument": {
+      "title": "Practice an instrument",
+      "tagline": "A full-brain gym",
+      "summary": "Few activities light up so much brain at once: fine motor skills, hearing, reading, memory and emotion working together. Fifteen daily minutes of deliberate practice beat the Sunday marathon session.",
+      "science": "Musical practice is associated in neuroimaging with greater cross-hemisphere connectivity and improvements in working memory and attention. Per the expertise literature, the key factor is short, frequent practice focused on what you can't play yet.",
+      "shortTerm": [
+        "Total disconnection from work/stress while playing (flow)",
+        "Audible progress within weeks of daily practice",
+        "Fast early gains in coordination"
+      ],
+      "longTerm": [
+        "A lifelong skill and a new identity ('I'm a musician')",
+        "Cognitive reserve: music protects the aging brain",
+        "An endless source of challenge and joy"
+      ],
+      "tips": [
+        "15 min daily > 2 hours on Sunday",
+        "Practice WHAT YOU CAN'T PLAY (deliberate practice), not just what already sounds good",
+        "Instrument out of its case, visible and ready",
+        "Record a weekly clip: hearing your progress is the best fuel"
+      ],
+      "frustrations": [
+        "The plateau hits at months 2-3: it's where almost everyone quits — persist, it breaks on its own",
+        "Sounding bad at first IS the process, not a lack of talent",
+        "5-minute days keep the chain alive; don't dismiss them"
+      ]
+    },
+    "drawing": {
+      "title": "Drawing / sketching",
+      "tagline": "Seeing the world with new eyes",
+      "summary": "Drawing isn't a gift: it's a trainable observation skill. Daily sketching teaches you to truly SEE — proportion, light, detail — and it's one of the cheapest doorways into flow.",
+      "science": "Art-making shows cortisol reductions after short sessions (45 min) in studies, regardless of skill level. Drawing ability improves measurably with structured practice — 'talent' weighs less than hours.",
+      "shortTerm": [
+        "Flow-like relaxation from the first session",
+        "You start observing the real world better",
+        "A real break from screens"
+      ],
+      "longTerm": [
+        "A full sketchbook = tangible proof of your evolution",
+        "A useful visual skill (communicating ideas, visual notes, design)",
+        "A form of expression that doesn't depend on words"
+      ],
+      "tips": [
+        "One 10-min sketch a day; ugly is allowed and expected",
+        "Draw from life (your mug, your hand), not only photos",
+        "Cheap sketchbook: fancy ones are scary to 'ruin'",
+        "Date every drawing — comparing month 1 to month 3 is magic"
+      ],
+      "frustrations": [
+        "Your first drawings will look awful to you: that's your eye improving faster than your hand (progress, not failure)",
+        "Comparing yourself to years-deep artists online is a mental trap",
+        "Blank-page block breaks with drills: draw 5 circles and you've started"
+      ]
+    },
+    "study": {
+      "title": "Daily study / learning",
+      "tagline": "30 minutes that compound like interest",
+      "summary": "A focused half hour daily beats weekend marathons: the brain consolidates during sleep what you practiced, so frequency matters more than volume. In a year that's ~180 hours of a new skill.",
+      "science": "Learning science is clear: spaced practice (little and often) and active recall (testing yourself) massively outperform re-reading and highlighting. The 'spacing effect' is one of psychology's most replicated findings.",
+      "shortTerm": [
+        "A sense of progress and momentum from week 1",
+        "Better retention than binge-studying",
+        "Momentum: starting tomorrow is easier if you studied today"
+      ],
+      "longTerm": [
+        "Skills that compound into your career and income",
+        "A learner identity: confidence that you can learn anything",
+        "An accumulated edge nobody can take away"
+      ],
+      "tips": [
+        "Decide WHAT you'll study before sitting down (the session doesn't start with choosing)",
+        "Test yourself: close the material and explain it out loud (active recall)",
+        "Phone in another room — its visible presence alone drains attention",
+        "25-30 min with a short break beats 2 exhausting hours"
+      ],
+      "frustrations": [
+        "The forgetting curve is discouraging: forgetting is part of the process, spaced review fixes it",
+        "Days when nothing sinks in: lower the difficulty, not the frequency",
+        "Skill progress is staircase-shaped — flat weeks, then a sudden jump"
+      ]
+    },
+    "planning": {
+      "title": "Plan the day",
+      "tagline": "10 minutes that organize the other 16 hours",
+      "summary": "Deciding in advance what you'll do removes dozens of micro-decisions that drain willpower through the day. A simple 3-priority plan beats the infinite to-do list.",
+      "science": "Research on implementation intentions (Gollwitzer) shows that planning the concrete when/where/how doubles or triples the odds of executing a task versus merely 'intending to'. Writing down open tasks also lowers mental load (Zeigarnik effect).",
+      "shortTerm": [
+        "Start the day without 'where do I begin?' paralysis",
+        "Less chaos and firefighting feel",
+        "Writing it down releases the loops in your head"
+      ],
+      "longTerm": [
+        "The important stops always losing to the urgent",
+        "Steady progress on big goals (they get planned in slices)",
+        "A realistic sense of your time: you stop promising yourself 30-hour days"
+      ],
+      "tips": [
+        "Max 3 real priorities; everything else is the 'if time remains' list",
+        "Plan the night before or first thing, BEFORE opening messages",
+        "Give priority #1 your first hour of energy",
+        "2-min review at day's end: what happened with the 3? (feedback loop)"
+      ],
+      "frustrations": [
+        "The plan will break many days — its value is re-deciding fast, not perfect compliance",
+        "You'll underestimate durations at first: you calibrate within 2 weeks",
+        "Planning isn't aesthetic procrastination: 10 minutes max, then execute"
+      ]
+    },
+    "deep-work": {
+      "title": "Deep work without distractions",
+      "tagline": "One focused hour outworks four fragmented ones",
+      "summary": "Every interruption costs far more than its seconds: the brain needs several minutes to truly refocus. Blocks with no phone and no tabs produce in one hour what multitasking produces in four.",
+      "science": "Office interruption studies (Mark et al.) estimate ~23 minutes to fully regain focus after an interruption. 'Attention residue' (Leroy) shows task-switching leaves part of your attention stuck on the previous task. Real multitasking doesn't exist: it's rapid switching with a cost.",
+      "shortTerm": [
+        "Finish in a morning what used to take a day",
+        "The satisfaction of moving the hard thing forward (not just the trivial)",
+        "Less mental fatigue at day's end"
+      ],
+      "longTerm": [
+        "The ability to concentrate is a growing, scarce professional advantage",
+        "You produce higher-quality work, not just more volume",
+        "You recover the ability to think long thoughts"
+      ],
+      "tips": [
+        "Start with 25-45 min blocks; 90 is advanced level",
+        "Phone in ANOTHER room (silent on the desk still steals attention)",
+        "One tab/task; close email and chat with a reopening time",
+        "Define the block's goal in one sentence before starting"
+      ],
+      "frustrations": [
+        "The first blocks feel uncomfortable: the mind begs for novelty every 3 minutes — passes in ~1 week",
+        "Your environment won't always cooperate: negotiate signals ('headphones = don't interrupt')",
+        "One deep block a day is already a win; don't attempt 8 deep hours (nobody has them)"
+      ]
+    },
+    "expense-tracking": {
+      "title": "Track expenses",
+      "tagline": "You can't improve what you don't measure",
+      "summary": "Logging every expense takes 2 minutes and produces your finances' most valuable input: knowing where the money ACTUALLY goes. Awareness alone already changes behavior.",
+      "science": "The mere act of self-monitoring a behavior changes it ('measurement reactivity') — true for food, steps and spending. Mental accounting (Thaler) explains why small invisible expenses are what break budgets.",
+      "shortTerm": [
+        "You find invisible leaks in week one (delivery, subscriptions, small stuff)",
+        "Impulse buys slow down just because you'll have to log them",
+        "An immediate sense of control"
+      ],
+      "longTerm": [
+        "Realistic budgets based on data, not wishful thinking",
+        "Real saving capacity (you know exactly what to trim)",
+        "Financial peace: numbers stop being an anxious mystery"
+      ],
+      "tips": [
+        "Log AT THE MOMENT of spending (2 taps); 'I'll note it later' = never",
+        "Don't judge the first 2 weeks: just observe, data first",
+        "Review the total weekly, not obsessively daily",
+        "Simple categories: 5-6 max, or the system dies of bureaucracy"
+      ],
+      "frustrations": [
+        "You'll see uncomfortable numbers at first — that discomfort IS the valuable information",
+        "You'll forget expenses: log in the moment, don't reconstruct the day from memory",
+        "Perfectionism kills the habit: a 90%-complete log works; an abandoned one doesn't"
+      ]
+    },
+    "saving": {
+      "title": "Save / no impulse buying",
+      "tagline": "Pay yourself first",
+      "summary": "Saving that works isn't 'whatever's left at month's end' (nothing's ever left): it's setting it aside first, however little. And against buying impulses, the most effective tool is simply waiting 24 hours.",
+      "science": "Behavioral economics shows automating savings ('pay yourself first') vastly outperforms willpower, and hyperbolic discounting makes us overvalue immediate rewards. The 24-72h rule defuses most impulse purchases.",
+      "shortTerm": [
+        "Watching the fund grow, however slowly, motivates immediately",
+        "Less purchase regret three days later",
+        "Clarity between 'I want it now' and 'I actually want it'"
+      ],
+      "longTerm": [
+        "Emergency fund = sleeping soundly",
+        "Freedom to decide (change jobs, move, invest)",
+        "Compound interest working for you instead of against you"
+      ],
+      "tips": [
+        "Automate: transfer on payday, even if it's $10",
+        "24h rule: whatever you want to buy goes to the cart and waits a day",
+        "Uninstall shopping apps and remove saved cards (add friction)",
+        "Name your goal ('Japan 2027') — saving 'just because' doesn't motivate"
+      ],
+      "frustrations": [
+        "The amount feels ridiculous at first: the habit matters more than the amount; the amount grows later",
+        "Impulse-buy relapses happen: log what triggered it and keep going",
+        "Watching others spend freely triggers FOMO — remember you don't see their debts"
+      ]
+    },
+    "social-connection": {
+      "title": "Social connection",
+      "tagline": "The #1 predictor of a long, happy life",
+      "summary": "The longest-running happiness study in history (Harvard, 85+ years) reached a simple conclusion: the quality of your relationships predicts your health and happiness better than money or fame. A call, a dinner, a message — that's life maintenance.",
+      "science": "Chronic loneliness is associated with a mortality increase comparable to smoking up to 15 cigarettes a day (Holt-Lunstad). Relationships are sustained by contact frequency, not grand gestures: small regular touches beat the big annual reunion.",
+      "shortTerm": [
+        "An immediate mood lift after a good conversation",
+        "The relationship feels alive again with a single touchpoint",
+        "Perspective: problems shrink when shared"
+      ],
+      "longTerm": [
+        "A real support network for when life hits",
+        "Lower risk of depression and cognitive decline",
+        "Deep relationships built from small 'touches'"
+      ],
+      "tips": [
+        "Call while walking or cooking — don't wait for 'the perfect moment'",
+        "First-move rule: YOU send the message; don't keep score of who owes whom",
+        "Voice note > text for real closeness (and a call > voice note)",
+        "Recurring slot with your people (Sunday = call parents) so it doesn't depend on remembering"
+      ],
+      "frustrations": [
+        "'No time' — a 10-minute call counts; the barrier is starting, not the calendar",
+        "Sometimes they don't pick up or seem dry: it's their day, not rejection — consistency wins",
+        "It may feel forced at first; within 3 weeks it becomes the best part of the day"
+      ]
+    },
+    "gratitude": {
+      "title": "Active gratitude",
+      "tagline": "Retraining the brain's radar",
+      "summary": "Your brain ships with a negativity bias: it detects threats and lack. Practiced gratitude — writing 3 good things or sending a thank-you message — recalibrates that radar toward what's working.",
+      "science": "Classic experiments by Emmons and Seligman show simple gratitude exercises ('three good things', gratitude letter) improve well-being and depressive symptoms with effects lasting weeks to months. It's one of positive psychology's cheapest, most replicated interventions.",
+      "shortTerm": [
+        "Better mood the same day (even more if the message goes to someone)",
+        "Better sleep if done at bedtime",
+        "Warmer relationships: people treasure those messages"
+      ],
+      "longTerm": [
+        "A recalibrated attention bias: you notice the good by default",
+        "Less rumination and fewer depressive symptoms",
+        "Stronger bonds (expressed gratitude is social glue)"
+      ],
+      "tips": [
+        "Be SPECIFIC: 'thanks for staying on the phone Tuesday' > 'thanks for everything'",
+        "Alternate: some days write 3 things, others send the message to the person",
+        "Find small, new things daily (repeating 'my family' loses effect)",
+        "Anchor: with morning coffee or as the day's closing"
+      ],
+      "frustrations": [
+        "It feels cheesy at first — the effect is measured all the same; do it anyway",
+        "Bad days with 'nothing good': find the minimum (hot coffee counts) — those days it works hardest",
+        "If it turns mechanical, switch formats: novelty keeps the effect alive"
+      ]
+    },
+    "quit-smoking": {
+      "title": "Quit smoking / vaping",
+      "tagline": "The single best health decision available",
+      "summary": "No habit's removal pays off faster: in 20 minutes your pulse drops, in weeks your breathing improves, in a year your cardiac risk halves. Every resisted day is literal body repair.",
+      "science": "Tobacco is the world's leading preventable cause of death. The good news: the body repairs aggressively once you quit (at 10 years, lung cancer risk drops ~50%). Relapses are a statistical part of the process — the average is several attempts before the final one.",
+      "shortTerm": [
+        "In 48-72h: better taste and smell, more air on the stairs",
+        "In 2-4 weeks: better circulation, less coughing",
+        "Visible money: calculate the monthly spend and watch it return"
+      ],
+      "longTerm": [
+        "Heart-attack risk halved within 1 year",
+        "Cancer risk dropping year after year",
+        "Years of life recovered — literally, not metaphorically"
+      ],
+      "tips": [
+        "Map your triggers (coffee, alcohol, stress, certain people) and reroute the routine around them",
+        "Replace the hand/mouth ritual: water, gum, toothpick",
+        "Cravings last 3-5 minutes: time them and just ride that wave",
+        "Consider medical support (patches, gum, bupropion) — it doubles success rates; it's not 'cheating'"
+      ],
+      "frustrations": [
+        "Relapse is part of the process, not the end: log the trigger and restart without drama",
+        "Days 3-7 are the physical withdrawal peak: TEMPORARY irritability and brain fog",
+        "'Just one, socially' is trap #1 — nicotine reactivates the whole circuit"
+      ]
+    },
+    "quit-screens": {
+      "title": "Less screens / social media",
+      "tagline": "Reclaiming your hijacked attention",
+      "summary": "Infinite-scroll apps are designed by entire teams to capture attention with variable rewards — the same mechanic as slot machines. Cutting back isn't willpower against yourself: it's redesigning the environment.",
+      "science": "Experimental studies (e.g. Hunt et al.) show limiting social media to ~30 min/day reduces loneliness and depressive symptoms within weeks. Nighttime screen use delays sleep via light and stimulation. A merely visible phone reduces available cognitive capacity ('brain drain').",
+      "shortTerm": [
+        "You reclaim 1-2 real hours a day (check your screen time and multiply)",
+        "Better sleep if screens stop 1h before bed",
+        "Less comparison anxiety within days"
+      ],
+      "longTerm": [
+        "Rebuilt sustained attention span",
+        "Real time for the habits you actually want (reading, creating, people)",
+        "A relationship with technology on YOUR terms"
+      ],
+      "tips": [
+        "Environment > willpower: apps off the home screen, notifications OFF, grayscale",
+        "Phone charges OUTSIDE the bedroom; a $5 alarm clock",
+        "Substitute, don't just remove: fill the scroll-gap with a pre-staged book/podcast",
+        "Phone-free times (meals, first hour) before total bans"
+      ],
+      "frustrations": [
+        "The first days you'll reach for the phone on pure reflex — that ghost fades in ~1 week",
+        "Initial FOMO: within 2 weeks you discover you missed nothing important",
+        "Sunday-afternoon relapses are classic: have plan B ready (what will you do instead?)"
+      ]
+    },
+    "quit-alcohol": {
+      "title": "Reduce / quit alcohol",
+      "tagline": "The sleep and energy you didn't know you were missing",
+      "summary": "Alcohol is the great silent saboteur of sleep: it helps you fall asleep and then wrecks the second half of the night. Cutting back returns energy, mood and clarity faster than you'd expect.",
+      "science": "Recent evidence shifted the consensus: no consumption level is clearly 'beneficial' (the supposed cardiovascular benefits don't survive modern analyses). Alcohol suppresses REM sleep; removing it improves sleep quality, baseline anxiety and blood pressure within weeks.",
+      "shortTerm": [
+        "Noticeably more restorative sleep in 1-2 weeks",
+        "Fog-free mornings, steadier energy",
+        "Less baseline anxiety ('hangxiety') and better skin"
+      ],
+      "longTerm": [
+        "Lower risk of several cancers, fatty liver and hypertension",
+        "Easier weight control (invisible liquid calories)",
+        "Emotions actually processed, not anesthetized"
+      ],
+      "tips": [
+        "Set your rule BEFORE the event ('today 0' or 'max 1') — deciding at the bar always loses",
+        "Have a dignified substitute: sparkling water + lime, 0.0 beer, kombucha",
+        "The first social events are the hard part: arrive with a drink in hand and nobody asks",
+        "Count alcohol-free nights in Zylen — the visible streak is the best motivator"
+      ],
+      "frustrations": [
+        "Social pressure is real: 'just one', 'how boring' — a simple 'I'm on a 30-day challenge' disarms almost everything",
+        "The craving shows up with Friday stress: it's the ritual, not the drink — change the ritual",
+        "You'll sleep WORSE the first 2-3 days if you drank daily; then comes the real improvement"
+      ]
+    },
+    "quit-sugar": {
+      "title": "Less sugar / ultra-processed food",
+      "tagline": "Stabilizing the energy rollercoaster",
+      "summary": "The sugar problem isn't a dessert: it's the constant invisible dose (drinks, sauces, 'healthy' snacks) keeping your energy and hunger on a rollercoaster. Cutting it stabilizes appetite within a couple of weeks.",
+      "science": "Sugary drinks are the literature's most solid link between sugar and weight gain/type 2 diabetes. Glucose spikes and dips are associated with more hunger, cravings and fatigue; a steadier glycemic load improves satiety and subjective energy.",
+      "shortTerm": [
+        "Steady energy without the 3pm crash within ~2 weeks",
+        "Hunger becomes predictable (you eat for food, not cravings)",
+        "Your palate recalibrates: fruit tastes sweet again"
+      ],
+      "longTerm": [
+        "Lower risk of type 2 diabetes and visceral fat",
+        "Better dental and skin health",
+        "Freedom: cravings stop making your decisions"
+      ],
+      "tips": [
+        "Start ONLY with sugary drinks — 80% of the benefit for 20% of the effort",
+        "Don't keep it at home: the battle is won at the supermarket, not in the kitchen at 11pm",
+        "Read labels: sugar hides as syrup, dextrose, maltose...",
+        "Strong craving = sometimes just tiredness or thirst; water + fruit + 10 minutes"
+      ],
+      "frustrations": [
+        "Days 3-7: intense cravings and irritable mood — it's the recalibration, it passes",
+        "Sugar is in EVERYTHING processed: aim to reduce, not for absolute purity",
+        "A birthday-cake relapse isn't failure: it was cake, not your identity — continue the next day"
+      ]
+    }
+  },
+  "catalog": {
+    "homeTitle": "Learn habits",
+    "explore": "Explore",
+    "libraryTitle": "Habit catalog"
+  },
+  "arena": {
+    "title": "Temple of Disorder",
+    "badge": "Co-op arena",
+    "cardTitle": "Temple of Disorder",
+    "cardSubtitle": "Enter the 3D arena, fight your vices with up to 3 heroes and defeat Supreme Sloth.",
+    "cardCta": "Enter the arena",
+    "loading": "Opening the portal to the Temple…",
+    "victoryReward": "You defeated Supreme Sloth! +{{xp}} XP · +{{points}} points",
+    "dailyCapReached": "The Temple's light rests for today — come back tomorrow for more rewards.",
+    "rewardError": "Could not deliver the reward. Check your connection.",
+    "armory": {
+      "title": "Guardian's Armory",
+      "subtitle": "Your habits forge your power — buy with your points.",
+      "selectTier": "Choose your arena",
+      "tierLabel": "Arena {{tier}}",
+      "tierHint": "Victory reward: +{{xp}} XP · +{{points}} points",
+      "weapons": "Staves",
+      "gems": "Gems",
+      "gemSlots": "Up to {{max}} gems socketed at once.",
+      "equipped": "Equipped",
+      "equip": "Equip",
+      "unequip": "Remove",
+      "insufficient": "Not enough points — complete more habits.",
+      "purchased": "Purchased! Your habits' power takes shape.",
+      "purchaseError": "Purchase could not be completed.",
+      "enter": "Enter Arena {{tier}}",
+      "back": "Armory"
+    },
+    "gear": {
+      "staff_novice": {
+        "name": "Initiate's Staff",
+        "desc": "Your first light. Base damage."
+      },
+      "staff_adept": {
+        "name": "Adept's Staff",
+        "desc": "+30% damage."
+      },
+      "staff_guardian": {
+        "name": "Guardian's Staff",
+        "desc": "+60% damage · 10% faster attack."
+      },
+      "staff_everlight": {
+        "name": "Everlight Staff",
+        "desc": "×2 damage · 20% faster attack."
+      },
+      "vitality": {
+        "name": "Vitality Gem",
+        "desc": "+30 max HP."
+      },
+      "swift": {
+        "name": "Swift Gem",
+        "desc": "+12% movement speed."
+      },
+      "wisdom": {
+        "name": "Wisdom Gem",
+        "desc": "+30% arena XP."
+      },
+      "wrath": {
+        "name": "Wrath Gem",
+        "desc": "+50% Light Nova damage."
+      },
+      "haste": {
+        "name": "Haste Gem",
+        "desc": "−25% spell cooldowns."
+      },
+      "leech": {
+        "name": "Leech Gem",
+        "desc": "Steal 10% of damage as life."
+      }
+    },
+    "gemPowerActive": "Gem power active",
+    "gemPowerNone": "Grow gems in Focus to earn powers"
+  },
+  "focus": {
+    "title": "Focus of the day",
+    "subtitle": "Grow gems with deep focus sessions",
+    "pickGem": "Pick your gem",
+    "newGem": "New gem",
+    "noGems": "Create your first gem: name it and choose which realm it feeds.",
+    "duration": "Duration",
+    "start": "Grow gem",
+    "stage1": "Crystal seed",
+    "stage2": "Sprouting",
+    "stage3": "Taking shape",
+    "stage4": "Full gem",
+    "keepGrowing": "Your gem is growing… stay focused",
+    "keepGrowingCta": "Keep growing",
+    "pauseBudget": "Pause left: {{time}}",
+    "abandon": "Abandon",
+    "abandonTitle": "Abandon the session?",
+    "abandonBody": "If you abandon now, your gem will break and you won't earn Light.",
+    "abandonConfirm": "Break the gem",
+    "completeTitle": "Your gem has grown!",
+    "completeReward": "+{{xp}} Light · +{{points}} Essence",
+    "completeCapped": "Daily cap reached: reduced reward.",
+    "growAnother": "Grow another gem",
+    "brokenTitle": "Your gem broke",
+    "brokenPause": "The pause lasted too long and the gem lost its light. Next time, come back within 3 minutes.",
+    "brokenAbandon": "You abandoned the session early. Every gem needs your full focus to grow.",
+    "brokenExpired": "The session was left unattended for too long. Try again with a new gem.",
+    "retry": "Try again",
+    "vault": "Gem vault",
+    "vaultToday": "Today",
+    "vaultWeek": "Week",
+    "statsGems": "Gems",
+    "statsMinutes": "Minutes",
+    "statsBroken": "Broken",
+    "vaultEmpty": "No gems in this period yet. Grow the first one!",
+    "speciesTotals": "Collection by realm",
+    "arenaPower": "Arena power",
+    "arenaPowerHint": "Every grown gem strengthens your hero in the Temple of Disorder: more health, damage and powers.",
+    "shieldProgress": "Light Shield: {{count}}/{{total}} gems",
+    "creator": {
+      "title": "New gem",
+      "name": "Name",
+      "namePlaceholder": "E.g. Study, Read, Meditate…",
+      "linkHabit": "Link to a habit (optional)",
+      "noHabit": "No habit — free activity",
+      "activity": "Activity",
+      "activityPlaceholder": "What will you focus on?",
+      "species": "Gem realm",
+      "speciesLocked": "The realm is inherited from the linked habit.",
+      "create": "Create gem",
+      "unlockTitle": "Unlock the {{species}} gem?",
+      "unlockBody": "Unlock it for ◆{{price}} Essence and grow it forever.",
+      "unlock": "Unlock",
+      "unlockCta": "Unlock {{species}} for ◆{{price}}",
+      "unlocked": "Species unlocked!",
+      "unlockFailed": "Could not unlock. Try again.",
+      "insufficientPoints": "Not enough Essence — earn it by completing habits."
+    },
+    "notificationTitle": "Your gem has grown! 💎",
+    "notificationBody": "Focus session complete. Come back to Zylen to claim your Light.",
+    "errors": {
+      "alreadyRunning": "You already have a session running.",
+      "startFailed": "Could not start the session. Try again.",
+      "completeFailed": "Could not complete the session.",
+      "createFailed": "Could not create the gem."
+    },
+    "starterGem": "Focus",
+    "vaultMonth": "Month",
+    "vaultYear": "Year",
+    "vaultLatest": "Latest gem",
+    "vaultOverflow": "+{{count}}",
+    "vaultInfo": "Every focus session grows a gem on the platform. Broken ones leave their mark too. Switch periods to see your harvest.",
+    "vaultChipLight": "Light",
+    "vaultChipEssence": "Essence",
+    "vaultChipGems": "Gems grown"
+  },
+  "realms": {
+    "title": "Focus Realms",
+    "subtitle": "Every habit you complete feeds the light of a realm. Grow them all.",
+    "cardBadge": "Realms",
+    "cardTitle": "Focus Realms",
+    "cardSubtitle": "Watch your light strengthen every domain of your life.",
+    "cardCta": "View my realms",
+    "levelLabel": "Level {{level}}",
+    "habitsCount_one": "{{count}} habit",
+    "habitsCount_other": "{{count}} habits",
+    "dormant": "Dormant realm",
+    "empty": "No realms to light up yet."
+  },
+  "icons": {
+    "Dumbbell": "Dumbbell",
+    "Bike": "Bike",
+    "Heart": "Heart",
+    "Apple": "Apple",
+    "Droplets": "Droplets",
+    "Bed": "Bed",
+    "Utensils": "Utensils",
+    "Brain": "Brain",
+    "Book": "Book",
+    "Pencil": "Pencil",
+    "Code": "Code",
+    "Target": "Target",
+    "Sparkles": "Sparkles",
+    "Users": "People",
+    "MessageCircle": "Message",
+    "Home": "Home",
+    "Gift": "Gift",
+    "Briefcase": "Briefcase",
+    "DollarSign": "Dollar",
+    "Trophy": "Trophy",
+    "Star": "Star",
+    "TrendingUp": "Trending up",
+    "Palette": "Palette",
+    "Music": "Music",
+    "Camera": "Camera",
+    "Coffee": "Coffee",
+    "Flame": "Flame",
+    "Zap": "Lightning",
+    "Moon": "Moon",
+    "Sunrise": "Sunrise",
+    "CheckCircle2": "Check",
+    "Award": "Award",
+    "ShoppingCart": "Shopping cart",
+    "Candy": "Candy"
+  },
+  "settings": {
+    "language": {
+      "switchToEnglish": "Switch to English",
+      "switchToSpanish": "Switch to Spanish"
+    }
+  }
+}
