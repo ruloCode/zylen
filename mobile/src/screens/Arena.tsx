@@ -210,54 +210,46 @@ export function Arena() {
     void equipArenaGear(progress.weaponId, gems);
   };
 
-  // ---------- playing view: fullscreen WebView ----------
+  // ---------- playing view: edge-to-edge fullscreen WebView ----------
+  // No header/safe-area padding: the game canvas bleeds to every edge and the
+  // status bar is hidden. A single floating button (offset by the notch inset)
+  // is the only chrome, so nothing eats into the landscape play area.
   if (view === 'playing') {
     return (
-      <View
-        className="flex-1 bg-background"
-        style={{
-          paddingTop: insets.top,
-          paddingLeft: insets.left,
-          paddingRight: insets.right,
-        }}
-      >
-        <View className="h-12 shrink-0 flex-row items-center gap-3 px-4">
-          <Pressable
-            onPress={() => { setView('armory'); setLoaded(false); }}
-            accessibilityLabel={t('arena.armory.back')}
-            className={`h-9 w-9 items-center justify-center rounded-full ${glass}`}
-          >
-            <ArrowLeft size={18} color="#ffffff" />
-          </Pressable>
-          <Text numberOfLines={1} className="flex-1 text-base font-bold text-white">
-            {t('arena.title')} · {t('arena.armory.tierLabel', { tier })}
-          </Text>
-        </View>
-        <View className="min-h-0 flex-1">
-          {gameSrc && (
-            <WebView
-              source={{ uri: gameSrc }}
-              injectedJavaScript={BRIDGE_JS}
-              onMessage={onGameMessage}
-              onLoadEnd={() => setLoaded(true)}
-              allowsInlineMediaPlayback
-              mediaPlaybackRequiresUserAction={false}
-              javaScriptEnabled
-              domStorageEnabled
-              // the game is a WebGL canvas: never let the WebView bounce/zoom
-              bounces={false}
-              scrollEnabled={false}
-              setBuiltInZoomControls={false}
-              style={{ flex: 1, backgroundColor: '#000' }}
-            />
-          )}
-          {!loaded && (
-            <View className="absolute inset-0 items-center justify-center gap-3 bg-background">
-              <ActivityIndicator size="large" color="#2dd4bf" />
-              <Text className="text-sm font-medium text-white/70">{t('arena.loading')}</Text>
-            </View>
-          )}
-        </View>
+      <View className="flex-1 bg-black">
+        <StatusBar hidden />
+        {gameSrc && (
+          <WebView
+            source={{ uri: gameSrc }}
+            injectedJavaScript={BRIDGE_JS}
+            onMessage={onGameMessage}
+            onLoadEnd={() => setLoaded(true)}
+            allowsInlineMediaPlayback
+            mediaPlaybackRequiresUserAction={false}
+            javaScriptEnabled
+            domStorageEnabled
+            // the game is a WebGL canvas: never let the WebView bounce/zoom
+            bounces={false}
+            scrollEnabled={false}
+            setBuiltInZoomControls={false}
+            style={{ flex: 1, backgroundColor: '#000' }}
+          />
+        )}
+        {!loaded && (
+          <View className="absolute inset-0 items-center justify-center gap-3 bg-background">
+            <ActivityIndicator size="large" color="#2dd4bf" />
+            <Text className="text-sm font-medium text-white/70">{t('arena.loading')}</Text>
+          </View>
+        )}
+        <Pressable
+          onPress={() => { setView('armory'); setLoaded(false); }}
+          accessibilityLabel={t('arena.armory.back')}
+          hitSlop={12}
+          className={`absolute h-9 w-9 items-center justify-center rounded-full ${glass}`}
+          style={{ top: Math.max(insets.top, 8) + 4, left: Math.max(insets.left, 8) + 4 }}
+        >
+          <ArrowLeft size={18} color="#ffffff" />
+        </Pressable>
       </View>
     );
   }
