@@ -55,14 +55,14 @@ export function TemplateCard({ template, onSelect, onLearnMore }: TemplateCardPr
 
       {/* Illustration (or icon fallback) and XP */}
       <div className="flex items-start justify-between mb-3">
-        <div className="flex items-center justify-center w-14 h-14 rounded-xl overflow-hidden relative">
+        <div className="flex items-center justify-center w-14 h-14 rounded-full overflow-hidden relative ring-1 ring-inset ring-white/15 shadow-[inset_0_1px_1px_rgba(255,255,255,0.06)] bg-[radial-gradient(circle_at_50%_30%,rgba(45,212,191,0.16),rgba(2,10,13,0.95))]">
           {catalogEntry ? (
             <>
               <img
                 src={`/catalog/${catalogEntry.slug}.png`}
                 alt=""
                 aria-hidden="true"
-                className="w-full h-full object-contain"
+                className="w-full h-full object-contain p-1.5 drop-shadow-[0_2px_4px_rgba(0,0,0,0.45)]"
                 onError={(e) => {
                   const img = e.currentTarget;
                   img.style.display = 'none';
@@ -70,14 +70,12 @@ export function TemplateCard({ template, onSelect, onLearnMore }: TemplateCardPr
                   if (fb) fb.style.display = 'flex';
                 }}
               />
-              <span className="absolute inset-0 hidden items-center justify-center bg-teal-500/20 text-teal-400 rounded-xl">
+              <span className="absolute inset-0 hidden items-center justify-center text-teal-400">
                 <Icon className="w-6 h-6" />
               </span>
             </>
           ) : (
-            <span className="w-12 h-12 flex items-center justify-center bg-teal-500/20 text-teal-400 rounded-xl">
-              <Icon className="w-6 h-6" />
-            </span>
+            <Icon className="w-6 h-6 text-teal-400" />
           )}
         </div>
         <div className="flex items-center gap-1 px-2 py-1 bg-gold-500/20 text-gold-400 rounded-lg text-sm font-semibold">

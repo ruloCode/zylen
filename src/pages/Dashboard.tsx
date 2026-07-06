@@ -1,4 +1,4 @@
-import React, { useRef, useState, Suspense, lazy } from 'react';
+import React, { useEffect, useRef, useState, Suspense, lazy } from 'react';
 import {
   Bell,
   Flame,
@@ -8,6 +8,7 @@ import {
   Compass,
   ChevronRight,
   Check,
+  Plus,
   Loader2,
   FlaskConical,
   Swords,
@@ -15,9 +16,9 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { CircularProgress } from '@/components/ui';
+import { CircularProgress, LevelUpNotification } from '@/components/ui';
 import { useAnimatedNumber } from '@/hooks/useAnimatedNumber';
-import { HabitScienceSheet, TemplateLibrary } from '@/features/habits/components';
+import { HabitItem, HabitScienceSheet, TemplateLibrary, MeasureLogger } from '@/features/habits/components';
 import { HABIT_CATALOG, findCatalogEntry } from '@/constants/habitCatalog';
 import type { HabitCatalogEntry } from '@/constants/habitCatalog';
 import type { HabitFormData, HabitTemplate } from '@/types';
@@ -32,27 +33,42 @@ import type { HeroCharacterHandle } from '@/components/hero/HeroCharacter';
 import { useUser, useHabits, useStreaks } from '@/store';
 import { ROUTES, getHeroBodySrc, getHeroVideoSources, LIFE_AREA_CATALOG } from '@/constants';
 import { useLocale } from '@/hooks/useLocale';
-import { getLevelProgress } from '@/utils/xp';
+import { calculateGlobalLevelUpReward, getLevelProgress } from '@/utils/xp';
 import { getGreetingKey, getDailyQuoteIndex } from '@/utils/greeting';
 
 // Hero is composed of two independent layers (swappable / animatable):
 // the jungle background and the transparent character. Both live in /public.
 const HERO_BG_SRC = '/hero-bg.png';
 
-// Fallback accent palette for habit rows when a habit has no explicit color.
-const HABIT_COLORS = ['#4CAF6D', '#8B5CF6', '#E0A93B', '#2DD4BF', '#F472B6', '#60A5FA'];
-
 export function Dashboard() {
   const navigate = useNavigate();
   const { user, isLoading: userLoading } = useUser();
-  const { habits, completeHabit, uncompleteHabit } = useHabits();
-  const { streak, isLoading: streakLoading } = useStreaks();
+  const {
+    habits,
+    isLoading: habitsLoading,
+    loadHabits,
+    completeHabit,
+    uncompleteHabit,
+    recordRelapse,
+  } = useHabits();
+  const { streak, isLoading: streakLoading, refreshStreak } = useStreaks();
   const { t } = useLocale();
   const [isCoachOpen, setIsCoachOpen] = useState(false);
   const heroRef = useRef<HeroCharacterHandle>(null);
   // Habit catalog: browse the library, or read a featured habit's science card.
   const [isCatalogOpen, setIsCatalogOpen] = useState(false);
   const [catalogEntry, setCatalogEntry] = useState<HabitCatalogEntry | null>(null);
+  // Level-up celebration + measurable value/timer logger (same flow as Rituales).
+  const [levelUpLevel, setLevelUpLevel] = useState<number | null>(null);
+  const [loggerHabitId, setLoggerHabitId] = useState<string | null>(null);
+
+  // Refresh habits + realign the weekly streak strip on mount, so the
+  // "Llama actual" tracker always lights up the real current weekday
+  // (refreshStreak recomputes last_seven_days with index 6 = today).
+  useEffect(() => {
+    loadHabits();
+    refreshStreak();
+  }, [loadHabits, refreshStreak]);
 
   const levelProgress = user
     ? getLevelProgress(user.totalXPEarned, user.level)
@@ -70,8 +86,94 @@ export function Dashboard() {
     : '';
 
   const firstName = user?.name?.split(' ')[0] || '';
-  const todaysHabits = habits.slice(0, 3);
   const pendingCount = habits.filter((h) => !h.completedToday).length;
+
+  /**
+   * Complete a habit from the home list — mirrors the Rituales page flow:
+   * real awarded XP (streak bonus + daily cap) in the toast, level-up modal.
+   */
+  const handleComplete = async (id: string) => {
+    try {
+      const result = await completeHabit(id);
+      if (result.leveledUp && result.newLevel) {
+        setLevelUpLevel(result.newLevel);
+      }
+      const bonusPercent = Math.round(((result.streakMultiplier ?? 1) - 1) * 100);
+      let message = `${t('habits.habitCompleted')} +${result.xpEarned} ${t('common.xp')}`;
+      if (bonusPercent > 0) {
+        message += ` · ${t('habits.streakBonus', { percent: bonusPercent })}`;
+      }
+      if (result.capped) {
+        toast(t('habits.xpCapped'), { icon: '🌙', duration: 3500 });
+      }
+      toast.success(message);
+      return result;
+    } catch (error) {
+      console.error('Error completing habit:', error);
+      toast.error(t('errors.habitCompleteFailed'));
+    }
+  };
+
+  const handleUncomplete = async (id: string): Promise<void> => {
+    try {
+      await uncompleteHabit(id);
+      toast.success(t('habits.habitUncompleted'));
+    } catch (error) {
+      console.error('Error uncompleting habit:', error);
+      toast.error(t('errors.habitUncompleteFailed'));
+    }
+  };
+
+  /** Save a measurable value from the timer/value logger. */
+  const handleLogValue = async (value: number): Promise<void> => {
+    if (!loggerHabitId) return;
+    try {
+      const result = await completeHabit(loggerHabitId, value);
+      setLoggerHabitId(null);
+      if (result.leveledUp && result.newLevel) {
+        setLevelUpLevel(result.newLevel);
+      }
+      toast.success(`${t('timer.logged')} +${result.xpEarned} ${t('common.xp')}`);
+    } catch (error) {
+      console.error('Error logging value:', error);
+      toast.error(t('errors.habitCompleteFailed'));
+    }
+  };
+
+  /** Register a relapse for a quit-habit (streak recomputed server-side). */
+  const handleRelapse = async (id: string): Promise<void> => {
+    if (!window.confirm(t('habits.relapseConfirm'))) return;
+    try {
+      await recordRelapse(id);
+      toast(t('habits.relapseRecorded'), { icon: '💪' });
+    } catch (error) {
+      console.error('Error registering relapse:', error);
+      toast.error(t('errors.habitUncompleteFailed'));
+    }
+  };
+
+  // Weekly streak data — same rendering rules as the Rituales page:
+  // lastSevenDays is oldest-first with index 6 = TODAY, drawn over a fixed
+  // Monday→Sunday week aligned to the device's local date.
+  const weekdaysShort = (t('routines.weekdaysShort', { returnObjects: true }) as string[]) || [];
+  const lastSevenDays: boolean[] =
+    streak?.lastSevenDays && streak.lastSevenDays.length === 7
+      ? streak.lastSevenDays
+      : [false, false, false, false, false, false, false];
+  const currentStreak = streak?.currentStreak ?? 0;
+
+  // Monday-based index of today: JS getDay() is 0=Sun..6=Sat.
+  const todayMondayIndex = (new Date().getDay() + 6) % 7;
+  const weekDays = weekdaysShort.map((label, position) => {
+    // offset < 0 → earlier this week · 0 → today · > 0 → still to come
+    const offset = position - todayMondayIndex;
+    return {
+      label,
+      isToday: offset === 0,
+      isUpcoming: offset > 0,
+      completed: offset <= 0 ? lastSevenDays[6 + offset] ?? false : false,
+    };
+  });
 
   // Hero cards: lighter, more translucent glass so the character shows through
   const heroCard =
@@ -189,15 +291,15 @@ export function Dashboard() {
           <div className="flex flex-col gap-2.5 w-[27%]">
             {/* Streak card */}
             <div className={`${heroCard} p-2.5 flex flex-col items-center text-center`}>
-              <p className="text-white/70 text-[10px] font-semibold leading-tight">{t('home.streakLabel')}</p>
+              <p className="text-white/85 text-[10px] font-semibold leading-tight">{t('home.streakLabel')}</p>
               <div className="flex items-center justify-center gap-1 mt-0.5">
                 <Flame size={16} className="text-orange-400" />
                 <span className="text-2xl font-extrabold text-white leading-none">
                   {streak?.currentStreak ?? 0}
                 </span>
               </div>
-              <p className="text-white/60 text-[10px] font-medium">{t('common.days').toLowerCase()}</p>
-              <p className="text-white/45 text-[9px] mt-0.5">{t('home.streakKeepGoing')}</p>
+              <p className="text-white/75 text-[10px] font-medium">{t('common.days').toLowerCase()}</p>
+              <p className="text-white/60 text-[9px] mt-0.5">{t('home.streakKeepGoing')}</p>
             </div>
 
             {/* Quick action: focus of the day (Pomodoro gems) */}
@@ -217,7 +319,7 @@ export function Dashboard() {
           <div className="flex flex-col gap-2.5 w-[27%]">
             {/* Level / XP card */}
             <div className={`${heroCard} p-2.5 flex flex-col items-center`}>
-              <p className="text-white/70 text-[10px] font-semibold mb-1.5">
+              <p className="text-white/85 text-[10px] font-semibold mb-1.5">
                 {t('home.levelLabel', { level: user?.level ?? 1 })}
               </p>
               <CircularProgress
@@ -232,7 +334,7 @@ export function Dashboard() {
                   <span className="text-base font-extrabold text-white leading-none">
                     {animatedXP}
                   </span>
-                  <span className="text-white/50 text-[8px] font-medium">
+                  <span className="text-white/65 text-[8px] font-medium">
                     / {levelProgress.max} {t('progress.xp')}
                   </span>
                 </div>
@@ -266,10 +368,164 @@ export function Dashboard() {
           </span>
           <span className="min-w-0 flex-1">
             <span className="block text-white text-sm font-bold leading-snug">{quote}</span>
-            <span className="block text-white/55 text-xs mt-0.5">{t('home.quoteSubtitle')}</span>
+            <span className="block text-white/70 text-xs mt-0.5">{t('home.quoteSubtitle')}</span>
           </span>
           <ChevronRight size={20} className="text-white/40 shrink-0" />
         </button>
+
+        {/* Llama actual — AAA streak tracker (flame medallion + 7-day path),
+            same design as the Rituales page */}
+        <section
+          aria-label={t('routines.currentStreak')}
+          className="glass-card relative overflow-hidden p-4 mb-7 ring-1 ring-inset ring-white/[0.06]"
+        >
+          {/* Warm ember glow + top gloss */}
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -top-12 -right-10 w-44 h-44 rounded-full bg-gold-500/15 blur-3xl"
+          />
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"
+          />
+
+          {/* Header: flame medallion + streak count */}
+          <div className="relative flex items-center gap-3 mb-4">
+            <div className="relative shrink-0">
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 rounded-2xl bg-gold-500/50 blur-md animate-glow-pulse"
+              />
+              <div className="relative w-12 h-12 rounded-2xl grid place-items-center bg-gradient-to-br from-gold-400 to-orange-600 ring-1 ring-inset ring-white/25 shadow-[inset_0_1px_1px_rgba(255,255,255,0.45)]">
+                <Flame size={24} className="text-white fill-white/30" />
+              </div>
+            </div>
+            <div className="min-w-0">
+              <p className="text-white/55 text-[11px] font-bold uppercase tracking-wider">
+                {t('routines.currentStreak')}
+              </p>
+              <p className="text-[26px] font-extrabold leading-none mt-0.5">
+                <span className="text-shimmer-gold">{currentStreak}</span>{' '}
+                <span className="text-sm font-bold text-white/70">{t('routines.days')}</span>
+              </p>
+            </div>
+          </div>
+
+          {/* 7-day tracker: connecting path behind glowing nodes */}
+          <div className="relative">
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute left-4 right-4 top-4 -translate-y-1/2 h-0.5 rounded-full bg-white/10"
+            />
+            <div className="relative flex justify-between gap-1">
+              {weekDays.map(({ label, isToday, isUpcoming, completed }, index) => (
+                <div
+                  key={`${label}-${index}`}
+                  className="relative z-10 flex flex-col items-center gap-1.5 min-w-0"
+                >
+                  {completed ? (
+                    <span className="w-8 h-8 rounded-full grid place-items-center bg-gradient-to-br from-success-400 to-success-600 text-white ring-1 ring-inset ring-white/25 shadow-[0_0_10px_hsl(150_55%_45%/0.55)]">
+                      <Check size={15} strokeWidth={3} />
+                    </span>
+                  ) : isToday ? (
+                    <span
+                      className="w-8 h-8 rounded-full grid place-items-center bg-teal-400/10 ring-2 ring-teal-400/60 animate-glow-pulse"
+                      aria-label={t('routines.today')}
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-teal-300" />
+                    </span>
+                  ) : (
+                    <span
+                      className={`w-8 h-8 rounded-full bg-white/[0.04] ring-1 ring-inset ring-white/[0.06] ${
+                        isUpcoming ? 'opacity-40' : ''
+                      }`}
+                    />
+                  )}
+                  <span
+                    className={`text-[10px] font-semibold truncate max-w-full ${
+                      isToday
+                        ? 'text-teal-300'
+                        : isUpcoming
+                          ? 'text-white/25'
+                          : 'text-white/45'
+                    }`}
+                  >
+                    {isToday ? t('routines.today') : label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Mis rituales — same AAA tiles as the Rituales page */}
+        <section aria-labelledby="home-rituals-heading" className="mb-7">
+          <div className="flex items-center justify-between mb-4">
+            <h2
+              id="home-rituals-heading"
+              className="font-sans normal-case text-xl font-bold text-white"
+            >
+              {t('routines.myRoutines')}
+            </h2>
+            <button
+              type="button"
+              onClick={() => setIsCatalogOpen(true)}
+              disabled={habitsLoading}
+              className="inline-flex items-center gap-1 rounded-full bg-gradient-to-br from-teal-400 to-teal-600 text-white text-sm font-semibold px-3.5 py-1.5 ring-1 ring-inset ring-white/20 shadow-glow-teal transition-all hover:brightness-110 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+              aria-label={t('routines.newRoutine')}
+            >
+              <Plus size={16} />
+              {t('routines.newRoutine')}
+            </button>
+          </div>
+
+          {/* Loading state */}
+          {habitsLoading && habits.length === 0 && (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="w-8 h-8 text-teal-500 animate-spin" />
+            </div>
+          )}
+
+          {/* Empty state */}
+          {!habitsLoading && habits.length === 0 && (
+            <div className="glass-card rounded-2xl p-8 text-center">
+              <p className="text-white/80 font-semibold mb-4">{t('routines.empty')}</p>
+              <button
+                type="button"
+                onClick={() => setIsCatalogOpen(true)}
+                className="btn-primary"
+              >
+                {t('habits.createFirstHabit')}
+              </button>
+            </div>
+          )}
+
+          {/* Rituals list */}
+          {habits.length > 0 && (
+            <div className="space-y-2.5 sm:space-y-3">
+              {habits.map((habit) => (
+                <HabitItem
+                  key={habit.id}
+                  id={habit.id}
+                  name={habit.name}
+                  iconName={habit.iconName}
+                  xp={habit.xp}
+                  completedToday={habit.completedToday}
+                  lifeArea={habit.lifeArea}
+                  habitType={habit.habitType}
+                  unit={habit.unit}
+                  dailyGoal={habit.dailyGoal}
+                  todayValue={habit.todayValue}
+                  onComplete={handleComplete}
+                  onUncomplete={handleUncomplete}
+                  onLog={(id) => setLoggerHabitId(id)}
+                  onRelapse={handleRelapse}
+                  onOpenAnalytics={() => navigate(ROUTES.HABITS)}
+                />
+              ))}
+            </div>
+          )}
+        </section>
 
         {/* Arena — the embedded Everlight co-op game (Templo del Desorden) */}
         <section aria-labelledby="arena-heading" className="mb-7">
@@ -292,7 +548,7 @@ export function Dashboard() {
               <h2 id="arena-heading" className="font-sans normal-case text-lg font-extrabold text-white leading-tight">
                 {t('arena.cardTitle')}
               </h2>
-              <p className="text-white/70 text-xs mt-1 max-w-[16rem] leading-snug">
+              <p className="text-white/80 text-xs mt-1 max-w-[16rem] leading-snug">
                 {t('arena.cardSubtitle')}
               </p>
               <span className="mt-2 inline-flex items-center gap-1 text-gold-400 text-sm font-bold">
@@ -376,12 +632,12 @@ export function Dashboard() {
                   onClick={() => setCatalogEntry(entry)}
                   className="shrink-0 w-[132px] glass-card p-3 text-left hover:border-teal-400/40 transition-colors"
                 >
-                  <span className="w-16 h-16 rounded-xl grid place-items-center bg-teal-500/10 mb-2 overflow-hidden">
+                  <span className="w-16 h-16 rounded-full grid place-items-center mb-2 overflow-hidden ring-1 ring-inset ring-white/15 shadow-[inset_0_1px_1px_rgba(255,255,255,0.06)] bg-[radial-gradient(circle_at_50%_30%,rgba(45,212,191,0.16),rgba(2,10,13,0.95))]">
                     <img
                       src={`/catalog/${entry.slug}.png`}
                       alt=""
                       aria-hidden="true"
-                      className="w-full h-full object-contain"
+                      className="w-full h-full object-contain p-1.5 drop-shadow-[0_2px_4px_rgba(0,0,0,0.45)]"
                       onError={(e) => {
                         // Fall back to the lucide icon if the illustration is missing.
                         const el = e.currentTarget;
@@ -403,98 +659,6 @@ export function Dashboard() {
           </div>
         </section>
 
-        {/* Today's path */}
-        <section aria-labelledby="today-heading">
-          <div className="flex items-center justify-between mb-4">
-            <h2 id="today-heading" className="font-sans normal-case text-xl font-bold text-white">
-              {t('home.todayPath')}
-            </h2>
-            <button
-              type="button"
-              onClick={() => navigate(ROUTES.HABITS)}
-              className="flex items-center gap-1 text-teal-300 text-sm font-semibold"
-            >
-              {t('home.seeAll')} <ChevronRight size={16} />
-            </button>
-          </div>
-
-          {todaysHabits.length === 0 ? (
-            <p className="text-white/50 text-sm text-center py-6">{t('home.noHabits')}</p>
-          ) : (
-            <div className="space-y-3">
-              {todaysHabits.map((habit, index) => {
-                const Icon = HABIT_ICONS[habit.iconName] || HABIT_ICONS['Target'] || Target;
-                const color = habit.color || HABIT_COLORS[index % HABIT_COLORS.length];
-                const isMeasurable = habit.habitType === 'measurable' && !!habit.dailyGoal;
-                const value = habit.todayValue ?? 0;
-                const goal = habit.dailyGoal ?? 0;
-                const pct = goal > 0 ? Math.min((value / goal) * 100, 100) : 0;
-                const unitLabel = habit.unit
-                  ? t(`habits.units.${habit.unit}`, { defaultValue: habit.unit })
-                  : '';
-                const subtitle = habit.dailyGoal
-                  ? `${goal} ${unitLabel}`.trim()
-                  : `+${habit.xp} ${t('progress.xp')}`;
-
-                return (
-                  <div
-                    key={habit.id}
-                    onClick={() => isMeasurable && navigate(ROUTES.HABITS)}
-                    className="glass-card p-3.5 flex items-center gap-3"
-                    role={isMeasurable ? 'button' : undefined}
-                  >
-                    {/* Icon */}
-                    <span
-                      className="shrink-0 w-11 h-11 rounded-full flex items-center justify-center"
-                      style={{ backgroundColor: color }}
-                    >
-                      <Icon size={20} className="text-white" />
-                    </span>
-
-                    {/* Name + subtitle */}
-                    <div className="min-w-0 flex-1">
-                      <p className="text-white font-semibold leading-tight truncate">{habit.name}</p>
-                      <p className="text-white/55 text-xs mt-0.5">{subtitle}</p>
-                    </div>
-
-                    {/* Right side: progress or check */}
-                    {isMeasurable ? (
-                      <div className="w-28 shrink-0">
-                        <p className="text-right text-white text-sm font-semibold mb-1">
-                          <span className="text-white">{value}</span>
-                          <span className="text-white/50"> / {goal} {unitLabel}</span>
-                        </p>
-                        <div className="h-2 w-full rounded-full bg-white/10 overflow-hidden">
-                          <div
-                            className="h-full rounded-full transition-all duration-500"
-                            style={{ width: `${pct}%`, backgroundColor: color }}
-                          />
-                        </div>
-                      </div>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          habit.completedToday ? uncompleteHabit(habit.id) : completeHabit(habit.id);
-                        }}
-                        aria-pressed={habit.completedToday}
-                        aria-label={habit.name}
-                        className={`shrink-0 w-9 h-9 rounded-full flex items-center justify-center transition-all ${
-                          habit.completedToday
-                            ? 'bg-success-500 text-white shadow-glow-success'
-                            : 'bg-white/10 text-white/40 border border-white/15'
-                        }`}
-                      >
-                        <Check size={18} strokeWidth={3} />
-                      </button>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </section>
       </div>
 
       {/* Coach Personal — Hermes-powered chat overlay */}
@@ -528,6 +692,31 @@ export function Dashboard() {
           }}
         />
       )}
+
+      {/* Level Up celebration (home completions award real XP too) */}
+      {levelUpLevel !== null && (
+        <LevelUpNotification
+          level={levelUpLevel}
+          type="global"
+          pointsReward={calculateGlobalLevelUpReward(levelUpLevel)}
+          onClose={() => setLevelUpLevel(null)}
+        />
+      )}
+
+      {/* Measurable value / timer logger */}
+      {loggerHabitId && (() => {
+        const h = habits.find((x) => x.id === loggerHabitId);
+        if (!h) return null;
+        return (
+          <MeasureLogger
+            habitName={h.name}
+            unit={h.unit || 'min'}
+            dailyGoal={h.dailyGoal}
+            onSave={handleLogValue}
+            onClose={() => setLoggerHabitId(null)}
+          />
+        );
+      })()}
     </div>
   );
 }

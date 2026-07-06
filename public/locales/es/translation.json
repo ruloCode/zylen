@@ -877,7 +877,9 @@
     },
     "streakDays_one": "{{count}} día de llama",
     "streakDays_other": "{{count}} días de llama",
-    "confirmRemoveFriend": "¿Quitar a @{{username}} de tus aliados?"
+    "confirmRemoveFriend": "¿Quitar a @{{username}} de tus aliados?",
+    "requests": "Solicitudes",
+    "search": "Buscar"
   },
   "templates": {
     "title": "Plantillas de Hábitos",
@@ -1774,7 +1776,7 @@
     "title": "Templo del Desorden",
     "badge": "Arena co-op",
     "cardTitle": "Templo del Desorden",
-    "cardSubtitle": "Entra a la arena 3D, combate tus vicios con hasta 3 héroes y vence a la Pereza Suprema.",
+    "cardSubtitle": "Entra a la arena 3D, combate tus vicios con hasta 3 guardianes y vence a la Pereza Suprema.",
     "cardCta": "Entrar a la arena",
     "loading": "Abriendo el portal al Templo…",
     "victoryReward": "¡Venciste a la Pereza Suprema! +{{xp}} XP · +{{points}} puntos",

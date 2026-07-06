@@ -854,7 +854,9 @@
     },
     "streakDays_one": "{{count}}-day streak",
     "streakDays_other": "{{count}}-day streak",
-    "confirmRemoveFriend": "Remove @{{username}} from your friends?"
+    "confirmRemoveFriend": "Remove @{{username}} from your friends?",
+    "requests": "Requests",
+    "search": "Search"
   },
   "templates": {
     "title": "Habit Templates",
@@ -1751,7 +1753,7 @@
     "title": "Temple of Disorder",
     "badge": "Co-op arena",
     "cardTitle": "Temple of Disorder",
-    "cardSubtitle": "Enter the 3D arena, fight your vices with up to 3 heroes and defeat Supreme Sloth.",
+    "cardSubtitle": "Enter the 3D arena, fight your vices with up to 3 guardians and defeat Supreme Sloth.",
     "cardCta": "Enter the arena",
     "loading": "Opening the portal to the Temple…",
     "victoryReward": "You defeated Supreme Sloth! +{{xp}} XP · +{{points}} points",

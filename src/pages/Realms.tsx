@@ -92,9 +92,7 @@ export function Realms() {
                 key={area.id}
                 type="button"
                 onClick={() => setSelectedArea(area)}
-                className={`glass-card relative overflow-hidden p-4 flex flex-col items-center text-center transition-transform duration-200 active:scale-[0.97] ${
-                  area.enabled ? '' : 'opacity-55 saturate-50'
-                }`}
+                className="glass-card relative overflow-hidden p-4 flex flex-col items-center text-center transition-transform duration-200 active:scale-[0.97]"
                 aria-label={label}
               >
                 {/* Ambient glow behind the gem */}
@@ -112,7 +110,14 @@ export function Realms() {
                   </span>
                 )}
 
-                <span className="relative w-24 h-24 grid place-items-center mb-2">
+                {/* Dormant realms dim only the inner content — never the card
+                    itself, so the glass background stays consistent across the
+                    grid instead of revealing the page backdrop underneath. */}
+                <span
+                  className={`relative w-24 h-24 grid place-items-center mb-2 ${
+                    area.enabled ? '' : 'opacity-60 saturate-50'
+                  }`}
+                >
                   <img
                     src={meta.image}
                     alt=""
@@ -135,7 +140,7 @@ export function Realms() {
                   </span>
                 </span>
 
-                <span className="relative block w-full">
+                <span className={`relative block w-full ${area.enabled ? '' : 'opacity-60'}`}>
                   <span className="block text-white font-bold text-sm truncate">{label}</span>
                   <span className="block text-white/55 text-[11px] font-medium mt-0.5">
                     {t('realms.levelLabel', { level: area.level })} ·{' '}

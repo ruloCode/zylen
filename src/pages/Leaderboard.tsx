@@ -229,39 +229,31 @@ export function Leaderboard() {
               {userWeeklyStats && (
                 <div className="glass-card p-6 mb-6 bg-gradient-to-br from-teal-500/10 to-gold-500/10 border-teal-500/20">
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div className="text-center">
-                      <div className="flex items-center justify-center gap-2 mb-2">
-                        <Trophy className="w-5 h-5 text-gold-500" />
-                        <p className="text-sm text-white">{t('leaderboard.yourRank')}</p>
-                      </div>
-                      <p className="text-2xl font-bold text-white">
+                    <div className="flex flex-col items-center text-center">
+                      <Trophy className="w-5 h-5 text-gold-500 mb-1.5" />
+                      <p className="text-sm text-white leading-tight">{t('leaderboard.yourRank')}</p>
+                      <p className="text-2xl font-bold text-white mt-1">
                         {userRank > 0 ? `#${userRank}` : '-'}
                       </p>
                     </div>
-                    <div className="text-center">
-                      <div className="flex items-center justify-center gap-2 mb-2">
-                        <TrendingUp className="w-5 h-5 text-teal-500" />
-                        <p className="text-sm text-white">{t('leaderboard.weeklyXP')}</p>
-                      </div>
-                      <p className="text-2xl font-bold text-teal-600">
+                    <div className="flex flex-col items-center text-center">
+                      <TrendingUp className="w-5 h-5 text-teal-500 mb-1.5" />
+                      <p className="text-sm text-white leading-tight">{t('leaderboard.weeklyXP')}</p>
+                      <p className="text-2xl font-bold text-teal-600 mt-1">
                         {userWeeklyStats.weeklyXPEarned}
                       </p>
                     </div>
-                    <div className="text-center">
-                      <div className="flex items-center justify-center gap-2 mb-2">
-                        <Flame className="w-5 h-5 text-gold-500" />
-                        <p className="text-sm text-white">{t('leaderboard.weeklyPoints')}</p>
-                      </div>
-                      <p className="text-2xl font-bold text-white">
+                    <div className="flex flex-col items-center text-center">
+                      <Flame className="w-5 h-5 text-gold-500 mb-1.5" />
+                      <p className="text-sm text-white leading-tight">{t('leaderboard.weeklyPoints')}</p>
+                      <p className="text-2xl font-bold text-white mt-1">
                         {userWeeklyStats.weeklyPointsEarned}
                       </p>
                     </div>
-                    <div className="text-center">
-                      <div className="flex items-center justify-center gap-2 mb-2">
-                        <Target className="w-5 h-5 text-success-500" />
-                        <p className="text-sm text-white">{t('leaderboard.habitsCompleted')}</p>
-                      </div>
-                      <p className="text-2xl font-bold text-success-600">
+                    <div className="flex flex-col items-center text-center">
+                      <Target className="w-5 h-5 text-success-500 mb-1.5" />
+                      <p className="text-sm text-white leading-tight">{t('leaderboard.habitsCompleted')}</p>
+                      <p className="text-2xl font-bold text-success-600 mt-1">
                         {userWeeklyStats.habitsCompleted}
                       </p>
                     </div>
