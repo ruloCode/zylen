@@ -1,0 +1,8 @@
+# App móvil Expo — no forma parte del build web
+mobile/
+
+# Juego de la arena (se despliega aparte en Higgsfield)
+everlight-game/
+
+# Grafo de código local
+graphify-out/
