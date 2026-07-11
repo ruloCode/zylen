@@ -1,13 +1,11 @@
-import React, { useEffect, useRef, useState, Suspense, lazy } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Bell,
   Flame,
   Gem,
   Target,
-  NotebookPen,
-  Compass,
   ChevronRight,
-  Check,
+  Play,
   Plus,
   Loader2,
   FlaskConical,
@@ -22,19 +20,15 @@ import { HabitItem, HabitScienceSheet, TemplateLibrary, MeasureLogger } from '@/
 import { HABIT_CATALOG, findCatalogEntry } from '@/constants/habitCatalog';
 import type { HabitCatalogEntry } from '@/constants/habitCatalog';
 import type { HabitFormData, HabitTemplate } from '@/types';
-// Lazy-loaded: pulls in the markdown + syntax-highlighting bundle only when the
-// user actually opens the Coach overlay, keeping the Dashboard chunk lean.
-const CoachChat = lazy(() =>
-  import('@/features/chat/components/CoachChat').then((m) => ({ default: m.CoachChat }))
-);
+import { DailyFocusChallenge } from '@/features/focus/components';
 import { HABIT_ICONS } from '@/components/atoms/icons/iconMaps';
 import HeroCharacter from '@/components/hero/HeroCharacter';
 import type { HeroCharacterHandle } from '@/components/hero/HeroCharacter';
-import { useUser, useHabits, useStreaks } from '@/store';
+import { useUser, useHabits, useStreaks, useFocus } from '@/store';
 import { ROUTES, getHeroBodySrc, getHeroVideoSources, LIFE_AREA_CATALOG } from '@/constants';
 import { useLocale } from '@/hooks/useLocale';
 import { calculateGlobalLevelUpReward, getLevelProgress } from '@/utils/xp';
-import { getGreetingKey, getDailyQuoteIndex } from '@/utils/greeting';
+import { getGreetingKey } from '@/utils/greeting';
 
 // Hero is composed of two independent layers (swappable / animatable):
 // the jungle background and the transparent character. Both live in /public.
@@ -52,8 +46,8 @@ export function Dashboard() {
     recordRelapse,
   } = useHabits();
   const { streak, isLoading: streakLoading, refreshStreak } = useStreaks();
+  const { loadFocusData } = useFocus();
   const { t } = useLocale();
-  const [isCoachOpen, setIsCoachOpen] = useState(false);
   const heroRef = useRef<HeroCharacterHandle>(null);
   // Habit catalog: browse the library, or read a featured habit's science card.
   const [isCatalogOpen, setIsCatalogOpen] = useState(false);
@@ -62,13 +56,14 @@ export function Dashboard() {
   const [levelUpLevel, setLevelUpLevel] = useState<number | null>(null);
   const [loggerHabitId, setLoggerHabitId] = useState<string | null>(null);
 
-  // Refresh habits + realign the weekly streak strip on mount, so the
-  // "Llama actual" tracker always lights up the real current weekday
+  // Refresh habits + realign the weekly streak strip on mount, and load focus
+  // data so the daily-challenge banner knows today's minutes and claim state
   // (refreshStreak recomputes last_seven_days with index 6 = today).
   useEffect(() => {
     loadHabits();
     refreshStreak();
-  }, [loadHabits, refreshStreak]);
+    loadFocusData();
+  }, [loadHabits, refreshStreak, loadFocusData]);
 
   const levelProgress = user
     ? getLevelProgress(user.totalXPEarned, user.level)
@@ -76,14 +71,6 @@ export function Dashboard() {
   const animatedXP = useAnimatedNumber(levelProgress.current);
 
   const isLoading = userLoading || streakLoading;
-
-  const comingSoon = () => toast(t('home.comingSoon'), { icon: '🚧' });
-
-  // Motivational quote rotates once per day.
-  const quotes = t('home.quotes', { returnObjects: true }) as string[];
-  const quote = Array.isArray(quotes) && quotes.length > 0
-    ? quotes[getDailyQuoteIndex(quotes.length)]
-    : '';
 
   const firstName = user?.name?.split(' ')[0] || '';
   const pendingCount = habits.filter((h) => !h.completedToday).length;
@@ -152,29 +139,6 @@ export function Dashboard() {
     }
   };
 
-  // Weekly streak data — same rendering rules as the Rituales page:
-  // lastSevenDays is oldest-first with index 6 = TODAY, drawn over a fixed
-  // Monday→Sunday week aligned to the device's local date.
-  const weekdaysShort = (t('routines.weekdaysShort', { returnObjects: true }) as string[]) || [];
-  const lastSevenDays: boolean[] =
-    streak?.lastSevenDays && streak.lastSevenDays.length === 7
-      ? streak.lastSevenDays
-      : [false, false, false, false, false, false, false];
-  const currentStreak = streak?.currentStreak ?? 0;
-
-  // Monday-based index of today: JS getDay() is 0=Sun..6=Sat.
-  const todayMondayIndex = (new Date().getDay() + 6) % 7;
-  const weekDays = weekdaysShort.map((label, position) => {
-    // offset < 0 → earlier this week · 0 → today · > 0 → still to come
-    const offset = position - todayMondayIndex;
-    return {
-      label,
-      isToday: offset === 0,
-      isUpcoming: offset > 0,
-      completed: offset <= 0 ? lastSevenDays[6 + offset] ?? false : false,
-    };
-  });
-
   // Hero cards: lighter, more translucent glass so the character shows through
   const heroCard =
     'bg-[hsl(var(--glass-bg)/0.3)] backdrop-blur-md border border-white/10 rounded-2xl shadow-soft';
@@ -230,8 +194,8 @@ export function Dashboard() {
         */}
         <HeroCharacter
           ref={heroRef}
-          imgSrc={getHeroBodySrc(user?.avatarUrl)}
-          videoSources={getHeroVideoSources(user?.avatarUrl)}
+          imgSrc={getHeroBodySrc(user?.avatarUrl, user?.avatarBodyUrl)}
+          videoSources={getHeroVideoSources(user?.avatarUrl, user?.avatarBodyUrl)}
           className="absolute inset-0"
           imgClassName="absolute bottom-[24.4%] left-1/2 -translate-x-1/2 w-[58%] h-auto object-contain drop-shadow-[0_14px_14px_rgba(0,0,0,0.5)]"
         />
@@ -301,18 +265,6 @@ export function Dashboard() {
               <p className="text-white/75 text-[10px] font-medium">{t('common.days').toLowerCase()}</p>
               <p className="text-white/60 text-[9px] mt-0.5">{t('home.streakKeepGoing')}</p>
             </div>
-
-            {/* Quick action: focus of the day (Pomodoro gems) */}
-            <button
-              type="button"
-              onClick={() => navigate(ROUTES.FOCUS)}
-              className={`${heroCard} p-2.5 flex flex-col items-center text-center gap-1.5`}
-            >
-              <Target size={18} className="text-teal-300" />
-              <span className="text-white text-[12px] font-semibold leading-tight">
-                {t('home.focusOfDay')}
-              </span>
-            </button>
           </div>
 
           {/* Right column */}
@@ -341,122 +293,37 @@ export function Dashboard() {
               </CircularProgress>
             </div>
 
-            {/* Quick action: personal coach (Hermes chat) */}
+            {/* Primary action: focus of the day — thumb-reachable, the strongest
+                CTA on the home (grows the hero via focus sessions). */}
             <button
               type="button"
-              onClick={() => setIsCoachOpen(true)}
-              className={`${heroCard} p-2.5 flex flex-col items-center text-center gap-1.5`}
+              onClick={() => navigate(ROUTES.FOCUS)}
+              aria-label={t('home.focusOfDay')}
+              className="relative overflow-hidden p-3 rounded-2xl flex flex-col items-center text-center gap-1.5 bg-gradient-to-br from-teal-500/45 to-gold-500/30 ring-1 ring-inset ring-white/25 shadow-[0_0_18px_hsl(178_60%_45%/0.45)] active:scale-[0.97] transition-transform"
             >
-              <NotebookPen size={18} className="text-amber-300" />
-              <span className="text-white text-[12px] font-semibold leading-tight">
-                {t('home.personalJournal')}
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 bg-gold-400/10 animate-glow-pulse"
+              />
+              <span className="relative w-9 h-9 rounded-xl grid place-items-center bg-white/15 ring-1 ring-inset ring-white/25">
+                <Target size={18} className="text-white" />
+              </span>
+              <span className="relative text-white text-[12px] font-bold leading-tight">
+                {t('home.focusOfDay')}
+              </span>
+              <span className="relative flex items-center gap-1 text-white/85 text-[10px] font-semibold">
+                <Play size={9} className="fill-current" />
+                {t('home.focusStart')}
               </span>
             </button>
           </div>
         </div>
         </div>{/* /hero overlay zone */}
 
-        {/* Motivational banner — floats just below the character's feet (the
-            spacer above ends at the feet; this small margin is the breathing gap) */}
-        <button
-          type="button"
-          onClick={comingSoon}
-          className="w-full glass-card p-4 flex items-center gap-3 text-left mt-3 mb-7"
-        >
-          <span className="shrink-0 w-11 h-11 rounded-full bg-gold-500/15 flex items-center justify-center">
-            <Compass size={22} className="text-gold-400" />
-          </span>
-          <span className="min-w-0 flex-1">
-            <span className="block text-white text-sm font-bold leading-snug">{quote}</span>
-            <span className="block text-white/70 text-xs mt-0.5">{t('home.quoteSubtitle')}</span>
-          </span>
-          <ChevronRight size={20} className="text-white/40 shrink-0" />
-        </button>
-
-        {/* Llama actual — AAA streak tracker (flame medallion + 7-day path),
-            same design as the Rituales page */}
-        <section
-          aria-label={t('routines.currentStreak')}
-          className="glass-card relative overflow-hidden p-4 mb-7 ring-1 ring-inset ring-white/[0.06]"
-        >
-          {/* Warm ember glow + top gloss */}
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute -top-12 -right-10 w-44 h-44 rounded-full bg-gold-500/15 blur-3xl"
-          />
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"
-          />
-
-          {/* Header: flame medallion + streak count */}
-          <div className="relative flex items-center gap-3 mb-4">
-            <div className="relative shrink-0">
-              <span
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-0 rounded-2xl bg-gold-500/50 blur-md animate-glow-pulse"
-              />
-              <div className="relative w-12 h-12 rounded-2xl grid place-items-center bg-gradient-to-br from-gold-400 to-orange-600 ring-1 ring-inset ring-white/25 shadow-[inset_0_1px_1px_rgba(255,255,255,0.45)]">
-                <Flame size={24} className="text-white fill-white/30" />
-              </div>
-            </div>
-            <div className="min-w-0">
-              <p className="text-white/55 text-[11px] font-bold uppercase tracking-wider">
-                {t('routines.currentStreak')}
-              </p>
-              <p className="text-[26px] font-extrabold leading-none mt-0.5">
-                <span className="text-shimmer-gold">{currentStreak}</span>{' '}
-                <span className="text-sm font-bold text-white/70">{t('routines.days')}</span>
-              </p>
-            </div>
-          </div>
-
-          {/* 7-day tracker: connecting path behind glowing nodes */}
-          <div className="relative">
-            <span
-              aria-hidden="true"
-              className="pointer-events-none absolute left-4 right-4 top-4 -translate-y-1/2 h-0.5 rounded-full bg-white/10"
-            />
-            <div className="relative flex justify-between gap-1">
-              {weekDays.map(({ label, isToday, isUpcoming, completed }, index) => (
-                <div
-                  key={`${label}-${index}`}
-                  className="relative z-10 flex flex-col items-center gap-1.5 min-w-0"
-                >
-                  {completed ? (
-                    <span className="w-8 h-8 rounded-full grid place-items-center bg-gradient-to-br from-success-400 to-success-600 text-white ring-1 ring-inset ring-white/25 shadow-[0_0_10px_hsl(150_55%_45%/0.55)]">
-                      <Check size={15} strokeWidth={3} />
-                    </span>
-                  ) : isToday ? (
-                    <span
-                      className="w-8 h-8 rounded-full grid place-items-center bg-teal-400/10 ring-2 ring-teal-400/60 animate-glow-pulse"
-                      aria-label={t('routines.today')}
-                    >
-                      <span className="w-1.5 h-1.5 rounded-full bg-teal-300" />
-                    </span>
-                  ) : (
-                    <span
-                      className={`w-8 h-8 rounded-full bg-white/[0.04] ring-1 ring-inset ring-white/[0.06] ${
-                        isUpcoming ? 'opacity-40' : ''
-                      }`}
-                    />
-                  )}
-                  <span
-                    className={`text-[10px] font-semibold truncate max-w-full ${
-                      isToday
-                        ? 'text-teal-300'
-                        : isUpcoming
-                          ? 'text-white/25'
-                          : 'text-white/45'
-                    }`}
-                  >
-                    {isToday ? t('routines.today') : label}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+        {/* Daily focus challenge — floats just below the character's feet (the
+            spacer above ends at the feet; this small margin is the breathing
+            gap). Reads today's focus minutes and offers the claimable reward. */}
+        <DailyFocusChallenge onLevelUp={setLevelUpLevel} className="mt-3" />
 
         {/* Mis rituales — same AAA tiles as the Rituales page */}
         <section aria-labelledby="home-rituals-heading" className="mb-7">
@@ -630,7 +497,7 @@ export function Dashboard() {
                   key={entry.slug}
                   type="button"
                   onClick={() => setCatalogEntry(entry)}
-                  className="shrink-0 w-[132px] glass-card p-3 text-left hover:border-teal-400/40 transition-colors"
+                  className="shrink-0 w-[132px] flex flex-col glass-card p-3 text-left hover:border-teal-400/40 transition-colors"
                 >
                   <span className="w-16 h-16 rounded-full grid place-items-center mb-2 overflow-hidden ring-1 ring-inset ring-white/15 shadow-[inset_0_1px_1px_rgba(255,255,255,0.06)] bg-[radial-gradient(circle_at_50%_30%,rgba(45,212,191,0.16),rgba(2,10,13,0.95))]">
                     <img
@@ -647,10 +514,10 @@ export function Dashboard() {
                     />
                     <Icon size={20} className="hidden" />
                   </span>
-                  <p className="text-white text-sm font-bold leading-tight line-clamp-2">
+                  <p className="min-h-[2.2rem] text-white text-sm font-bold leading-tight line-clamp-2">
                     {(t as (k: string) => string)(`habitCatalog.${entry.slug}.title`)}
                   </p>
-                  <span className="mt-2 inline-flex items-center gap-1 text-teal-300 text-[11px] font-semibold">
+                  <span className="mt-auto pt-2 inline-flex items-center gap-1 text-teal-300 text-[11px] font-semibold">
                     <FlaskConical size={12} /> {t('habitScience.learnMore')}
                   </span>
                 </button>
@@ -660,13 +527,6 @@ export function Dashboard() {
         </section>
 
       </div>
-
-      {/* Coach Personal — Hermes-powered chat overlay */}
-      {isCoachOpen && (
-        <Suspense fallback={null}>
-          <CoachChat onClose={() => setIsCoachOpen(false)} />
-        </Suspense>
-      )}
 
       {/* Habit catalog library (browse + learn + create) */}
       {isCatalogOpen && (

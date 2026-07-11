@@ -65,7 +65,10 @@
     "levelLabel": "Guardián Nivel {{level}}",
     "levelLabel_male": "Guardián Nivel {{level}}",
     "levelLabel_female": "Guardiana Nivel {{level}}",
+    "guardianTitle": "Guardián",
+    "levelShort": "Nivel {{level}}",
     "focusOfDay": "Enfoque del día",
+    "focusStart": "Empezar",
     "personalJournal": "Coach Personal",
     "todayPath": "Tu sendero de hoy",
     "seeAll": "Ver todo",
@@ -769,7 +772,9 @@
       "explorer1": "Aventurero",
       "explorer2": "Aventurera",
       "explorer3": "Explorador",
-      "saved": "Avatar actualizado"
+      "saved": "Avatar actualizado",
+      "custom": "Tu avatar",
+      "createCustom": "Crear con tu foto"
     },
     "ach": {
       "firstStep": "Primera chispa",
@@ -782,6 +787,28 @@
       "focusDesc": "100 minutos en una semana",
       "elite": "Guardián de Élite",
       "eliteDesc": "30 días de llama constante"
+    },
+    "avatarCreator": {
+      "title": "Crea tu avatar",
+      "subtitle": "Sube una foto y la convertiremos en tu héroe de Everlight.",
+      "pickPhoto": "Elegir una foto",
+      "changePhoto": "Cambiar foto",
+      "photoAlt": "Tu foto",
+      "generate": "Crear mi avatar",
+      "generating1": "Forjando tu héroe en la luz…",
+      "generating2": "Tallando cada detalle de tu rostro…",
+      "generating3": "Tejiendo tu atuendo de Guardián…",
+      "generatingHint": "Esto puede tardar hasta un minuto",
+      "bustLabel": "Retrato",
+      "bodyLabel": "Héroe completo",
+      "bustAlt": "Retrato de tu avatar",
+      "bodyAlt": "Tu héroe de cuerpo completo",
+      "retry": "Reintentar",
+      "use": "Usar este avatar",
+      "saved": "¡Tu héroe ha despertado!",
+      "error": "No pudimos crear tu avatar. Intenta con otra foto.",
+      "limitError": "Alcanzaste el límite de creaciones por hoy. Vuelve mañana.",
+      "privacy": "Tu foto solo se usa para crear el avatar y no se guarda."
     }
   },
   "username": {
@@ -879,7 +906,34 @@
     "streakDays_other": "{{count}} días de llama",
     "confirmRemoveFriend": "¿Quitar a @{{username}} de tus aliados?",
     "requests": "Solicitudes",
-    "search": "Buscar"
+    "search": "Buscar",
+    "hub": {
+      "statAllies": "Aliados",
+      "statActiveFlames": "Llamas activas",
+      "statSharedLight": "Luz de la alianza",
+      "statBestStreak": "Mejor racha",
+      "daysValue_one": "{{count}} día",
+      "daysValue_other": "{{count}} días",
+      "yourAllies": "Tus aliados",
+      "viewAll": "Ver todos",
+      "viewLess": "Ver menos",
+      "flameAlive": "Llama activa",
+      "flameOut": "Sin llama",
+      "recentActivity": "Actividad de la alianza",
+      "noActivity": "Cuando tus aliados completen rituales, su Luz aparecerá aquí.",
+      "thisWeek": "Esta semana",
+      "activityYouWeek": "sumaste Luz con tus rituales",
+      "activityRituals_one": "completó {{count}} ritual",
+      "activityRituals_other": "completó {{count}} rituales",
+      "activityStreak": "mantiene su llama encendida",
+      "streakDay": "Día {{day}}",
+      "sharedMissions": "Misiones compartidas",
+      "comingSoon": "Próximamente",
+      "missionsTeaser": "Retos en equipo con tus aliados: completa misiones juntos y compartan la Luz de la recompensa.",
+      "missionWater": "Tomar agua · 7 días",
+      "missionSleep": "Dormir antes de las 10 PM",
+      "missionReading": "Leer 20 páginas diarias"
+    }
   },
   "templates": {
     "title": "Plantillas de Hábitos",
@@ -1004,6 +1058,11 @@
     "errors": {
       "loadLeaderboard": "Error al cargar el salón de Guardianes",
       "loadStats": "Error al cargar tus estadísticas"
+    },
+    "hub": {
+      "heroRankings": "Los Guardianes que más Luz reunieron esta semana.",
+      "heroSocial": "Nunca subes de nivel solo. Tus aliados te ayudan a mantener la disciplina.",
+      "heroStreaks": "Tu llama crece con cada día de constancia."
     }
   },
   "analytics": {
@@ -1928,7 +1987,21 @@
     "vaultInfo": "Cada sesión de enfoque cultiva una gema en la plataforma. Las rotas también dejan huella. Cambia el período para ver tu cosecha.",
     "vaultChipLight": "Luz",
     "vaultChipEssence": "Esencia",
-    "vaultChipGems": "Gemas cultivadas"
+    "vaultChipGems": "Gemas cultivadas",
+    "dailyChallenge": {
+      "badge": "Reto de hoy",
+      "pendingTitle": "Reto de enfoque",
+      "pendingBody": "Enfócate {{goal}} min hoy y fortalece a tu héroe",
+      "progress": "{{minutes}}/{{goal}} min",
+      "readyTitle": "¡Reto cumplido!",
+      "readyBody": "Reclama tu recompensa por enfocarte hoy",
+      "claim": "Reclamar +{{points}} Esencia · +{{xp}} Luz",
+      "claiming": "Reclamando…",
+      "claimedTitle": "Recompensa reclamada",
+      "claimedBody": "Vuelve mañana por un nuevo reto",
+      "claimedToast": "+{{points}} Esencia · +{{xp}} Luz",
+      "claimFailed": "No se pudo reclamar. Intenta de nuevo."
+    }
   },
   "realms": {
     "title": "Reinos de enfoque",
@@ -1983,6 +2056,69 @@
     "language": {
       "switchToEnglish": "Cambiar a inglés",
       "switchToSpanish": "Cambiar a español"
+    }
+  },
+  "community": {
+    "stats": {
+      "vsPrevious": "{{pct}}% vs anterior",
+      "newWeek": "Nuevo esta semana"
+    },
+    "ranking": {
+      "title": "Ranking de Guardianes",
+      "subtitleWeekly": "Los más constantes esta semana",
+      "subtitleAllTime": "Leyendas de todos los tiempos",
+      "weekly": "Semanal",
+      "allTime": "Histórico",
+      "viewFull": "Ver ranking completo",
+      "viewLess": "Ver menos",
+      "light": "Luz",
+      "essence": "Esencia"
+    },
+    "allies": {
+      "activeToday": "Activos hoy",
+      "activeNow": "Activo ahora",
+      "sharedLight": "Luz compartida esta semana",
+      "bestFlame": "Mejor llama del círculo"
+    },
+    "activity": {
+      "justNow": "Justo ahora",
+      "types": {
+        "habitCompleted": "terminó {{habit}}",
+        "levelUp": "consiguió Nivel {{level}}",
+        "streakMilestone": "mantuvo su llama · Día {{days}}",
+        "missionCompleted": "completó {{mission}}"
+      }
+    },
+    "missions": {
+      "participants_one": "{{count}} participante",
+      "participants_other": "{{count}} participantes",
+      "reward": "Recompensa: +{{xp}} Luz",
+      "join": "Unirme",
+      "checkIn": "Marcar hoy",
+      "checkedIn": "Hecho hoy",
+      "completed": "Completada",
+      "joinSuccess": "¡Te uniste a la misión!",
+      "checkInSuccess": "¡Progreso registrado!",
+      "missionComplete": "¡Misión completada! +{{xp}} Luz",
+      "error": "No se pudo completar la acción",
+      "catalog": {
+        "hydration_7": {
+          "title": "Tomar agua",
+          "description": "7 días de hidratación consciente"
+        },
+        "early_bird_5": {
+          "title": "Despertar temprano",
+          "description": "5 días madrugando"
+        },
+        "move_7": {
+          "title": "Moverse 20 min",
+          "description": "7 días de movimiento diario"
+        },
+        "mindful_3": {
+          "title": "Respirar y meditar",
+          "description": "3 días de pausa consciente"
+        }
+      }
     }
   }
 }

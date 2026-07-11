@@ -38,3 +38,6 @@ supabase/.temp/
 /*.jpeg
 /*.jpg
 /*.png
+
+# graphify — grafo de código local (no versionar)
+graphify-out/

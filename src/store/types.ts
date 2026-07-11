@@ -13,6 +13,7 @@ import type { HabitTemplatesSlice } from './habitTemplatesSlice';
 import type { ThemeSlice } from './themeSlice';
 import type { ArenaSlice } from './arenaSlice';
 import type { FocusSlice } from './focusSlice';
+import type { CommunitySlice } from './communitySlice';
 
 /**
  * Combined store type. Lives in its own module so individual slices can
@@ -33,4 +34,5 @@ export type AppStore = UserSlice &
   HabitTemplatesSlice &
   ThemeSlice &
   ArenaSlice &
-  FocusSlice;
+  FocusSlice &
+  CommunitySlice;

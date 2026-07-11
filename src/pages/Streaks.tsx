@@ -152,7 +152,7 @@ export function Streaks() {
         <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-b from-transparent to-[hsl(var(--background))]" />
         {/* Character (transparent PNG), upper-right */}
         <img
-          src={getHeroBodySrc(user?.avatarUrl)}
+          src={getHeroBodySrc(user?.avatarUrl, user?.avatarBodyUrl)}
           alt=""
           aria-hidden="true"
           className="absolute top-[6%] right-[-4%] w-[52%] max-w-[230px] h-auto object-contain drop-shadow-[0_14px_14px_rgba(0,0,0,0.5)]"

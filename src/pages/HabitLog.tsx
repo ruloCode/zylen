@@ -296,7 +296,7 @@ export function HabitLog() {
             <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/55 to-transparent" />
             {/* Character bust on the right: head at the top, lower body clipped by the card */}
             <img
-              src={getHeroBodySrc(user?.avatarUrl)}
+              src={getHeroBodySrc(user?.avatarUrl, user?.avatarBodyUrl)}
               alt=""
               aria-hidden="true"
               className="absolute top-2 left-[57%] -translate-x-1/2 w-[47%] max-w-[190px] h-auto object-contain drop-shadow-[0_10px_12px_rgba(0,0,0,0.45)]"
@@ -317,22 +317,31 @@ export function HabitLog() {
                   </p>
                 </div>
 
-                {/* Level ring */}
-                <div className="shrink-0">
+                {/* Level badge — eyebrow + level beside a compact ring so nothing
+                    crowds the circle; glass backdrop keeps it legible over the character */}
+                <div className="shrink-0 flex items-center gap-2 rounded-2xl bg-black/35 backdrop-blur-md ring-1 ring-inset ring-white/10 py-1.5 pl-2.5 pr-1.5">
+                  <div className="flex flex-col items-end text-right leading-tight">
+                    <span className="text-[9px] font-bold uppercase tracking-[0.12em] text-[#8Fb3ff]">
+                      {t('home.guardianTitle')}
+                    </span>
+                    <span className="text-[13px] font-extrabold text-white leading-tight">
+                      {t('home.levelShort', { level: user?.level ?? 1 })}
+                    </span>
+                  </div>
                   <CircularProgress
                     current={levelProgress.current}
                     max={levelProgress.max || 1}
                     variant="xp"
-                    size={66}
+                    size={50}
                     strokeWidth={5}
                   >
                     <div className="flex flex-col items-center">
                       <Gem size={12} className="text-[#8Fb3ff]" />
-                      <span className="text-[10px] font-extrabold text-white leading-none mt-0.5">
-                        {t('home.levelLabel', { level: user?.level ?? 1 })}
+                      <span className="text-[13px] font-extrabold text-white leading-none mt-0.5">
+                        {levelProgress.current}
                       </span>
-                      <span className="text-white/55 text-[7px] font-medium mt-0.5">
-                        {levelProgress.current} / {levelProgress.max} {t('common.xp')}
+                      <span className="text-white/55 text-[7px] font-medium leading-none mt-0.5">
+                        /{levelProgress.max} {t('common.xp')}
                       </span>
                     </div>
                   </CircularProgress>

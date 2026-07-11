@@ -56,7 +56,10 @@
     "streakLabel": "Current streak",
     "streakKeepGoing": "Keep it up!",
     "levelLabel": "Level {{level}}",
+    "guardianTitle": "Guardian",
+    "levelShort": "Level {{level}}",
     "focusOfDay": "Focus of the day",
+    "focusStart": "Start",
     "personalJournal": "Personal Coach",
     "todayPath": "Your path today",
     "seeAll": "See all",
@@ -746,7 +749,9 @@
       "explorer1": "Adventurer",
       "explorer2": "Adventuress",
       "explorer3": "Explorer",
-      "saved": "Avatar updated"
+      "saved": "Avatar updated",
+      "custom": "Your avatar",
+      "createCustom": "Create from photo"
     },
     "ach": {
       "firstStep": "First step",
@@ -759,6 +764,28 @@
       "focusDesc": "100 minutes in a week",
       "elite": "Elite discipline",
       "eliteDesc": "30 day streak"
+    },
+    "avatarCreator": {
+      "title": "Create your avatar",
+      "subtitle": "Upload a photo and we will turn it into your Everlight hero.",
+      "pickPhoto": "Choose a photo",
+      "changePhoto": "Change photo",
+      "photoAlt": "Your photo",
+      "generate": "Create my avatar",
+      "generating1": "Forging your hero in the light…",
+      "generating2": "Carving every detail of your face…",
+      "generating3": "Weaving your Guardian garb…",
+      "generatingHint": "This can take up to a minute",
+      "bustLabel": "Portrait",
+      "bodyLabel": "Full hero",
+      "bustAlt": "Your avatar portrait",
+      "bodyAlt": "Your full-body hero",
+      "retry": "Try again",
+      "use": "Use this avatar",
+      "saved": "Your hero has awakened!",
+      "error": "We couldn't create your avatar. Try a different photo.",
+      "limitError": "You reached today's creation limit. Come back tomorrow.",
+      "privacy": "Your photo is only used to create the avatar and is not stored."
     }
   },
   "username": {
@@ -856,7 +883,34 @@
     "streakDays_other": "{{count}}-day streak",
     "confirmRemoveFriend": "Remove @{{username}} from your friends?",
     "requests": "Requests",
-    "search": "Search"
+    "search": "Search",
+    "hub": {
+      "statAllies": "Allies",
+      "statActiveFlames": "Active flames",
+      "statSharedLight": "Alliance Light",
+      "statBestStreak": "Best streak",
+      "daysValue_one": "{{count}} day",
+      "daysValue_other": "{{count}} days",
+      "yourAllies": "Your allies",
+      "viewAll": "View all",
+      "viewLess": "View less",
+      "flameAlive": "Flame alive",
+      "flameOut": "No flame",
+      "recentActivity": "Alliance activity",
+      "noActivity": "When your allies complete rituals, their Light will show up here.",
+      "thisWeek": "This week",
+      "activityYouWeek": "earned Light from your rituals",
+      "activityRituals_one": "completed {{count}} ritual",
+      "activityRituals_other": "completed {{count}} rituals",
+      "activityStreak": "keeps their flame alive",
+      "streakDay": "Day {{day}}",
+      "sharedMissions": "Shared missions",
+      "comingSoon": "Coming soon",
+      "missionsTeaser": "Team challenges with your allies: complete missions together and share the Light reward.",
+      "missionWater": "Drink water · 7 days",
+      "missionSleep": "Sleep before 10 PM",
+      "missionReading": "Read 20 pages a day"
+    }
   },
   "templates": {
     "title": "Habit Templates",
@@ -981,6 +1035,11 @@
     "errors": {
       "loadLeaderboard": "Failed to load leaderboard",
       "loadStats": "Failed to load your stats"
+    },
+    "hub": {
+      "heroRankings": "The Guardians who gathered the most Light this week.",
+      "heroSocial": "You never level up alone. Your allies help you stay disciplined.",
+      "heroStreaks": "Your flame grows with every day of consistency."
     }
   },
   "analytics": {
@@ -1905,7 +1964,21 @@
     "vaultInfo": "Every focus session grows a gem on the platform. Broken ones leave their mark too. Switch periods to see your harvest.",
     "vaultChipLight": "Light",
     "vaultChipEssence": "Essence",
-    "vaultChipGems": "Gems grown"
+    "vaultChipGems": "Gems grown",
+    "dailyChallenge": {
+      "badge": "Today's challenge",
+      "pendingTitle": "Focus challenge",
+      "pendingBody": "Focus for {{goal}} min today and make your hero stronger",
+      "progress": "{{minutes}}/{{goal}} min",
+      "readyTitle": "Challenge complete!",
+      "readyBody": "Claim your reward for focusing today",
+      "claim": "Claim +{{points}} Essence · +{{xp}} Light",
+      "claiming": "Claiming…",
+      "claimedTitle": "Reward claimed",
+      "claimedBody": "Come back tomorrow for a new challenge",
+      "claimedToast": "+{{points}} Essence · +{{xp}} Light",
+      "claimFailed": "Couldn't claim. Try again."
+    }
   },
   "realms": {
     "title": "Focus Realms",
@@ -1960,6 +2033,69 @@
     "language": {
       "switchToEnglish": "Switch to English",
       "switchToSpanish": "Switch to Spanish"
+    }
+  },
+  "community": {
+    "stats": {
+      "vsPrevious": "{{pct}}% vs last week",
+      "newWeek": "New this week"
+    },
+    "ranking": {
+      "title": "Guardians Ranking",
+      "subtitleWeekly": "The most consistent this week",
+      "subtitleAllTime": "All-time legends",
+      "weekly": "Weekly",
+      "allTime": "All-time",
+      "viewFull": "View full ranking",
+      "viewLess": "Show less",
+      "light": "Light",
+      "essence": "Essence"
+    },
+    "allies": {
+      "activeToday": "Active today",
+      "activeNow": "Active now",
+      "sharedLight": "Light shared this week",
+      "bestFlame": "Best flame in the circle"
+    },
+    "activity": {
+      "justNow": "Just now",
+      "types": {
+        "habitCompleted": "completed {{habit}}",
+        "levelUp": "reached Level {{level}}",
+        "streakMilestone": "kept the flame · Day {{days}}",
+        "missionCompleted": "completed {{mission}}"
+      }
+    },
+    "missions": {
+      "participants_one": "{{count}} participant",
+      "participants_other": "{{count}} participants",
+      "reward": "Reward: +{{xp}} Light",
+      "join": "Join",
+      "checkIn": "Check in today",
+      "checkedIn": "Done today",
+      "completed": "Completed",
+      "joinSuccess": "You joined the mission!",
+      "checkInSuccess": "Progress logged!",
+      "missionComplete": "Mission complete! +{{xp}} Light",
+      "error": "Action failed",
+      "catalog": {
+        "hydration_7": {
+          "title": "Drink water",
+          "description": "7 days of mindful hydration"
+        },
+        "early_bird_5": {
+          "title": "Wake up early",
+          "description": "5 days rising early"
+        },
+        "move_7": {
+          "title": "Move 20 min",
+          "description": "7 days of daily movement"
+        },
+        "mindful_3": {
+          "title": "Breathe & meditate",
+          "description": "3 days of mindful pause"
+        }
+      }
     }
   }
 }

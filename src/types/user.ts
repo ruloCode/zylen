@@ -7,6 +7,7 @@ export interface User {
   level: number; // Global level (based on totalXPEarned)
   joinedAt: Date;
   avatarUrl?: string;
+  avatarBodyUrl?: string; // Full-body hero PNG for custom AI avatars (storage URL)
   hasCompletedOnboarding: boolean; // Whether user has completed the onboarding flow
   selectedLifeAreas: string[]; // IDs of active life areas
   timezone: string; // IANA timezone (e.g., 'America/Bogota') for habit reset calculation

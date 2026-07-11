@@ -39,13 +39,14 @@ import {
   AdvancedStats,
   DangerZone,
   AvatarPicker,
+  AvatarCreator,
 } from '@/features/profile/components';
 import { HabitForm } from '@/features/habits/components';
 import { ThemeSelector, ReminderSettings } from '@/features/settings/components';
 import { ProgressBar } from '@/components/ui';
 import { Habit, HabitFormData } from '@/types';
 import type { HabitWithCompletion } from '@/services/supabase/habits.service';
-import { ROUTES, AVATARS } from '@/constants';
+import { ROUTES, AVATARS, isCustomAvatar } from '@/constants';
 import { getLevelProgress } from '@/utils/xp';
 import { cn } from '@/utils';
 
@@ -75,7 +76,7 @@ const GLASS =
  */
 export function Profile() {
   const navigate = useNavigate();
-  const { user, updateUserProfile } = useUser();
+  const { user, updateUserProfile, applyCustomAvatar } = useUser();
   const { lifeAreas, toggleLifeAreaEnabled } = useLifeAreas();
   const { habits, deleteHabit, updateHabit } = useHabits();
   const { achievementsWithProgress, loadAchievementsWithProgress } = useAchievements();
@@ -96,6 +97,7 @@ export function Profile() {
   );
   const [isAvatarPickerOpen, setIsAvatarPickerOpen] = useState(false);
   const [pickerAvatar, setPickerAvatar] = useState(user?.avatarUrl || AVATARS.RULO);
+  const [isAvatarCreatorOpen, setIsAvatarCreatorOpen] = useState(false);
   const [isEditingHabit, setIsEditingHabit] = useState(false);
   const [habitToEdit, setHabitToEdit] = useState<Habit | undefined>(undefined);
   const [isEditingUsername, setIsEditingUsername] = useState(false);
@@ -151,6 +153,16 @@ export function Profile() {
     setIsAvatarPickerOpen(false);
     setSelectedAvatar(pickerAvatar);
     toast.success(t('profile.avatars.saved'));
+  };
+
+  // AI avatar creator: AvatarService.save already persisted the URLs in the
+  // profile — just sync the store and local picker state.
+  const handleCustomAvatarSaved = (avatarUrl: string, avatarBodyUrl: string) => {
+    applyCustomAvatar(avatarUrl, avatarBodyUrl);
+    setSelectedAvatar(avatarUrl);
+    setPickerAvatar(avatarUrl);
+    setIsAvatarCreatorOpen(false);
+    toast.success(t('profile.avatarCreator.saved'));
   };
 
   const handleOpenEditHabit = (habit: HabitWithCompletion) => {
@@ -540,7 +552,17 @@ export function Profile() {
                 <X size={18} />
               </button>
             </div>
-            <AvatarPicker value={pickerAvatar} onChange={setPickerAvatar} />
+            <AvatarPicker
+              value={pickerAvatar}
+              onChange={setPickerAvatar}
+              customAvatarUrl={
+                isCustomAvatar(user.avatarUrl) ? user.avatarUrl : undefined
+              }
+              onCreateCustom={() => {
+                setIsAvatarPickerOpen(false);
+                setIsAvatarCreatorOpen(true);
+              }}
+            />
             <button
               type="button"
               onClick={handleSavePickerAvatar}
@@ -550,6 +572,15 @@ export function Profile() {
             </button>
           </div>
         </div>
+      )}
+
+      {/* ── AI avatar creator (photo → chibi hero) ── */}
+      {isAvatarCreatorOpen && (
+        <AvatarCreator
+          gender={user.gender}
+          onClose={() => setIsAvatarCreatorOpen(false)}
+          onSaved={handleCustomAvatarSaved}
+        />
       )}
 
       {/* ── Settings sheet (full original settings UI, gear-triggered) ── */}
@@ -883,6 +914,8 @@ export function Profile() {
                             ? t('profile.avatarMale')
                             : user.avatarUrl === AVATARS.DANI
                             ? t('profile.avatarFemale')
+                            : isCustomAvatar(user.avatarUrl)
+                            ? t('profile.avatars.custom')
                             : '-'}
                         </p>
                       </div>
@@ -1025,7 +1058,7 @@ export function Profile() {
                     { path: ROUTES.LEADERBOARD, icon: Trophy, label: t('navigation.leaderboard') },
                     { path: ROUTES.CHAT, icon: MessageCircle, label: t('navigation.chat') },
                     { path: ROUTES.ROOT_HABIT, icon: Flame, label: t('rootHabit.title') },
-                    { path: ROUTES.SOCIAL, icon: UserIcon, label: t('navigation.social') },
+                    { path: `${ROUTES.LEADERBOARD}?tab=social`, icon: UserIcon, label: t('navigation.social') },
                   ].map(({ path, icon: Icon, label }) => (
                     <button
                       key={path}

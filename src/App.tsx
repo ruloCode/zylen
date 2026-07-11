@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from 'react';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Navigation, Header } from '@/components/layout';
 import { AppProvider } from '@/app/AppProvider';
 import { I18nProvider } from '@/components/I18nProvider';
@@ -16,7 +16,6 @@ const RootHabit = lazy(() => import('./pages/RootHabit').then(m => ({ default: m
 const Mood = lazy(() => import('./pages/Mood').then(m => ({ default: m.Mood })));
 const Shop = lazy(() => import('./pages/Shop').then(m => ({ default: m.Shop })));
 const Chat = lazy(() => import('./pages/Chat').then(m => ({ default: m.Chat })));
-const Social = lazy(() => import('./pages/Social').then(m => ({ default: m.Social })));
 const Leaderboard = lazy(() => import('./pages/Leaderboard').then(m => ({ default: m.Leaderboard })));
 const Arena = lazy(() => import('./pages/Arena').then(m => ({ default: m.Arena })));
 const Realms = lazy(() => import('./pages/Realms').then(m => ({ default: m.Realms })));
@@ -106,7 +105,11 @@ function ProtectedShell() {
             <Route path={ROUTES.MOOD} element={<Mood />} />
             <Route path={ROUTES.SHOP} element={<Shop />} />
             <Route path={ROUTES.CHAT} element={<Chat />} />
-            <Route path={ROUTES.SOCIAL} element={<Social />} />
+            {/* Aliados now lives inside the community hub */}
+            <Route
+              path={ROUTES.SOCIAL}
+              element={<Navigate to={`${ROUTES.LEADERBOARD}?tab=social`} replace />}
+            />
             <Route path={ROUTES.LEADERBOARD} element={<Leaderboard />} />
             <Route path={ROUTES.ARENA} element={<Arena />} />
             <Route path={ROUTES.REALMS} element={<Realms />} />

@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { Home, CalendarCheck, Trophy, TrendingUp, User, Plus, type LucideIcon } from 'lucide-react';
+import { Home, CalendarCheck, Trophy, TrendingUp, User, type LucideIcon } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/utils';
 import { useLocale } from '@/hooks/useLocale';
@@ -139,28 +139,6 @@ export function Navigation() {
 
           {items.map(renderItem)}
         </div>
-
-        {/* Floating quick-create FAB (right corner, above the bar) */}
-        <button
-          type="button"
-          onClick={() => navigate(ROUTES.HABITS)}
-          aria-label={t('home.addHabit')}
-          className={cn(
-            'absolute right-3 -top-16',
-            'grid h-12 w-12 place-items-center rounded-full',
-            'transition-transform duration-200 hover:scale-105 active:scale-95',
-            'focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-300/70'
-          )}
-          style={{
-            background:
-              'radial-gradient(circle at 35% 30%, hsl(var(--primary-hover)), hsl(var(--primary)) 70%)',
-            border: '2px solid hsl(var(--primary) / 0.55)',
-            boxShadow:
-              '0 0 18px 2px hsl(var(--glow) / 0.7), inset 0 1px 2px hsl(0 0% 100% / 0.4)',
-          }}
-        >
-          <Plus size={24} strokeWidth={2.8} className="text-primary-foreground" />
-        </button>
       </div>
     </nav>
   );

@@ -25,14 +25,14 @@ export function DurationPicker({ minutes, onChange }: DurationPickerProps) {
 
   return (
     <div>
-      <div className="grid grid-cols-4 gap-2">
+      <div className="grid grid-cols-4 gap-2.5">
         {FOCUS_CONFIG.presets.map((p) => (
           <button
             key={p}
             type="button"
             onClick={() => onChange(p)}
             className={cn(
-              'py-2.5 rounded-xl text-sm font-bold border transition-all',
+              'py-3 rounded-xl text-sm font-bold border transition-all',
               minutes === p
                 ? 'bg-teal-500 border-teal-400 text-white shadow-glow-teal'
                 : 'bg-white/5 border-white/10 text-teal-300 hover:border-white/25'
@@ -43,7 +43,7 @@ export function DurationPicker({ minutes, onChange }: DurationPickerProps) {
         ))}
       </div>
 
-      <div className="mt-3 flex items-center justify-center gap-4">
+      <div className="mt-4 flex items-center justify-center gap-5 rounded-2xl bg-white/[0.04] border border-white/10 py-3">
         <button
           type="button"
           onClick={() => step(-5)}

@@ -22,6 +22,11 @@ export interface UserSlice {
     extra?: Partial<Pick<User, 'gender' | 'ageRange' | 'experienceLevel' | 'motivation'>>
   ) => Promise<void>;
   updateSelectedLifeAreas: (areaIds: string[]) => Promise<void>;
+  /**
+   * Reflect a freshly generated AI avatar in the store. The DB write already
+   * happened inside AvatarService.save — this only syncs local state.
+   */
+  applyCustomAvatar: (avatarUrl: string, avatarBodyUrl: string) => void;
 }
 
 export const createUserSlice: StateCreator<UserSlice> = (set, get) => ({
@@ -163,6 +168,12 @@ export const createUserSlice: StateCreator<UserSlice> = (set, get) => ({
         userLoading: false,
       });
     }
+  },
+
+  applyCustomAvatar: (avatarUrl: string, avatarBodyUrl: string) => {
+    set((state) => ({
+      user: state.user ? { ...state.user, avatarUrl, avatarBodyUrl } : null,
+    }));
   },
 
   updateSelectedLifeAreas: async (areaIds: string[]) => {

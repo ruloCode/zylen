@@ -10,6 +10,7 @@
 import { StateCreator } from 'zustand';
 import type {
   ActiveFocusSession,
+  ClaimDailyRewardResult,
   CompleteFocusSessionResult,
   FocusBreakReason,
   FocusGem,
@@ -45,6 +46,8 @@ export interface FocusSlice {
   unlockFocusSpecies: (species: GemSpecies) => Promise<void>;
   startFocusSession: (gemId: string, durationMinutes: number) => Promise<void>;
   completeFocusSession: () => Promise<CompleteFocusSessionResult>;
+  /** Claim today's daily-challenge reward (once per day, gated on the minutes goal). */
+  claimDailyFocusReward: () => Promise<ClaimDailyRewardResult>;
   breakFocusSession: (reason: FocusBreakReason) => Promise<void>;
   /** Rehydrate a persisted running session (restore-on-mount) */
   setActiveFocusSession: (session: ActiveFocusSession | null) => void;
@@ -246,6 +249,38 @@ export const createFocusSlice: StateCreator<AppStore, [], [], FocusSlice> = (
     } finally {
       settlingSessionId = null;
     }
+  },
+
+  claimDailyFocusReward: async () => {
+    const result = await FocusService.claimDailyReward();
+    if (!result.ok) return result;
+
+    // Apply the reward to the profile (server totals when present, local
+    // increments in the dev adapter — same fallback as completeFocusSession).
+    const user = get().user;
+    if (user) {
+      const newTotalXP =
+        result.newTotalXP ?? user.totalXPEarned + result.xpAwarded;
+      const newPoints = result.newPoints ?? user.points + result.pointsAwarded;
+      const newLevel = result.newLevel ?? getLevelFromXP(newTotalXP);
+      set({
+        user: {
+          ...user,
+          points: newPoints,
+          totalXPEarned: newTotalXP,
+          level: newLevel,
+        },
+      });
+    }
+
+    // Mark today's reward as claimed on the single source of truth (focusStats)
+    // so the banner flips to its "claimed" state without a refetch.
+    const stats = get().focusStats;
+    if (stats) {
+      set({ focusStats: { ...stats, todayRewardClaimed: true } });
+    }
+
+    return result;
   },
 
   breakFocusSession: async (reason: FocusBreakReason) => {

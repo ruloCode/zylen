@@ -35,6 +35,7 @@ export function mapProfileToUser(profile: ProfileRow, selectedLifeAreas: string[
     level: profile.level,
     joinedAt: mapDBDateToDate(profile.created_at),
     avatarUrl: profile.avatar_url || DEFAULT_AVATAR, // Default avatar if not set
+    avatarBodyUrl: profile.avatar_body_url || undefined, // Custom AI full-body hero
     hasCompletedOnboarding: profile.has_completed_onboarding,
     selectedLifeAreas, // This needs to be fetched separately from life_areas where enabled=true
     timezone: profile.timezone || 'America/Bogota', // Default timezone if not set
@@ -194,6 +195,8 @@ export function mapUserToProfileUpdate(
   if (user.totalXPEarned !== undefined) update.total_xp_earned = user.totalXPEarned;
   if (user.level !== undefined) update.level = user.level;
   if (user.avatarUrl !== undefined) update.avatar_url = user.avatarUrl || null;
+  if (user.avatarBodyUrl !== undefined)
+    update.avatar_body_url = user.avatarBodyUrl || null;
   if (user.hasCompletedOnboarding !== undefined)
     update.has_completed_onboarding = user.hasCompletedOnboarding;
   if (user.timezone !== undefined) update.timezone = user.timezone;

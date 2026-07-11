@@ -206,6 +206,9 @@ export async function getFriendsList(userId?: string): Promise<FriendProfile[]> 
       points: friend.points,
       friendshipStatus: friend.friendship_status,
       friendshipCreatedAt: new Date(friend.friendship_created_at),
+      lastActiveAt: friend.last_active_at
+        ? new Date(friend.last_active_at)
+        : undefined,
     }));
   } catch (error) {
     console.error('Error fetching friends list:', error);

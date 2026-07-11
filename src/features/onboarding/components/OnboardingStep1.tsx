@@ -5,7 +5,7 @@ import { useLocale } from '@/hooks/useLocale';
 import { Logo } from '@/components/branding/Logo';
 import { cn } from '@/utils';
 import { DEFAULT_AVATAR, GENDER_OPTIONS } from '@/constants';
-import { AvatarPicker } from '@/features/profile/components';
+import { AvatarPicker, AvatarCreator } from '@/features/profile/components';
 import type { Gender } from '@/types/user';
 
 interface OnboardingStep1Props {
@@ -22,6 +22,7 @@ export function OnboardingStep1({ onNext }: OnboardingStep1Props) {
   const [selectedAvatar, setSelectedAvatar] = useState(temporaryData.avatarUrl || DEFAULT_AVATAR);
   const [gender, setGender] = useState<Gender | undefined>(temporaryData.gender);
   const [error, setError] = useState('');
+  const [isCreatorOpen, setIsCreatorOpen] = useState(false);
 
   useEffect(() => {
     // Load saved name and avatar if exists
@@ -114,7 +115,11 @@ export function OnboardingStep1({ onNext }: OnboardingStep1Props) {
           <label className="block text-sm font-bold text-white/90 mb-3 uppercase tracking-wide">
             {t('onboarding.step1.avatarLabel')}
           </label>
-          <AvatarPicker value={selectedAvatar} onChange={setSelectedAvatar} />
+          <AvatarPicker
+            value={selectedAvatar}
+            onChange={setSelectedAvatar}
+            onCreateCustom={() => setIsCreatorOpen(true)}
+          />
         </div>
 
         {/* Identity Selection — drives gendered language across the app */}
@@ -182,6 +187,19 @@ export function OnboardingStep1({ onNext }: OnboardingStep1Props) {
       <p className="mt-6 text-center text-sm text-gray-400">
         {t('onboarding.step1.helperText')}
       </p>
+
+      {/* AI avatar creator — AvatarService.save persists the URLs in the
+          profile; here we also select it for the onboarding flow. */}
+      {isCreatorOpen && (
+        <AvatarCreator
+          gender={gender}
+          onClose={() => setIsCreatorOpen(false)}
+          onSaved={(avatarUrl) => {
+            setSelectedAvatar(avatarUrl);
+            setIsCreatorOpen(false);
+          }}
+        />
+      )}
     </div>
   );
 }

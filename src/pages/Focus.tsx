@@ -214,7 +214,7 @@ export function Focus() {
 
         {/* Views */}
         {view === 'home' && (
-          <div className="flex-1 flex flex-col gap-6 pt-2">
+          <div className="flex-1 flex flex-col gap-8 pt-8">
             {isLoading && focusGems.length === 0 ? (
               <div className="flex-1 grid place-items-center">
                 <Loader2 className="w-9 h-9 text-teal-400 animate-spin" />
@@ -222,11 +222,11 @@ export function Focus() {
             ) : (
               <>
                 <section>
-                  <h2 className="text-white font-bold text-sm mb-2.5">
+                  <h2 className="text-white/90 font-bold text-sm mb-3.5">
                     {t('focus.pickGem')}
                   </h2>
                   {focusGems.length === 0 && !isLoading && (
-                    <p className="text-white/50 text-xs mb-2">
+                    <p className="text-white/50 text-xs mb-3">
                       {t('focus.noGems')}
                     </p>
                   )}
@@ -239,13 +239,13 @@ export function Focus() {
                 </section>
 
                 <section>
-                  <h2 className="text-white font-bold text-sm mb-2.5">
+                  <h2 className="text-white/90 font-bold text-sm mb-3.5">
                     {t('focus.duration')}
                   </h2>
                   <DurationPicker minutes={minutes} onChange={setMinutes} />
                 </section>
 
-                <div className="mt-auto pb-2">
+                <div className="mt-auto pt-2 pb-2">
                   <button
                     type="button"
                     onClick={handleStart}

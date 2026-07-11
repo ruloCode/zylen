@@ -68,3 +68,28 @@ export function daysBetween(date1: Date, date2: Date): number {
   const diffInMs = Math.abs(date2.getTime() - date1.getTime());
   return Math.floor(diffInMs / (1000 * 60 * 60 * 24));
 }
+
+/**
+ * Localized short relative time ("hace 20 min" / "20 min ago") via
+ * Intl.RelativeTimeFormat. For anything under a minute the caller should
+ * show its own "just now" copy (returns empty string as the signal).
+ */
+export function formatRelativeShort(date: Date, locale: string): string {
+  const diffInMs = Date.now() - date.getTime();
+  const minutes = Math.floor(diffInMs / (1000 * 60));
+  if (minutes < 1) return '';
+
+  const rtf = new Intl.RelativeTimeFormat(locale, {
+    style: 'short',
+    numeric: 'always',
+  });
+
+  if (minutes < 60) return rtf.format(-minutes, 'minute');
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return rtf.format(-hours, 'hour');
+  const days = Math.floor(hours / 24);
+  if (days < 7) return rtf.format(-days, 'day');
+  const weeks = Math.floor(days / 7);
+  if (weeks < 5) return rtf.format(-weeks, 'week');
+  return date.toLocaleDateString(locale);
+}

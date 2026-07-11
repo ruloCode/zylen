@@ -107,9 +107,12 @@ export const AVATAR_OPTIONS = [
     nameKey: 'profile.avatars.rulo',
     url: AVATARS.RULO,
     body: '/hero-character.png',
+    // -v2: idle loop regenerated from the ancient-garb artwork (sword flourish
+    // + wave). -v1 was the old white-shirt artwork; suffix bumped because the
+    // SW caches these CacheFirst.
     video: {
-      mov: '/avatars/video/rulo-idle-v1.mov',
-      webm: '/avatars/video/rulo-idle-v1.webm',
+      mov: '/avatars/video/rulo-idle-v2.mov',
+      webm: '/avatars/video/rulo-idle-v2.webm',
     },
   },
   {
@@ -125,12 +128,26 @@ export const AVATAR_OPTIONS = [
 export const DEFAULT_HERO_BODY = '/hero-character.png';
 
 /**
- * Resolve the full-body hero character for the Home from the user's saved
- * avatar (which is the bust `url`). Falls back to the default hero.
+ * Custom AI-generated avatars live in Supabase Storage, so their bust URL is
+ * absolute (https://...), unlike the bundled presets which are root-relative.
  */
-export function getHeroBodySrc(avatarUrl?: string | null): string {
+export function isCustomAvatar(avatarUrl?: string | null): boolean {
+  return !!avatarUrl && /^https?:\/\//i.test(avatarUrl);
+}
+
+/**
+ * Resolve the full-body hero character for the Home from the user's saved
+ * avatar (which is the bust `url`). Custom AI avatars carry their own
+ * full-body render (profiles.avatar_body_url). Falls back to the default.
+ */
+export function getHeroBodySrc(
+  avatarUrl?: string | null,
+  customBodyUrl?: string | null
+): string {
   const opt = AVATAR_OPTIONS.find((o) => o.url === avatarUrl);
-  return opt?.body ?? DEFAULT_HERO_BODY;
+  if (opt) return opt.body;
+  if (isCustomAvatar(avatarUrl) && customBodyUrl) return customBodyUrl;
+  return DEFAULT_HERO_BODY;
 }
 
 /** Ordered <source> list for the hero idle-loop video. */
@@ -142,14 +159,18 @@ export interface HeroVideoSource {
 /**
  * Resolve the hero idle-loop video sources from the user's saved avatar.
  * Mirrors getHeroBodySrc; falls back to the default hero. Returns undefined
- * when the avatar has no clip (the hero then stays a static PNG). The mov
- * (HEVC+alpha) source goes first: Safari picks it and Chrome skips to the
- * webm — reversed, Safari would pick the webm and lose the alpha channel.
+ * when the avatar has no clip (the hero then stays a static PNG) — custom AI
+ * avatars have no clip, so they must NOT inherit the default hero's video.
+ * The mov (HEVC+alpha) source goes first: Safari picks it and Chrome skips
+ * to the webm — reversed, Safari would pick the webm and lose the alpha
+ * channel.
  */
 export function getHeroVideoSources(
-  avatarUrl?: string | null
+  avatarUrl?: string | null,
+  customBodyUrl?: string | null
 ): HeroVideoSource[] | undefined {
   const opt = AVATAR_OPTIONS.find((o) => o.url === avatarUrl);
+  if (!opt && isCustomAvatar(avatarUrl) && customBodyUrl) return undefined;
   const video = (opt ?? AVATAR_OPTIONS[0]).video;
   if (!video) return undefined;
   return [
@@ -216,6 +237,13 @@ export const FOCUS_CONFIG = {
   arena: {
     shieldUnlockGems: 10,
     buffTiers: [1, 3, 6, 10, 15],
+  },
+  // Daily focus challenge shown on the home banner: reach `minutesGoal` minutes
+  // of focus today to unlock a once-per-day claimable reward (Esencia + Luz).
+  dailyChallenge: {
+    minutesGoal: 25,
+    rewardPoints: 20, // Esencia (spendable)
+    rewardXP: 15, // Luz (levels the hero)
   },
 } as const;
 

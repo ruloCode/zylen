@@ -89,6 +89,25 @@ export interface FocusStats {
   /** Server-authoritative period boundaries (ISO), user-timezone aware. */
   periodStarts: Record<FocusVaultPeriod, string>;
   recentSessions: FocusSessionRecord[];
+  /** Whether today's focus-challenge reward has already been claimed. */
+  todayRewardClaimed: boolean;
+}
+
+/**
+ * claim_daily_focus_reward payload. `ok` is false when the goal isn't met yet
+ * or the reward was already claimed today. Profile totals are optional: the
+ * dev (VITE_SKIP_AUTH) adapter cannot know them, so the slice falls back to
+ * incrementing the local user when they are absent.
+ */
+export interface ClaimDailyRewardResult {
+  ok: boolean;
+  reason?: 'goal_not_met' | 'already_claimed';
+  pointsAwarded: number;
+  xpAwarded: number;
+  newPoints?: number;
+  newTotalXP?: number;
+  newLevel?: number;
+  leveledUp?: boolean;
 }
 
 export interface StartFocusSessionResult {

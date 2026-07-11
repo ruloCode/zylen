@@ -26,7 +26,7 @@ export function GemPicker({
   const { t } = useLocale();
 
   return (
-    <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+    <div className="flex gap-3 overflow-x-auto -mx-4 -my-3 px-4 py-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       {gems.map((gem) => {
         const meta = speciesMeta(gem.species);
         const selected = gem.id === selectedGemId;
