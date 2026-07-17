@@ -56,7 +56,7 @@ export function Realms() {
   );
 
   return (
-    <div className="relative max-w-md mx-auto px-4">
+    <div className="relative max-w-md mx-auto px-4 animate-page-in">
       {/* Atmospheric backdrop: faint teal/gold light bleeding from the top */}
       <div
         aria-hidden="true"

@@ -6,6 +6,7 @@ import { useUser, useShop } from '@/store';
 import { useLocale } from '@/hooks/useLocale';
 import type { ShopItem as ShopItemType } from '@/types';
 import { ShopItemsService } from '@/services/supabase/shopItems.service';
+import { PageContainer } from '@/components/layout';
 
 export function Shop() {
   const { user, initializeUser } = useUser();
@@ -84,7 +85,7 @@ export function Shop() {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <Loader2 className="w-12 h-12 text-[rgb(155,215,50)] animate-spin mx-auto mb-4" />
+          <Loader2 className="w-12 h-12 text-primary animate-spin mx-auto mb-4" />
           <p className="text-white font-semibold">{t('common.loading')}</p>
         </div>
       </div>
@@ -92,32 +93,33 @@ export function Shop() {
   }
 
   return (
-    <div className="min-h-screen pb-24 px-2 pt-4">
-      <div className="max-w-md mx-auto">
+    <div className="min-h-screen pb-24 pt-4">
+      <PageContainer className="animate-page-in">
         {/* Header */}
-        <header className="mb-8">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-3">
-              <ShoppingBag className="w-10 h-10 text-[rgb(155,215,50)]" />
-              <h1 className="text-4xl font-extrabold text-white tracking-tight">
+        <header className="mb-6">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <h1 className="text-[28px] leading-tight font-extrabold text-white tracking-tight">
                 {t('shop.title')}
               </h1>
+              <p className="text-sm text-white/60 mt-1">
+                {isManaging ? t('shopManager.subtitle') : t('shop.subtitle')}
+              </p>
             </div>
             <button
               onClick={() => setIsManaging(!isManaging)}
-              className={`p-3 rounded-xl transition-all duration-200 ${
+              className={`p-2.5 mt-1 rounded-xl transition-all duration-200 pressable focus:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                 isManaging
-                  ? 'bg-gold-100 text-gold-600 shadow-glow-gold'
-                  : 'hover:bg-white/10 text-white/70'
+                  ? 'bg-gold-500/20 text-gold-300 border border-gold-500/30'
+                  : 'hover:bg-white/10 text-white/70 border border-transparent'
               }`}
               title={t('shopManager.manageItems')}
+              aria-label={t('shopManager.manageItems')}
+              aria-pressed={isManaging}
             >
-              <Settings className="w-6 h-6" />
+              <Settings className="w-5 h-5" />
             </button>
           </div>
-          <p className="text-base text-white font-medium">
-            {isManaging ? t('shopManager.subtitle') : t('shop.subtitle')}
-          </p>
         </header>
 
         {isManaging ? (
@@ -129,32 +131,44 @@ export function Shop() {
             {/* Points Balance */}
             <section
               aria-labelledby="balance-heading"
-              className={`glass-card rounded-3xl p-7 mb-8 text-center bg-gradient-to-br from-gold-100/60 to-gold-200/40 border-2 border-gold-300/40 shadow-glow-gold relative overflow-hidden ${
-                isPurchasing ? 'purchase-success' : ''
-              }`}
+              className="glass-card rounded-3xl px-6 py-5 mb-6 relative overflow-hidden border border-gold-400/20"
             >
-              {/* Animated background glow */}
-              <div className="absolute inset-0 shimmer opacity-30 pointer-events-none" />
+              {/* Ambient gold aura */}
+              <div
+                aria-hidden="true"
+                className="absolute -top-16 -right-10 w-48 h-48 rounded-full pointer-events-none"
+                style={{ background: 'radial-gradient(circle, hsl(40 95% 58% / 0.22) 0%, transparent 70%)' }}
+              />
+              <div
+                aria-hidden="true"
+                className="absolute -bottom-20 -left-12 w-44 h-44 rounded-full pointer-events-none"
+                style={{ background: 'radial-gradient(circle, hsl(172 66% 50% / 0.12) 0%, transparent 70%)' }}
+              />
 
-              <div className="relative z-10">
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  <Coins className="w-6 h-6 text-[rgb(155,215,50)] coin-spin" />
-                  <h2 className="text-base text-[rgb(155,215,50)] font-bold" id="balance-heading">
+              <div className="relative z-10 flex items-center justify-between gap-4">
+                <div>
+                  <h2 className="section-label mb-1.5" id="balance-heading">
                     {t('common.points')}
                   </h2>
+                  <div
+                    className={`text-5xl font-extrabold text-white tabular-nums tracking-tight transition-transform duration-300 ${
+                      isPurchasing ? 'scale-110' : ''
+                    }`}
+                    aria-live="polite"
+                  >
+                    {user?.points?.toLocaleString() || 0}
+                  </div>
+                  <p className="text-xs text-white/50 font-medium mt-2 flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-gold-400" aria-hidden="true" />
+                    {t('shop.spendWisely')}
+                  </p>
                 </div>
                 <div
-                  className={`text-6xl font-extrabold text-white mb-3 ${
-                    isPurchasing ? 'points-pop' : ''
-                  }`}
-                  aria-live="polite"
+                  aria-hidden="true"
+                  className="grid place-items-center w-16 h-16 rounded-2xl bg-gradient-to-br from-gold-400/25 to-gold-600/10 border border-gold-400/30 shadow-glow-gold"
                 >
-                  {user?.points?.toLocaleString() || 0}
+                  <Coins className="w-8 h-8 text-gold-300" />
                 </div>
-                <p className="text-sm text-[rgb(155,215,50)] font-semibold flex items-center justify-center gap-2">
-                  <Sparkles className="w-4 h-4" />
-                  {t('shop.spendWisely')}
-                </p>
               </div>
             </section>
 
@@ -176,9 +190,14 @@ export function Shop() {
                   </button>
                 </div>
               ) : (
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-3">
                   {displayItems.map((item) => (
-                    <ShopItem key={item.id} {...item} onPurchase={handlePurchase} />
+                    <ShopItem
+                      key={item.id}
+                      {...item}
+                      userPoints={user?.points ?? 0}
+                      onPurchase={handlePurchase}
+                    />
                   ))}
                 </div>
               )}
@@ -186,28 +205,23 @@ export function Shop() {
 
             {/* Warning */}
             <aside
-              className="glass-card rounded-3xl p-6 bg-gradient-to-br from-warning/10 to-danger/10 border-2 border-warning/30 relative overflow-hidden group hover:border-warning/50 transition-all duration-200"
+              className="glass-card rounded-2xl p-5 border border-warning/20 flex items-start gap-3.5"
               role="note"
               aria-label={t('shop.reminderAria')}
             >
-              {/* Warning icon with animation */}
-              <div className="absolute top-4 right-4 opacity-20 group-hover:opacity-30 transition-opacity">
-                <AlertTriangle className="w-12 h-12 text-warning" />
+              <div className="grid place-items-center w-10 h-10 rounded-xl bg-warning/15 border border-warning/25 shrink-0">
+                <AlertTriangle className="w-5 h-5 text-warning" aria-hidden="true" />
               </div>
-
-              <div className="relative">
-                <div className="flex items-center gap-2 mb-3">
-                  <AlertTriangle className="w-5 h-5 text-warning" />
-                  <p className="text-white font-bold text-lg">{t('shop.rememberGoals')}</p>
-                </div>
-                <p className="text-base text-white leading-relaxed">
+              <div>
+                <p className="text-white font-bold text-sm mb-1">{t('shop.rememberGoals')}</p>
+                <p className="text-[13px] text-white/60 leading-relaxed">
                   {t('shop.indulgenceWarning')}
                 </p>
               </div>
             </aside>
           </>
         )}
-      </div>
+      </PageContainer>
     </div>
   );
 }

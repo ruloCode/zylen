@@ -173,24 +173,25 @@ export async function getUserWeeklyStats(
       ? { weekStart: weekStartDate }
       : await getCurrentWeekRange();
 
+    // maybeSingle(): a missing row is expected (no habits yet this week) and
+    // must not surface as a 406 in the console like .single() does.
     const { data, error } = await supabase
       .from('weekly_leaderboard')
       .select('weekly_xp_earned, weekly_points_earned, habits_completed, rank')
       .eq('user_id', userId)
       .eq('week_start_date', weekStart.toISOString().split('T')[0])
-      .single();
+      .maybeSingle();
 
-    if (error) {
-      if (error.code === 'PGRST116') {
-        // Not found - user hasn't completed any habits this week
-        return {
-          weeklyXPEarned: 0,
-          weeklyPointsEarned: 0,
-          habitsCompleted: 0,
-          rank: 0,
-        };
-      }
-      throw error;
+    if (error) throw error;
+
+    if (!data) {
+      // User hasn't completed any habits this week
+      return {
+        weeklyXPEarned: 0,
+        weeklyPointsEarned: 0,
+        habitsCompleted: 0,
+        rank: 0,
+      };
     }
 
     return {

@@ -1,3 +1,6 @@
+# OJO: cuando existe .vercelignore, Vercel deja de usar .gitignore para filtrar
+# la subida — hay que repetir aquí todo lo que no debe llegar al build cloud.
+
 # App móvil Expo — no forma parte del build web
 mobile/
 
@@ -6,3 +9,13 @@ everlight-game/
 
 # Grafo de código local
 graphify-out/
+
+# Secretos y builds locales — nunca subirlos al deploy
+.env
+.env.*
+dist/
+*.log
+.playwright-mcp/
+.learnings/
+supabase/.temp/
+docs/

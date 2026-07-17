@@ -114,16 +114,16 @@ export const gradients = {
 // ========================================
 
 export const typography = {
-  // Font families - DOFUS exact spec
+  // Font families — Zylen v2
   fontFamily: {
-    // Body font (DOFUS uses Roboto)
-    sans: '"Roboto", sans-serif',
+    // Body/UI font
+    sans: '"Manrope", system-ui, sans-serif',
 
-    // Display font for headings (DOFUS uses Bebas Neue)
+    // Display font for opt-in accents (big numbers, hero moments)
     display: '"Bebas Neue", sans-serif',
 
-    // Buttons use Roboto
-    button: '"Roboto", sans-serif',
+    // Buttons share the UI font
+    button: '"Manrope", system-ui, sans-serif',
 
     // Monospace for stats
     mono: '"JetBrains Mono", "SF Mono", "Consolas", monospace',

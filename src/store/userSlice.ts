@@ -27,6 +27,11 @@ export interface UserSlice {
    * happened inside AvatarService.save — this only syncs local state.
    */
   applyCustomAvatar: (avatarUrl: string, avatarBodyUrl: string) => void;
+  /**
+   * Reflect a freshly forged 3D hero in the store. The DB write already
+   * happened inside the forge-hero Edge Function — this only syncs state.
+   */
+  applyHeroModel: (heroModelUrl: string) => void;
 }
 
 export const createUserSlice: StateCreator<UserSlice> = (set, get) => ({
@@ -173,6 +178,12 @@ export const createUserSlice: StateCreator<UserSlice> = (set, get) => ({
   applyCustomAvatar: (avatarUrl: string, avatarBodyUrl: string) => {
     set((state) => ({
       user: state.user ? { ...state.user, avatarUrl, avatarBodyUrl } : null,
+    }));
+  },
+
+  applyHeroModel: (heroModelUrl: string) => {
+    set((state) => ({
+      user: state.user ? { ...state.user, heroModelUrl } : null,
     }));
   },
 

@@ -13,9 +13,9 @@ module.exports = {
       },
     },
     extend: {
-      // Font families - DOFUS Style
+      // Font families — Manrope for UI, Bebas Neue as opt-in display accent
       fontFamily: {
-        sans: ['"Roboto"', 'sans-serif'],
+        sans: ['"Manrope"', 'system-ui', '-apple-system', '"Segoe UI"', 'sans-serif'],
         display: ['"Bebas Neue"', 'sans-serif'],
         mono: ['"JetBrains Mono"', '"SF Mono"', '"Consolas"', 'monospace'],
       },

@@ -222,7 +222,7 @@ export function Focus() {
             ) : (
               <>
                 <section>
-                  <h2 className="text-white/90 font-bold text-sm mb-3.5">
+                  <h2 className="section-label mb-3.5">
                     {t('focus.pickGem')}
                   </h2>
                   {focusGems.length === 0 && !isLoading && (
@@ -239,7 +239,7 @@ export function Focus() {
                 </section>
 
                 <section>
-                  <h2 className="text-white/90 font-bold text-sm mb-3.5">
+                  <h2 className="section-label mb-3.5">
                     {t('focus.duration')}
                   </h2>
                   <DurationPicker minutes={minutes} onChange={setMinutes} />

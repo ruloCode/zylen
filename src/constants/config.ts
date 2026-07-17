@@ -262,4 +262,11 @@ export const FEATURES = {
   enableRootHabit: true,
   enableAchievements: true, // Real backend (achievements + user_achievements + RPCs)
   enableMultiplayer: false, // Future feature
+  enableHeroForge: true, // Forge your AI avatar into a 3D arena hero (Meshy)
 } as const;
+
+/** Hero Forge beta allowlist — empty array opens the feature to everyone. */
+export const FORGE_BETA_EMAILS: readonly string[] = [
+  'rulocode7@gmail.com',
+  'qa.claude@zylen.test',
+];

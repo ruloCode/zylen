@@ -27,6 +27,7 @@ import {
   Wind,
   Leaf,
   Quote,
+  Wand2,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { supabase } from '@/lib/supabase';
@@ -40,6 +41,7 @@ import {
   DangerZone,
   AvatarPicker,
   AvatarCreator,
+  ForgeHeroCard,
 } from '@/features/profile/components';
 import { HabitForm } from '@/features/habits/components';
 import { ThemeSelector, ReminderSettings } from '@/features/settings/components';
@@ -296,7 +298,7 @@ export function Profile() {
       </div>
 
       {/* ── Foreground ── */}
-      <div className="relative z-10 max-w-md mx-auto px-4 pt-[calc(env(safe-area-inset-top)+1.5rem)]">
+      <div className="relative z-10 max-w-md mx-auto px-4 pt-[calc(env(safe-area-inset-top)+1.5rem)] animate-page-in">
         {/* 1. Header */}
         <header className="flex items-start justify-between gap-3 mb-6">
           <div className="min-w-0">
@@ -360,6 +362,15 @@ export function Profile() {
             {t('profile.levelLabel', { level: user.level })}
           </span>
 
+          <button
+            type="button"
+            onClick={() => setIsAvatarCreatorOpen(true)}
+            className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-teal-500/15 border border-teal-400/40 text-teal-200 text-sm font-semibold hover:bg-teal-500/25 transition-colors"
+          >
+            <Wand2 size={15} />
+            {t('profile.avatarCreator.cta')}
+          </button>
+
           <div className="w-full mt-4">
             <ProgressBar
               current={levelProgress.current}
@@ -372,6 +383,9 @@ export function Profile() {
             </p>
           </div>
         </section>
+
+        {/* 2b. Hero Forge — forge the AI avatar into the 3D arena hero */}
+        <ForgeHeroCard className="mb-5" />
 
         {/* 3. Motivational quote */}
         <section className={`${GLASS} p-5 mb-5 flex items-start gap-3`}>
@@ -388,7 +402,7 @@ export function Profile() {
             <StatCell
               icon={<Flame size={20} className="text-orange-400" />}
               value={streak?.currentStreak ?? 0}
-              label={t('profile.statStreakDays')}
+              label={t('progress.streakChip', { count: streak?.currentStreak ?? 0 })}
               hint={t('profile.statStreakHint')}
               hintClass="text-teal-300"
             />
@@ -539,7 +553,7 @@ export function Profile() {
 
       {/* ── Avatar picker sheet (showcase hero) ── */}
       {isAvatarPickerOpen && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm p-4">
           <div className="w-full max-w-md glass-card p-5">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-bold text-white">{t('profile.avatars.pickTitle')}</h3>
@@ -585,7 +599,7 @@ export function Profile() {
 
       {/* ── Settings sheet (full original settings UI, gear-triggered) ── */}
       {isSettingsOpen && (
-        <div className="fixed inset-0 z-50 bg-[hsl(var(--background))] overflow-y-auto">
+        <div className="fixed inset-0 z-[60] bg-[hsl(var(--background))] overflow-y-auto">
           <div className="max-w-2xl mx-auto px-4 pt-[calc(env(safe-area-inset-top)+1rem)] pb-24">
             {/* Sheet header */}
             <div className="sticky top-0 -mx-4 px-4 py-3 mb-4 bg-[hsl(var(--background))]/90 backdrop-blur-md flex items-center justify-between z-10">

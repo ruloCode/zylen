@@ -1,7 +1,7 @@
 /* Zylen - Dark Fantasy MMORPG Design System (Dofus-inspired) */
 
-/* Import Google Fonts - Roboto (body) & Bebas Neue (display/headers) - DOFUS Style */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Bebas+Neue&display=swap');
+/* Import Google Fonts - Manrope (body/UI) & Bebas Neue (opt-in display accents) */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Bebas+Neue&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -357,10 +357,14 @@
     background-color: #06090d;
     @apply text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
     font-size: 16px;
     color: hsl(var(--foreground));
     transition: color 0.3s ease;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Native-app feel: no grey flash on tap targets (iOS/Android WebView) */
+    -webkit-tap-highlight-color: transparent;
   }
 
   /*
@@ -391,27 +395,75 @@
     }
   }
 
+  /*
+   * Heading scale — Zylen v2. One typographic voice app-wide (Manrope,
+   * sentence case, tight tracking). The old Bebas-uppercase default leaked
+   * into user content (habit names, template titles); display type is now
+   * strictly opt-in via `font-display`.
+   */
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-weight: 400;
-    text-transform: uppercase;  /* DOFUS style - uppercase headers */
+    font-weight: 800;
+    letter-spacing: -0.01em;
   }
 
   h1 {
-    font-size: 48px;
-    line-height: 1.2;
+    font-size: 30px;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
   }
 
   h2 {
-    font-size: 32px;
-    line-height: 1.2;
+    font-size: 22px;
+    line-height: 1.25;
+    letter-spacing: -0.015em;
   }
 
   h3 {
-    font-family: 'Roboto', sans-serif;
     font-size: 16px;
     font-weight: 700;
-    line-height: 1.1;
+    line-height: 1.3;
+  }
+
+  /* Keyboard-only focus ring — consistent, theme-aware, never on tap/click */
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring) / 0.8);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /*
+   * Scrollbars — thin + translucent inside the mobile frame so overflow
+   * areas (chat, template sheets) stop showing the desktop's chrome bar.
+   */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--glass-border) / 0.25) transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: hsl(var(--glass-border) / 0.25);
+    border-radius: 9999px;
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--glass-border) / 0.4);
+  }
+
+  /* Vestibular safety: collapse decorative motion when the OS asks for it */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
 
@@ -511,11 +563,25 @@
     -webkit-text-fill-color: transparent;
   }
 
-  /* Uppercase bold for Dofus style */
-  .text-dofus {
-    text-transform: uppercase;
+  /*
+   * Section label — the app-wide eyebrow for grouping content
+   * ("Resumen semanal", "Reliquias", "Elige tu gema"). Small caps with wide
+   * tracking reads as deliberate hierarchy instead of shouted Bebas.
+   */
+  .section-label {
+    font-size: 11px;
     font-weight: 700;
-    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: hsl(var(--text-secondary) / 0.75);
+  }
+
+  /* Tactile press feedback for any interactive card/row */
+  .pressable {
+    transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .pressable:active {
+    transform: scale(0.975);
   }
 
   /* ==========================================
@@ -531,75 +597,6 @@
   .card-lift:hover {
     transform: translateY(-2px);
     transition: transform 0.2s ease-in-out;
-  }
-
-  /* ==========================================
-     DOFUS FILTER BUTTONS - Diamond Shape
-     ========================================== */
-
-  /* Diamond shape filter button */
-  .filter-diamond {
-    width: 100px;
-    height: 100px;
-    transform: rotate(45deg);
-    transition: opacity 0.2s ease-in-out;
-    cursor: pointer;
-  }
-
-  .filter-diamond-inner {
-    transform: rotate(-45deg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-  }
-
-  /* Active/Inactive states */
-  .filter-diamond.inactive {
-    opacity: 0.6;
-  }
-
-  .filter-diamond.active {
-    opacity: 1;
-  }
-
-  /* ==========================================
-     DOFUS BUTTON STYLES
-     ========================================== */
-
-  /* Primary accent button - theme-driven */
-  .btn-dofus-primary {
-    background-color: hsl(var(--primary));
-    color: hsl(var(--primary-foreground));
-    font-weight: 700;
-    text-transform: uppercase;
-    padding: 12px 34px;
-    border-radius: 0.875rem;
-    border: 0px;
-    transition: all 0.2s ease-in-out;
-    font-size: 23px;
-  }
-
-  .btn-dofus-primary:hover {
-    background-color: hsl(var(--primary-hover));
-  }
-
-  /* Secondary accent button */
-  .btn-dofus-secondary {
-    background-color: hsl(var(--secondary));
-    color: hsl(var(--secondary-foreground));
-    font-weight: 400;
-    text-transform: uppercase;
-    padding: 12px 34px;
-    border-radius: 0.875rem;
-    border: 0px;
-    transition: all 0.2s ease-in-out;
-    font-size: 23px;
-  }
-
-  .btn-dofus-secondary:hover {
-    opacity: 0.9;
   }
 
   /* ── Zylen v2 standard buttons (used across pages) ── */

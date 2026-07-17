@@ -655,6 +655,57 @@ export type Database = {
         }
         Relationships: []
       }
+      hero_forges: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          error_code: string | null
+          gender: string | null
+          glb_paths: Json
+          id: string
+          meshy_anim_tasks: Json
+          meshy_model_task: string | null
+          meshy_rig_task: string | null
+          model_url: string | null
+          rig_image_path: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          error_code?: string | null
+          gender?: string | null
+          glb_paths?: Json
+          id?: string
+          meshy_anim_tasks?: Json
+          meshy_model_task?: string | null
+          meshy_rig_task?: string | null
+          model_url?: string | null
+          rig_image_path?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          error_code?: string | null
+          gender?: string | null
+          glb_paths?: Json
+          id?: string
+          meshy_anim_tasks?: Json
+          meshy_model_task?: string | null
+          meshy_rig_task?: string | null
+          model_url?: string | null
+          rig_image_path?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           age_range: string | null
@@ -664,6 +715,7 @@ export type Database = {
           experience_level: string | null
           gender: string | null
           has_completed_onboarding: boolean
+          hero_model_url: string | null
           id: string
           last_active_at: string | null
           level: number
@@ -683,6 +735,7 @@ export type Database = {
           experience_level?: string | null
           gender?: string | null
           has_completed_onboarding?: boolean
+          hero_model_url?: string | null
           id: string
           last_active_at?: string | null
           level?: number
@@ -702,6 +755,7 @@ export type Database = {
           experience_level?: string | null
           gender?: string | null
           has_completed_onboarding?: boolean
+          hero_model_url?: string | null
           id?: string
           last_active_at?: string | null
           level?: number

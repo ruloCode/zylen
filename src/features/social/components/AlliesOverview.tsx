@@ -313,7 +313,7 @@ export function AlliesOverview({
         )}
       </section>
 
-      <div className="grid md:grid-cols-2 gap-5 items-start">
+      <div className="space-y-5">
         {/* ── Recent activity (real feed) ── */}
         <section className={cn(GLASS, 'p-4')}>
           <div className="flex items-center justify-between mb-3">

@@ -122,6 +122,10 @@ export function Arena() {
     if (user.avatarUrl) {
       params.set('avatar', new URL(user.avatarUrl, window.location.origin).href);
     }
+    if (user.heroModelUrl) {
+      // forged 3D hero — the game loads this GLB instead of the standard skin
+      params.set('model', user.heroModelUrl);
+    }
     return `${GAME_CONFIG.url}?${params.toString()}`;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, view, tier, inviteRoom, myRoom, progress.weaponId, progress.gems.join(','), focusGemsParam]);
@@ -287,7 +291,7 @@ export function Arena() {
         <>
           {/* tier ladder */}
           <section className="mb-5">
-            <h2 className="text-white font-bold text-sm mb-2">{t('arena.armory.selectTier')}</h2>
+            <h2 className="section-label mb-2">{t('arena.armory.selectTier')}</h2>
             <div className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {Array.from({ length: Math.min(progress.tier + 2, 12) }, (_, i) => i + 1).map((n) => {
                 const unlocked = n <= progress.tier;
@@ -320,7 +324,7 @@ export function Arena() {
 
           {/* weapons */}
           <section className="mb-5">
-            <h2 className="text-white font-bold text-sm mb-2 flex items-center gap-1.5">
+            <h2 className="section-label mb-2 flex items-center gap-1.5">
               <Swords size={15} className="text-teal-300" /> {t('arena.armory.weapons')}
             </h2>
             <div className="space-y-2">
@@ -357,7 +361,7 @@ export function Arena() {
 
           {/* gems */}
           <section className="mb-6">
-            <h2 className="text-white font-bold text-sm mb-2 flex items-center gap-1.5">
+            <h2 className="section-label mb-2 flex items-center gap-1.5">
               <Gem size={15} className="text-purple-300" /> {t('arena.armory.gems')}
             </h2>
             <div className="grid grid-cols-2 gap-2">
@@ -397,7 +401,7 @@ export function Arena() {
 
           {/* play with allies — share your room's deep link */}
           <section className="mb-6">
-            <h2 className="text-white font-bold text-sm mb-2 flex items-center gap-1.5">
+            <h2 className="section-label mb-2 flex items-center gap-1.5">
               <Users size={15} className="text-teal-300" /> {t('arena.invite.title')}
             </h2>
             <div className="glass-card p-3">

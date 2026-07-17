@@ -16,6 +16,7 @@ import { createThemeSlice } from './themeSlice';
 import { createArenaSlice } from './arenaSlice';
 import { createFocusSlice } from './focusSlice';
 import { createCommunitySlice } from './communitySlice';
+import { createForgeSlice } from './forgeSlice';
 import * as CommunityService from '@/services/supabase/community.service';
 import { AVATARS, LIFE_AREAS } from '@/constants';
 import type { LifeArea, Streak, User } from '@/types';
@@ -42,6 +43,7 @@ export const useAppStore = create<AppStore>()((...a) => ({
   ...createArenaSlice(...a),
   ...createFocusSlice(...a),
   ...createCommunitySlice(...a),
+  ...createForgeSlice(...a),
 }));
 
 // Typed hooks for easier access
@@ -320,6 +322,20 @@ export function useFocus() {
     breakFocusSession: state.breakFocusSession,
     setActiveFocusSession: state.setActiveFocusSession,
     updateFocusPause: state.updateFocusPause,
+  }));
+  return useAppStore(selector);
+}
+
+export function useForge() {
+  const selector = useShallow((state: AppStore) => ({
+    forge: state.forge,
+    forging: state.forging,
+    forgeProgress: state.forgeProgress,
+    forgeError: state.forgeError,
+    forgeRetryAt: state.forgeRetryAt,
+    refreshForge: state.refreshForge,
+    startForge: state.startForge,
+    resumeForge: state.resumeForge,
   }));
   return useAppStore(selector);
 }

@@ -297,6 +297,7 @@ export async function getPublicProfile(
       totalXPEarned: data.total_xp_earned,
       points: data.points,
       createdAt: new Date(data.created_at),
+      lastActiveAt: data.last_active_at ? new Date(data.last_active_at) : undefined,
     };
   } catch (error) {
     console.error('Error fetching public profile:', error);

@@ -8,6 +8,7 @@ export interface User {
   joinedAt: Date;
   avatarUrl?: string;
   avatarBodyUrl?: string; // Full-body hero PNG for custom AI avatars (storage URL)
+  heroModelUrl?: string; // Forged 3D hero GLB for the arena (storage URL)
   hasCompletedOnboarding: boolean; // Whether user has completed the onboarding flow
   selectedLifeAreas: string[]; // IDs of active life areas
   timezone: string; // IANA timezone (e.g., 'America/Bogota') for habit reset calculation
@@ -45,4 +46,6 @@ export interface PublicUserProfile {
   totalXPEarned: number;
   points: number;
   createdAt: Date;
+  /** Last presence heartbeat; undefined for users inactive since the column shipped */
+  lastActiveAt?: Date;
 }

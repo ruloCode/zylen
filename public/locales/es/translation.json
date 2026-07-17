@@ -382,7 +382,8 @@
     "dayCount": "Día {{current}} de {{total}}",
     "percentComplete": "{{percent}}% iluminado",
     "checkInSuccess": "Has encendido la llama de hoy. El Everlight brilla con más fuerza.",
-    "checkInError": "La llama no prendió esta vez. Inténtalo de nuevo, Guardián."
+    "checkInError": "La llama no prendió esta vez. Inténtalo de nuevo, Guardián.",
+    "dayDone": "Día {{day}} completado"
   },
   "shop": {
     "title": "Santuario de Recompensas",
@@ -393,8 +394,8 @@
     "notEnoughPoints": "Aún no reúnes suficiente Esencia. Completa más hábitos para acumularla.",
     "confirmPurchase": "¿Confirmar el canje?",
     "purchaseConfirmed": "¡Recompensa concedida! Disfrútala con consciencia 😊",
-    "spendWisely": "Gasta tu Esencia con sabiduría, Guardián ⚖️",
-    "rememberGoals": "⚠️ Recuerda tu Viaje",
+    "spendWisely": "Gasta tu Esencia con sabiduría, Guardián",
+    "rememberGoals": "Recuerda tu Viaje",
     "indulgenceWarning": "Estas recompensas honran tu esfuerzo, no son hábitos. Úsalas con consciencia para que la luz siga creciendo.",
     "toast": {
       "purchaseSuccess": "🎉 ¡{{name}} canjeado! -{{cost}} Esencia",
@@ -422,7 +423,9 @@
       }
     },
     "availableRewards": "Recompensas disponibles",
-    "reminderAria": "Recordatorio importante"
+    "reminderAria": "Recordatorio importante",
+    "notEnough": "Te faltan {{count}}",
+    "buyAria": "Canjear {{name}} por {{cost}} de Esencia"
   },
   "shopManager": {
     "title": "Gestionar Recompensas",
@@ -808,7 +811,39 @@
       "saved": "¡Tu héroe ha despertado!",
       "error": "No pudimos crear tu avatar. Intenta con otra foto.",
       "limitError": "Alcanzaste el límite de creaciones por hoy. Vuelve mañana.",
-      "privacy": "Tu foto solo se usa para crear el avatar y no se guarda."
+      "privacy": "Tu foto solo se usa para crear el avatar y no se guarda.",
+      "cta": "Crear avatar con IA",
+      "photoRejected": "Esa foto no pudo procesarse. Prueba con otra donde tu rostro se vea claro y de frente."
+    },
+    "forge": {
+      "title": "Forja de Héroe 3D",
+      "cta": "Forjar mi héroe 3D",
+      "reforgeCta": "Re-forjar héroe",
+      "noAvatar": "Primero crea tu avatar con IA — tu héroe 3D se forja a partir de él.",
+      "ready": "Tu héroe 3D está listo. ¡Así te ves en la Arena!",
+      "forgingHint": "La forja tarda 10-20 min. Puedes cerrar la app: continuará al volver.",
+      "reforgeIn": "Podrás re-forjar tu héroe en {{days}} día(s).",
+      "stages": {
+        "sheet": "Dibujando el boceto del héroe…",
+        "model": "Esculpiendo tu figura en 3D…",
+        "skeleton": "Forjando el esqueleto…",
+        "anims": "Dando vida a tus movimientos…",
+        "download": "Recogiendo las piezas de la forja…",
+        "merge": "Fusionando tu héroe final…"
+      },
+      "errors": {
+        "no_avatar": "Necesitas un avatar con IA antes de forjar tu héroe.",
+        "forge_active_exists": "Ya hay una forja en curso.",
+        "forge_cooldown": "Tu héroe fue forjado hace poco. Espera para re-forjar.",
+        "sheet_failed": "No pudimos dibujar el boceto. Intenta de nuevo.",
+        "meshy_model_failed": "La escultura 3D falló. Intenta de nuevo.",
+        "meshy_rig_failed": "El esqueleto no pudo forjarse con esa figura. Re-crea tu avatar e intenta de nuevo.",
+        "meshy_anim_failed": "Las animaciones fallaron. Intenta de nuevo.",
+        "meshy_credits_exhausted": "La forja se quedó sin energía por ahora. Vuelve más tarde.",
+        "download_failed": "No pudimos recoger las piezas de la forja. Intenta de nuevo.",
+        "merge_failed": "La fusión final falló. Intenta de nuevo.",
+        "forge_failed": "La forja falló. Intenta de nuevo."
+      }
     }
   },
   "username": {
@@ -2072,7 +2107,8 @@
       "viewFull": "Ver ranking completo",
       "viewLess": "Ver menos",
       "light": "Luz",
-      "essence": "Esencia"
+      "essence": "Esencia",
+      "resetsIn": "Se reinicia en {{time}}"
     },
     "allies": {
       "activeToday": "Activos hoy",
@@ -2119,6 +2155,16 @@
           "description": "3 días de pausa consciente"
         }
       }
+    },
+    "profile": {
+      "title": "Perfil de Guardián",
+      "guardianSince": "Guardián desde {{date}}",
+      "mutualAllies": "Aliados en común",
+      "addAlly": "Sumar Aliado",
+      "acceptRequest": "Aceptar solicitud",
+      "currentFlame": "Llama actual",
+      "bestFlame": "Mejor llama",
+      "totalLight": "Luz total"
     }
   }
 }

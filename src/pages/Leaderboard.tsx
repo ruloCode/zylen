@@ -7,7 +7,7 @@
  * tabs, and the AlliesOverview (stats + allies rail + activity + missions).
  */
 
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
   Trophy, Flame, Target, Users, Search,
@@ -18,9 +18,10 @@ import {
   useLeaderboard, useUser, useSocial, useAppStore, useAchievements, useCommunity,
 } from '@/store';
 import { Button } from '@/components/ui/Button';
+import { PageContainer } from '@/components/layout';
 import { StreakDisplay } from '@/features/streaks/components';
 import { AchievementDetailModal, RelicCard } from '@/features/achievements/components';
-import { AlliesOverview } from '@/features/social/components';
+import { AlliesOverview, GuardianProfileSheet } from '@/features/social/components';
 import type { AchievementWithProgress } from '@/types/achievement';
 import type { LeaderboardEntry } from '@/types/social';
 import type { RankingPeriod } from '@/types/community';
@@ -134,6 +135,9 @@ export function Leaderboard() {
   const [rankingPeriod, setRankingPeriod] = useState<RankingPeriod>('weekly');
   const [rankingExpanded, setRankingExpanded] = useState(false);
 
+  // Guardian detail sheet (opened by tapping any ranking row)
+  const [profileUsername, setProfileUsername] = useState<string | null>(null);
+
   // Achievement modal state
   const [selectedAchievement, setSelectedAchievement] = useState<AchievementWithProgress | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -230,15 +234,28 @@ export function Leaderboard() {
     ? activeEntries.find((e) => e.isCurrentUser && e.rank > RANKING_TOP_N)
     : undefined;
 
+  // Friendship state for a ranked user, derived from the loaded social lists
+  const friendshipStatusFor = (userId: string): 'friends' | 'request_sent' | 'request_received' | 'none' => {
+    if (friends.some((f) => f.userId === userId)) return 'friends';
+    if (sentRequests.some((r) => r.userId === userId)) return 'request_sent';
+    if (pendingRequests.some((r) => r.userId === userId)) return 'request_received';
+    return 'none';
+  };
+
   const renderRankingEntry = (entry: LeaderboardEntry) => {
     const medal = getMedal(entry.rank);
     const isCurrentUser = entry.isCurrentUser;
+    const canQuickAdd = !isCurrentUser && friendshipStatusFor(entry.userId) === 'none';
 
     return (
       <div
         key={`${rankingPeriod}-${entry.userId}`}
+        role="button"
+        tabIndex={0}
+        onClick={() => setProfileUsername(entry.username)}
+        onKeyDown={(e) => e.key === 'Enter' && setProfileUsername(entry.username)}
         className={cn(
-          'px-4 py-3 transition-colors',
+          'px-4 py-3 transition-colors cursor-pointer active:bg-white/[0.05]',
           isCurrentUser
             ? 'bg-teal-500/10 border-l-2 border-teal-400'
             : 'hover:bg-white/[0.03]'
@@ -293,6 +310,20 @@ export function Leaderboard() {
                 {t('community.ranking.essence')}
               </p>
             </div>
+            {/* Quick add ally (only for strangers) */}
+            {canQuickAdd && (
+              <button
+                type="button"
+                aria-label={t('community.profile.addAlly')}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleSendRequest(entry.username);
+                }}
+                className="shrink-0 w-7 h-7 rounded-full grid place-items-center bg-teal-500/15 ring-1 ring-inset ring-teal-400/40 text-teal-300 hover:bg-teal-500/25 active:scale-90 transition-all"
+              >
+                <UserPlus size={13} />
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -353,25 +384,26 @@ export function Leaderboard() {
     .filter((a) => a.category === 'streak')
     .sort((a, b) => a.requirementValue - b.requirementValue);
 
-  // ── Hero banner content per tab ──
-  const heroByTab: Record<TabType, { icon: ReactNode; title: string; subtitle: string }> = {
-    rankings: {
-      icon: <Trophy size={30} className="text-teal-300" />,
-      title: t('leaderboard.tabs.rankings'),
-      subtitle: t('leaderboard.hub.heroRankings'),
-    },
-    social: {
-      icon: <Users size={30} className="text-teal-300" />,
-      title: t('leaderboard.tabs.social'),
-      subtitle: t('leaderboard.hub.heroSocial'),
-    },
-    streaks: {
-      icon: <Flame size={30} className="text-teal-300" />,
-      title: t('leaderboard.tabs.streaks'),
-      subtitle: t('leaderboard.hub.heroStreaks'),
-    },
+  // ── Per-tab context line ──
+  const heroByTab: Record<TabType, { subtitle: string }> = {
+    rankings: { subtitle: t('leaderboard.hub.heroRankings') },
+    social: { subtitle: t('leaderboard.hub.heroSocial') },
+    streaks: { subtitle: t('leaderboard.hub.heroStreaks') },
   };
   const hero = heroByTab[activeTab];
+
+  // Countdown to the weekly reset (Monday 00:00 local) — Duolingo-style urgency
+  const resetCountdown = useMemo(() => {
+    const now = new Date();
+    const next = new Date(now);
+    const daysUntilMonday = (8 - now.getDay()) % 7 || 7;
+    next.setDate(now.getDate() + daysUntilMonday);
+    next.setHours(0, 0, 0, 0);
+    const ms = next.getTime() - now.getTime();
+    const days = Math.floor(ms / 86_400_000);
+    const hours = Math.floor((ms % 86_400_000) / 3_600_000);
+    return days > 0 ? `${days}d ${hours}h` : `${hours}h`;
+  }, []);
 
   const mainTabs: { key: TabType; icon: ReactNode; label: string; badge?: number }[] = [
     { key: 'rankings', icon: <Trophy size={16} />, label: t('leaderboard.tabs.rankings') },
@@ -385,8 +417,8 @@ export function Leaderboard() {
   ];
 
   return (
-    <div className="min-h-screen pb-24 px-3 pt-[calc(env(safe-area-inset-top)+0.75rem)]">
-      <div className="container mx-auto max-w-4xl">
+    <div className="min-h-screen pb-24 pt-[calc(env(safe-area-inset-top)+0.75rem)]">
+      <PageContainer>
         {/* ── Sticky-style header: title + own flame ── */}
         <header className="flex items-center justify-between mb-4">
           <h1 className="flex items-center gap-2 text-sm font-extrabold uppercase tracking-[0.2em] text-white">
@@ -402,18 +434,8 @@ export function Leaderboard() {
           </span>
         </header>
 
-        {/* ── Hero banner (changes with the active tab) ── */}
-        <section className={cn(GLASS, 'p-5 mb-4 flex items-center gap-4')}>
-          <span className="shrink-0 w-16 h-16 rounded-full grid place-items-center bg-teal-500/10 border border-teal-400/40 shadow-glow-teal">
-            {hero.icon}
-          </span>
-          <div className="min-w-0">
-            <h2 className="text-2xl font-extrabold text-white uppercase tracking-wide leading-tight">
-              {hero.title}
-            </h2>
-            <p className="text-sm text-white/60 leading-snug mt-1">{hero.subtitle}</p>
-          </div>
-        </section>
+        {/* ── Per-tab context line (the old hero card repeated the tab name; one line is enough) ── */}
+        <p className="text-sm text-white/60 leading-snug mb-4">{hero.subtitle}</p>
 
         {/* ── Segmented pill tabs ── */}
         <div className="flex gap-1 p-1 mb-5 rounded-2xl bg-white/[0.04] border border-white/10">
@@ -489,12 +511,12 @@ export function Leaderboard() {
               <div className={cn(GLASS, 'overflow-hidden')}>
                 <div className="px-4 py-3 border-b border-white/10 flex items-center justify-between gap-2">
                   <div className="min-w-0">
-                    <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-white/50">
+                    <h3 className="section-label">
                       {t('community.ranking.title')}
                     </h3>
                     <p className="text-[11px] text-white/40 mt-0.5 truncate">
                       {rankingPeriod === 'weekly'
-                        ? t('community.ranking.subtitleWeekly')
+                        ? t('community.ranking.resetsIn', { time: resetCountdown })
                         : t('community.ranking.subtitleAllTime')}
                     </p>
                   </div>
@@ -786,7 +808,8 @@ export function Leaderboard() {
                         {t('streaks.best')}
                       </div>
                       <div className="text-3xl font-extrabold text-white">
-                        {streak.longestStreak} {t('common.days')}
+                        {streak.longestStreak}{' '}
+                        {t('progress.daysCount', { count: streak.longestStreak })}
                       </div>
                     </div>
                     <Trophy size={44} className="text-gold-400" />
@@ -844,7 +867,7 @@ export function Leaderboard() {
             </div>
           )}
         </div>
-      </div>
+      </PageContainer>
 
       {/* Achievement Detail Modal */}
       {selectedAchievement && (
@@ -852,6 +875,14 @@ export function Leaderboard() {
           achievement={selectedAchievement}
           isOpen={isModalOpen}
           onClose={handleCloseModal}
+        />
+      )}
+
+      {/* Guardian detail (tapped from the ranking) */}
+      {profileUsername && (
+        <GuardianProfileSheet
+          username={profileUsername}
+          onClose={() => setProfileUsername(null)}
         />
       )}
     </div>

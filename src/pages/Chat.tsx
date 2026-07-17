@@ -81,12 +81,12 @@ export function Chat() {
   };
 
   return (
-    <div className="h-[calc(100vh-10rem)] px-2 pt-4 flex flex-col">
-      <div className="max-w-md mx-auto w-full h-full flex flex-col">
+    <div className="h-[calc(100vh-10rem)] px-4 pt-4 flex flex-col">
+      <div className="max-w-md mx-auto w-full h-full flex flex-col animate-page-in">
         {/* Header */}
-        <header className="pt-6 pb-4 flex-shrink-0">
-          <h1 className="text-4xl font-extrabold text-white mb-3 tracking-tight">{t('chat.title')}</h1>
-          <p className="text-base text-white font-semibold">{t('chat.subtitle')}</p>
+        <header className="pt-4 pb-3 flex-shrink-0">
+          <h1 className="text-[28px] leading-tight font-extrabold text-white tracking-tight">{t('chat.title')}</h1>
+          <p className="text-sm text-white/60 mt-1">{t('chat.subtitle')}</p>
         </header>
 
         {/* Error Message */}
@@ -99,7 +99,11 @@ export function Chat() {
 
         {/* Messages - Scrollable Area */}
         <div className="relative flex-1 min-h-0">
-          <div ref={scrollRef} onScroll={onScroll} className="h-full overflow-y-auto pb-4 flex flex-col">
+          <div
+            ref={scrollRef}
+            onScroll={onScroll}
+            className="h-full overflow-y-auto pb-4 flex flex-col [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
             {messages.length === 0 && !showTyping ? (
               <ChatEmptyState
                 accent="teal"

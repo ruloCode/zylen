@@ -364,7 +364,8 @@
     "dayCount": "Day {{current}} of {{total}}",
     "percentComplete": "{{percent}}% lit",
     "checkInSuccess": "You've lit today's flame. The Everlight shines brighter.",
-    "checkInError": "The flame didn't catch this time. Try again, Guardian."
+    "checkInError": "The flame didn't catch this time. Try again, Guardian.",
+    "dayDone": "Day {{day}} completed"
   },
   "levelUp": {
     "title": "Your light has evolved.",
@@ -374,7 +375,7 @@
     "dismiss": "Tap to continue"
   },
   "shop": {
-    "title": "Indulgence Shop",
+    "title": "Reward Sanctuary",
     "subtitle": "Treat yourself (occasionally)",
     "balance": "Balance",
     "buyNow": "Buy",
@@ -382,8 +383,8 @@
     "notEnoughPoints": "Not enough points! Complete more habits to earn points.",
     "confirmPurchase": "Confirm purchase?",
     "purchaseConfirmed": "Purchase confirmed! Enjoy responsibly 😊",
-    "spendWisely": "Spend wisely, hero ⚖️",
-    "rememberGoals": "⚠️ Remember Your Goals",
+    "spendWisely": "Spend your Essence wisely, Guardian",
+    "rememberGoals": "Remember Your Journey",
     "indulgenceWarning": "These indulgences are rewards, not habits. Use them mindfully to maintain your progress.",
     "toast": {
       "purchaseSuccess": "🎉 {{name}} purchased! -{{cost}} points",
@@ -411,7 +412,9 @@
       }
     },
     "availableRewards": "Available Rewards",
-    "reminderAria": "Important reminder"
+    "reminderAria": "Important reminder",
+    "notEnough": "Need {{count}} more",
+    "buyAria": "Redeem {{name}} for {{cost}} Essence"
   },
   "shopManager": {
     "title": "Manage Rewards",
@@ -785,7 +788,39 @@
       "saved": "Your hero has awakened!",
       "error": "We couldn't create your avatar. Try a different photo.",
       "limitError": "You reached today's creation limit. Come back tomorrow.",
-      "privacy": "Your photo is only used to create the avatar and is not stored."
+      "privacy": "Your photo is only used to create the avatar and is not stored.",
+      "cta": "Create AI avatar",
+      "photoRejected": "That photo couldn't be processed. Try another one where your face is clear and front-facing."
+    },
+    "forge": {
+      "title": "3D Hero Forge",
+      "cta": "Forge my 3D hero",
+      "reforgeCta": "Re-forge hero",
+      "noAvatar": "Create your AI avatar first — your 3D hero is forged from it.",
+      "ready": "Your 3D hero is ready. This is you in the Arena!",
+      "forgingHint": "Forging takes 10-20 min. You can close the app: it resumes when you return.",
+      "reforgeIn": "You can re-forge your hero in {{days}} day(s).",
+      "stages": {
+        "sheet": "Sketching your hero…",
+        "model": "Sculpting your 3D figure…",
+        "skeleton": "Forging the skeleton…",
+        "anims": "Bringing your moves to life…",
+        "download": "Collecting the forge pieces…",
+        "merge": "Fusing your final hero…"
+      },
+      "errors": {
+        "no_avatar": "You need an AI avatar before forging your hero.",
+        "forge_active_exists": "A forge is already in progress.",
+        "forge_cooldown": "Your hero was forged recently. Wait before re-forging.",
+        "sheet_failed": "We couldn't sketch your hero. Try again.",
+        "meshy_model_failed": "The 3D sculpt failed. Try again.",
+        "meshy_rig_failed": "The skeleton couldn't be forged from that figure. Re-create your avatar and try again.",
+        "meshy_anim_failed": "The animations failed. Try again.",
+        "meshy_credits_exhausted": "The forge ran out of energy for now. Come back later.",
+        "download_failed": "We couldn't collect the forge pieces. Try again.",
+        "merge_failed": "The final fusion failed. Try again.",
+        "forge_failed": "The forge failed. Try again."
+      }
     }
   },
   "username": {
@@ -2049,7 +2084,8 @@
       "viewFull": "View full ranking",
       "viewLess": "Show less",
       "light": "Light",
-      "essence": "Essence"
+      "essence": "Essence",
+      "resetsIn": "Resets in {{time}}"
     },
     "allies": {
       "activeToday": "Active today",
@@ -2096,6 +2132,16 @@
           "description": "3 days of mindful pause"
         }
       }
+    },
+    "profile": {
+      "title": "Guardian Profile",
+      "guardianSince": "Guardian since {{date}}",
+      "mutualAllies": "Mutual allies",
+      "addAlly": "Add Ally",
+      "acceptRequest": "Accept request",
+      "currentFlame": "Current flame",
+      "bestFlame": "Best flame",
+      "totalLight": "Total Light"
     }
   }
 }

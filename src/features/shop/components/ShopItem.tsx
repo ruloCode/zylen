@@ -1,7 +1,7 @@
 import React from 'react';
-import { Coins, Candy, ShoppingCart, Moon, Coffee, Gift, Sparkles } from 'lucide-react';
-import { Button } from '@/components/ui';
+import { Coins, Candy, ShoppingCart, Moon, Coffee, Gift } from 'lucide-react';
 import { useLocale } from '@/hooks/useLocale';
+import { cn } from '@/utils';
 
 // Icon mapper for shop items
 const iconMap: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
@@ -12,30 +12,6 @@ const iconMap: Record<string, React.ComponentType<{ size?: number; className?: s
   Gift,
 };
 
-// Category color mapping using DOFUS brand palette
-const categoryColors: Record<string, { bg: string; border: string; text: string }> = {
-  food: {
-    bg: 'bg-gold-500/20',
-    border: 'border-gold-400/30',
-    text: 'text-white',
-  },
-  leisure: {
-    bg: 'bg-teal-500/20',
-    border: 'border-teal-400/30',
-    text: 'text-white',
-  },
-  shopping: {
-    bg: 'bg-white/10',
-    border: 'border-white/20',
-    text: 'text-white',
-  },
-  other: {
-    bg: 'bg-white/10',
-    border: 'border-white/20',
-    text: 'text-white',
-  },
-};
-
 interface ShopItemProps {
   id: string;
   name: string;
@@ -43,6 +19,8 @@ interface ShopItemProps {
   cost: number;
   description: string;
   category?: 'food' | 'leisure' | 'shopping' | 'other';
+  /** Current Esencia balance — drives the affordable / missing-points state */
+  userPoints: number;
   onPurchase: (id: string) => void;
 }
 
@@ -52,56 +30,77 @@ export function ShopItem({
   iconName,
   cost,
   description,
-  category = 'other',
+  userPoints,
   onPurchase,
 }: ShopItemProps) {
   const { t } = useLocale();
   const IconComponent = iconMap[iconName] || Gift;
-  const categoryStyle = categoryColors[category] || categoryColors.other;
+  const canAfford = userPoints >= cost;
+  const missing = cost - userPoints;
 
   return (
-    <div className="glass-card rounded-2xl p-5 shop-item-hover border-2 border-gold-200/30 relative overflow-hidden group">
-      {/* Subtle background glow on hover */}
-      <div className="absolute inset-0 bg-gradient-to-br from-gold-500/20 to-teal-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl" />
-
-      <div className="relative flex flex-col items-center text-center gap-3">
-        {/* Icon with gradient background */}
-        <div className="relative">
-          <div className="icon-gradient-gold p-4 rounded-2xl shadow-glow-gold group-hover:shadow-glow-gold group-hover:scale-110 transition-all duration-300">
-            <IconComponent size={36} className="text-white drop-shadow-md" />
-          </div>
-          {/* Sparkle effect on hover */}
-          <Sparkles
-            size={16}
-            className="absolute -top-1 -right-1 text-gold-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-pulse"
-          />
+    <div
+      className={cn(
+        'glass-card rounded-2xl p-4 relative overflow-hidden group flex flex-col',
+        'border border-white/[0.07] transition-all duration-300',
+        canAfford ? 'hover:border-gold-400/30 hover:shadow-glow-gold' : 'opacity-90'
+      )}
+    >
+      <div className="relative flex flex-col items-center text-center gap-2.5 flex-1">
+        {/* Icon tile */}
+        <div
+          className={cn(
+            'grid place-items-center w-14 h-14 rounded-2xl transition-transform duration-300 group-hover:scale-105',
+            canAfford
+              ? 'bg-gradient-to-br from-gold-400/25 to-gold-600/15 border border-gold-400/25'
+              : 'bg-white/[0.06] border border-white/10'
+          )}
+        >
+          <IconComponent size={26} className={canAfford ? 'text-gold-300' : 'text-white/50'} />
         </div>
 
         {/* Item Name */}
-        <h3 className="font-bold text-lg text-white group-hover:text-[rgb(155,215,50)] transition-all duration-200">
+        <h3 className="font-bold text-[15px] leading-snug text-white">
           {name}
         </h3>
 
         {/* Description */}
-        <p className="text-sm text-white leading-relaxed min-h-[2.5rem]">
+        <p className="text-xs text-white/55 leading-relaxed flex-1">
           {description}
         </p>
 
-        {/* Cost Display */}
-        <div className="flex items-center gap-2 text-[rgb(155,215,50)] font-bold text-lg my-1">
-          <Coins size={22} className="coin-spin" />
-          <span className="text-[rgb(155,215,50)]">{cost}</span>
+        {/* Cost chip */}
+        <div
+          className={cn(
+            'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-bold',
+            canAfford
+              ? 'bg-gold-500/15 text-gold-300 border border-gold-500/25'
+              : 'bg-white/[0.06] text-white/45 border border-white/10'
+          )}
+        >
+          <Coins size={14} aria-hidden="true" />
+          <span>{cost.toLocaleString()}</span>
         </div>
 
         {/* Purchase Button */}
-        <Button
-          variant="secondary"
-          size="sm"
+        <button
+          type="button"
           onClick={() => onPurchase(id)}
-          className="w-full bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white font-semibold shadow-glow-teal hover:shadow-glow-teal transition-all duration-200 border-0"
+          disabled={!canAfford}
+          aria-label={
+            canAfford
+              ? t('shop.buyAria', { name, cost })
+              : t('shop.notEnough', { count: missing })
+          }
+          className={cn(
+            'w-full min-h-[40px] rounded-xl text-sm font-bold transition-all duration-200',
+            canAfford
+              ? 'pressable bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-glow-teal hover:brightness-110'
+              : 'bg-white/[0.05] text-white/40 border border-white/10 cursor-not-allowed'
+          )}
         >
-          {t('shop.buyNow')}
-        </Button>
+          {canAfford ? t('shop.buyNow') : t('shop.notEnough', { count: missing })}
+        </button>
       </div>
     </div>
   );

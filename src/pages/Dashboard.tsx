@@ -205,7 +205,7 @@ export function Dashboard() {
       {/* No top padding here: the content column shares the hero's top origin
           (y=0) so the spacer below tracks the character's feet exactly. The
           safe-area / top inset is applied to the header instead. */}
-      <div className="relative z-10 max-w-md mx-auto px-4">
+      <div className="relative z-10 max-w-md mx-auto px-4 animate-page-in">
         {/* Hero overlay zone — a spacer whose height tracks the hero scene down
             to the character's FEET. The hero is aspect-[941/1672] and the feet
             land on the platform at 72.4% of that height → 0.724 × 1672 ≈ 1210.
@@ -262,7 +262,9 @@ export function Dashboard() {
                   {streak?.currentStreak ?? 0}
                 </span>
               </div>
-              <p className="text-white/75 text-[10px] font-medium">{t('common.days').toLowerCase()}</p>
+              <p className="text-white/75 text-[10px] font-medium">
+                {t('progress.daysCount', { count: streak?.currentStreak ?? 0 })}
+              </p>
               <p className="text-white/60 text-[9px] mt-0.5">{t('home.streakKeepGoing')}</p>
             </div>
           </div>
@@ -271,7 +273,7 @@ export function Dashboard() {
           <div className="flex flex-col gap-2.5 w-[27%]">
             {/* Level / XP card */}
             <div className={`${heroCard} p-2.5 flex flex-col items-center`}>
-              <p className="text-white/85 text-[10px] font-semibold mb-1.5">
+              <p className="text-white/85 text-[10px] font-semibold mb-1.5 text-center leading-tight [text-wrap:balance]">
                 {t('home.levelLabel', { level: user?.level ?? 1 })}
               </p>
               <CircularProgress

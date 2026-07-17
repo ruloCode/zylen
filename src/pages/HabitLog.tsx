@@ -281,7 +281,7 @@ export function HabitLog() {
     <>
       <div className="relative min-h-screen pb-28 overflow-x-hidden">
         {/* ── Foreground content ── */}
-        <div className="relative z-10 max-w-md mx-auto px-4 pt-[calc(env(safe-area-inset-top)+1rem)]">
+        <div className="relative z-10 max-w-md mx-auto px-4 pt-[calc(env(safe-area-inset-top)+1rem)] animate-page-in">
           {/* ── Hero card (contained: bg + character + title + level + filters) ── */}
           <section className="relative rounded-3xl overflow-hidden mb-5 min-h-[212px] ring-1 ring-inset ring-white/10 shadow-soft-xl">
             {/* Background scene */}
@@ -410,7 +410,9 @@ export function HabitLog() {
                 </p>
                 <p className="text-[26px] font-extrabold leading-none mt-0.5">
                   <span className="text-shimmer-gold">{currentStreak}</span>{' '}
-                  <span className="text-sm font-bold text-white/70">{t('routines.days')}</span>
+                  <span className="text-sm font-bold text-white/70">
+                    {t('progress.daysCount', { count: currentStreak })}
+                  </span>
                 </p>
               </div>
             </div>

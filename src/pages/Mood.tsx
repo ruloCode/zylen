@@ -3,13 +3,14 @@
  * Today selector + month calendar + stats + distribution. localStorage-backed.
  */
 
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import { ChevronLeft, ChevronRight, Smile, Flame, CalendarDays, Check } from 'lucide-react';
 import { useLocale } from '@/hooks/useLocale';
 import { MoodService, localDateKey } from '@/services/mood.service';
 import { MOODS, moodByLevel, type MoodLevel, type MoodEntry } from '@/types/mood';
 import { cn } from '@/utils/cn';
+import { PageContainer } from '@/components/layout';
 
 export function Mood() {
   const { t, language } = useLocale();
@@ -66,24 +67,27 @@ export function Mood() {
     ? rawWeekdays
     : ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
 
-  const monthLabel = month.toLocaleDateString(language, { month: 'long', year: 'numeric' });
+  // "julio de 2026" → "Julio de 2026" (CSS `capitalize` would title-case every
+  // word, mangling the Spanish "de")
+  const rawMonthLabel = month.toLocaleDateString(language, { month: 'long', year: 'numeric' });
+  const monthLabel = rawMonthLabel.charAt(0).toUpperCase() + rawMonthLabel.slice(1);
   const avgMood = average !== null ? moodByLevel(Math.round(average) as MoodLevel) : null;
 
   return (
-    <div className="min-h-screen pb-24 px-3 pt-4">
-      <div className="max-w-md mx-auto">
+    <div className="min-h-screen pb-24 pt-4">
+      <PageContainer className="animate-page-in">
         {/* Header */}
         <header className="mb-5">
-          <div className="flex items-center justify-between">
+          <div className="flex items-start justify-between gap-3">
             <div>
-              <h1 className="text-3xl font-extrabold text-white tracking-tight flex items-center gap-2">
-                <Smile className="w-7 h-7 text-gold-400" /> {t('mood.title')}
+              <h1 className="text-[28px] leading-tight font-extrabold text-white tracking-tight">
+                {t('mood.title')}
               </h1>
               <p className="text-sm text-white/60 mt-1">{t('mood.subtitle')}</p>
             </div>
             {streak > 0 && (
-              <div className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-orange-500/15 border border-orange-400/25">
-                <Flame className="w-4 h-4 text-orange-400" />
+              <div className="flex items-center gap-1.5 px-3 py-2 mt-1 rounded-2xl bg-orange-500/15 border border-orange-400/25 shrink-0">
+                <Flame className="w-4 h-4 text-orange-400" aria-hidden="true" />
                 <span className="text-white font-bold">{streak}</span>
               </div>
             )}
@@ -93,7 +97,7 @@ export function Mood() {
         {/* Today's mood selector */}
         <section className="glass-card p-5 mb-5">
           <h2 className="text-base font-bold text-white mb-4 text-center">{t('mood.howAreYou')}</h2>
-          <div className="flex justify-between gap-1.5 mb-4">
+          <div className="flex justify-between gap-1 mb-4">
             {MOODS.map((m) => {
               const active = selected === m.level;
               return (
@@ -101,15 +105,39 @@ export function Mood() {
                   key={m.level}
                   onClick={() => setSelected(m.level)}
                   className={cn(
-                    'flex-1 flex flex-col items-center gap-1.5 py-3 rounded-2xl border-2 transition-all duration-200',
-                    active ? 'scale-105' : 'border-transparent opacity-60 hover:opacity-100'
+                    'flex-1 flex flex-col items-center gap-1.5 py-2.5 rounded-2xl transition-all duration-200 pressable',
+                    !active && 'hover:bg-white/[0.04]'
                   )}
-                  style={active ? { borderColor: m.color, backgroundColor: `${m.color}1f` } : undefined}
                   aria-pressed={active}
                   aria-label={t(`mood.${m.labelKey}`)}
                 >
-                  <span className="text-3xl">{m.emoji}</span>
-                  <span className="text-[10px] font-semibold text-white/80">{t(`mood.${m.labelKey}`)}</span>
+                  <span
+                    key={active ? `on-${m.level}` : `off-${m.level}`}
+                    className={cn(
+                      'grid place-items-center w-12 h-12 rounded-full text-[26px] leading-none border transition-all duration-200',
+                      active
+                        ? 'animate-pop-in'
+                        : 'border-white/10 bg-white/[0.04] grayscale opacity-60'
+                    )}
+                    style={
+                      active
+                        ? {
+                            backgroundColor: m.color.replace('hsl(', 'hsla(').replace(')', ', 0.18)'),
+                            borderColor: m.color,
+                            boxShadow: `0 0 18px -2px ${m.color}`,
+                          }
+                        : undefined
+                    }
+                    aria-hidden="true"
+                  >
+                    {m.emoji}
+                  </span>
+                  <span
+                    className={cn('text-[10px] font-bold transition-colors', active ? '' : 'text-white/50')}
+                    style={active ? { color: m.color } : undefined}
+                  >
+                    {t(`mood.${m.labelKey}`)}
+                  </span>
                 </button>
               );
             })}
@@ -161,7 +189,7 @@ export function Mood() {
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
-            <span className="font-bold text-white capitalize">{monthLabel}</span>
+            <span className="font-bold text-white">{monthLabel}</span>
             <button
               onClick={() => setMonth(new Date(month.getFullYear(), month.getMonth() + 1, 1))}
               className="w-8 h-8 rounded-lg grid place-items-center bg-white/5 text-white/70 hover:bg-white/10"
@@ -198,7 +226,9 @@ export function Mood() {
                   {cell.entry ? (
                     <span className="text-base leading-none">{moodByLevel(cell.entry.mood).emoji}</span>
                   ) : (
-                    <span className="text-white/30">{cell.day}</span>
+                    <span className={cell.key === todayKey ? 'text-white font-bold' : 'text-white/30'}>
+                      {cell.day}
+                    </span>
                   )}
                 </div>
               )
@@ -209,7 +239,7 @@ export function Mood() {
         {/* Distribution */}
         {entries.length > 0 ? (
           <section className="glass-card p-4">
-            <h3 className="text-sm font-bold text-white mb-3">{t('mood.distribution')}</h3>
+            <h3 className="section-label mb-3">{t('mood.distribution')}</h3>
             <div className="space-y-2">
               {distribution.map((m) => (
                 <div key={m.level} className="flex items-center gap-2">
@@ -226,9 +256,14 @@ export function Mood() {
             </div>
           </section>
         ) : (
-          <p className="text-center text-sm text-white/40 py-6">{t('mood.noEntries')}</p>
+          <div className="glass-card p-8 text-center">
+            <div className="grid place-items-center w-12 h-12 rounded-full bg-white/[0.05] border border-white/10 mx-auto mb-3">
+              <Smile className="w-6 h-6 text-white/40" aria-hidden="true" />
+            </div>
+            <p className="text-sm text-white/50">{t('mood.noEntries')}</p>
+          </div>
         )}
-      </div>
+      </PageContainer>
     </div>
   );
 }

@@ -163,7 +163,7 @@ export function Streaks() {
       </div>
 
       {/* ── Foreground content ── */}
-      <div className="relative z-10 max-w-md mx-auto px-4 pt-[calc(env(safe-area-inset-top)+1.5rem)]">
+      <div className="relative z-10 max-w-md mx-auto px-4 pt-[calc(env(safe-area-inset-top)+1.5rem)] animate-page-in">
         {/* Hero text + streak chip */}
         <header className="relative mb-6">
           <div className="flex items-start justify-between gap-3">
