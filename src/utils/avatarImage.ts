@@ -90,8 +90,12 @@ export async function fileToImagePart(file: File, maxDim = 768): Promise<ImagePa
 
 /**
  * Fetch one of the app's own style-reference assets and downscale it to a
- * PNG ImagePart (PNG keeps the alpha silhouette, which helps the model read
- * the figurine style).
+ * PNG ImagePart. The transparent background is flattened onto the SAME
+ * magenta plate we ask the model for: Gemini renders PNG alpha as black,
+ * and flash models blend that implied dark bg into the output plate
+ * (maroon instead of #FF00FF, which the chroma key can't remove). A
+ * magenta-flattened ref instead *reinforces* the plate instruction
+ * (measured: border dist-to-magenta 75→10 on gemini-2.5-flash-image).
  */
 export async function assetToImagePart(url: string, maxDim = 640): Promise<ImagePart> {
   const img = await loadImage(url);
@@ -100,7 +104,10 @@ export async function assetToImagePart(url: string, maxDim = 640): Promise<Image
     Math.round(img.width * scale),
     Math.round(img.height * scale)
   );
-  context2d(canvas).drawImage(img, 0, 0, canvas.width, canvas.height);
+  const ctx = context2d(canvas);
+  ctx.fillStyle = '#FF00FF';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
   const dataUrl = canvas.toDataURL('image/png');
   return { data: dataUrl.split(',')[1] ?? '', mimeType: 'image/png' };
 }
@@ -182,6 +189,27 @@ export async function composeBust(part: ImagePart): Promise<Blob> {
   const w = cutout.width * scale;
   const h = cutout.height * scale;
   context2d(canvas).drawImage(cutout, (BUST_CANVAS - w) / 2, (BUST_CANVAS - h) / 2, w, h);
+  return canvasToBlob(canvas);
+}
+
+/**
+ * Compose the A-pose rig sheet for Meshy image-to-3D: the keyed-out subject
+ * centred on a PURE WHITE canvas (the 3D pipeline's concept convention —
+ * white, clean silhouette, small margin). No feet-line convention here.
+ */
+export async function composeRigSheet(part: ImagePart): Promise<Blob> {
+  const cutout = await partToCutout(part);
+  const canvas = createCanvas(BODY_CANVAS_W, BODY_CANVAS_H);
+  const ctx = context2d(canvas);
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fillRect(0, 0, BODY_CANVAS_W, BODY_CANVAS_H);
+  const scale = Math.min(
+    (BODY_CANVAS_H * 0.92) / cutout.height,
+    (BODY_CANVAS_W * 0.92) / cutout.width
+  );
+  const w = cutout.width * scale;
+  const h = cutout.height * scale;
+  ctx.drawImage(cutout, (BODY_CANVAS_W - w) / 2, (BODY_CANVAS_H - h) / 2, w, h);
   return canvasToBlob(canvas);
 }
 

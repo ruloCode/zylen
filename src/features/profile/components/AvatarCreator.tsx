@@ -104,9 +104,12 @@ export function AvatarCreator({ gender, onClose, onSaved }: AvatarCreatorProps) 
     } catch (err) {
       if (!activeRef.current) return;
       console.error('Avatar generation failed:', err);
+      const code = err instanceof AvatarGenerationError ? err.code : undefined;
       setError(
-        err instanceof AvatarGenerationError && err.code === 'daily_limit_reached'
+        code === 'daily_limit_reached'
           ? t('profile.avatarCreator.limitError')
+          : code === 'photo_rejected'
+          ? t('profile.avatarCreator.photoRejected')
           : t('profile.avatarCreator.error')
       );
       setStep('ready');

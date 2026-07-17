@@ -41,6 +41,7 @@ export interface SavedAvatar {
 /** Error codes surfaced to the UI (mapped to i18n keys by the creator). */
 export type AvatarGenerationErrorCode =
   | 'daily_limit_reached'
+  | 'photo_rejected'
   | 'generation_failed';
 
 export class AvatarGenerationError extends Error {
@@ -80,6 +81,10 @@ export class AvatarService {
       const status = (error as { context?: { status?: number } }).context?.status;
       if (status === 429) {
         throw new AvatarGenerationError('daily_limit_reached');
+      }
+      if (status === 422) {
+        // Gemini refused the photo (safety) — a different photo can work.
+        throw new AvatarGenerationError('photo_rejected');
       }
       console.error('generate-avatar invoke failed:', error);
       throw new AvatarGenerationError('generation_failed', error.message);
@@ -145,9 +150,12 @@ export class AvatarService {
     }
 
     // Best-effort cleanup of previous generations (never blocks the save).
+    // NEVER touch the forged 3D hero: hero-*.glb and the forge/ working
+    // folder belong to the Hero Forge feature, not to avatar regeneration.
     try {
       const { data: files } = await bucket.list(userId);
       const stale = (files ?? [])
+        .filter((f) => f.name !== 'forge' && !f.name.endsWith('.glb'))
         .map((f) => `${userId}/${f.name}`)
         .filter((path) => path !== bustPath && path !== bodyPath);
       if (stale.length > 0) await bucket.remove(stale);
