@@ -80,7 +80,11 @@ export function Welcome() {
         </View>
 
         {/* Decorative carousel dots */}
-        <View className="mb-6 flex-row items-center justify-center gap-2">
+        <View
+          className="mb-6 flex-row items-center justify-center gap-2"
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+        >
           {Array.from({ length: 5 }).map((_, i) => (
             <View
               key={i}

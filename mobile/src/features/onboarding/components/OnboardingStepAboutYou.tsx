@@ -67,7 +67,7 @@ export function OnboardingStepAboutYou({ onNext, onPrev }: OnboardingStepAboutYo
       <View className="mb-8 items-center">
         <View className="mb-2 flex-row items-center justify-center gap-2">
           <Sparkles color={primaryColor} size={28} />
-          <Text className="text-center text-2xl font-extrabold uppercase tracking-wide text-white">
+          <Text className="text-center text-2xl font-extrabold tracking-tight text-white">
             {t('onboarding.aboutYou.title')}
           </Text>
         </View>
@@ -79,7 +79,7 @@ export function OnboardingStepAboutYou({ onNext, onPrev }: OnboardingStepAboutYo
       <View className="gap-8">
         {/* Motivation */}
         <View>
-          <Text className="mb-3 text-sm font-bold uppercase tracking-wide text-white/90">
+          <Text className="mb-3 text-sm font-semibold text-white/90">
             {t('onboarding.aboutYou.motivationLabel')}
           </Text>
           <View className="flex-row flex-wrap gap-2.5">
@@ -101,7 +101,7 @@ export function OnboardingStepAboutYou({ onNext, onPrev }: OnboardingStepAboutYo
 
         {/* Experience level */}
         <View>
-          <Text className="mb-3 text-sm font-bold uppercase tracking-wide text-white/90">
+          <Text className="mb-3 text-sm font-semibold text-white/90">
             {t('onboarding.aboutYou.experienceLabel')}
           </Text>
           <View className="flex-row gap-2.5">
@@ -123,7 +123,7 @@ export function OnboardingStepAboutYou({ onNext, onPrev }: OnboardingStepAboutYo
 
         {/* Age range */}
         <View>
-          <Text className="mb-3 text-sm font-bold uppercase tracking-wide text-white/90">
+          <Text className="mb-3 text-sm font-semibold text-white/90">
             {t('onboarding.aboutYou.ageLabel')}
           </Text>
           <View className="flex-row flex-wrap gap-2.5">

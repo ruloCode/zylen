@@ -5,7 +5,7 @@
  * (paddingBottom: 130).
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -19,20 +19,27 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import {
   Trophy, TrendingUp, Flame, Target, Users, Search,
-  UserPlus, UserCheck, X, Check, UserMinus,
+  UserPlus, UserCheck, X, Check,
 } from 'lucide-react-native';
 import { useLocale } from '@/hooks/useLocale';
-import { useLeaderboard, useUser, useSocial, useAppStore, useAchievements } from '@/store';
+import {
+  useLeaderboard, useUser, useSocial, useAppStore, useAchievements, useCommunity,
+} from '@/store';
 import { Button } from '@/components/ui/Button';
 import { GlassCard } from '@/components/ui';
 import { Header } from '@/components/layout';
 import { StreakDisplay } from '@/features/streaks/components';
 import { AchievementCard, AchievementDetailModal } from '@/features/achievements/components';
+import { AlliesOverview, GuardianProfileSheet } from '@/features/social/components';
 import type { AchievementWithProgress } from '@/types/achievement';
+import type { LeaderboardEntry } from '@/types/social';
+import type { RankingPeriod } from '@/types/community';
 import toast from '@/lib/toast';
 
 type TabType = 'rankings' | 'social' | 'streaks';
 type SocialSubTab = 'friends' | 'requests' | 'search';
+
+const RANKING_TOP_N = 5;
 
 const COLORS = {
   green500: 'hsl(76, 85%, 52%)',
@@ -94,10 +101,18 @@ export function Leaderboard() {
     weeklyLeaderboard,
     userRank,
     userWeeklyStats,
+    weeklyComparison,
+    allTimeLeaderboard,
+    allTimeLoading,
     isLoading: leaderboardLoading,
     loadWeeklyLeaderboard,
     loadUserWeeklyStats,
+    loadWeeklyComparison,
+    loadAllTimeLeaderboard,
   } = useLeaderboard();
+
+  // Community state (Aliados tab: real feed, missions, ally stats)
+  const { loadAlliesTab } = useCommunity();
 
   // Social state
   const {
@@ -128,6 +143,13 @@ export function Leaderboard() {
   const [socialSubTab, setSocialSubTab] = useState<SocialSubTab>('friends');
   const [searchTerm, setSearchTerm] = useState('');
 
+  // Ranking period + collapse state
+  const [rankingPeriod, setRankingPeriod] = useState<RankingPeriod>('weekly');
+  const [rankingExpanded, setRankingExpanded] = useState(false);
+
+  // Guardian detail sheet (opened by tapping any ranking row)
+  const [profileUsername, setProfileUsername] = useState<string | null>(null);
+
   // Achievement modal state
   const [selectedAchievement, setSelectedAchievement] = useState<AchievementWithProgress | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -147,8 +169,25 @@ export function Leaderboard() {
     if (user?.id) {
       loadWeeklyLeaderboard(user.id);
       loadUserWeeklyStats(user.id);
+      loadWeeklyComparison(user.id);
     }
-  }, [user?.id, loadWeeklyLeaderboard, loadUserWeeklyStats]);
+  }, [user?.id, loadWeeklyLeaderboard, loadUserWeeklyStats, loadWeeklyComparison]);
+
+  // Load the all-time ranking the first time "Histórico" is selected
+  useEffect(() => {
+    if (rankingPeriod === 'alltime' && user?.id && allTimeLeaderboard.length === 0) {
+      loadAllTimeLeaderboard(user.id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rankingPeriod, user?.id]);
+
+  // Load real community data (feed + missions + ally stats) on the Aliados tab
+  useEffect(() => {
+    if (activeTab === 'social') {
+      loadAlliesTab();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab]);
 
   // Load social data
   useEffect(() => {
@@ -168,6 +207,120 @@ export function Leaderboard() {
     if (rank === 2) return t('leaderboard.medal.second');
     if (rank === 3) return t('leaderboard.medal.third');
     return null;
+  };
+
+  // "▲12% vs anterior" under the weekly Luz/Esencia stats
+  const renderDelta = (pct: number | null) => {
+    if (!weeklyComparison) return null;
+    if (!weeklyComparison.hasPreviousWeek || pct === null) {
+      return (
+        <Text className="text-[10px] font-semibold leading-tight text-white/40">
+          {t('community.stats.newWeek')}
+        </Text>
+      );
+    }
+    const up = pct >= 0;
+    return (
+      <Text
+        className={`text-[10px] font-semibold leading-tight ${
+          up ? 'text-emerald-400' : 'text-danger-400'
+        }`}
+      >
+        {up ? '▲' : '▼'} {t('community.stats.vsPrevious', { pct: Math.abs(pct) })}
+      </Text>
+    );
+  };
+
+  // ── Ranking entries for the active period, collapsed to top-N ──
+  const activeEntries: LeaderboardEntry[] =
+    rankingPeriod === 'weekly' ? weeklyLeaderboard?.entries ?? [] : allTimeLeaderboard;
+  const isRankingLoading =
+    rankingPeriod === 'weekly' ? leaderboardLoading : allTimeLoading;
+  const rankingCollapsed = !rankingExpanded && activeEntries.length > RANKING_TOP_N;
+  const topEntries = rankingCollapsed
+    ? activeEntries.slice(0, RANKING_TOP_N)
+    : activeEntries;
+  // Keep the user visible even when their rank falls outside the top-N
+  const ownHiddenEntry = rankingCollapsed
+    ? activeEntries.find((e) => e.isCurrentUser && e.rank > RANKING_TOP_N)
+    : undefined;
+
+  // Countdown to the weekly reset (Monday 00:00 local) — Duolingo-style urgency
+  const resetCountdown = useMemo(() => {
+    const now = new Date();
+    const next = new Date(now);
+    const daysUntilMonday = (8 - now.getDay()) % 7 || 7;
+    next.setDate(now.getDate() + daysUntilMonday);
+    next.setHours(0, 0, 0, 0);
+    const ms = next.getTime() - now.getTime();
+    const days = Math.floor(ms / 86_400_000);
+    const hours = Math.floor((ms % 86_400_000) / 3_600_000);
+    return days > 0 ? `${days}d ${hours}h` : `${hours}h`;
+  }, []);
+
+  // ── Per-tab context line ──
+  const heroByTab: Record<TabType, string> = {
+    rankings: t('leaderboard.hub.heroRankings'),
+    social: t('leaderboard.hub.heroSocial'),
+    streaks: t('leaderboard.hub.heroStreaks'),
+  };
+
+  const renderRankingEntry = (entry: LeaderboardEntry, isLast: boolean) => {
+    const medal = getMedal(entry.rank);
+    const isCurrentUser = entry.isCurrentUser;
+
+    return (
+      <Pressable
+        key={`${rankingPeriod}-${entry.userId}`}
+        onPress={() => setProfileUsername(entry.username)}
+        accessibilityRole="button"
+        accessibilityLabel={`@${entry.username}`}
+        className={`p-4 active:bg-white/[0.05] ${isLast ? '' : 'border-b border-white/10'} ${
+          isCurrentUser ? 'border-l-4 border-l-teal-500 bg-teal-500/10' : ''
+        }`}
+      >
+        <View className="flex-row items-center justify-between">
+          {/* Rank & User */}
+          <View className="flex-1 flex-row items-center gap-4">
+            <View className="w-12 items-center">
+              {medal ? (
+                <Text className="text-3xl">{medal}</Text>
+              ) : (
+                <Text className="text-xl font-bold text-white/70">#{entry.rank}</Text>
+              )}
+            </View>
+            <View className="flex-1 flex-row items-center gap-3">
+              <AvatarCircle username={entry.username} variant="teal" size={40} />
+              <View className="flex-1">
+                <Text className="font-semibold text-white" numberOfLines={1}>
+                  @{entry.username}
+                  {isCurrentUser && (
+                    <Text className="text-xs text-teal-600">
+                      {'  '}({t('leaderboard.you')})
+                    </Text>
+                  )}
+                </Text>
+                <Text className="text-sm text-white">
+                  {t('common.level')} {entry.level}
+                </Text>
+              </View>
+            </View>
+          </View>
+
+          {/* Compact stats — the web hides these behind md:
+              breakpoints, but on a phone the ranking is
+              meaningless without the weekly XP that sorts it. */}
+          <View className="items-end">
+            <Text className="text-base font-bold text-teal-300">
+              +{entry.weeklyXPEarned} XP
+            </Text>
+            <Text className="text-xs text-white/60">
+              ◆ {entry.weeklyPointsEarned} · ✓ {entry.habitsCompleted}
+            </Text>
+          </View>
+        </View>
+      </Pressable>
+    );
   };
 
   // Handle search
@@ -269,8 +422,10 @@ export function Leaderboard() {
           <View className="mb-8">
             <View className="mb-2 flex-row items-center gap-3">
               <Trophy size={32} color={COLORS.gold400} />
-              <Text className="text-3xl font-bold text-white">{t('leaderboard.title')}</Text>
+              <Text className="text-[28px] font-extrabold leading-tight tracking-tight text-white">{t('leaderboard.title')}</Text>
             </View>
+            {/* Per-tab context line */}
+            <Text className="text-sm leading-snug text-white/60">{heroByTab[activeTab]}</Text>
           </View>
 
           {/* Main Tabs */}
@@ -335,6 +490,7 @@ export function Leaderboard() {
                         <Text className="text-2xl font-bold text-teal-600">
                           {userWeeklyStats.weeklyXPEarned}
                         </Text>
+                        {renderDelta(weeklyComparison?.xpChangePct ?? null)}
                       </View>
                       <View className="w-[45%] flex-1 items-center">
                         <View className="mb-2 flex-row items-center justify-center gap-2">
@@ -344,6 +500,7 @@ export function Leaderboard() {
                         <Text className="text-2xl font-bold text-white">
                           {userWeeklyStats.weeklyPointsEarned}
                         </Text>
+                        {renderDelta(weeklyComparison?.pointsChangePct ?? null)}
                       </View>
                       <View className="w-[45%] flex-1 items-center">
                         <View className="mb-2 flex-row items-center justify-center gap-2">
@@ -360,84 +517,82 @@ export function Leaderboard() {
                   </GlassCard>
                 )}
 
-                {/* Leaderboard Table */}
+                {/* Ranking de Guardianes: header + period toggle + rows */}
                 <GlassCard className="overflow-hidden">
-                  <View className="border-b border-white/20 bg-white/5 p-4">
-                    <Text className="text-lg font-semibold text-white">
-                      {t('leaderboard.topPlayers')}
-                    </Text>
+                  <View className="flex-row items-center justify-between gap-2 border-b border-white/20 bg-white/5 px-4 py-3">
+                    <View className="min-w-0 flex-1">
+                      <Text className="text-lg font-semibold text-white">
+                        {t('community.ranking.title')}
+                      </Text>
+                      <Text numberOfLines={1} className="mt-0.5 text-[11px] text-white/40">
+                        {rankingPeriod === 'weekly'
+                          ? t('community.ranking.resetsIn', { time: resetCountdown })
+                          : t('community.ranking.subtitleAllTime')}
+                      </Text>
+                    </View>
+                    <View className="flex-row rounded-full border border-white/10 bg-white/[0.05] p-0.5">
+                      {(['weekly', 'alltime'] as RankingPeriod[]).map((period) => (
+                        <Pressable
+                          key={period}
+                          onPress={() => {
+                            setRankingPeriod(period);
+                            setRankingExpanded(false);
+                          }}
+                          accessibilityRole="button"
+                          className={`rounded-full px-2.5 py-1 active:opacity-80 ${
+                            rankingPeriod === period
+                              ? 'border border-teal-400/40 bg-teal-500/20'
+                              : ''
+                          }`}
+                        >
+                          <Text
+                            className={`text-[11px] font-bold ${
+                              rankingPeriod === period ? 'text-teal-200' : 'text-white/50'
+                            }`}
+                          >
+                            {period === 'weekly'
+                              ? t('community.ranking.weekly')
+                              : t('community.ranking.allTime')}
+                          </Text>
+                        </Pressable>
+                      ))}
+                    </View>
                   </View>
 
-                  {leaderboardLoading ? (
+                  {isRankingLoading && activeEntries.length === 0 ? (
                     <View className="items-center p-12">
                       <ActivityIndicator size="large" color={COLORS.teal500} />
                       <Text className="mt-4 text-white">{t('common.loading')}</Text>
                     </View>
-                  ) : weeklyLeaderboard && weeklyLeaderboard.entries.length > 0 ? (
+                  ) : activeEntries.length > 0 ? (
                     <View>
-                      {weeklyLeaderboard.entries.map((entry, index) => {
-                        const medal = getMedal(entry.rank);
-                        const isCurrentUser = entry.isCurrentUser;
-                        const isLast = index === weeklyLeaderboard.entries.length - 1;
-
-                        return (
-                          <View
-                            key={entry.userId}
-                            className={`p-4 ${isLast ? '' : 'border-b border-white/10'} ${
-                              isCurrentUser
-                                ? 'border-l-4 border-l-teal-500 bg-teal-500/10'
-                                : ''
-                            }`}
-                          >
-                            <View className="flex-row items-center justify-between">
-                              {/* Rank & User */}
-                              <View className="flex-1 flex-row items-center gap-4">
-                                <View className="w-12 items-center">
-                                  {medal ? (
-                                    <Text className="text-3xl">{medal}</Text>
-                                  ) : (
-                                    <Text className="text-xl font-bold text-white/70">
-                                      #{entry.rank}
-                                    </Text>
-                                  )}
-                                </View>
-                                <View className="flex-1 flex-row items-center gap-3">
-                                  <AvatarCircle
-                                    username={entry.username}
-                                    variant="teal"
-                                    size={40}
-                                  />
-                                  <View className="flex-1">
-                                    <Text className="font-semibold text-white" numberOfLines={1}>
-                                      @{entry.username}
-                                      {isCurrentUser && (
-                                        <Text className="text-xs text-teal-600">
-                                          {'  '}({t('leaderboard.you')})
-                                        </Text>
-                                      )}
-                                    </Text>
-                                    <Text className="text-sm text-white">
-                                      {t('common.level')} {entry.level}
-                                    </Text>
-                                  </View>
-                                </View>
-                              </View>
-
-                              {/* Compact stats — the web hides these behind md:
-                                  breakpoints, but on a phone the ranking is
-                                  meaningless without the weekly XP that sorts it. */}
-                              <View className="items-end">
-                                <Text className="text-base font-bold text-teal-300">
-                                  +{entry.weeklyXPEarned} XP
-                                </Text>
-                                <Text className="text-xs text-white/60">
-                                  ◆ {entry.weeklyPointsEarned} · ✓ {entry.habitsCompleted}
-                                </Text>
-                              </View>
-                            </View>
-                          </View>
-                        );
-                      })}
+                      {topEntries.map((entry, index) =>
+                        renderRankingEntry(
+                          entry,
+                          index === topEntries.length - 1 && !ownHiddenEntry
+                        )
+                      )}
+                      {ownHiddenEntry && (
+                        <>
+                          <Text className="border-b border-white/10 py-1 text-center text-sm leading-none text-white/25">
+                            ···
+                          </Text>
+                          {renderRankingEntry(ownHiddenEntry, true)}
+                        </>
+                      )}
+                      {activeEntries.length > RANKING_TOP_N && (
+                        <Pressable
+                          onPress={() => setRankingExpanded((v) => !v)}
+                          accessibilityRole="button"
+                          className="w-full border-t border-white/10 py-3 active:bg-white/[0.05]"
+                        >
+                          <Text className="text-center text-sm font-semibold text-teal-300">
+                            {rankingExpanded
+                              ? t('community.ranking.viewLess')
+                              : `${t('community.ranking.viewFull')} →`}
+                          </Text>
+                        </Pressable>
+                      )}
                     </View>
                   ) : (
                     <View className="items-center p-12">
@@ -494,47 +649,17 @@ export function Leaderboard() {
 
                 {/* Social Sub-Tab Content */}
                 <View className="gap-4">
-                  {/* Friends Sub-Tab */}
+                  {/* Friends Sub-Tab: the showcase overview (stats + allies
+                      rail + activity feed + shared missions), like the web */}
                   {socialSubTab === 'friends' && (
-                    <View className="gap-3">
-                      {friends.length === 0 ? (
-                        <GlassCard className="items-center py-12">
-                          <Users size={64} color={COLORS.white30} />
-                          <Text className="mt-4 text-center text-white">
-                            {t('social.noFriends')}
-                          </Text>
-                        </GlassCard>
-                      ) : (
-                        friends.map((friend) => (
-                          <GlassCard key={friend.userId} className="p-4">
-                            <View className="flex-row items-center justify-between">
-                              <View className="flex-1 flex-row items-center gap-4">
-                                <AvatarCircle username={friend.username} variant="teal" />
-                                <View className="flex-1">
-                                  <Text className="font-semibold text-white" numberOfLines={1}>
-                                    @{friend.username}
-                                  </Text>
-                                  <Text className="text-sm text-white">
-                                    {t('common.level')} {friend.level} •{' '}
-                                    {t('social.streakDays', { count: friend.currentStreak })}
-                                  </Text>
-                                </View>
-                              </View>
-                              <Pressable
-                                onPress={() =>
-                                  handleRemoveFriend(friend.friendshipId!, friend.username)
-                                }
-                                accessibilityRole="button"
-                                accessibilityLabel={t('social.removeFriend')}
-                                className="rounded-lg border border-red-400/50 bg-red-500/20 p-2 active:bg-red-500/30"
-                              >
-                                <UserMinus size={18} color={COLORS.red400} />
-                              </Pressable>
-                            </View>
-                          </GlassCard>
-                        ))
-                      )}
-                    </View>
+                    <AlliesOverview
+                      friends={friends}
+                      leaderboardEntries={weeklyLeaderboard?.entries ?? []}
+                      ownWeeklyXP={userWeeklyStats?.weeklyXPEarned ?? 0}
+                      ownAvatarUrl={user?.avatarUrl}
+                      onAddAlly={() => setSocialSubTab('search')}
+                      onRemoveFriend={handleRemoveFriend}
+                    />
                   )}
 
                   {/* Requests Sub-Tab */}
@@ -835,6 +960,14 @@ export function Leaderboard() {
           achievement={selectedAchievement}
           isOpen={isModalOpen}
           onClose={handleCloseModal}
+        />
+      )}
+
+      {/* Guardian detail (tapped from the ranking) */}
+      {profileUsername && (
+        <GuardianProfileSheet
+          username={profileUsername}
+          onClose={() => setProfileUsername(null)}
         />
       )}
     </View>

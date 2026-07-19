@@ -75,7 +75,7 @@ export function Badge({
   withFloat: _withFloat = false,
 }: BadgeProps) {
   const gradient = GRADIENTS[variant];
-  const textClassName = cn('font-display font-bold', TEXT_SIZES[size], TEXT_VARIANTS[variant]);
+  const textClassName = cn('font-bold', TEXT_SIZES[size], TEXT_VARIANTS[variant]);
 
   return (
     <View

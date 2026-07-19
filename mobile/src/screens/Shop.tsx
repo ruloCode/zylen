@@ -31,7 +31,8 @@ import { useLocale } from '@/hooks/useLocale';
 import type { ShopItem as ShopItemType } from '@/types';
 import { ShopItemsService } from '@/services/supabase/shopItems.service';
 
-const ACCENT_GREEN = 'rgb(155,215,50)';
+// v2: the shop reads in gold (the legacy lime is banned by the design system)
+const ACCENT_GREEN = '#FBC956'; // gold-300, matches the web Shop
 
 export function Shop() {
   const { user, initializeUser } = useUser();
@@ -143,7 +144,7 @@ export function Shop() {
           <View className="mb-3 flex-row items-center justify-between">
             <View className="flex-row items-center gap-3">
               <ShoppingBag size={40} color={ACCENT_GREEN} />
-              <Text className="text-4xl font-extrabold tracking-tight text-white">
+              <Text className="text-[28px] font-extrabold leading-tight tracking-tight text-white">
                 {t('shop.title')}
               </Text>
             </View>
@@ -237,7 +238,11 @@ export function Shop() {
                 <View className="flex-row flex-wrap justify-between">
                   {displayItems.map((item) => (
                     <View key={item.id} className="mb-4 w-[48.5%]">
-                      <ShopItem {...item} onPurchase={handlePurchase} />
+                      <ShopItem
+                        {...item}
+                        userPoints={user?.points ?? 0}
+                        onPurchase={handlePurchase}
+                      />
                     </View>
                   ))}
                 </View>

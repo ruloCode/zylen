@@ -5,6 +5,7 @@
 
 import { supabase } from '@/lib/supabase';
 import type { LeaderboardEntry, WeeklyLeaderboard } from '@/types/social';
+import type { WeeklyComparison } from '@/types/community';
 
 /**
  * Get the current week's date range
@@ -90,6 +91,7 @@ export async function getWeeklyLeaderboard(
       weeklyPointsEarned: entry.weekly_points_earned,
       habitsCompleted: entry.habits_completed,
       isCurrentUser: entry.is_current_user,
+      currentStreak: entry.current_streak ?? undefined,
     }));
 
     // Get current user's entry
@@ -244,5 +246,90 @@ export async function getHistoricalLeaderboard(
   } catch (error) {
     console.error('Error fetching historical leaderboard:', error);
     throw new Error('Failed to fetch historical leaderboard');
+  }
+}
+
+/**
+ * Compare the user's current week vs the previous one.
+ * No backend changes needed: weekly_leaderboard keeps past weeks and is
+ * readable by authenticated users. Pct is null when the previous week has
+ * no row or a 0 value (UI shows "—" instead of a misleading %).
+ */
+export async function getWeeklyComparison(
+  userId: string
+): Promise<WeeklyComparison> {
+  const { weekStart } = await getCurrentWeekRange();
+  const prevStart = new Date(weekStart);
+  prevStart.setDate(prevStart.getDate() - 7);
+
+  const toKey = (d: Date) => d.toISOString().split('T')[0];
+
+  const { data, error } = await supabase
+    .from('weekly_leaderboard')
+    .select('week_start_date, weekly_xp_earned, weekly_points_earned')
+    .eq('user_id', userId)
+    .in('week_start_date', [toKey(weekStart), toKey(prevStart)]);
+
+  if (error) {
+    console.error('Error fetching weekly comparison:', error);
+    throw new Error('Failed to fetch weekly comparison');
+  }
+
+  const current = (data || []).find((r) => r.week_start_date === toKey(weekStart));
+  const previous = (data || []).find((r) => r.week_start_date === toKey(prevStart));
+
+  const pct = (cur: number, prev: number): number | null =>
+    prev > 0 ? Math.round(((cur - prev) / prev) * 100) : null;
+
+  const currentXP = current?.weekly_xp_earned ?? 0;
+  const previousXP = previous?.weekly_xp_earned ?? 0;
+  const currentPoints = current?.weekly_points_earned ?? 0;
+  const previousPoints = previous?.weekly_points_earned ?? 0;
+
+  return {
+    currentXP,
+    previousXP,
+    xpChangePct: previous ? pct(currentXP, previousXP) : null,
+    currentPoints,
+    previousPoints,
+    pointsChangePct: previous ? pct(currentPoints, previousPoints) : null,
+    hasPreviousWeek: !!previous,
+  };
+}
+
+/**
+ * All-time ranking ("Histórico") straight from the public profile view,
+ * ordered by lifetime XP. Rank is positional (no ties handling — same as
+ * showing the ordered list).
+ */
+export async function getAllTimeLeaderboard(
+  userId: string,
+  limit: number = 50
+): Promise<LeaderboardEntry[]> {
+  try {
+    const { data, error } = await supabase
+      .from('v_user_public_profile')
+      .select('id, username, avatar_url, level, total_xp_earned, points, current_streak')
+      .order('total_xp_earned', { ascending: false })
+      .limit(limit);
+
+    if (error) throw error;
+
+    return (data || []).map((row: any, index: number) => ({
+      rank: index + 1,
+      userId: row.id,
+      username: row.username,
+      avatarUrl: row.avatar_url,
+      level: row.level,
+      // Reuse the entry shape: for all-time, "weekly" fields carry lifetime totals
+      weeklyXPEarned: row.total_xp_earned,
+      weeklyPointsEarned: row.points,
+      habitsCompleted: 0,
+      isCurrentUser: row.id === userId,
+      currentStreak: row.current_streak ?? undefined,
+    }));
+  } catch (error) {
+    console.error('Error fetching all-time leaderboard:', error);
+    throw new Error('Failed to fetch all-time leaderboard');
   }
 }

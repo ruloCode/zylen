@@ -108,6 +108,34 @@ export class StatsService {
   }
 
   /**
+   * Raw completion timestamps for the last N days (habit_completions stores
+   * the full TIMESTAMPTZ). Powers the time-of-day chart on the progress page.
+   */
+  static async getCompletionTimestamps(days = 30): Promise<Date[]> {
+    try {
+      const userId = await getAuthUserId();
+      const since = new Date(Date.now() - days * 86_400_000);
+
+      const { data, error } = await supabase
+        .from('habit_completions')
+        .select('completed_at')
+        .eq('user_id', userId)
+        .gte('completed_at', since.toISOString())
+        .order('completed_at');
+
+      if (error) {
+        console.error('Error getting completion timestamps:', error);
+        return [];
+      }
+
+      return (data ?? []).map((row: { completed_at: string }) => new Date(row.completed_at));
+    } catch (error) {
+      console.error('Error in StatsService.getCompletionTimestamps:', error);
+      return [];
+    }
+  }
+
+  /**
    * Get comprehensive user statistics
    * Uses RPC function for efficient aggregation
    */

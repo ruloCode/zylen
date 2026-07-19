@@ -6,6 +6,7 @@
 
 import { supabase } from '@/lib/supabase';
 import { AuthError } from '@/types/errors';
+import { getDayRangeInTimeZone, getProfileTimezone } from './timezone';
 
 /**
  * Get authenticated user ID
@@ -70,32 +71,20 @@ export function getBrowserTimezone(): string {
 }
 
 /**
- * Get today's date range for filtering (start and end of day)
- * Note: This uses the browser's local timezone for display purposes.
- * The backend uses the user's stored timezone for validation.
+ * Get today's date range for filtering (start and end of day).
+ * Computed in the user's STORED profile timezone so it matches the backend
+ * RPCs (complete_habit / refresh_user_streak / get_daily_activity), which
+ * derive "today" from profiles.timezone — not the device clock.
  */
 export function getTodayDateRange(): { start: string; end: string } {
-  const today = new Date();
-  const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-  const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59, 999);
-
-  return {
-    start: startOfDay.toISOString(),
-    end: endOfDay.toISOString(),
-  };
+  return getDayRangeInTimeZone(getProfileTimezone());
 }
 
 /**
- * Get date range for a specific date
+ * Get date range for a specific date (in the user's stored timezone)
  */
 export function getDateRange(date: Date): { start: string; end: string } {
-  const startOfDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-  const endOfDay = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999);
-
-  return {
-    start: startOfDay.toISOString(),
-    end: endOfDay.toISOString(),
-  };
+  return getDayRangeInTimeZone(getProfileTimezone(), date);
 }
 
 /**

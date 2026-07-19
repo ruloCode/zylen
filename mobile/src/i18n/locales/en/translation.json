@@ -56,6 +56,9 @@
     "streakLabel": "Current streak",
     "streakKeepGoing": "Keep it up!",
     "levelLabel": "Level {{level}}",
+    "guardianTitle": "Guardian",
+    "levelShort": "Level {{level}}",
+    "focusStart": "Start",
     "focusOfDay": "Focus of the day",
     "personalJournal": "Personal Coach",
     "todayPath": "Your path today",
@@ -361,7 +364,8 @@
     "dayCount": "Day {{current}} of {{total}}",
     "percentComplete": "{{percent}}% lit",
     "checkInSuccess": "You've lit today's flame. The Everlight shines brighter.",
-    "checkInError": "The flame didn't catch this time. Try again, Guardian."
+    "checkInError": "The flame didn't catch this time. Try again, Guardian.",
+    "dayDone": "Day {{day}} completed"
   },
   "levelUp": {
     "title": "Your light has evolved.",
@@ -375,6 +379,8 @@
     "subtitle": "Treat yourself (occasionally)",
     "balance": "Balance",
     "buyNow": "Buy",
+    "notEnough": "Need {{count}} more",
+    "buyAria": "Redeem {{name}} for {{cost}} Essence",
     "purchased": "Purchased",
     "notEnoughPoints": "Not enough points! Complete more habits to earn points.",
     "confirmPurchase": "Confirm purchase?",
@@ -738,8 +744,34 @@
       "breathing": "Breathing",
       "breathingDesc": "Breathing and mindfulness exercises."
     },
+    "avatarCreator": {
+      "title": "Create your avatar",
+      "subtitle": "Upload a photo and we will turn it into your Zylen hero.",
+      "pickPhoto": "Choose a photo",
+      "changePhoto": "Change photo",
+      "photoAlt": "Your photo",
+      "generate": "Create my avatar",
+      "generating1": "Forging your hero in the light…",
+      "generating2": "Carving every detail of your face…",
+      "generating3": "Weaving your Guardian garb…",
+      "generatingHint": "This can take up to a minute",
+      "bustLabel": "Portrait",
+      "bodyLabel": "Full hero",
+      "bustAlt": "Your avatar portrait",
+      "bodyAlt": "Your full-body hero",
+      "retry": "Try again",
+      "use": "Use this avatar",
+      "saved": "Your hero has awakened!",
+      "error": "We couldn't create your avatar. Try a different photo.",
+      "limitError": "You reached today's creation limit. Come back tomorrow.",
+      "privacy": "Your photo is only used to create the avatar and is not stored.",
+      "cta": "Create AI avatar",
+      "photoRejected": "That photo couldn't be processed. Try another one where your face is clear and front-facing."
+    },
     "avatars": {
       "pickTitle": "Choose your avatar",
+      "custom": "Your avatar",
+      "createCustom": "Create from photo",
       "save": "Save",
       "saved": "Avatar updated",
       "rulo": "Rulo",
@@ -759,6 +791,36 @@
       "focusDesc": "100 minutes in a week",
       "elite": "Elite discipline",
       "eliteDesc": "30 day streak"
+    },
+    "forge": {
+      "title": "3D Hero Forge",
+      "cta": "Forge my 3D hero",
+      "reforgeCta": "Re-forge hero",
+      "noAvatar": "Create your AI avatar first — your 3D hero is forged from it.",
+      "ready": "Your 3D hero is ready. This is you in the Arena!",
+      "forgingHint": "Forging takes 10-20 min. You can close the app: it resumes when you return.",
+      "reforgeIn": "You can re-forge your hero in {{days}} day(s).",
+      "stages": {
+        "sheet": "Sketching your hero…",
+        "model": "Sculpting your 3D figure…",
+        "skeleton": "Forging the skeleton…",
+        "anims": "Bringing your moves to life…",
+        "download": "Collecting the forge pieces…",
+        "merge": "Fusing your final hero…"
+      },
+      "errors": {
+        "no_avatar": "You need an AI avatar before forging your hero.",
+        "forge_active_exists": "A forge is already in progress.",
+        "forge_cooldown": "Your hero was forged recently. Wait before re-forging.",
+        "sheet_failed": "We couldn't sketch your hero. Try again.",
+        "meshy_model_failed": "The 3D sculpt failed. Try again.",
+        "meshy_rig_failed": "The skeleton couldn't be forged from that figure. Re-create your avatar and try again.",
+        "meshy_anim_failed": "The animations failed. Try again.",
+        "meshy_credits_exhausted": "The forge ran out of energy for now. Come back later.",
+        "download_failed": "We couldn't collect the forge pieces. Try again.",
+        "merge_failed": "The final fusion failed. Try again.",
+        "forge_failed": "The forge failed. Try again."
+      }
     }
   },
   "username": {
@@ -856,7 +918,108 @@
       "searchUsers": "Failed to search users"
     },
     "requests": "Requests",
-    "search": "Search"
+    "search": "Search",
+    "hub": {
+      "statAllies": "Allies",
+      "statActiveFlames": "Active flames",
+      "statSharedLight": "Alliance Light",
+      "statBestStreak": "Best streak",
+      "daysValue_one": "{{count}} day",
+      "daysValue_other": "{{count}} days",
+      "yourAllies": "Your allies",
+      "viewAll": "View all",
+      "viewLess": "View less",
+      "flameAlive": "Flame alive",
+      "flameOut": "No flame",
+      "recentActivity": "Alliance activity",
+      "noActivity": "When your allies complete rituals, their Light will show up here.",
+      "thisWeek": "This week",
+      "activityYouWeek": "earned Light from your rituals",
+      "activityRituals_one": "completed {{count}} ritual",
+      "activityRituals_other": "completed {{count}} rituals",
+      "activityStreak": "keeps their flame alive",
+      "streakDay": "Day {{day}}",
+      "sharedMissions": "Shared missions",
+      "comingSoon": "Coming soon",
+      "missionsTeaser": "Team challenges with your allies: complete missions together and share the Light reward.",
+      "missionWater": "Drink water · 7 days",
+      "missionSleep": "Sleep before 10 PM",
+      "missionReading": "Read 20 pages a day"
+    }
+  },
+  "community": {
+    "stats": {
+      "vsPrevious": "{{pct}}% vs last week",
+      "newWeek": "New this week"
+    },
+    "ranking": {
+      "title": "Guardians Ranking",
+      "subtitleWeekly": "The most consistent this week",
+      "subtitleAllTime": "All-time legends",
+      "weekly": "Weekly",
+      "allTime": "All-time",
+      "viewFull": "View full ranking",
+      "viewLess": "Show less",
+      "light": "Light",
+      "essence": "Essence",
+      "resetsIn": "Resets in {{time}}"
+    },
+    "allies": {
+      "activeToday": "Active today",
+      "activeNow": "Active now",
+      "sharedLight": "Light shared this week",
+      "bestFlame": "Best flame in the circle"
+    },
+    "activity": {
+      "justNow": "Just now",
+      "types": {
+        "habitCompleted": "completed {{habit}}",
+        "levelUp": "reached Level {{level}}",
+        "streakMilestone": "kept the flame · Day {{days}}",
+        "missionCompleted": "completed {{mission}}"
+      }
+    },
+    "missions": {
+      "participants_one": "{{count}} participant",
+      "participants_other": "{{count}} participants",
+      "reward": "Reward: +{{xp}} Light",
+      "join": "Join",
+      "checkIn": "Check in today",
+      "checkedIn": "Done today",
+      "completed": "Completed",
+      "joinSuccess": "You joined the mission!",
+      "checkInSuccess": "Progress logged!",
+      "missionComplete": "Mission complete! +{{xp}} Light",
+      "error": "Action failed",
+      "catalog": {
+        "hydration_7": {
+          "title": "Drink water",
+          "description": "7 days of mindful hydration"
+        },
+        "early_bird_5": {
+          "title": "Wake up early",
+          "description": "5 days rising early"
+        },
+        "move_7": {
+          "title": "Move 20 min",
+          "description": "7 days of daily movement"
+        },
+        "mindful_3": {
+          "title": "Breathe & meditate",
+          "description": "3 days of mindful pause"
+        }
+      }
+    },
+    "profile": {
+      "title": "Guardian Profile",
+      "guardianSince": "Guardian since {{date}}",
+      "mutualAllies": "Mutual allies",
+      "addAlly": "Add Ally",
+      "acceptRequest": "Accept request",
+      "currentFlame": "Current flame",
+      "bestFlame": "Best flame",
+      "totalLight": "Total Light"
+    }
   },
   "templates": {
     "title": "Habit Templates",
@@ -967,6 +1130,11 @@
       "second": "🥈",
       "third": "🥉"
     },
+    "hub": {
+      "heroRankings": "The Guardians who gathered the most Light this week.",
+      "heroSocial": "You never level up alone. Your allies help you stay disciplined.",
+      "heroStreaks": "Your flame grows with every day of consistency."
+    },
     "tabs": {
       "rankings": "Rankings",
       "social": "Social",
@@ -1076,7 +1244,11 @@
     "currentStreakTitle": "Your current streak",
     "keepItUp": "Keep it up! 🔥",
     "today": "Today",
-    "dailyActivity": "Daily activity (minutes)",
+    "dailyActivity": "Daily activity (XP)",
+    "completionTimes": "Your ritual hours",
+    "completionTimesHint": "Complete rituals to discover when you shine the most.",
+    "peakHour": "Your brightest hour: {{hour}}",
+    "last30Days": "Last 30 days",
     "minutesUnit": "Minutes",
     "focusAreas": "Focus areas",
     "seeDetail": "See detail",
@@ -1108,6 +1280,7 @@
     "days": "days",
     "today": "Today",
     "myRoutines": "My routines",
+    "todayProgress": "{{done}}/{{total}} today",
     "newRoutine": "New routine",
     "empty": "You don't have routines yet. Create your first one!",
     "bannerTitle": "Consistency is your superpower.",
@@ -1879,6 +2052,20 @@
     },
     "notificationTitle": "Your gem has grown! 💎",
     "notificationBody": "Focus session complete. Come back to Zylen to claim your Light.",
+    "dailyChallenge": {
+      "badge": "Today's challenge",
+      "pendingTitle": "Focus challenge",
+      "pendingBody": "Focus for {{goal}} min today and make your hero stronger",
+      "progress": "{{minutes}}/{{goal}} min",
+      "readyTitle": "Challenge complete!",
+      "readyBody": "Claim your reward for focusing today",
+      "claim": "Claim +{{points}} Essence · +{{xp}} Light",
+      "claiming": "Claiming…",
+      "claimedTitle": "Reward claimed",
+      "claimedBody": "Come back tomorrow for a new challenge",
+      "claimedToast": "+{{points}} Essence · +{{xp}} Light",
+      "claimFailed": "Couldn't claim. Try again."
+    },
     "errors": {
       "alreadyRunning": "You already have a session running.",
       "startFailed": "Could not start the session. Try again.",

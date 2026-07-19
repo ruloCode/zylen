@@ -8,6 +8,7 @@
 
 import React, { useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
+import * as Haptics from 'expo-haptics';
 import { Check, X, Flame, Shield, Timer, Zap } from 'lucide-react-native';
 import { cn } from '@/utils';
 import { XPBurst } from '@/components/effects/XPBurst';
@@ -81,9 +82,11 @@ export function HabitItem({
       onLog(id);
       return;
     }
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     try {
       setIsLoading(true);
       const result = await onComplete(id);
+      void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       const awarded = result && 'xpEarned' in result ? result.xpEarned : xp;
       const bonusPercent =
         result && result.streakMultiplier && result.streakMultiplier > 1
@@ -102,6 +105,7 @@ export function HabitItem({
 
   const handleUncomplete = async () => {
     if (isLoading || !completedToday) return;
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     try {
       setIsLoading(true);
       await onUncomplete(id);

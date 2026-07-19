@@ -101,7 +101,7 @@ export function RootHabit() {
                 <Sunrise size={48} color="#FFFFFF" />
               </LinearGradient>
             </View>
-            <Text className="mb-4 text-center text-4xl font-bold text-white">
+            <Text className="mb-4 text-center text-[28px] font-extrabold leading-tight tracking-tight text-white">
               {t('rootHabit.reviveTitle')}
             </Text>
             <Text className="text-center text-lg leading-relaxed text-white">
@@ -156,6 +156,9 @@ export function RootHabit() {
                 {checkIns.map((day) => (
                   <View
                     key={day.day}
+                    accessibilityLabel={
+                      day.completed ? t('rootHabit.dayDone', { day: day.day }) : undefined
+                    }
                     className={cn(
                       'aspect-square grow basis-[13%] items-center justify-center overflow-hidden rounded-xl',
                       !day.completed && 'bg-white/10'

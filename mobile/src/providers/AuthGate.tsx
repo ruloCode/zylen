@@ -104,7 +104,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
     return (
       <View className="flex-1 items-center justify-center bg-background">
         <ActivityIndicator size="large" className="mb-4" color="#2dd4bf" />
-        <Text className="text-lg text-foreground">El reino despierta…</Text>
+        <Text className="text-lg text-foreground">{t('common.awakening')}</Text>
       </View>
     );
   }

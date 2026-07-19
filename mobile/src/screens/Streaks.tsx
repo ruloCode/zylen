@@ -25,7 +25,6 @@ import {
   Star,
   Gem,
   Check,
-  ChevronDown,
   ChevronRight,
   Compass,
   type LucideIcon,
@@ -36,6 +35,7 @@ import { getAreaLevelProgress } from '@/utils/xp';
 import { getHeroBodySrc, getLifeAreaMeta, ROUTES } from '@/constants';
 import { getIcon } from '@/components/atoms/icons/iconMaps';
 import { StatsService, type DailyActivity } from '@/services/supabase/stats.service';
+import { CompletionTimesChart } from '@/features/streaks/components';
 import { Header } from '@/components/layout';
 import { img } from '@/assets/registry';
 import { themeHsl } from '@/theme/themeVars';
@@ -99,10 +99,15 @@ export function Streaks() {
 
   // Real daily activity (XP per local day) from habit_completions.
   const [activity, setActivity] = useState<DailyActivity[]>([]);
+  // Raw completion timestamps (last 30 days) for the time-of-day chart.
+  const [completionTimes, setCompletionTimes] = useState<Date[]>([]);
   useEffect(() => {
     let alive = true;
     StatsService.getDailyActivity(7).then((rows) => {
       if (alive) setActivity(rows);
+    });
+    StatsService.getCompletionTimestamps(30).then((times) => {
+      if (alive) setCompletionTimes(times);
     });
     return () => {
       alive = false;
@@ -298,11 +303,10 @@ export function Streaks() {
               <Text className="text-base font-bold text-white">
                 {t('progress.weeklySummary')}
               </Text>
-              <View className="flex-row items-center gap-1 rounded-full border border-white/10 bg-white/10 px-3 py-1">
+              <View className="rounded-full border border-white/10 bg-white/10 px-3 py-1">
                 <Text className="text-xs font-semibold text-white/80">
                   {t('progress.thisWeek')}
                 </Text>
-                <ChevronDown size={14} color="rgba(255,255,255,0.8)" />
               </View>
             </View>
             <View className="flex-row flex-wrap gap-3">
@@ -453,6 +457,9 @@ export function Streaks() {
             })()}
           </View>
 
+          {/* ── Horas de completado (distribución 0-23h, últimos 30 días) ── */}
+          <CompletionTimesChart timestamps={completionTimes} className={cn(glass, 'mb-4')} />
+
           {/* ── Áreas de enfoque ── */}
           <View className={cn(glass, 'mb-4')}>
             <View className="mb-4 flex-row items-center justify-between">
@@ -525,6 +532,7 @@ export function Streaks() {
 
           {/* ── Banner ── */}
           <Pressable
+            onPress={() => router.push(ROUTES.HABITS)}
             accessibilityRole="button"
             accessibilityLabel={t('progress.bannerTitle')}
             className="w-full flex-row items-center gap-3 rounded-2xl border border-white/10 bg-[hsl(var(--glass-bg)/0.65)] p-4 active:opacity-80"

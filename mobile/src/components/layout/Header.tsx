@@ -11,7 +11,7 @@ import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { Image } from 'expo-image';
 import { usePathname, useRouter } from 'expo-router';
-import { Coins, Star, User as UserIcon } from 'lucide-react-native';
+import { Coins, User as UserIcon } from 'lucide-react-native';
 import { useUser } from '@/store';
 import { useAnimatedNumber } from '@/hooks/useAnimatedNumber';
 import { LanguageSwitcher } from '@/features/settings/components/LanguageSwitcher';
@@ -21,7 +21,8 @@ import { ROUTES } from '@/constants/routes';
 import { img } from '@/assets/registry';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const STAT_ICON_COLOR = 'rgb(137,184,32)';
+// v2: rewards/currency read in gold (the legacy lime is banned by the design system)
+const GOLD_400 = '#F6A93B';
 
 export function Header() {
   const { user } = useUser();
@@ -46,7 +47,7 @@ export function Header() {
 
   return (
     <View
-      className="border-b border-charcoal-700 bg-charcoal-800/95"
+      className="border-b border-[hsl(var(--glass-border)/0.12)] bg-[hsl(var(--glass-bg)/0.7)]"
       style={{ paddingTop: insets.top }}
     >
       <View className="h-16 flex-row items-center justify-between px-4">
@@ -60,21 +61,13 @@ export function Header() {
           <Logo size="sm" />
         </Pressable>
 
-        {/* Center: User Stats (visible on md+ widths, like the web) */}
-        <View className="hidden flex-row items-center gap-6 md:flex">
-          {/* Points */}
-          <View className="flex-row items-center gap-2 rounded-lg border border-charcoal-600 bg-charcoal-700/50 px-3 py-1.5">
-            <Coins size={18} color={STAT_ICON_COLOR} />
-            <Text className="text-sm font-semibold text-white">
+        {/* Center: points always visible on phone (md: never applies at 360-430dp) */}
+        <View className="flex-row items-center gap-2">
+          <View className="flex-row items-center gap-1.5 rounded-full border border-gold-400/25 bg-gold-400/10 px-3 py-1.5">
+            <Coins size={15} color={GOLD_400} />
+            <Text className="text-sm font-bold text-gold-300">
               {animatedPoints.toLocaleString()}
             </Text>
-            <Text className="text-xs text-gray-200">pts</Text>
-          </View>
-
-          {/* Level */}
-          <View className="flex-row items-center gap-2 rounded-lg border border-charcoal-600 bg-charcoal-700/50 px-3 py-1.5">
-            <Star size={18} color={STAT_ICON_COLOR} />
-            <Text className="text-sm font-semibold text-white">Nv. {user.level}</Text>
           </View>
         </View>
 
@@ -92,7 +85,7 @@ export function Header() {
             className={cn(
               'flex-row items-center gap-2 rounded-lg px-3 py-2',
               isProfile
-                ? 'border border-[rgb(137,184,32)]/50 bg-[rgb(137,184,32)]/20'
+                ? 'border border-teal-400/50 bg-teal-400/15'
                 : 'border border-white/20 bg-white/10 active:bg-white/20'
             )}
           >

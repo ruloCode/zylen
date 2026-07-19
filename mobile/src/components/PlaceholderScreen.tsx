@@ -9,7 +9,7 @@ import { Text, View } from 'react-native';
 export function PlaceholderScreen({ title }: { title: string }) {
   return (
     <View className="flex-1 items-center justify-center bg-background px-8">
-      <Text className="mb-2 font-display text-3xl uppercase text-foreground">{title}</Text>
+      <Text className="mb-2 text-[28px] font-extrabold tracking-tight text-foreground">{title}</Text>
       <Text className="text-center text-muted-foreground">
         Pantalla en migración desde la app web.
       </Text>

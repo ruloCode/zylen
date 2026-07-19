@@ -71,7 +71,7 @@ export function OnboardingStep1({ onNext }: OnboardingStep1Props) {
       <View className="mb-8 items-center">
         <View className="mb-3 flex-row items-center justify-center gap-2">
           <Sparkles color={primaryColor} size={32} />
-          <Text className="text-center text-2xl font-extrabold uppercase tracking-wide text-white">
+          <Text className="text-center text-2xl font-extrabold tracking-tight text-white">
             {t('onboarding.step1.title')}
           </Text>
         </View>
@@ -83,7 +83,7 @@ export function OnboardingStep1({ onNext }: OnboardingStep1Props) {
       {/* Name Input Form */}
       <View className="gap-6">
         <View>
-          <Text className="mb-2 text-sm font-bold uppercase tracking-wide text-white/90">
+          <Text className="mb-2 text-sm font-semibold text-white/90">
             {t('onboarding.step1.nameLabel')}
           </Text>
           <TextInput
@@ -113,7 +113,7 @@ export function OnboardingStep1({ onNext }: OnboardingStep1Props) {
 
         {/* Avatar Selection */}
         <View>
-          <Text className="mb-3 text-sm font-bold uppercase tracking-wide text-white/90">
+          <Text className="mb-3 text-sm font-semibold text-white/90">
             {t('onboarding.step1.avatarLabel')}
           </Text>
           <AvatarPicker value={selectedAvatar} onChange={setSelectedAvatar} />
@@ -121,7 +121,7 @@ export function OnboardingStep1({ onNext }: OnboardingStep1Props) {
 
         {/* Identity Selection — drives gendered language across the app */}
         <View>
-          <Text className="mb-3 text-sm font-bold uppercase tracking-wide text-white/90">
+          <Text className="mb-3 text-sm font-semibold text-white/90">
             {t('onboarding.identity.label')}
           </Text>
           <View

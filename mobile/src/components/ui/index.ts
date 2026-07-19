@@ -9,3 +9,4 @@ export * from './LevelUpNotification';
 export * from './Modal';
 export * from './ColorPicker';
 export * from './GlassCard';
+export * from './SectionLabel';

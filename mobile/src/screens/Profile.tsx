@@ -52,6 +52,7 @@ import {
   Quote,
   Check,
   type LucideIcon,
+  Wand2,
 } from 'lucide-react-native';
 import toast from '@/lib/toast';
 import { supabase } from '@/lib/supabase';
@@ -65,6 +66,8 @@ import {
   AdvancedStats,
   DangerZone,
   AvatarPicker,
+  AvatarCreator,
+  ForgeHeroCard,
 } from '@/features/profile/components';
 import { HabitForm } from '@/features/habits/components';
 import { ThemeSelector, ReminderSettings } from '@/features/settings/components';
@@ -73,7 +76,7 @@ import { ProgressBar } from '@/components/ui';
 import { getIcon } from '@/components/atoms/icons/iconMaps';
 import { Habit, HabitFormData } from '@/types';
 import type { HabitWithCompletion } from '@/services/supabase/habits.service';
-import { ROUTES, AVATARS, THEMES } from '@/constants';
+import { ROUTES, AVATARS, THEMES, FEATURES, isCustomAvatar } from '@/constants';
 import { img } from '@/assets/registry';
 import { getLevelProgress } from '@/utils/xp';
 import { cn } from '@/utils';
@@ -129,7 +132,7 @@ export function Profile() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
-  const { user, updateUserProfile } = useUser();
+  const { user, updateUserProfile, applyCustomAvatar } = useUser();
   const { signOut } = useAuth();
   const { lifeAreas, toggleLifeAreaEnabled } = useLifeAreas();
   const { habits, deleteHabit, updateHabit } = useHabits();
@@ -151,6 +154,7 @@ export function Profile() {
     user?.avatarUrl || AVATARS.RULO
   );
   const [isAvatarPickerOpen, setIsAvatarPickerOpen] = useState(false);
+  const [isAvatarCreatorOpen, setIsAvatarCreatorOpen] = useState(false);
   const [pickerAvatar, setPickerAvatar] = useState(user?.avatarUrl || AVATARS.RULO);
   const [isEditingHabit, setIsEditingHabit] = useState(false);
   const [habitToEdit, setHabitToEdit] = useState<Habit | undefined>(undefined);
@@ -226,6 +230,16 @@ export function Profile() {
     setIsAvatarPickerOpen(false);
     setSelectedAvatar(pickerAvatar);
     toast.success(t('profile.avatars.saved'));
+  };
+
+  // Custom AI avatar creator: the service already uploaded + persisted; here
+  // we just sync the store and local UI state (mirrors the web Profile).
+  const handleCustomAvatarSaved = (avatarUrl: string, avatarBodyUrl: string) => {
+    applyCustomAvatar(avatarUrl, avatarBodyUrl);
+    setSelectedAvatar(avatarUrl);
+    setPickerAvatar(avatarUrl);
+    setIsAvatarCreatorOpen(false);
+    toast.success(t('profile.avatarCreator.saved'));
   };
 
   const handleOpenEditHabit = (habit: HabitWithCompletion) => {
@@ -422,7 +436,7 @@ export function Profile() {
           {/* 1. Header */}
           <View className="mb-6 flex-row items-start justify-between gap-3">
             <View className="min-w-0 flex-1">
-              <Text className="text-[26px] font-extrabold leading-tight tracking-tight text-white">
+              <Text className="text-[28px] font-extrabold leading-tight tracking-tight text-white">
                 {t('navigation.profile')}
               </Text>
               <Text className="mt-1.5 text-[15px] font-medium leading-snug text-white/70">
@@ -501,6 +515,18 @@ export function Profile() {
               </Text>
             </View>
 
+            <Pressable
+              onPress={() => setIsAvatarCreatorOpen(true)}
+              accessibilityRole="button"
+              accessibilityLabel={t('profile.avatarCreator.cta')}
+              className="mt-4 flex-row items-center gap-2 rounded-full border border-teal-400/40 bg-teal-500/15 px-4 py-2 active:bg-teal-500/25"
+            >
+              <Wand2 size={15} color="#99F6E4" />
+              <Text className="text-sm font-semibold text-teal-200">
+                {t('profile.avatarCreator.cta')}
+              </Text>
+            </Pressable>
+
             <View className="mt-4 w-full">
               <ProgressBar
                 current={levelProgress.current}
@@ -513,6 +539,9 @@ export function Profile() {
               </Text>
             </View>
           </View>
+
+          {/* 2b. Hero Forge — forge the AI avatar into a 3D arena hero */}
+          <ForgeHeroCard className="mb-5" />
 
           {/* 3. Motivational quote */}
           <View className={cn(GLASS, 'mb-5 flex-row items-start gap-3 p-5')}>
@@ -631,7 +660,8 @@ export function Profile() {
             )}
           </View>
 
-          {/* 6. Tools */}
+          {/* 6. Tools — coming-soon placeholders, hidden for the store release */}
+          {FEATURES.enableProfileTools ? (
           <View className={cn(GLASS, 'mb-5 p-4')}>
             <View className="mb-4 flex-row items-center justify-between">
               <Text className="text-lg font-bold text-white">{t('profile.toolsTitle')}</Text>
@@ -670,6 +700,7 @@ export function Profile() {
               ))}
             </View>
           </View>
+          ) : null}
 
           {/* Habit reminders (local notifications) */}
           <ReminderSettings />
@@ -683,14 +714,16 @@ export function Profile() {
                   {t('profile.aboutTitle')}
                 </Text>
               </View>
-              <Pressable
-                onPress={comingSoon}
-                accessibilityRole="button"
-                accessibilityLabel={t('common.edit')}
-                className="h-8 w-8 items-center justify-center rounded-full bg-white/10 active:bg-white/20"
-              >
-                <Pencil size={14} color="rgba(255,255,255,0.7)" />
-              </Pressable>
+              {FEATURES.enableProfileTools ? (
+                <Pressable
+                  onPress={comingSoon}
+                  accessibilityRole="button"
+                  accessibilityLabel={t('common.edit')}
+                  className="h-8 w-8 items-center justify-center rounded-full bg-white/10 active:bg-white/20"
+                >
+                  <Pencil size={14} color="rgba(255,255,255,0.7)" />
+                </Pressable>
+              ) : null}
             </View>
             <Text className="text-sm leading-relaxed text-white/70">
               {t('profile.aboutDefault')}
@@ -721,7 +754,15 @@ export function Profile() {
                 <X size={18} color={WHITE} />
               </Pressable>
             </View>
-            <AvatarPicker value={pickerAvatar} onChange={setPickerAvatar} />
+            <AvatarPicker
+              value={pickerAvatar}
+              onChange={setPickerAvatar}
+              customAvatarUrl={isCustomAvatar(user.avatarUrl) ? user.avatarUrl : undefined}
+              onCreateCustom={() => {
+                setIsAvatarPickerOpen(false);
+                setIsAvatarCreatorOpen(true);
+              }}
+            />
             <Pressable
               onPress={handleSavePickerAvatar}
               accessibilityRole="button"
@@ -732,6 +773,15 @@ export function Profile() {
           </View>
         </View>
       </RNModal>
+
+      {/* ── AI avatar creator (photo → chibi hero via Edge Function) ── */}
+      {isAvatarCreatorOpen && user ? (
+        <AvatarCreator
+          gender={user.gender}
+          onClose={() => setIsAvatarCreatorOpen(false)}
+          onSaved={handleCustomAvatarSaved}
+        />
+      ) : null}
 
       {/* ── Settings sheet (full original settings UI, gear-triggered) ── */}
       <RNModal
@@ -1207,7 +1257,7 @@ export function Profile() {
                 <View className="gap-4">
                   {/* Theme Selector */}
                   <View>
-                    <Text className="mb-3 text-sm font-bold uppercase tracking-wide text-white/90">
+                    <Text className="mb-3 text-sm font-semibold text-white/90">
                       {t('themes.title')}
                     </Text>
                     <ThemeSelector variant="grid" />

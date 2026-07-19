@@ -182,7 +182,7 @@ export function Social() {
           <View className="mb-8">
             <View className="mb-2 flex-row items-center gap-3">
               <Users size={32} color={COLORS.teal400} />
-              <Text className="text-3xl font-bold text-white">{t('social.title')}</Text>
+              <Text className="text-[28px] font-extrabold leading-tight tracking-tight text-white">{t('social.title')}</Text>
             </View>
           </View>
 

@@ -1,3 +1,41 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/*
+ * Design system v2 (mirrors web src/index.css).
+ *
+ * RN registers each font weight as its own family, so the standard Tailwind
+ * weight utilities are re-declared here to ALSO switch the Manrope family.
+ * font-weight itself is omitted on purpose: the family already carries the
+ * weight, and adding fontWeight would trigger Android's synthetic bold.
+ */
+@layer utilities {
+  .font-normal {
+    font-family: 'Manrope_400Regular';
+  }
+  .font-medium {
+    font-family: 'Manrope_500Medium';
+  }
+  .font-semibold {
+    font-family: 'Manrope_600SemiBold';
+  }
+  .font-bold {
+    font-family: 'Manrope_700Bold';
+  }
+  .font-extrabold {
+    font-family: 'Manrope_800ExtraBold';
+  }
+}
+
+@layer components {
+  /* Section eyebrow — v2 equivalent of the web .section-label */
+  .section-label {
+    font-family: 'Manrope_700Bold';
+    font-size: 11px;
+    line-height: 14px;
+    letter-spacing: 1.7px;
+    text-transform: uppercase;
+    color: hsl(var(--text-secondary) / 0.75);
+  }
+}

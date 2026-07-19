@@ -317,7 +317,8 @@ export function HabitLog() {
 
   // Bundled hero images (web public/ paths resolved through the registry)
   const heroBgSource = img(HERO_BG_SRC);
-  const heroBodySource = img(getHeroBodySrc(user?.avatarUrl));
+  const heroBody = getHeroBodySrc(user?.avatarUrl, user?.avatarBodyUrl);
+  const heroBodySource = img(heroBody) ?? { uri: heroBody };
 
   return (
     <View className="flex-1 bg-background">
@@ -381,24 +382,38 @@ export function HabitLog() {
                   </Text>
                 </View>
 
-                {/* Level ring */}
-                <CircularProgress
-                  current={levelProgress.current}
-                  max={levelProgress.max || 1}
-                  variant="xp"
-                  size={66}
-                  strokeWidth={5}
-                >
-                  <View className="items-center">
-                    <Gem size={12} color="#8FB3FF" />
-                    <Text className="mt-0.5 text-[10px] font-extrabold leading-none text-white">
-                      {t('home.levelLabel', { level: user?.level ?? 1 })}
+                {/* Level badge — eyebrow + level beside a compact ring so nothing
+                    crowds the circle; dark backdrop keeps it legible over the character */}
+                <View className="flex-row items-center gap-2 rounded-2xl border border-white/10 bg-black/35 py-1.5 pl-2.5 pr-1.5">
+                  <View className="items-end">
+                    <Text
+                      className="text-[9px] font-bold uppercase text-[#8Fb3ff]"
+                      style={{ letterSpacing: 1 }}
+                    >
+                      {t('home.guardianTitle')}
                     </Text>
-                    <Text className="mt-0.5 text-[7px] font-medium text-white/55">
-                      {levelProgress.current} / {levelProgress.max} {t('common.xp')}
+                    <Text className="text-[13px] font-extrabold leading-tight text-white">
+                      {t('home.levelShort', { level: user?.level ?? 1 })}
                     </Text>
                   </View>
-                </CircularProgress>
+                  <CircularProgress
+                    current={levelProgress.current}
+                    max={levelProgress.max || 1}
+                    variant="xp"
+                    size={50}
+                    strokeWidth={5}
+                  >
+                    <View className="items-center">
+                      <Gem size={12} color="#8FB3FF" />
+                      <Text className="mt-0.5 text-[13px] font-extrabold leading-none text-white">
+                        {levelProgress.current}
+                      </Text>
+                      <Text className="mt-0.5 text-[7px] font-medium text-white/55">
+                        /{levelProgress.max} {t('common.xp')}
+                      </Text>
+                    </View>
+                  </CircularProgress>
+                </View>
               </View>
 
               {/* Filter pills pinned to the bottom of the card */}
@@ -519,7 +534,7 @@ export function HabitLog() {
 
           {/* Mis rutinas */}
           <View className="mb-6">
-            <View className="mb-4 flex-row items-center justify-between">
+            <View className="mb-2 flex-row items-center justify-between">
               <Text className="text-xl font-bold text-white">{t('routines.myRoutines')}</Text>
               <Pressable
                 onPress={handleCreateHabit}
@@ -537,6 +552,28 @@ export function HabitLog() {
                 </Text>
               </Pressable>
             </View>
+
+            {/* Progreso del día — cuántas rutinas van completadas hoy */}
+            {habits.length > 0 && (
+              <View className="mb-4 flex-row items-center gap-3">
+                <View className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/10">
+                  <View
+                    className="h-full rounded-full bg-teal-400"
+                    style={{
+                      width: `${Math.round(
+                        (habits.filter((h) => h.completedToday).length / habits.length) * 100
+                      )}%`,
+                    }}
+                  />
+                </View>
+                <Text className="text-xs font-bold text-white/60">
+                  {t('routines.todayProgress', {
+                    done: habits.filter((h) => h.completedToday).length,
+                    total: habits.length,
+                  })}
+                </Text>
+              </View>
+            )}
 
             {/* Loading state */}
             {isLoading && habits.length === 0 && (

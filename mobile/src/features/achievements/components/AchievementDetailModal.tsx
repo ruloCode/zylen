@@ -291,7 +291,7 @@ export function AchievementDetailModal({
           <ScrollView contentContainerStyle={{ padding: 24, gap: 24 }}>
             {/* Description */}
             <View>
-              <Text className="mb-2 text-sm font-bold uppercase tracking-wider text-white/70">
+              <Text className="mb-2 text-[11px] font-bold uppercase tracking-[1.7px] text-white/60">
                 {t('achievements.modal.description')}
               </Text>
               <Text className="leading-relaxed text-white/90">{displayDescription}</Text>
@@ -299,7 +299,7 @@ export function AchievementDetailModal({
 
             {/* Requirements */}
             <View>
-              <Text className="mb-2 text-sm font-bold uppercase tracking-wider text-white/70">
+              <Text className="mb-2 text-[11px] font-bold uppercase tracking-[1.7px] text-white/60">
                 {t('achievements.requirements')}
               </Text>
               <View className="rounded-xl border border-white/10 bg-white/5 p-4">
@@ -310,7 +310,7 @@ export function AchievementDetailModal({
             {/* Progress */}
             <View>
               <View className="mb-3 flex-row items-center justify-between">
-                <Text className="text-sm font-bold uppercase tracking-wider text-white/70">
+                <Text className="text-[11px] font-bold uppercase tracking-[1.7px] text-white/60">
                   {t('achievements.modal.yourProgress')}
                 </Text>
                 <Text
@@ -347,7 +347,7 @@ export function AchievementDetailModal({
 
             {/* Rewards */}
             <View>
-              <Text className="mb-3 text-sm font-bold uppercase tracking-wider text-white/70">
+              <Text className="mb-3 text-[11px] font-bold uppercase tracking-[1.7px] text-white/60">
                 {t('achievements.rewards')}
               </Text>
               <View className="flex-row gap-3">

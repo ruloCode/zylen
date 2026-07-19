@@ -212,10 +212,9 @@ function HudTabBar({ state, navigation }: HudTabBarProps) {
               </HexFrame>
               <Text
                 style={{
-                  fontSize: 9.5,
-                  fontWeight: isActive ? '800' : '600',
-                  textTransform: 'uppercase',
-                  letterSpacing: 1.2,
+                  fontSize: 10.5,
+                  fontFamily: isActive ? 'Manrope_800ExtraBold' : 'Manrope_600SemiBold',
+                  letterSpacing: 0.2,
                   color: isActive ? foreground : inactiveLabel,
                 }}
               >

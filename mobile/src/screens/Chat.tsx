@@ -113,7 +113,7 @@ export function Chat() {
         >
           {/* Header */}
           <View className="pb-4 pt-6">
-            <Text className="mb-3 text-4xl font-extrabold tracking-tight text-white">
+            <Text className="mb-3 text-[28px] font-extrabold leading-tight tracking-tight text-white">
               {t('chat.title')}
             </Text>
             <Text className="text-base font-semibold text-white">{t('chat.subtitle')}</Text>

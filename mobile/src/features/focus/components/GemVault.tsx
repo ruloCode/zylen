@@ -16,7 +16,7 @@ import { cn } from '@/utils/cn';
 import { useLocale } from '@/hooks/useLocale';
 import { useAnimatedNumber } from '@/hooks/useAnimatedNumber';
 import { img } from '@/assets/registry';
-import { FOCUS_CONFIG } from '@/constants/config';
+import { FEATURES, FOCUS_CONFIG } from '@/constants/config';
 import {
   GEM_SPECIES,
   type FocusStats,
@@ -181,7 +181,8 @@ export function GemVault({ stats }: GemVaultProps) {
         </ScrollView>
       </View>
 
-      {/* Arena power teaser */}
+      {/* Arena power teaser (hidden while the Arena itself is feature-flagged off) */}
+      {FEATURES.enableArena ? (
       <View className={cn(glass, 'p-4')}>
         <View className="mb-1 flex-row items-center gap-1.5">
           <Swords size={15} color="#d8b4fe" />
@@ -228,6 +229,7 @@ export function GemVault({ stats }: GemVaultProps) {
           </View>
         </View>
       </View>
+      ) : null}
     </View>
   );
 }

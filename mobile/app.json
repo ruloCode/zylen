@@ -2,7 +2,7 @@
   "expo": {
     "name": "Zylen",
     "slug": "zylen",
-    "version": "1.0.0",
+    "version": "1.2.0",
     "scheme": "zylen",
     "orientation": "default",
     "icon": "./assets/icon.png",
@@ -16,6 +16,7 @@
     },
     "android": {
       "package": "com.rulocode.zylen",
+      "versionCode": 3,
       "adaptiveIcon": {
         "backgroundColor": "#0B1519",
         "foregroundImage": "./assets/android-icon-foreground.png",
@@ -48,7 +49,8 @@
         {
           "color": "#14b8a6"
         }
-      ]
+      ],
+      "expo-asset"
     ],
     "extra": {
       "router": {},

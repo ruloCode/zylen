@@ -65,6 +65,9 @@
     "levelLabel": "Guardián Nivel {{level}}",
     "levelLabel_male": "Guardián Nivel {{level}}",
     "levelLabel_female": "Guardiana Nivel {{level}}",
+    "guardianTitle": "Guardián",
+    "levelShort": "Nivel {{level}}",
+    "focusStart": "Empezar",
     "focusOfDay": "Enfoque del día",
     "personalJournal": "Coach Personal",
     "todayPath": "Tu sendero de hoy",
@@ -379,13 +382,16 @@
     "dayCount": "Día {{current}} de {{total}}",
     "percentComplete": "{{percent}}% iluminado",
     "checkInSuccess": "Has encendido la llama de hoy. El Everlight brilla con más fuerza.",
-    "checkInError": "La llama no prendió esta vez. Inténtalo de nuevo, Guardián."
+    "checkInError": "La llama no prendió esta vez. Inténtalo de nuevo, Guardián.",
+    "dayDone": "Día {{day}} completado"
   },
   "shop": {
     "title": "Santuario de Recompensas",
     "subtitle": "Honra tu esfuerzo (de vez en cuando)",
     "balance": "Esencia",
     "buyNow": "Canjear",
+    "notEnough": "Te faltan {{count}}",
+    "buyAria": "Canjear {{name}} por {{cost}} de Esencia",
     "purchased": "Canjeado",
     "notEnoughPoints": "Aún no reúnes suficiente Esencia. Completa más hábitos para acumularla.",
     "confirmPurchase": "¿Confirmar el canje?",
@@ -761,8 +767,34 @@
       "breathing": "Respiración",
       "breathingDesc": "Ejercicios de respiración y mindfulness."
     },
+    "avatarCreator": {
+      "title": "Crea tu avatar",
+      "subtitle": "Sube una foto y la convertiremos en tu héroe de Zylen.",
+      "pickPhoto": "Elegir una foto",
+      "changePhoto": "Cambiar foto",
+      "photoAlt": "Tu foto",
+      "generate": "Crear mi avatar",
+      "generating1": "Forjando tu héroe en la luz…",
+      "generating2": "Tallando cada detalle de tu rostro…",
+      "generating3": "Tejiendo tu atuendo de Guardián…",
+      "generatingHint": "Esto puede tardar hasta un minuto",
+      "bustLabel": "Retrato",
+      "bodyLabel": "Héroe completo",
+      "bustAlt": "Retrato de tu avatar",
+      "bodyAlt": "Tu héroe de cuerpo completo",
+      "retry": "Reintentar",
+      "use": "Usar este avatar",
+      "saved": "¡Tu héroe ha despertado!",
+      "error": "No pudimos crear tu avatar. Intenta con otra foto.",
+      "limitError": "Alcanzaste el límite de creaciones por hoy. Vuelve mañana.",
+      "privacy": "Tu foto solo se usa para crear el avatar y no se guarda.",
+      "cta": "Crear avatar con IA",
+      "photoRejected": "Esa foto no pudo procesarse. Prueba con otra donde tu rostro se vea claro y de frente."
+    },
     "avatars": {
       "pickTitle": "Elige tu avatar",
+      "custom": "Tu avatar",
+      "createCustom": "Crear con tu foto",
       "save": "Guardar",
       "saved": "Avatar actualizado",
       "rulo": "Rulo",
@@ -782,6 +814,36 @@
       "focusDesc": "100 minutos en una semana",
       "elite": "Guardián de Élite",
       "eliteDesc": "30 días de llama constante"
+    },
+    "forge": {
+      "title": "Forja de Héroe 3D",
+      "cta": "Forjar mi héroe 3D",
+      "reforgeCta": "Re-forjar héroe",
+      "noAvatar": "Primero crea tu avatar con IA — tu héroe 3D se forja a partir de él.",
+      "ready": "Tu héroe 3D está listo. ¡Así te ves en la Arena!",
+      "forgingHint": "La forja tarda 10-20 min. Puedes cerrar la app: continuará al volver.",
+      "reforgeIn": "Podrás re-forjar tu héroe en {{days}} día(s).",
+      "stages": {
+        "sheet": "Dibujando el boceto del héroe…",
+        "model": "Esculpiendo tu figura en 3D…",
+        "skeleton": "Forjando el esqueleto…",
+        "anims": "Dando vida a tus movimientos…",
+        "download": "Recogiendo las piezas de la forja…",
+        "merge": "Fusionando tu héroe final…"
+      },
+      "errors": {
+        "no_avatar": "Necesitas un avatar con IA antes de forjar tu héroe.",
+        "forge_active_exists": "Ya hay una forja en curso.",
+        "forge_cooldown": "Tu héroe fue forjado hace poco. Espera para re-forjar.",
+        "sheet_failed": "No pudimos dibujar el boceto. Intenta de nuevo.",
+        "meshy_model_failed": "La escultura 3D falló. Intenta de nuevo.",
+        "meshy_rig_failed": "El esqueleto no pudo forjarse con esa figura. Re-crea tu avatar e intenta de nuevo.",
+        "meshy_anim_failed": "Las animaciones fallaron. Intenta de nuevo.",
+        "meshy_credits_exhausted": "La forja se quedó sin energía por ahora. Vuelve más tarde.",
+        "download_failed": "No pudimos recoger las piezas de la forja. Intenta de nuevo.",
+        "merge_failed": "La fusión final falló. Intenta de nuevo.",
+        "forge_failed": "La forja falló. Intenta de nuevo."
+      }
     }
   },
   "username": {
@@ -879,7 +941,108 @@
       "searchUsers": "Error al buscar Guardianes"
     },
     "requests": "Solicitudes",
-    "search": "Buscar"
+    "search": "Buscar",
+    "hub": {
+      "statAllies": "Aliados",
+      "statActiveFlames": "Llamas activas",
+      "statSharedLight": "Luz de la alianza",
+      "statBestStreak": "Mejor racha",
+      "daysValue_one": "{{count}} día",
+      "daysValue_other": "{{count}} días",
+      "yourAllies": "Tus aliados",
+      "viewAll": "Ver todos",
+      "viewLess": "Ver menos",
+      "flameAlive": "Llama activa",
+      "flameOut": "Sin llama",
+      "recentActivity": "Actividad de la alianza",
+      "noActivity": "Cuando tus aliados completen rituales, su Luz aparecerá aquí.",
+      "thisWeek": "Esta semana",
+      "activityYouWeek": "sumaste Luz con tus rituales",
+      "activityRituals_one": "completó {{count}} ritual",
+      "activityRituals_other": "completó {{count}} rituales",
+      "activityStreak": "mantiene su llama encendida",
+      "streakDay": "Día {{day}}",
+      "sharedMissions": "Misiones compartidas",
+      "comingSoon": "Próximamente",
+      "missionsTeaser": "Retos en equipo con tus aliados: completa misiones juntos y compartan la Luz de la recompensa.",
+      "missionWater": "Tomar agua · 7 días",
+      "missionSleep": "Dormir antes de las 10 PM",
+      "missionReading": "Leer 20 páginas diarias"
+    }
+  },
+  "community": {
+    "stats": {
+      "vsPrevious": "{{pct}}% vs anterior",
+      "newWeek": "Nuevo esta semana"
+    },
+    "ranking": {
+      "title": "Ranking de Guardianes",
+      "subtitleWeekly": "Los más constantes esta semana",
+      "subtitleAllTime": "Leyendas de todos los tiempos",
+      "weekly": "Semanal",
+      "allTime": "Histórico",
+      "viewFull": "Ver ranking completo",
+      "viewLess": "Ver menos",
+      "light": "Luz",
+      "essence": "Esencia",
+      "resetsIn": "Se reinicia en {{time}}"
+    },
+    "allies": {
+      "activeToday": "Activos hoy",
+      "activeNow": "Activo ahora",
+      "sharedLight": "Luz compartida esta semana",
+      "bestFlame": "Mejor llama del círculo"
+    },
+    "activity": {
+      "justNow": "Justo ahora",
+      "types": {
+        "habitCompleted": "terminó {{habit}}",
+        "levelUp": "consiguió Nivel {{level}}",
+        "streakMilestone": "mantuvo su llama · Día {{days}}",
+        "missionCompleted": "completó {{mission}}"
+      }
+    },
+    "missions": {
+      "participants_one": "{{count}} participante",
+      "participants_other": "{{count}} participantes",
+      "reward": "Recompensa: +{{xp}} Luz",
+      "join": "Unirme",
+      "checkIn": "Marcar hoy",
+      "checkedIn": "Hecho hoy",
+      "completed": "Completada",
+      "joinSuccess": "¡Te uniste a la misión!",
+      "checkInSuccess": "¡Progreso registrado!",
+      "missionComplete": "¡Misión completada! +{{xp}} Luz",
+      "error": "No se pudo completar la acción",
+      "catalog": {
+        "hydration_7": {
+          "title": "Tomar agua",
+          "description": "7 días de hidratación consciente"
+        },
+        "early_bird_5": {
+          "title": "Despertar temprano",
+          "description": "5 días madrugando"
+        },
+        "move_7": {
+          "title": "Moverse 20 min",
+          "description": "7 días de movimiento diario"
+        },
+        "mindful_3": {
+          "title": "Respirar y meditar",
+          "description": "3 días de pausa consciente"
+        }
+      }
+    },
+    "profile": {
+      "title": "Perfil de Guardián",
+      "guardianSince": "Guardián desde {{date}}",
+      "mutualAllies": "Aliados en común",
+      "addAlly": "Sumar Aliado",
+      "acceptRequest": "Aceptar solicitud",
+      "currentFlame": "Llama actual",
+      "bestFlame": "Mejor llama",
+      "totalLight": "Luz total"
+    }
   },
   "templates": {
     "title": "Plantillas de Hábitos",
@@ -990,6 +1153,11 @@
       "second": "🥈",
       "third": "🥉"
     },
+    "hub": {
+      "heroRankings": "Los Guardianes que más Luz reunieron esta semana.",
+      "heroSocial": "Nunca subes de nivel solo. Tus aliados te ayudan a mantener la disciplina.",
+      "heroStreaks": "Tu llama crece con cada día de constancia."
+    },
     "tabs": {
       "rankings": "Guardianes",
       "social": "Aliados",
@@ -1099,7 +1267,11 @@
     "currentStreakTitle": "Tu llama constante",
     "keepItUp": "Mantén viva la llama. 🔥",
     "today": "Hoy",
-    "dailyActivity": "Actividad diaria (minutos)",
+    "dailyActivity": "Actividad diaria (Luz)",
+    "completionTimes": "Horas de tus rituales",
+    "completionTimesHint": "Completa rituales para descubrir a qué horas brillas más.",
+    "peakHour": "Tu hora más luminosa: {{hour}}",
+    "last30Days": "Últimos 30 días",
     "minutesUnit": "Minutos",
     "focusAreas": "Reinos de enfoque",
     "seeDetail": "Ver detalle",
@@ -1131,6 +1303,7 @@
     "days": "días",
     "today": "Hoy",
     "myRoutines": "Mis rituales",
+    "todayProgress": "{{done}}/{{total}} hoy",
     "newRoutine": "Nuevo ritual",
     "empty": "Aún no tienes rituales. ¡Crea el primero!",
     "bannerTitle": "La constancia mantiene viva la llama.",
@@ -1902,6 +2075,20 @@
     },
     "notificationTitle": "¡Tu gema ha crecido! 💎",
     "notificationBody": "Sesión de enfoque completada. Vuelve a Zylen para reclamar tu Luz.",
+    "dailyChallenge": {
+      "badge": "Reto de hoy",
+      "pendingTitle": "Reto de enfoque",
+      "pendingBody": "Enfócate {{goal}} min hoy y fortalece a tu héroe",
+      "progress": "{{minutes}}/{{goal}} min",
+      "readyTitle": "¡Reto cumplido!",
+      "readyBody": "Reclama tu recompensa por enfocarte hoy",
+      "claim": "Reclamar +{{points}} Esencia · +{{xp}} Luz",
+      "claiming": "Reclamando…",
+      "claimedTitle": "Recompensa reclamada",
+      "claimedBody": "Vuelve mañana por un nuevo reto",
+      "claimedToast": "+{{points}} Esencia · +{{xp}} Luz",
+      "claimFailed": "No se pudo reclamar. Intenta de nuevo."
+    },
     "errors": {
       "alreadyRunning": "Ya tienes una sesión en curso.",
       "startFailed": "No se pudo iniciar la sesión. Intenta de nuevo.",

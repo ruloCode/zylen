@@ -2,6 +2,7 @@ import { StateCreator } from 'zustand';
 import { User } from '@/types';
 import { UserService } from '@/services/supabase/user.service';
 import { LifeAreasService } from '@/services/supabase/lifeAreas.service';
+import { setProfileTimezone } from '@/services/supabase/timezone';
 
 export interface UserSlice {
   user: User | null;
@@ -21,6 +22,10 @@ export interface UserSlice {
     extra?: Partial<Pick<User, 'gender' | 'ageRange' | 'experienceLevel' | 'motivation'>>
   ) => Promise<void>;
   updateSelectedLifeAreas: (areaIds: string[]) => Promise<void>;
+  /** Sync a freshly saved custom AI avatar into the store (DB already updated). */
+  applyCustomAvatar: (avatarUrl: string, avatarBodyUrl: string) => void;
+  /** Sync a freshly forged 3D hero model into the store (DB already updated). */
+  applyHeroModel: (heroModelUrl: string) => void;
 }
 
 export const createUserSlice: StateCreator<UserSlice> = (set, get) => ({
@@ -36,13 +41,15 @@ export const createUserSlice: StateCreator<UserSlice> = (set, get) => ({
       const user = await UserService.getUser();
 
       if (user) {
-        // Sync timezone with browser automatically
+        // Sync timezone with the device automatically
         try {
           const updatedUser = await UserService.syncTimezone();
+          setProfileTimezone(updatedUser.timezone);
           set({ user: updatedUser, isInitialized: true, userLoading: false });
         } catch (tzError) {
           // If timezone sync fails, still initialize with the user we have
           console.warn('Failed to sync timezone, continuing with existing user:', tzError);
+          setProfileTimezone(user.timezone);
           set({ user, isInitialized: true, userLoading: false });
         }
       } else {
@@ -160,6 +167,18 @@ export const createUserSlice: StateCreator<UserSlice> = (set, get) => ({
         userLoading: false,
       });
     }
+  },
+
+  applyCustomAvatar: (avatarUrl: string, avatarBodyUrl: string) => {
+    set((state) => ({
+      user: state.user ? { ...state.user, avatarUrl, avatarBodyUrl } : null,
+    }));
+  },
+
+  applyHeroModel: (heroModelUrl: string) => {
+    set((state) => ({
+      user: state.user ? { ...state.user, heroModelUrl } : null,
+    }));
   },
 
   updateSelectedLifeAreas: async (areaIds: string[]) => {

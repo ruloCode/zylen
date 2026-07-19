@@ -14,6 +14,7 @@
 import { supabase } from '@/lib/supabase';
 import { FOCUS_CONFIG } from '@/constants/config';
 import type {
+  ClaimDailyRewardResult,
   CompleteFocusSessionResult,
   FocusBreakReason,
   FocusGem,
@@ -102,6 +103,7 @@ interface FocusStatsRpc {
   week: FocusPeriodRpc;
   month?: FocusPeriodRpc;
   year?: FocusPeriodRpc;
+  today_reward_claimed?: boolean;
   period_starts?: { today: string; week: string; month: string; year: string };
   recent_sessions: Array<{
     id: string;
@@ -153,7 +155,16 @@ function mapStatsRpc(data: FocusStatsRpc): FocusStats {
       xpAwarded: s.xp_awarded,
       gemName: s.gem_name,
     })),
+    todayRewardClaimed: data.today_reward_claimed ?? false,
   };
+}
+
+/** Local calendar day as YYYY-MM-DD (matches the dev claim ledger key). */
+function localDateKey(date = new Date()): string {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
 }
 
 /* ------------------------------------------------------------------------ */
@@ -178,6 +189,8 @@ interface DevBlob {
   sessions: DevSession[];
   /** Paid species unlocked in dev mode (defaults excluded). */
   unlocked?: string[];
+  /** Local dates (YYYY-MM-DD) whose daily-challenge reward was claimed. */
+  rewardClaims?: string[];
 }
 
 function devLoad(): DevBlob {
@@ -639,6 +652,7 @@ export class FocusService {
           year: yearStart.toISOString(),
         },
         recentSessions: recent,
+        todayRewardClaimed: (blob.rewardClaims ?? []).includes(localDateKey()),
       };
     }
 
@@ -649,5 +663,79 @@ export class FocusService {
       throw new Error(error.message || 'Failed to load focus stats');
     }
     return mapStatsRpc(data as unknown as FocusStatsRpc);
+  }
+
+  /**
+   * Claim today's daily-challenge reward. Idempotent per local day and gated on
+   * reaching the focus-minutes goal — the server RPC owns both checks; the dev
+   * adapter mirrors them against the kv session ledger.
+   */
+  static async claimDailyReward(): Promise<ClaimDailyRewardResult> {
+    const { minutesGoal, rewardPoints, rewardXP } = FOCUS_CONFIG.dailyChallenge;
+
+    if (shouldSkipAuth) {
+      const blob = devLoad();
+      const today = localDateKey();
+      const claims = blob.rewardClaims ?? [];
+
+      if (claims.includes(today)) {
+        return {
+          ok: false,
+          reason: 'already_claimed',
+          pointsAwarded: 0,
+          xpAwarded: 0,
+        };
+      }
+
+      const midnight = new Date();
+      midnight.setHours(0, 0, 0, 0);
+      const minutesToday = devPeriodStats(blob.sessions, midnight).minutes;
+      if (minutesToday < minutesGoal) {
+        return {
+          ok: false,
+          reason: 'goal_not_met',
+          pointsAwarded: 0,
+          xpAwarded: 0,
+        };
+      }
+
+      blob.rewardClaims = [...claims, today];
+      devSave(blob);
+      // Dev adapter can't touch a profile row → omit totals; the slice
+      // increments the local user (same fallback as completeSession).
+      return { ok: true, pointsAwarded: rewardPoints, xpAwarded: rewardXP };
+    }
+
+    const { data, error } = await supabase.rpc('claim_daily_focus_reward', {
+      p_minutes_goal: minutesGoal,
+      p_reward_points: rewardPoints,
+      p_reward_xp: rewardXP,
+    });
+
+    if (error) {
+      console.error('Error in FocusService.claimDailyReward:', error);
+      throw new Error(error.message || 'Failed to claim daily reward');
+    }
+
+    const result = data as unknown as {
+      ok: boolean;
+      reason?: 'goal_not_met' | 'already_claimed';
+      points_awarded?: number;
+      xp_awarded?: number;
+      new_points?: number;
+      new_total_xp?: number;
+      new_level?: number;
+      leveled_up?: boolean;
+    };
+    return {
+      ok: result.ok,
+      reason: result.reason,
+      pointsAwarded: result.points_awarded ?? 0,
+      xpAwarded: result.xp_awarded ?? 0,
+      newPoints: result.new_points,
+      newTotalXP: result.new_total_xp,
+      newLevel: result.new_level,
+      leveledUp: result.leveled_up,
+    };
   }
 }

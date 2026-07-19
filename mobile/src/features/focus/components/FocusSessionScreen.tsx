@@ -23,6 +23,7 @@ import {
   View,
 } from 'react-native';
 import { Image } from 'expo-image';
+import { useKeepAwake } from 'expo-keep-awake';
 import { Pause, Play, Square } from 'lucide-react-native';
 import { cn } from '@/utils/cn';
 import { useLocale } from '@/hooks/useLocale';
@@ -47,6 +48,9 @@ export function FocusSessionScreen({
   onCompleted,
   onBroken,
 }: FocusSessionScreenProps) {
+  // The screen must not sleep mid-session: the timer keeps running but the
+  // user loses the visual feedback (and the ritual feeling) if it dims.
+  useKeepAwake();
   const { t } = useLocale();
   const {
     activeFocusSession,

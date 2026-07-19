@@ -68,3 +68,33 @@ export function daysBetween(date1: Date, date2: Date): number {
   const diffInMs = Math.abs(date2.getTime() - date1.getTime());
   return Math.floor(diffInMs / (1000 * 60 * 60 * 24));
 }
+
+/**
+ * Localized short relative time ("hace 20 min" / "20 min ago"). Web uses
+ * Intl.RelativeTimeFormat; Hermes' Intl coverage is partial, so fall back
+ * to hand-rolled es/en strings when the API is missing. For anything under
+ * a minute the caller should show its own "just now" copy (returns empty
+ * string as the signal).
+ */
+export function formatRelativeShort(date: Date, locale: string): string {
+  const diffInMs = Date.now() - date.getTime();
+  const minutes = Math.floor(diffInMs / (1000 * 60));
+  if (minutes < 1) return '';
+
+  const rtf =
+    typeof Intl !== 'undefined' && typeof (Intl as any).RelativeTimeFormat === 'function'
+      ? new Intl.RelativeTimeFormat(locale, { style: 'short', numeric: 'always' })
+      : null;
+  const isEs = locale.startsWith('es');
+  const format = (value: number, unit: Intl.RelativeTimeFormatUnit, short: string): string =>
+    rtf ? rtf.format(-value, unit) : isEs ? `hace ${value} ${short}` : `${value} ${short} ago`;
+
+  if (minutes < 60) return format(minutes, 'minute', 'min');
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return format(hours, 'hour', 'h');
+  const days = Math.floor(hours / 24);
+  if (days < 7) return format(days, 'day', isEs ? 'd' : 'd');
+  const weeks = Math.floor(days / 7);
+  if (weeks < 5) return format(weeks, 'week', isEs ? 'sem' : 'wk');
+  return date.toLocaleDateString(locale);
+}

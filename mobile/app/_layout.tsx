@@ -10,6 +10,13 @@ import Toast from 'react-native-toast-message';
 import { useFonts } from 'expo-font';
 import { BebasNeue_400Regular } from '@expo-google-fonts/bebas-neue';
 import { JetBrainsMono_400Regular } from '@expo-google-fonts/jetbrains-mono';
+import {
+  Manrope_400Regular,
+  Manrope_500Medium,
+  Manrope_600SemiBold,
+  Manrope_700Bold,
+  Manrope_800ExtraBold,
+} from '@expo-google-fonts/manrope';
 
 import { kv } from '@/lib/kvStorage';
 import { initI18n } from '@/services/i18n';
@@ -30,6 +37,11 @@ export default function RootLayout() {
   const [fontsLoaded] = useFonts({
     BebasNeue_400Regular,
     JetBrainsMono_400Regular,
+    Manrope_400Regular,
+    Manrope_500Medium,
+    Manrope_600SemiBold,
+    Manrope_700Bold,
+    Manrope_800ExtraBold,
   });
 
   // The app lives in portrait; the Arena unlocks landscape while playing

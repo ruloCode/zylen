@@ -86,7 +86,7 @@ export function CardTitle({ children, className = '', gradient = false }: CardTi
 
   return (
     <Text
-      className={cn('font-display text-xl font-bold uppercase tracking-wide', gradientClass, className)}
+      className={cn('text-xl font-extrabold tracking-tight', gradientClass, className)}
     >
       {children}
     </Text>

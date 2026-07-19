@@ -37,6 +37,8 @@ interface ShopItemProps {
   cost: number;
   description: string;
   category?: 'food' | 'leisure' | 'shopping' | 'other';
+  /** Current Esencia balance — drives the affordable / missing-points state */
+  userPoints: number;
   onPurchase: (id: string) => void;
 }
 
@@ -46,33 +48,46 @@ export function ShopItem({
   iconName,
   cost,
   description,
+  userPoints,
   onPurchase,
 }: ShopItemProps) {
   const { t } = useLocale();
   const IconComponent = iconMap[iconName] || Gift;
+  const canAfford = userPoints >= cost;
+  const missing = cost - userPoints;
 
   return (
-    <GlassCard className="border-2 border-gold-200/30 p-5">
+    <GlassCard className={canAfford ? 'border-2 border-gold-200/30 p-5' : 'border-2 border-white/10 p-5 opacity-90'}>
       <View className="items-center gap-3">
         {/* Icon with gradient background (web: .icon-gradient-gold + glow) */}
         <View
           className="overflow-hidden rounded-2xl"
-          style={{
-            shadowColor: '#F9A410',
-            shadowOpacity: 0.45,
-            shadowRadius: 8,
-            shadowOffset: { width: 0, height: 2 },
-            elevation: 6,
-          }}
+          style={
+            canAfford
+              ? {
+                  shadowColor: '#F9A410',
+                  shadowOpacity: 0.45,
+                  shadowRadius: 8,
+                  shadowOffset: { width: 0, height: 2 },
+                  elevation: 6,
+                }
+              : undefined
+          }
         >
-          <LinearGradient
-            colors={['#FAB62E', '#F9A410']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={{ padding: 16 }}
-          >
-            <IconComponent size={36} color="#FFFFFF" />
-          </LinearGradient>
+          {canAfford ? (
+            <LinearGradient
+              colors={['#FAB62E', '#F9A410']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={{ padding: 16 }}
+            >
+              <IconComponent size={36} color="#FFFFFF" />
+            </LinearGradient>
+          ) : (
+            <View className="border border-white/10 bg-white/10 p-4">
+              <IconComponent size={36} color="rgba(255,255,255,0.5)" />
+            </View>
+          )}
         </View>
 
         {/* Item Name */}
@@ -85,8 +100,11 @@ export function ShopItem({
 
         {/* Cost Display */}
         <View className="my-1 flex-row items-center gap-2">
-          <Coins size={22} color={ACCENT_GREEN} />
-          <Text className="text-lg font-bold" style={{ color: ACCENT_GREEN }}>
+          <Coins size={22} color={canAfford ? ACCENT_GREEN : 'rgba(255,255,255,0.45)'} />
+          <Text
+            className="text-lg font-bold"
+            style={{ color: canAfford ? ACCENT_GREEN : 'rgba(255,255,255,0.45)' }}
+          >
             {cost}
           </Text>
         </View>
@@ -96,9 +114,19 @@ export function ShopItem({
           variant="secondary"
           size="sm"
           onClick={() => onPurchase(id)}
-          className="w-full border-0 bg-teal-500"
+          disabled={!canAfford}
+          aria-label={
+            canAfford
+              ? t('shop.buyAria', { name, cost })
+              : t('shop.notEnough', { count: missing })
+          }
+          className={
+            canAfford
+              ? 'w-full border-0 bg-teal-500'
+              : 'w-full border border-white/10 bg-white/5'
+          }
         >
-          {t('shop.buyNow')}
+          {canAfford ? t('shop.buyNow') : t('shop.notEnough', { count: missing })}
         </Button>
       </View>
     </GlassCard>

@@ -31,6 +31,8 @@ export interface FriendProfile {
   points: number;
   friendshipStatus: FriendshipStatus;
   friendshipCreatedAt?: Date;
+  /** Last presence heartbeat; undefined until the ally is active post-migration */
+  lastActiveAt?: Date;
 }
 
 /**
@@ -59,6 +61,8 @@ export interface LeaderboardEntry {
   weeklyPointsEarned: number;
   habitsCompleted: number;
   isCurrentUser: boolean;
+  /** Only present on weekly entries (LEFT JOIN streaks in the RPC) */
+  currentStreak?: number;
 }
 
 /**

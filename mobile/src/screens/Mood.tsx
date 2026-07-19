@@ -128,7 +128,7 @@ export function Mood() {
               <View className="flex-1">
                 <View className="flex-row items-center gap-2">
                   <Smile size={28} color={GOLD_400} />
-                  <Text className="text-3xl font-extrabold tracking-tight text-white">
+                  <Text className="text-[28px] font-extrabold leading-tight tracking-tight text-white">
                     {t('mood.title')}
                   </Text>
                 </View>

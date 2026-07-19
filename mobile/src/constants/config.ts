@@ -6,7 +6,7 @@ export const APP_CONFIG = {
   name: 'Everlight',
   displayName: 'Everlight',
   // tagline is now in i18n translations: app.tagline
-  version: '1.0.0',
+  version: '1.1.0',
 } as const;
 
 // XP & Points configuration
@@ -125,12 +125,26 @@ export const AVATAR_OPTIONS = [
 export const DEFAULT_HERO_BODY = '/hero-character.png';
 
 /**
- * Resolve the full-body hero character for the Home from the user's saved
- * avatar (which is the bust `url`). Falls back to the default hero.
+ * Custom AI-generated avatars live in Supabase Storage, so their bust URL is
+ * absolute (https://...), unlike the bundled presets which are root-relative.
  */
-export function getHeroBodySrc(avatarUrl?: string | null): string {
+export function isCustomAvatar(avatarUrl?: string | null): boolean {
+  return !!avatarUrl && /^https?:\/\//i.test(avatarUrl);
+}
+
+/**
+ * Resolve the full-body hero character for the Home from the user's saved
+ * avatar (which is the bust `url`). Custom AI avatars carry their own
+ * full-body render (profiles.avatar_body_url). Falls back to the default.
+ */
+export function getHeroBodySrc(
+  avatarUrl?: string | null,
+  customBodyUrl?: string | null
+): string {
   const opt = AVATAR_OPTIONS.find((o) => o.url === avatarUrl);
-  return opt?.body ?? DEFAULT_HERO_BODY;
+  if (opt) return opt.body;
+  if (isCustomAvatar(avatarUrl) && customBodyUrl) return customBodyUrl;
+  return DEFAULT_HERO_BODY;
 }
 
 /** Ordered <source> list for the hero idle-loop video. */
@@ -147,9 +161,12 @@ export interface HeroVideoSource {
  * webm — reversed, Safari would pick the webm and lose the alpha channel.
  */
 export function getHeroVideoSources(
-  avatarUrl?: string | null
+  avatarUrl?: string | null,
+  customBodyUrl?: string | null
 ): HeroVideoSource[] | undefined {
   const opt = AVATAR_OPTIONS.find((o) => o.url === avatarUrl);
+  // Custom AI avatars have no idle clip — they must NOT inherit the default's.
+  if (!opt && isCustomAvatar(avatarUrl) && customBodyUrl) return undefined;
   const video = (opt ?? AVATAR_OPTIONS[0]).video;
   if (!video) return undefined;
   return [
@@ -217,6 +234,13 @@ export const FOCUS_CONFIG = {
     shieldUnlockGems: 10,
     buffTiers: [1, 3, 6, 10, 15],
   },
+  // Daily focus challenge shown on the home banner: reach `minutesGoal` minutes
+  // of focus today to unlock a once-per-day claimable reward (Esencia + Luz).
+  dailyChallenge: {
+    minutesGoal: 25,
+    rewardPoints: 20, // Esencia (spendable)
+    rewardXP: 15, // Luz (levels the hero)
+  },
 } as const;
 
 // Chat configuration
@@ -234,7 +258,23 @@ export const FEATURES = {
   enableRootHabit: true,
   enableAchievements: true, // Real backend (achievements + user_achievements + RPCs)
   enableMultiplayer: false, // Future feature
+  // Arena oculta temporalmente en el primer release de Play Store (el juego
+  // necesita mejoras). Reactivar poniendo esto en true: la card del Dashboard,
+  // el teaser del GemVault y la ruta /arena vuelven solos.
+  enableArena: false,
+  // Herramientas del Perfil (journal/goals/breathing) aún son "coming soon";
+  // ocultas en tienda para no parecer funciones rotas.
+  enableProfileTools: false,
+  // Forge your AI avatar into a 3D arena hero (Meshy). Limitado además por
+  // FORGE_BETA_EMAILS, igual que la web.
+  enableHeroForge: true,
 } as const;
+
+/** Hero Forge beta allowlist — empty array opens the feature to everyone. */
+export const FORGE_BETA_EMAILS: readonly string[] = [
+  'rulocode7@gmail.com',
+  'qa.claude@zylen.test',
+];
 
 // ===== Mobile-only additions =====
 

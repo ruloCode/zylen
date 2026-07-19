@@ -13,8 +13,10 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        // Body text uses the platform system font (Roboto on Android, SF on
-        // iOS). Display/mono are loaded via expo-font in app/_layout.tsx.
+        // Design system v2: Manrope is the UI font (loaded via expo-font in
+        // app/_layout.tsx). Weight utilities are remapped to the matching
+        // Manrope family in global.css. Bebas stays opt-in via font-display.
+        sans: ['Manrope_400Regular'],
         display: ['BebasNeue_400Regular'],
         mono: ['JetBrainsMono_400Regular'],
       },

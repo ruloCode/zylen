@@ -157,6 +157,10 @@ export function Arena() {
       // The game fetches the bust over HTTP — resolve against the deployed web app.
       params.set('avatar', new URL(user.avatarUrl, WEB_APP_ORIGIN).href);
     }
+    if (user.heroModelUrl) {
+      // forged 3D hero — the game loads this GLB instead of the standard skin
+      params.set('model', user.heroModelUrl);
+    }
     return `${GAME_CONFIG.url}?${params.toString()}`;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, view, tier, progress.weaponId, progress.gems.join(','), focusGemsParam]);

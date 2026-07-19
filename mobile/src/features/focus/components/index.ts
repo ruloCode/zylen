@@ -7,3 +7,4 @@ export { SessionBrokenScreen } from './SessionBrokenScreen';
 export { GemVault } from './GemVault';
 export { VaultPlatform } from './VaultPlatform';
 export { VaultCurrencyChips } from './VaultCurrencyChips';
+export { DailyFocusChallenge } from './DailyFocusChallenge';

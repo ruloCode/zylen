@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Pressable,
@@ -17,31 +17,36 @@ import {
   Gem,
   Target,
   NotebookPen,
-  Compass,
   ChevronRight,
   Check,
   FlaskConical,
   Swords,
   Crown,
 } from 'lucide-react-native';
-import toast from '@/lib/toast';
-import { CircularProgress } from '@/components/ui';
+import { CircularProgress, LevelUpNotification } from '@/components/ui';
 import { useAnimatedNumber } from '@/hooks/useAnimatedNumber';
 import { HabitScienceSheet, TemplateLibrary } from '@/features/habits/components';
 import { HABIT_CATALOG } from '@/constants/habitCatalog';
 import type { HabitCatalogEntry } from '@/constants/habitCatalog';
 import type { HabitFormData, HabitTemplate } from '@/types';
+import { DailyFocusChallenge } from '@/features/focus/components';
 // Web lazy-loads this (markdown bundle); on native a static import is fine —
 // Metro bundles everything up front anyway. Same module path as the web.
 import { CoachChat } from '@/features/chat/components/CoachChat';
 import { HABIT_ICONS } from '@/components/atoms/icons/iconMaps';
 import HeroCharacter from '@/components/hero/HeroCharacter';
 import type { HeroCharacterHandle } from '@/components/hero/HeroCharacter';
-import { useUser, useHabits, useStreaks, useTheme } from '@/store';
-import { ROUTES, getHeroBodySrc, getHeroVideoSources, LIFE_AREA_CATALOG } from '@/constants';
+import { useUser, useHabits, useStreaks, useFocus, useTheme } from '@/store';
+import {
+  ROUTES,
+  FEATURES,
+  getHeroBodySrc,
+  getHeroVideoSources,
+  LIFE_AREA_CATALOG,
+} from '@/constants';
 import { useLocale } from '@/hooks/useLocale';
-import { getLevelProgress } from '@/utils/xp';
-import { getGreetingKey, getDailyQuoteIndex } from '@/utils/greeting';
+import { calculateGlobalLevelUpReward, getLevelProgress } from '@/utils/xp';
+import { getGreetingKey } from '@/utils/greeting';
 import { img } from '@/assets/registry';
 import { themeHsl } from '@/theme/themeVars';
 
@@ -76,6 +81,7 @@ export function Dashboard() {
   const { user, isLoading: userLoading } = useUser();
   const { habits, completeHabit, uncompleteHabit } = useHabits();
   const { streak, isLoading: streakLoading } = useStreaks();
+  const { loadFocusData } = useFocus();
   const { t } = useLocale();
   const { theme } = useTheme();
   const [isCoachOpen, setIsCoachOpen] = useState(false);
@@ -83,6 +89,14 @@ export function Dashboard() {
   // Habit catalog: browse the library, or read a featured habit's science card.
   const [isCatalogOpen, setIsCatalogOpen] = useState(false);
   const [catalogEntry, setCatalogEntry] = useState<HabitCatalogEntry | null>(null);
+  // Level-up celebration (the daily-challenge claim can level the hero).
+  const [levelUpLevel, setLevelUpLevel] = useState<number | null>(null);
+
+  // Load focus data on mount so the daily-challenge banner knows today's
+  // minutes and claim state (same as the web Dashboard).
+  useEffect(() => {
+    loadFocusData();
+  }, [loadFocusData]);
 
   const levelProgress = user
     ? getLevelProgress(user.totalXPEarned, user.level)
@@ -91,17 +105,8 @@ export function Dashboard() {
 
   const isLoading = userLoading || streakLoading;
 
-  const comingSoon = () => toast(t('home.comingSoon'));
-
   // Theme background as a literal color for the JS-built gradient scrims.
   const bg = (alpha: number) => themeHsl(theme, '--background', alpha);
-
-  // Motivational quote rotates once per day.
-  const quotes = t('home.quotes', { returnObjects: true }) as unknown as string[];
-  const quote =
-    Array.isArray(quotes) && quotes.length > 0
-      ? quotes[getDailyQuoteIndex(quotes.length)]
-      : '';
 
   const firstName = user?.name?.split(' ')[0] || '';
   const todaysHabits = habits.slice(0, 3);
@@ -160,8 +165,8 @@ export function Dashboard() {
           >
             <HeroCharacter
               ref={heroRef}
-              imgSrc={getHeroBodySrc(user?.avatarUrl)}
-              videoSources={getHeroVideoSources(user?.avatarUrl)}
+              imgSrc={getHeroBodySrc(user?.avatarUrl, user?.avatarBodyUrl)}
+              videoSources={getHeroVideoSources(user?.avatarUrl, user?.avatarBodyUrl)}
             />
           </View>
         </View>
@@ -186,7 +191,7 @@ export function Dashboard() {
               style={{ paddingTop: insets.top + 24 }}
             >
               <View className="min-w-0 flex-1">
-                <Text className="text-[26px] font-extrabold leading-tight tracking-tight text-white">
+                <Text className="text-[28px] font-extrabold leading-tight tracking-tight text-white">
                   {t(getGreetingKey(), { name: firstName })} 👋
                 </Text>
                 <Text className="mt-1.5 max-w-[240px] text-[15px] font-medium leading-snug text-white/85">
@@ -233,6 +238,8 @@ export function Dashboard() {
                 {/* Quick action: focus of the day (Pomodoro gems) */}
                 <Pressable
                   onPress={() => router.push(ROUTES.FOCUS)}
+                  accessibilityRole="button"
+                  accessibilityLabel={t('home.focusOfDay')}
                   className={`${heroCard} items-center gap-1.5 p-2.5`}
                 >
                   <Target size={18} color={TEAL_300} />
@@ -271,6 +278,8 @@ export function Dashboard() {
                 {/* Quick action: personal coach (Hermes chat) */}
                 <Pressable
                   onPress={() => setIsCoachOpen(true)}
+                  accessibilityRole="button"
+                  accessibilityLabel={t('home.personalJournal')}
                   className={`${heroCard} items-center gap-1.5 p-2.5`}
                 >
                   <NotebookPen size={18} color="#fcd34d" />
@@ -283,25 +292,19 @@ export function Dashboard() {
           </View>
           {/* /hero overlay zone */}
 
-          {/* Motivational banner — floats just below the character's feet */}
-          <Pressable
-            onPress={comingSoon}
-            className={`${glass} mb-7 mt-3 w-full flex-row items-center gap-3 p-4`}
-          >
-            <View className="h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gold-500/15">
-              <Compass size={22} color={GOLD_400} />
-            </View>
-            <View className="min-w-0 flex-1">
-              <Text className="text-sm font-bold leading-snug text-white">{quote}</Text>
-              <Text className="mt-0.5 text-xs text-white/75">{t('home.quoteSubtitle')}</Text>
-            </View>
-            <ChevronRight size={20} color="rgba(255,255,255,0.4)" />
-          </Pressable>
+          {/* Daily focus challenge — floats just below the character's feet.
+              Reads today's focus minutes and offers the claimable reward
+              (replaces the old motivational banner, same as the web Home). */}
+          <DailyFocusChallenge onLevelUp={setLevelUpLevel} className="mt-3" />
 
-          {/* Arena — the embedded Everlight co-op game (Templo del Desorden) */}
+          {/* Arena — the embedded Everlight co-op game (Templo del Desorden).
+              Hidden behind FEATURES.enableArena for the first store release. */}
+          {FEATURES.enableArena ? (
           <View className="mb-7">
             <Pressable
               onPress={() => router.push(ROUTES.ARENA)}
+              accessibilityRole="button"
+              accessibilityLabel={t('arena.cardTitle')}
               className={`${glass} relative w-full overflow-hidden`}
             >
               <Image
@@ -335,11 +338,14 @@ export function Dashboard() {
               </View>
             </Pressable>
           </View>
+          ) : null}
 
           {/* Focus realms — life areas as fantasy kingdoms, each with its own detail */}
           <View className="mb-7">
             <Pressable
               onPress={() => router.push(ROUTES.REALMS)}
+              accessibilityRole="button"
+              accessibilityLabel={t('realms.cardTitle')}
               className={`${glass} w-full flex-row items-center gap-3 p-4`}
             >
               <View className="min-w-0 flex-1">
@@ -445,7 +451,20 @@ export function Dashboard() {
             </View>
 
             {todaysHabits.length === 0 ? (
-              <Text className="py-6 text-center text-sm text-white/70">{t('home.noHabits')}</Text>
+              <View className="items-center py-6">
+                <Text className="mb-4 text-center text-sm text-white/70">
+                  {t('home.noHabits')}
+                </Text>
+                <Pressable
+                  onPress={() => router.push(ROUTES.HABITS)}
+                  accessibilityRole="button"
+                  className="rounded-xl bg-teal-500 px-6 py-3 active:bg-teal-600"
+                >
+                  <Text className="font-semibold text-white">
+                    {t('habits.createFirstHabit')}
+                  </Text>
+                </Pressable>
+              </View>
             ) : (
               <View className="gap-3">
                 {todaysHabits.map((habit, index) => {
@@ -559,6 +578,16 @@ export function Dashboard() {
             setCatalogEntry(null);
             router.push(ROUTES.HABITS);
           }}
+        />
+      )}
+
+      {/* Level Up celebration (daily-challenge claims award real XP too) */}
+      {levelUpLevel !== null && (
+        <LevelUpNotification
+          level={levelUpLevel}
+          type="global"
+          pointsReward={calculateGlobalLevelUpReward(levelUpLevel)}
+          onClose={() => setLevelUpLevel(null)}
         />
       )}
     </View>

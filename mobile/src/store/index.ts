@@ -15,6 +15,9 @@ import { createHabitTemplatesSlice } from './habitTemplatesSlice';
 import { createThemeSlice } from './themeSlice';
 import { createArenaSlice } from './arenaSlice';
 import { createFocusSlice } from './focusSlice';
+import { createCommunitySlice } from './communitySlice';
+import { createForgeSlice } from './forgeSlice';
+import * as CommunityService from '@/services/supabase/community.service';
 import { AVATARS, LIFE_AREAS } from '@/constants';
 import type { LifeArea, Streak, User } from '@/types';
 import type { HabitWithCompletion } from '@/services/supabase/habits.service';
@@ -40,6 +43,8 @@ export const useAppStore = create<AppStore>()((...a) => ({
   ...createThemeSlice(...a),
   ...createArenaSlice(...a),
   ...createFocusSlice(...a),
+  ...createCommunitySlice(...a),
+  ...createForgeSlice(...a),
 }));
 
 // Typed hooks for easier access
@@ -56,6 +61,8 @@ export function useUser() {
     completeOnboarding: state.completeOnboarding,
     updateUserProfile: state.updateUserProfile,
     updateSelectedLifeAreas: state.updateSelectedLifeAreas,
+    applyCustomAvatar: state.applyCustomAvatar,
+    applyHeroModel: state.applyHeroModel,
   }));
   return useAppStore(selector);
 }
@@ -187,12 +194,40 @@ export function useLeaderboard() {
     weeklyLeaderboard: state.weeklyLeaderboard,
     userRank: state.userRank,
     userWeeklyStats: state.userWeeklyStats,
+    weeklyComparison: state.weeklyComparison,
+    allTimeLeaderboard: state.allTimeLeaderboard,
+    allTimeLoading: state.allTimeLoading,
     isLoading: state.leaderboardLoading,
     error: state.leaderboardError,
     loadWeeklyLeaderboard: state.loadWeeklyLeaderboard,
     loadUserWeeklyStats: state.loadUserWeeklyStats,
+    loadWeeklyComparison: state.loadWeeklyComparison,
+    loadAllTimeLeaderboard: state.loadAllTimeLeaderboard,
     refreshLeaderboard: state.refreshLeaderboard,
     clearError: state.clearError,
+  }));
+  return useAppStore(selector);
+}
+
+export function useCommunity() {
+  const selector = useShallow((state: AppStore) => ({
+    activityFeed: state.activityFeed,
+    activityHasMore: state.activityHasMore,
+    activityLoading: state.activityLoading,
+    activityError: state.activityError,
+    sharedMissions: state.sharedMissions,
+    missionsLoading: state.missionsLoading,
+    missionsError: state.missionsError,
+    allyStats: state.allyStats,
+    allyStatsLoading: state.allyStatsLoading,
+    allyStatsError: state.allyStatsError,
+    loadActivityFeed: state.loadActivityFeed,
+    loadMoreActivity: state.loadMoreActivity,
+    loadSharedMissions: state.loadSharedMissions,
+    joinMission: state.joinMission,
+    checkinMission: state.checkinMission,
+    loadAllyStats: state.loadAllyStats,
+    loadAlliesTab: state.loadAlliesTab,
   }));
   return useAppStore(selector);
 }
@@ -285,9 +320,24 @@ export function useFocus() {
     unlockFocusSpecies: state.unlockFocusSpecies,
     startFocusSession: state.startFocusSession,
     completeFocusSession: state.completeFocusSession,
+    claimDailyFocusReward: state.claimDailyFocusReward,
     breakFocusSession: state.breakFocusSession,
     setActiveFocusSession: state.setActiveFocusSession,
     updateFocusPause: state.updateFocusPause,
+  }));
+  return useAppStore(selector);
+}
+
+export function useForge() {
+  const selector = useShallow((state: AppStore) => ({
+    forge: state.forge,
+    forging: state.forging,
+    forgeProgress: state.forgeProgress,
+    forgeError: state.forgeError,
+    forgeRetryAt: state.forgeRetryAt,
+    refreshForge: state.refreshForge,
+    startForge: state.startForge,
+    resumeForge: state.resumeForge,
   }));
   return useAppStore(selector);
 }
@@ -381,6 +431,9 @@ export async function initializeStore() {
       console.log('Store initialized in local auth bypass mode');
       return;
     }
+
+    // Presence heartbeat — fire-and-forget, never blocks init
+    CommunityService.touchLastActive();
 
     // Initialize in parallel for better performance
     await Promise.all([

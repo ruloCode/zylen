@@ -159,7 +159,7 @@ export const Select = forwardRef<View, SelectProps>(
             <View className="max-h-[70%] overflow-hidden rounded-2xl border border-white/10 bg-charcoal-500">
               {placeholder && (
                 <View className="border-b border-white/10 px-4 py-3">
-                  <Text className="text-sm font-semibold uppercase text-white/50">
+                  <Text className="text-sm font-semibold text-white/50">
                     {placeholder}
                   </Text>
                 </View>

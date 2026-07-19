@@ -12,31 +12,6 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "14.5"
   }
-  graphql_public: {
-    Tables: {
-      [_ in never]: never
-    }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      graphql: {
-        Args: {
-          extensions?: Json
-          operationName?: string
-          query?: string
-          variables?: Json
-        }
-        Returns: Json
-      }
-    }
-    Enums: {
-      [_ in never]: never
-    }
-    CompositeTypes: {
-      [_ in never]: never
-    }
-  }
   public: {
     Tables: {
       achievements: {
@@ -87,61 +62,129 @@ export type Database = {
         }
         Relationships: []
       }
-      friendships: {
+      activity_events: {
         Row: {
+          completion_id: string | null
           created_at: string
-          friend_id: string
+          dedup_key: string | null
+          event_type: string
           id: string
-          status: Database["public"]["Enums"]["friendship_status"]
-          updated_at: string
+          payload: Json
           user_id: string
         }
         Insert: {
+          completion_id?: string | null
           created_at?: string
-          friend_id: string
+          dedup_key?: string | null
+          event_type: string
           id?: string
-          status?: Database["public"]["Enums"]["friendship_status"]
-          updated_at?: string
+          payload?: Json
           user_id: string
         }
         Update: {
+          completion_id?: string | null
           created_at?: string
-          friend_id?: string
+          dedup_key?: string | null
+          event_type?: string
           id?: string
-          status?: Database["public"]["Enums"]["friendship_status"]
-          updated_at?: string
+          payload?: Json
           user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "friendships_friend_id_fkey"
-            columns: ["friend_id"]
+            foreignKeyName: "activity_events_completion_id_fkey"
+            columns: ["completion_id"]
             isOneToOne: false
-            referencedRelation: "profiles"
+            referencedRelation: "habit_completions"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "friendships_friend_id_fkey"
-            columns: ["friend_id"]
-            isOneToOne: false
-            referencedRelation: "v_user_public_profile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "friendships_user_id_fkey"
+            foreignKeyName: "activity_events_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "friendships_user_id_fkey"
+            foreignKeyName: "activity_events_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "v_user_public_profile"
             referencedColumns: ["id"]
           },
         ]
+      }
+      arena_progress: {
+        Row: {
+          gems: Json
+          owned_gems: Json
+          owned_weapons: Json
+          tier: number
+          updated_at: string
+          user_id: string
+          weapon_id: string
+        }
+        Insert: {
+          gems?: Json
+          owned_gems?: Json
+          owned_weapons?: Json
+          tier?: number
+          updated_at?: string
+          user_id: string
+          weapon_id?: string
+        }
+        Update: {
+          gems?: Json
+          owned_gems?: Json
+          owned_weapons?: Json
+          tier?: number
+          updated_at?: string
+          user_id?: string
+          weapon_id?: string
+        }
+        Relationships: []
+      }
+      avatar_generations: {
+        Row: {
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      focus_daily_reward_claims: {
+        Row: {
+          claim_date: string
+          created_at: string
+          points_awarded: number
+          user_id: string
+          xp_awarded: number
+        }
+        Insert: {
+          claim_date: string
+          created_at?: string
+          points_awarded?: number
+          user_id: string
+          xp_awarded?: number
+        }
+        Update: {
+          claim_date?: string
+          created_at?: string
+          points_awarded?: number
+          user_id?: string
+          xp_awarded?: number
+        }
+        Relationships: []
       }
       focus_gem_species: {
         Row: {
@@ -200,36 +243,14 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "focus_gems_species_fkey"
-            columns: ["species"]
+            foreignKeyName: "focus_gems_habit_id_fkey"
+            columns: ["habit_id"]
             isOneToOne: false
-            referencedRelation: "focus_gem_species"
-            referencedColumns: ["key"]
+            referencedRelation: "habits"
+            referencedColumns: ["id"]
           },
-        ]
-      }
-      focus_species_unlocks: {
-        Row: {
-          points_paid: number
-          species: string
-          unlocked_at: string
-          user_id: string
-        }
-        Insert: {
-          points_paid?: number
-          species: string
-          unlocked_at?: string
-          user_id: string
-        }
-        Update: {
-          points_paid?: number
-          species?: string
-          unlocked_at?: string
-          user_id?: string
-        }
-        Relationships: [
           {
-            foreignKeyName: "focus_species_unlocks_species_fkey"
+            foreignKeyName: "focus_gems_species_fkey"
             columns: ["species"]
             isOneToOne: false
             referencedRelation: "focus_gem_species"
@@ -289,6 +310,98 @@ export type Database = {
             columns: ["gem_id"]
             isOneToOne: false
             referencedRelation: "focus_gems"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "focus_sessions_life_area_id_fkey"
+            columns: ["life_area_id"]
+            isOneToOne: false
+            referencedRelation: "life_areas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      focus_species_unlocks: {
+        Row: {
+          points_paid: number
+          species: string
+          unlocked_at: string
+          user_id: string
+        }
+        Insert: {
+          points_paid?: number
+          species: string
+          unlocked_at?: string
+          user_id: string
+        }
+        Update: {
+          points_paid?: number
+          species?: string
+          unlocked_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "focus_species_unlocks_species_fkey"
+            columns: ["species"]
+            isOneToOne: false
+            referencedRelation: "focus_gem_species"
+            referencedColumns: ["key"]
+          },
+        ]
+      }
+      friendships: {
+        Row: {
+          created_at: string
+          friend_id: string
+          id: string
+          status: Database["public"]["Enums"]["friendship_status"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          friend_id: string
+          id?: string
+          status?: Database["public"]["Enums"]["friendship_status"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          friend_id?: string
+          id?: string
+          status?: Database["public"]["Enums"]["friendship_status"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "friendships_friend_id_fkey"
+            columns: ["friend_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "friendships_friend_id_fkey"
+            columns: ["friend_id"]
+            isOneToOne: false
+            referencedRelation: "v_user_public_profile"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "friendships_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "friendships_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "v_user_public_profile"
             referencedColumns: ["id"]
           },
         ]
@@ -542,15 +655,69 @@ export type Database = {
         }
         Relationships: []
       }
+      hero_forges: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          error_code: string | null
+          gender: string | null
+          glb_paths: Json
+          id: string
+          meshy_anim_tasks: Json
+          meshy_model_task: string | null
+          meshy_rig_task: string | null
+          model_url: string | null
+          rig_image_path: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          error_code?: string | null
+          gender?: string | null
+          glb_paths?: Json
+          id?: string
+          meshy_anim_tasks?: Json
+          meshy_model_task?: string | null
+          meshy_rig_task?: string | null
+          model_url?: string | null
+          rig_image_path?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          error_code?: string | null
+          gender?: string | null
+          glb_paths?: Json
+          id?: string
+          meshy_anim_tasks?: Json
+          meshy_model_task?: string | null
+          meshy_rig_task?: string | null
+          model_url?: string | null
+          rig_image_path?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           age_range: string | null
+          avatar_body_url: string | null
           avatar_url: string | null
           created_at: string
           experience_level: string | null
           gender: string | null
           has_completed_onboarding: boolean
+          hero_model_url: string | null
           id: string
+          last_active_at: string | null
           level: number
           motivation: string | null
           name: string
@@ -562,12 +729,15 @@ export type Database = {
         }
         Insert: {
           age_range?: string | null
+          avatar_body_url?: string | null
           avatar_url?: string | null
           created_at?: string
           experience_level?: string | null
           gender?: string | null
           has_completed_onboarding?: boolean
+          hero_model_url?: string | null
           id: string
+          last_active_at?: string | null
           level?: number
           motivation?: string | null
           name: string
@@ -579,12 +749,15 @@ export type Database = {
         }
         Update: {
           age_range?: string | null
+          avatar_body_url?: string | null
           avatar_url?: string | null
           created_at?: string
           experience_level?: string | null
           gender?: string | null
           has_completed_onboarding?: boolean
+          hero_model_url?: string | null
           id?: string
+          last_active_at?: string | null
           level?: number
           motivation?: string | null
           name?: string
@@ -652,6 +825,120 @@ export type Database = {
           id?: string
           user_id?: string
           xp_earned?: number
+        }
+        Relationships: []
+      }
+      shared_mission_checkins: {
+        Row: {
+          checkin_date: string
+          created_at: string
+          mission_id: string
+          user_id: string
+        }
+        Insert: {
+          checkin_date: string
+          created_at?: string
+          mission_id: string
+          user_id: string
+        }
+        Update: {
+          checkin_date?: string
+          created_at?: string
+          mission_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shared_mission_checkins_mission_id_user_id_fkey"
+            columns: ["mission_id", "user_id"]
+            isOneToOne: false
+            referencedRelation: "shared_mission_participants"
+            referencedColumns: ["mission_id", "user_id"]
+          },
+        ]
+      }
+      shared_mission_participants: {
+        Row: {
+          completed_at: string | null
+          days_completed: number
+          joined_at: string
+          mission_id: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          days_completed?: number
+          joined_at?: string
+          mission_id: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          days_completed?: number
+          joined_at?: string
+          mission_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shared_mission_participants_mission_id_fkey"
+            columns: ["mission_id"]
+            isOneToOne: false
+            referencedRelation: "shared_missions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shared_mission_participants_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shared_mission_participants_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "v_user_public_profile"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      shared_missions: {
+        Row: {
+          code: string
+          created_at: string
+          description: string
+          duration_days: number
+          icon_name: string | null
+          id: string
+          is_active: boolean
+          reward_points: number
+          reward_xp: number
+          title: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          description?: string
+          duration_days: number
+          icon_name?: string | null
+          id?: string
+          is_active?: boolean
+          reward_points?: number
+          reward_xp?: number
+          title: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          description?: string
+          duration_days?: number
+          icon_name?: string | null
+          id?: string
+          is_active?: boolean
+          reward_points?: number
+          reward_xp?: number
+          title?: string
         }
         Relationships: []
       }
@@ -837,6 +1124,7 @@ export type Database = {
           created_at: string | null
           current_streak: number | null
           id: string | null
+          last_active_at: string | null
           level: number | null
           longest_streak: number | null
           points: number | null
@@ -851,6 +1139,14 @@ export type Database = {
         Args: { p_friendship_id: string }
         Returns: undefined
       }
+      arena_item_cost: {
+        Args: { p_item_id: string; p_item_type: string }
+        Returns: number
+      }
+      break_focus_session: {
+        Args: { p_reason: string; p_session_id: string }
+        Returns: Json
+      }
       calculate_life_area_level: {
         Args: { p_total_xp: number }
         Returns: number
@@ -863,49 +1159,42 @@ export type Database = {
           newly_unlocked: number
         }[]
       }
+      checkin_shared_mission: { Args: { p_mission_id: string }; Returns: Json }
       claim_achievement_reward: {
         Args: { p_achievement_id: string; p_user_id: string }
         Returns: Json
       }
-      break_focus_session: {
-        Args: { p_session_id: string; p_reason: string }
+      claim_daily_focus_reward: {
+        Args: {
+          p_minutes_goal: number
+          p_reward_points: number
+          p_reward_xp: number
+        }
         Returns: Json
       }
-      complete_focus_session: {
-        Args: { p_session_id: string }
-        Returns: Json
-      }
+      complete_arena_tier: { Args: { p_tier: number }; Returns: number }
+      complete_focus_session: { Args: { p_session_id: string }; Returns: Json }
       complete_habit: {
         Args: { p_habit_id: string; p_value?: number }
         Returns: Json
       }
-      complete_arena_tier: {
-        Args: { p_tier: number }
-        Returns: number
-      }
       equip_arena_gear: {
-        Args: { p_gems: string[]; p_weapon_id: string }
-        Returns: Json
-      }
-      get_arena_progress: {
-        Args: never
-        Returns: Json
-      }
-      purchase_arena_item: {
-        Args: { p_item_id: string; p_item_type: string }
-        Returns: Json
-      }
-      get_focus_stats: {
-        Args: never
-        Returns: Json
-      }
-      start_focus_session: {
-        Args: { p_gem_id: string; p_duration_minutes: number }
-        Returns: Json
-      }
-      unlock_focus_species: {
-        Args: { p_species: string }
-        Returns: Json
+        Args: { p_gems: Json; p_weapon_id: string }
+        Returns: {
+          gems: Json
+          owned_gems: Json
+          owned_weapons: Json
+          tier: number
+          updated_at: string
+          user_id: string
+          weapon_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "arena_progress"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
       generate_username_suggestions: {
         Args: { p_count?: number; p_name: string }
@@ -933,6 +1222,36 @@ export type Database = {
           xp_reward: number
         }[]
       }
+      get_ally_stats: {
+        Args: never
+        Returns: {
+          active_now: number
+          active_today: number
+          best_streak: number
+          best_streak_username: string
+          shared_weekly_points: number
+          shared_weekly_xp: number
+          total_allies: number
+        }[]
+      }
+      get_arena_progress: {
+        Args: never
+        Returns: {
+          gems: Json
+          owned_gems: Json
+          owned_weapons: Json
+          tier: number
+          updated_at: string
+          user_id: string
+          weapon_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "arena_progress"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       get_current_week_range: {
         Args: never
         Returns: {
@@ -948,6 +1267,20 @@ export type Database = {
           xp: number
         }[]
       }
+      get_focus_stats: { Args: never; Returns: Json }
+      get_friend_activity: {
+        Args: { p_before?: string; p_limit?: number }
+        Returns: {
+          avatar_url: string
+          created_at: string
+          event_type: string
+          id: string
+          is_current_user: boolean
+          payload: Json
+          user_id: string
+          username: string
+        }[]
+      }
       get_friend_list: {
         Args: { p_user_id?: string }
         Returns: {
@@ -956,6 +1289,7 @@ export type Database = {
           friendship_created_at: string
           friendship_id: string
           friendship_status: Database["public"]["Enums"]["friendship_status"]
+          last_active_at: string
           level: number
           longest_streak: number
           points: number
@@ -1008,6 +1342,25 @@ export type Database = {
           username: string
         }[]
       }
+      get_shared_missions: {
+        Args: never
+        Returns: {
+          code: string
+          description: string
+          duration_days: number
+          icon_name: string
+          is_joined: boolean
+          mission_id: string
+          my_checked_in_today: boolean
+          my_completed: boolean
+          my_days_completed: number
+          participant_avatars: Json
+          participant_count: number
+          reward_points: number
+          reward_xp: number
+          title: string
+        }[]
+      }
       get_user_stats: { Args: { p_user_id: string }; Returns: Json }
       get_user_weekly_rank: {
         Args: { p_user_id: string; p_week_start?: string }
@@ -1017,6 +1370,7 @@ export type Database = {
         Args: { p_limit?: number; p_user_id: string; p_week_start?: string }
         Returns: {
           avatar_url: string
+          current_streak: number
           habits_completed: number
           is_current_user: boolean
           level: number
@@ -1033,6 +1387,11 @@ export type Database = {
         Returns: undefined
       }
       is_username_available: { Args: { p_username: string }; Returns: boolean }
+      join_shared_mission: { Args: { p_mission_id: string }; Returns: Json }
+      purchase_arena_item: {
+        Args: { p_item_id: string; p_item_type: string }
+        Returns: Json
+      }
       record_relapse: { Args: { p_habit_id: string }; Returns: Json }
       refresh_user_streak: { Args: { p_user_id: string }; Returns: Json }
       reject_friend_request: {
@@ -1056,6 +1415,11 @@ export type Database = {
         Args: { p_friend_username: string }
         Returns: string
       }
+      start_focus_session: {
+        Args: { p_duration_minutes: number; p_gem_id: string }
+        Returns: Json
+      }
+      touch_last_active: { Args: never; Returns: undefined }
       track_weekly_habit_completion: {
         Args: {
           p_points_earned: number
@@ -1065,6 +1429,7 @@ export type Database = {
         Returns: undefined
       }
       uncomplete_habit: { Args: { p_habit_id: string }; Returns: Json }
+      unlock_focus_species: { Args: { p_species: string }; Returns: Json }
       update_current_week_ranks: { Args: never; Returns: undefined }
       update_user_points: {
         Args: { p_delta: number; p_user_id: string }
@@ -1202,9 +1567,6 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
-  graphql_public: {
-    Enums: {},
-  },
   public: {
     Enums: {
       friendship_status: ["pending", "accepted", "rejected"],
