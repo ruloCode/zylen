@@ -119,15 +119,69 @@ acceso a producción.
 - [ ] Arena: reactivar cuando esté lista con `FEATURES.enableArena = true`
       (`src/constants/config.ts`) + subir `versionCode`.
 
-## 7. Alternativa: builds en la nube con EAS
+## 7. CI/CD con EAS: push a `release` → build en la nube → Play automático
 
-Si prefieres no compilar en local (requiere una sola vez `npx eas-cli login`):
+Ya configurado en el repo: `eas.json` (profile production con `autoIncrement` y
+submit a pista **internal**) y el workflow `mobile/.eas/workflows/build-and-submit.yml`
+(se dispara con cada push a la rama `release`).
+
+### Activación (una sola vez, ~20 min)
+
+1. **Login** (interactivo, en tu terminal):
+   ```bash
+   cd mobile && npx eas-cli login
+   ```
+
+2. **⚠️ CRÍTICO — sube tu keystore a EAS ANTES del primer build en la nube**:
+   ```bash
+   npx eas-cli credentials --platform android
+   ```
+   → producción → Keystore → **Set up a new keystore → import an existing keystore**
+   → `credentials/zylen-upload.jks` (alias y contraseñas están en `credentials.json`).
+   Si te saltas esto, EAS **generará un keystore nuevo** y Google Play rechazará el
+   AAB por firma distinta a tu upload key.
+
+3. **Service account de Google Play** (para el submit automático):
+   - Play Console → **Configuración → Acceso a API** → vincula/crea proyecto de Google
+     Cloud → crea una **service account** → en Cloud Console genera su **clave JSON**.
+   - En Play Console concédele permisos sobre Zylen: "Publicar en pistas de prueba".
+   - Súbela a EAS: `npx eas-cli credentials --platform android` → Google Service
+     Account Key → sube el JSON. (Alternativa: guárdalo como
+     `mobile/service-account.json`, gitignorado, y añade
+     `"serviceAccountKeyPath": "./service-account.json"` al submit profile.)
+
+4. **Variables de entorno** (el `.env` no viaja a la nube):
+   ```bash
+   npx eas-cli env:push production --path .env
+   ```
+   (si tu versión del CLI no tiene `env:push`, créalas una a una con
+   `eas env:create` o en expo.dev → proyecto zylen → Environment variables).
+
+5. **Conecta GitHub**: [expo.dev](https://expo.dev) → proyecto **zylen** → Settings →
+   **GitHub** → instala la GitHub App y vincula `ruloCode/zylen` → en la configuración
+   del repo dentro de expo.dev pon **Base directory = `mobile`** (monorepo).
+
+6. **Crea la rama de release**:
+   ```bash
+   git checkout -b release && git push -u origin release
+   ```
+
+### Uso diario
 
 ```bash
-npx eas-cli build --platform android --profile production   # AAB en la nube
-npx eas-cli submit --platform android                       # sube el AAB a Play Console
+# desarrollas en main como siempre; cuando quieras publicar a los testers:
+git checkout release && git merge main && git push && git checkout main
 ```
 
-`eas.json` ya está configurado (`credentialsSource: local` usa tu mismo keystore).
-Para `eas submit` necesitarás además una **service account** de Google Cloud con acceso
-a la API de Play Console (Play Console → Configuración → Acceso a API).
+Eso dispara el workflow: EAS compila el AAB (versionCode auto-incrementado en remoto,
+sin tocar app.json) y lo sube a la **pista interna** de Play. Los testers reciben el
+update en minutos. La promoción a cerrada/producción sigue siendo un clic manual en
+Play Console (deliberado: producción pasa revisión de Google).
+
+También puedes lanzar un release manual sin pasar por GitHub:
+```bash
+npx eas-cli build --platform android --profile production --auto-submit
+```
+
+Nota: los builds locales con `./scripts/build-release.sh` siguen funcionando igual
+(usan gradle + credentials.json directamente, sin EAS).

@@ -1,0 +1,26 @@
+# EAS Workflow: al hacer push a la rama `release`, compila el AAB de Android
+# en la nube de Expo y lo sube automáticamente a la pista interna de Google
+# Play (submit.production en eas.json).
+#
+# Flujo de publicación:   git checkout release && git merge main && git push
+# Prerrequisitos (una sola vez): ver mobile/docs/PLAY_STORE.md §7.
+name: Release Android (Play pista interna)
+
+on:
+  push:
+    branches: ['release']
+
+jobs:
+  build_android:
+    name: Build Android
+    type: build
+    params:
+      platform: android
+      profile: production
+
+  submit_android:
+    name: Submit a Google Play
+    needs: [build_android]
+    type: submit
+    params:
+      build_id: ${{ needs.build_android.outputs.build_id }}
