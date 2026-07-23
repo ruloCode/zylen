@@ -43,3 +43,4 @@ credentials.json
 /ios
 /android
 .env
+service-account.json
