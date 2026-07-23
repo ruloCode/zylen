@@ -764,11 +764,12 @@
       "retry": "Try again",
       "use": "Use this avatar",
       "saved": "Your hero has awakened!",
-      "error": "We couldn't create your avatar. Try a different photo.",
+      "error": "We had a problem creating your avatar. Please try again in a moment.",
       "limitError": "You reached today's creation limit. Come back tomorrow.",
       "privacy": "Your photo is only used to create the avatar and is not stored.",
       "cta": "Create AI avatar",
-      "photoRejected": "That photo couldn't be processed. Try another one where your face is clear and front-facing."
+      "photoRejected": "That photo couldn't be processed. Try another one where your face is clear and front-facing.",
+      "errorDetail": "Detail: {{detail}}"
     },
     "avatars": {
       "pickTitle": "Choose your avatar",

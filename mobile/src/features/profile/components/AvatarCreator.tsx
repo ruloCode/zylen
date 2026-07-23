@@ -60,6 +60,9 @@ export function AvatarCreator({ gender, onClose, onSaved }: AvatarCreatorProps) 
   const [photoUri, setPhotoUri] = useState<string | null>(null);
   const [generated, setGenerated] = useState<GeneratedAvatar | null>(null);
   const [error, setError] = useState<string | null>(null);
+  // Compact technical cause (Gemini reason / failing stage / HTTP) shown under
+  // the friendly message so a failure is diagnosable from a screenshot.
+  const [errorDetail, setErrorDetail] = useState<string | null>(null);
   const [messageIndex, setMessageIndex] = useState(0);
   // Guards against state updates from a generation the user abandoned.
   const activeRef = useRef(true);
@@ -90,12 +93,14 @@ export function AvatarCreator({ gender, onClose, onSaved }: AvatarCreatorProps) 
     if (result.canceled || !uri) return;
     setPhotoUri(uri);
     setError(null);
+    setErrorDetail(null);
     setStep('ready');
   };
 
   const handleGenerate = async () => {
     if (!photoUri) return;
     setError(null);
+    setErrorDetail(null);
     setMessageIndex(0);
     setStep('generating');
     try {
@@ -118,6 +123,10 @@ export function AvatarCreator({ gender, onClose, onSaved }: AvatarCreatorProps) 
             ? t('profile.avatarCreator.photoRejected')
             : t('profile.avatarCreator.error')
       );
+      // Surface the technical cause for anything that isn't the two "expected"
+      // outcomes (limit / photo rejected) — that's where diagnosis matters.
+      const detail = err instanceof AvatarGenerationError ? err.detail : undefined;
+      setErrorDetail(code === 'daily_limit_reached' || code === 'photo_rejected' ? null : detail ?? null);
       setStep('ready');
     }
   };
@@ -213,9 +222,16 @@ export function AvatarCreator({ gender, onClose, onSaved }: AvatarCreatorProps) 
                 </Pressable>
 
                 {error ? (
-                  <Text className="text-sm text-danger-400" accessibilityRole="alert">
-                    {error}
-                  </Text>
+                  <View>
+                    <Text className="text-sm text-danger-400" accessibilityRole="alert">
+                      {error}
+                    </Text>
+                    {errorDetail ? (
+                      <Text className="mt-1 text-[11px] text-white/35">
+                        {t('profile.avatarCreator.errorDetail', { detail: errorDetail })}
+                      </Text>
+                    ) : null}
+                  </View>
                 ) : null}
 
                 <Pressable

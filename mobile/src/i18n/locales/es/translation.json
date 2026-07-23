@@ -787,11 +787,12 @@
       "retry": "Reintentar",
       "use": "Usar este avatar",
       "saved": "¡Tu héroe ha despertado!",
-      "error": "No pudimos crear tu avatar. Intenta con otra foto.",
+      "error": "Tuvimos un problema al crear tu avatar. Inténtalo de nuevo en un momento.",
       "limitError": "Alcanzaste el límite de creaciones por hoy. Vuelve mañana.",
       "privacy": "Tu foto solo se usa para crear el avatar y no se guarda.",
       "cta": "Crear avatar con IA",
-      "photoRejected": "Esa foto no pudo procesarse. Prueba con otra donde tu rostro se vea claro y de frente."
+      "photoRejected": "Esa foto no pudo procesarse. Prueba con otra donde tu rostro se vea claro y de frente.",
+      "errorDetail": "Detalle: {{detail}}"
     },
     "avatars": {
       "pickTitle": "Elige tu avatar",

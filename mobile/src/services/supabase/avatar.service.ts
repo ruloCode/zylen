@@ -52,10 +52,62 @@ export type AvatarGenerationErrorCode =
 export class AvatarGenerationError extends Error {
   constructor(
     public code: AvatarGenerationErrorCode,
-    message?: string
+    message?: string,
+    /** Short technical cause (Gemini reason, stage, HTTP detail) for the UI/logs. */
+    public detail?: string
   ) {
     super(message ?? code);
     this.name = 'AvatarGenerationError';
+  }
+}
+
+/**
+ * Turn a supabase.functions.invoke() error into a typed AvatarGenerationError.
+ * A FunctionsHttpError carries the raw Response as `error.context`; the
+ * function's own JSON body ({ error, detail }) is more precise than the HTTP
+ * status, so read it when we can. Anything else (network/relay) is transient.
+ */
+async function classifyInvokeError(error: unknown): Promise<AvatarGenerationError> {
+  const ctx = (error as { context?: unknown }).context;
+  const status =
+    ctx && typeof ctx === 'object' && 'status' in ctx
+      ? (ctx as { status?: number }).status
+      : undefined;
+
+  let bodyCode: string | undefined;
+  let bodyDetail: string | undefined;
+  if (ctx && typeof (ctx as { json?: unknown }).json === 'function') {
+    try {
+      const parsed = await (ctx as Response).clone().json();
+      bodyCode = parsed?.error;
+      bodyDetail = parsed?.detail;
+    } catch {
+      // Non-JSON body — fall back to status-based classification.
+    }
+  }
+
+  if (status === 429 || bodyCode === 'daily_limit_reached') {
+    return new AvatarGenerationError('daily_limit_reached');
+  }
+  if (status === 422 || bodyCode === 'photo_rejected') {
+    return new AvatarGenerationError('photo_rejected', undefined, bodyDetail);
+  }
+  const msg = (error as { message?: string }).message;
+  return new AvatarGenerationError(
+    'generation_failed',
+    msg,
+    bodyDetail ?? (status ? `HTTP ${status}` : msg)
+  );
+}
+
+/** Run one avatar stage, tagging any raw failure with its stage for diagnosis. */
+async function stage<T>(name: string, fn: () => Promise<T>): Promise<T> {
+  try {
+    return await fn();
+  } catch (err) {
+    if (err instanceof AvatarGenerationError) throw err;
+    const msg = err instanceof Error ? err.message : String(err);
+    throw new AvatarGenerationError('generation_failed', `${name}: ${msg}`, `${name}: ${msg}`);
   }
 }
 
@@ -74,41 +126,46 @@ export class AvatarService {
    */
   static async generate(photoUri: string, gender?: Gender): Promise<GeneratedAvatar> {
     const refs = styleRefsFor(gender);
-    const [photoPart, styleBust, styleBody] = await Promise.all([
-      photoToImagePart(photoUri),
-      assetToImagePart(refs.bust),
-      assetToImagePart(refs.body),
-    ]);
+
+    // Prepare inputs. Each stage tags its own failures (photo vs bundled refs)
+    // so a device-side I/O error is diagnosable instead of a blank "failed".
+    const photoPart = await stage('photo', () => photoToImagePart(photoUri));
+    const styleBust = await stage('styleBust', () => assetToImagePart(refs.bust));
+    const styleBody = await stage('styleBody', () => assetToImagePart(refs.body));
 
     const { data, error } = await supabase.functions.invoke('generate-avatar', {
       body: { photo: photoPart, styleBust, styleBody, gender },
     });
 
     if (error) {
-      // FunctionsHttpError exposes the raw Response as error.context.
-      const status = (error as { context?: { status?: number } }).context?.status;
-      if (status === 429) {
-        throw new AvatarGenerationError('daily_limit_reached');
-      }
-      if (status === 422) {
-        // Gemini refused the photo (safety) — a different photo can work.
-        throw new AvatarGenerationError('photo_rejected');
-      }
-      console.error('generate-avatar invoke failed:', error);
-      throw new AvatarGenerationError('generation_failed', error.message);
+      const classified = await classifyInvokeError(error);
+      console.error('generate-avatar invoke failed:', classified.code, classified.detail);
+      throw classified;
     }
 
-    const { bust, body } = data as { bust: ImagePart; body: ImagePart };
-    const [bustBytes, bodyBytes] = await Promise.all([
-      composeBust(bust),
-      composeBody(body),
-    ]);
+    const { bust, body } = data as { bust?: ImagePart; body?: ImagePart };
+    if (!bust?.data || !body?.data) {
+      throw new AvatarGenerationError(
+        'generation_failed',
+        'empty response',
+        'server returned no image'
+      );
+    }
+
+    // Chroma-key + compose the two renders. Sequential (not Promise.all) and
+    // one-preview-at-a-time to keep the pure-JS image buffers off the JS heap
+    // simultaneously — the whole pipeline runs in-process on native (no GPU
+    // canvas), so peak memory is what makes it fall over on low-RAM devices.
+    const bustBytes = await stage('composeBust', async () => composeBust(bust));
+    const bustPreviewUrl = `data:image/png;base64,${fromByteArray(bustBytes)}`;
+    const bodyBytes = await stage('composeBody', async () => composeBody(body));
+    const bodyPreviewUrl = `data:image/png;base64,${fromByteArray(bodyBytes)}`;
 
     return {
       bustBytes,
       bodyBytes,
-      bustPreviewUrl: `data:image/png;base64,${fromByteArray(bustBytes)}`,
-      bodyPreviewUrl: `data:image/png;base64,${fromByteArray(bodyBytes)}`,
+      bustPreviewUrl,
+      bodyPreviewUrl,
       dispose: () => {},
     };
   }

@@ -32,9 +32,18 @@ const KEY_T_HIGH = 175;
 /** Alpha below this counts as empty when autocropping. */
 const CROP_ALPHA = 8;
 
-const BUST_CANVAS = 1024; // 1:1
-const BODY_CANVAS_W = 1024; // 2:3
-const BODY_CANVAS_H = 1536;
+// Native does the chroma-key + compose entirely on the JS heap (no GPU
+// canvas), so peak memory scales with canvas area. The avatar renders at
+// ≤192px in the app, so 768/1152 is plenty and cuts peak RGBA buffers ~44%
+// vs the web's 1024/1536 — the difference between a smooth run and an OOM on
+// low-RAM Androids. (Web keeps 1024/1536; it uses a native Canvas.)
+const BUST_CANVAS = 768; // 1:1
+const BODY_CANVAS_W = 768; // 2:3
+const BODY_CANVAS_H = 1152;
+// The 3D-forge rig sheet feeds Meshy's image-to-3D, which benefits from more
+// resolution — keep it at the full size (it's a rarer, opt-in flow).
+const RIG_CANVAS_W = 1024;
+const RIG_CANVAS_H = 1536;
 const BODY_FEET_AT = 0.93; // feet anchor (fraction of canvas height)
 const BODY_MAX_HEIGHT = 0.86; // subject height budget above the feet line
 const BUST_FILL = 0.94; // bust subject fills 94% of the square
@@ -264,15 +273,15 @@ export function composeBody(part: ImagePart): Uint8Array {
  */
 export function composeRigSheet(part: ImagePart): Uint8Array {
   const cutout = partToCutout(part);
-  const canvas = createRaster(BODY_CANVAS_W, BODY_CANVAS_H);
+  const canvas = createRaster(RIG_CANVAS_W, RIG_CANVAS_H);
   canvas.data.fill(255); // opaque white
   const scale = Math.min(
-    (BODY_CANVAS_H * 0.92) / cutout.height,
-    (BODY_CANVAS_W * 0.92) / cutout.width
+    (RIG_CANVAS_H * 0.92) / cutout.height,
+    (RIG_CANVAS_W * 0.92) / cutout.width
   );
   const w = Math.max(1, Math.round(cutout.width * scale));
   const h = Math.max(1, Math.round(cutout.height * scale));
-  blitOver(canvas, scaleBilinear(cutout, w, h), Math.round((BODY_CANVAS_W - w) / 2), Math.round((BODY_CANVAS_H - h) / 2));
+  blitOver(canvas, scaleBilinear(cutout, w, h), Math.round((RIG_CANVAS_W - w) / 2), Math.round((RIG_CANVAS_H - h) / 2));
   return encodePng(canvas);
 }
 

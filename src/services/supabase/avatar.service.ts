@@ -45,10 +45,54 @@ export type AvatarGenerationErrorCode =
   | 'generation_failed';
 
 export class AvatarGenerationError extends Error {
-  constructor(public code: AvatarGenerationErrorCode, message?: string) {
+  constructor(
+    public code: AvatarGenerationErrorCode,
+    message?: string,
+    /** Short technical cause (Gemini reason, HTTP detail) for the UI/logs. */
+    public detail?: string
+  ) {
     super(message ?? code);
     this.name = 'AvatarGenerationError';
   }
+}
+
+/**
+ * Turn a supabase.functions.invoke() error into a typed AvatarGenerationError.
+ * A FunctionsHttpError carries the raw Response as `error.context`; the
+ * function's own JSON body ({ error, detail }) is more precise than the HTTP
+ * status, so read it when we can. Anything else (network) is transient.
+ */
+async function classifyInvokeError(error: unknown): Promise<AvatarGenerationError> {
+  const ctx = (error as { context?: unknown }).context;
+  const status =
+    ctx && typeof ctx === 'object' && 'status' in ctx
+      ? (ctx as { status?: number }).status
+      : undefined;
+
+  let bodyCode: string | undefined;
+  let bodyDetail: string | undefined;
+  if (ctx && typeof (ctx as { json?: unknown }).json === 'function') {
+    try {
+      const parsed = await (ctx as Response).clone().json();
+      bodyCode = parsed?.error;
+      bodyDetail = parsed?.detail;
+    } catch {
+      // Non-JSON body — fall back to status-based classification.
+    }
+  }
+
+  if (status === 429 || bodyCode === 'daily_limit_reached') {
+    return new AvatarGenerationError('daily_limit_reached');
+  }
+  if (status === 422 || bodyCode === 'photo_rejected') {
+    return new AvatarGenerationError('photo_rejected', undefined, bodyDetail);
+  }
+  const msg = (error as { message?: string }).message;
+  return new AvatarGenerationError(
+    'generation_failed',
+    msg,
+    bodyDetail ?? (status ? `HTTP ${status}` : msg)
+  );
 }
 
 /** Style reference assets per player identity (female → Dani, else Rulo). */
@@ -77,17 +121,9 @@ export class AvatarService {
     });
 
     if (error) {
-      // FunctionsHttpError exposes the raw Response as error.context.
-      const status = (error as { context?: { status?: number } }).context?.status;
-      if (status === 429) {
-        throw new AvatarGenerationError('daily_limit_reached');
-      }
-      if (status === 422) {
-        // Gemini refused the photo (safety) — a different photo can work.
-        throw new AvatarGenerationError('photo_rejected');
-      }
-      console.error('generate-avatar invoke failed:', error);
-      throw new AvatarGenerationError('generation_failed', error.message);
+      const classified = await classifyInvokeError(error);
+      console.error('generate-avatar invoke failed:', classified.code, classified.detail);
+      throw classified;
     }
 
     const { bust, body } = data as { bust: ImagePart; body: ImagePart };
