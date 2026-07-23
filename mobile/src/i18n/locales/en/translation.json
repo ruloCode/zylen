@@ -517,6 +517,8 @@
     "emailPlaceholder": "Email address",
     "passwordPlaceholder": "Password",
     "passwordTooShort": "Password must be at least 6 characters",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
     "signIn": "Sign in",
     "createAccount": "Create account",
     "accountCreated": "Account created! Your journey begins.",

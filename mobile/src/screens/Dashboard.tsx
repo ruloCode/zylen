@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
+  Alert,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -18,14 +19,19 @@ import {
   Target,
   NotebookPen,
   ChevronRight,
-  Check,
   FlaskConical,
   Swords,
   Crown,
 } from 'lucide-react-native';
+import toast from '@/lib/toast';
 import { CircularProgress, LevelUpNotification } from '@/components/ui';
 import { useAnimatedNumber } from '@/hooks/useAnimatedNumber';
-import { HabitScienceSheet, TemplateLibrary } from '@/features/habits/components';
+import {
+  HabitItem,
+  HabitScienceSheet,
+  MeasureLogger,
+  TemplateLibrary,
+} from '@/features/habits/components';
 import { HABIT_CATALOG } from '@/constants/habitCatalog';
 import type { HabitCatalogEntry } from '@/constants/habitCatalog';
 import type { HabitFormData, HabitTemplate } from '@/types';
@@ -54,9 +60,6 @@ import { themeHsl } from '@/theme/themeVars';
 // the jungle background and the transparent character.
 const HERO_BG_SRC = '/hero-bg.png';
 
-// Fallback accent palette for habit rows when a habit has no explicit color.
-const HABIT_COLORS = ['#4CAF6D', '#8B5CF6', '#E0A93B', '#2DD4BF', '#F472B6', '#60A5FA'];
-
 // ── Layout ratios (see the web Dashboard's ASSET ALIGNMENT note) ──
 // The hero container is locked to the BACKGROUND's exact aspect ratio
 // (941×1672) so the scene shows in full with NO crop at any width. The
@@ -79,7 +82,7 @@ export function Dashboard() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { user, isLoading: userLoading } = useUser();
-  const { habits, completeHabit, uncompleteHabit } = useHabits();
+  const { habits, completeHabit, uncompleteHabit, recordRelapse } = useHabits();
   const { streak, isLoading: streakLoading } = useStreaks();
   const { loadFocusData } = useFocus();
   const { t } = useLocale();
@@ -91,6 +94,8 @@ export function Dashboard() {
   const [catalogEntry, setCatalogEntry] = useState<HabitCatalogEntry | null>(null);
   // Level-up celebration (the daily-challenge claim can level the hero).
   const [levelUpLevel, setLevelUpLevel] = useState<number | null>(null);
+  // Measurable value/timer logger target (same flow as Rituales).
+  const [loggerHabitId, setLoggerHabitId] = useState<string | null>(null);
 
   // Load focus data on mount so the daily-challenge banner knows today's
   // minutes and claim state (same as the web Dashboard).
@@ -111,6 +116,79 @@ export function Dashboard() {
   const firstName = user?.name?.split(' ')[0] || '';
   const todaysHabits = habits.slice(0, 3);
   const pendingCount = habits.filter((h) => !h.completedToday).length;
+
+  // ── Habit actions — same handlers as the Rituales tab so the shared
+  // HabitItem card behaves identically here (toasts, level-up, XP burst). ──
+
+  const handleComplete = async (id: string) => {
+    try {
+      const result = await completeHabit(id);
+      if (result.leveledUp && result.newLevel) {
+        setLevelUpLevel(result.newLevel);
+      }
+      const bonusPercent = Math.round(((result.streakMultiplier ?? 1) - 1) * 100);
+      let message = `${t('habits.habitCompleted')} +${result.xpEarned} ${t('common.xp')}`;
+      if (bonusPercent > 0) {
+        message += ` · ${t('habits.streakBonus', { percent: bonusPercent })}`;
+      }
+      if (result.capped) {
+        toast(`🌙 ${t('habits.xpCapped')}`);
+      }
+      toast.success(message);
+      return result;
+    } catch (error) {
+      console.error('Error completing habit:', error);
+      toast.error(t('errors.habitCompleteFailed'));
+      // Re-throw so HabitItem's own catch suppresses the success burst/haptic.
+      throw error;
+    }
+  };
+
+  const handleUncomplete = async (id: string): Promise<void> => {
+    try {
+      await uncompleteHabit(id);
+      toast.success(t('habits.habitUncompleted'));
+    } catch (error) {
+      console.error('Error uncompleting habit:', error);
+      toast.error(t('errors.habitUncompleteFailed'));
+    }
+  };
+
+  const handleLogValue = async (value: number): Promise<void> => {
+    if (!loggerHabitId) return;
+    try {
+      const result = await completeHabit(loggerHabitId, value);
+      setLoggerHabitId(null);
+      if (result.leveledUp && result.newLevel) {
+        setLevelUpLevel(result.newLevel);
+      }
+      toast.success(`${t('timer.logged')} +${result.xpEarned} ${t('common.xp')}`);
+    } catch (error) {
+      console.error('Error logging value:', error);
+      toast.error(t('errors.habitCompleteFailed'));
+    }
+  };
+
+  const handleRelapse = (id: string): void => {
+    Alert.alert(t('habits.relapse'), t('habits.relapseConfirm'), [
+      { text: t('actions.cancel'), style: 'cancel' },
+      {
+        text: t('habits.relapse'),
+        style: 'destructive',
+        onPress: () => {
+          void (async () => {
+            try {
+              await recordRelapse(id);
+              toast(`💪 ${t('habits.relapseRecorded')}`);
+            } catch (error) {
+              console.error('Error registering relapse:', error);
+              toast.error(t('errors.habitUncompleteFailed'));
+            }
+          })();
+        },
+      },
+    ]);
+  };
 
   if (isLoading) {
     return (
@@ -200,8 +278,9 @@ export function Dashboard() {
               </View>
               <Pressable
                 onPress={() => router.push(ROUTES.HABITS)}
+                accessibilityRole="button"
                 accessibilityLabel={t('home.notifications')}
-                className={`relative h-11 w-11 shrink-0 items-center justify-center rounded-full ${glass}`}
+                className={`relative h-11 w-11 shrink-0 items-center justify-center rounded-full active:opacity-80 ${glass}`}
               >
                 <Bell size={20} color="#ffffff" />
                 {pendingCount > 0 && (
@@ -386,7 +465,9 @@ export function Dashboard() {
               <Text className="text-xl font-bold text-white">{t('catalog.homeTitle')}</Text>
               <Pressable
                 onPress={() => setIsCatalogOpen(true)}
-                className="flex-row items-center gap-1"
+                accessibilityRole="button"
+                hitSlop={8}
+                className="flex-row items-center gap-1 active:opacity-70"
               >
                 <Text className="text-sm font-semibold text-teal-300">{t('catalog.explore')}</Text>
                 <ChevronRight size={16} color={TEAL_300} />
@@ -405,7 +486,8 @@ export function Dashboard() {
                   <Pressable
                     key={entry.slug}
                     onPress={() => setCatalogEntry(entry)}
-                    className={`${glass} w-[132px] shrink-0 p-3`}
+                    accessibilityRole="button"
+                    className={`${glass} w-[132px] shrink-0 p-3 active:opacity-80`}
                   >
                     <View className="mb-2 h-16 w-16 items-center justify-center overflow-hidden rounded-xl bg-teal-500/10">
                       {illustration ? (
@@ -443,7 +525,9 @@ export function Dashboard() {
               <Text className="text-xl font-bold text-white">{t('home.todayPath')}</Text>
               <Pressable
                 onPress={() => router.push(ROUTES.HABITS)}
-                className="flex-row items-center gap-1"
+                accessibilityRole="button"
+                hitSlop={8}
+                className="flex-row items-center gap-1 active:opacity-70"
               >
                 <Text className="text-sm font-semibold text-teal-300">{t('home.seeAll')}</Text>
                 <ChevronRight size={16} color={TEAL_300} />
@@ -466,87 +550,27 @@ export function Dashboard() {
                 </Pressable>
               </View>
             ) : (
-              <View className="gap-3">
-                {todaysHabits.map((habit, index) => {
-                  const Icon = HABIT_ICONS[habit.iconName] || HABIT_ICONS['Target'] || Target;
-                  const color = habit.color || HABIT_COLORS[index % HABIT_COLORS.length];
-                  const isMeasurable = habit.habitType === 'measurable' && !!habit.dailyGoal;
-                  const value = habit.todayValue ?? 0;
-                  const goal = habit.dailyGoal ?? 0;
-                  const pct = goal > 0 ? Math.min((value / goal) * 100, 100) : 0;
-                  const unitLabel = habit.unit
-                    ? t(`habits.units.${habit.unit}`, { defaultValue: habit.unit })
-                    : '';
-                  const subtitle = habit.dailyGoal
-                    ? `${goal} ${unitLabel}`.trim()
-                    : `+${habit.xp} ${t('progress.xp')}`;
-
-                  return (
-                    <Pressable
-                      key={habit.id}
-                      disabled={!isMeasurable}
-                      onPress={() => router.push(ROUTES.HABITS)}
-                      className={`${glass} flex-row items-center gap-3 p-3.5`}
-                    >
-                      {/* Icon */}
-                      <View
-                        className="h-11 w-11 shrink-0 items-center justify-center rounded-full"
-                        style={{ backgroundColor: color }}
-                      >
-                        <Icon size={20} color="#ffffff" />
-                      </View>
-
-                      {/* Name + subtitle */}
-                      <View className="min-w-0 flex-1">
-                        <Text
-                          numberOfLines={1}
-                          className="font-semibold leading-tight text-white"
-                        >
-                          {habit.name}
-                        </Text>
-                        <Text className="mt-0.5 text-xs text-white/75">{subtitle}</Text>
-                      </View>
-
-                      {/* Right side: progress or check */}
-                      {isMeasurable ? (
-                        <View className="w-28 shrink-0">
-                          <Text className="mb-1 text-right text-sm font-semibold text-white">
-                            {value}
-                            <Text className="text-white/70">
-                              {' '}/ {goal} {unitLabel}
-                            </Text>
-                          </Text>
-                          <View className="h-2 w-full overflow-hidden rounded-full bg-white/10">
-                            <View
-                              className="h-full rounded-full"
-                              style={{ width: `${pct}%`, backgroundColor: color }}
-                            />
-                          </View>
-                        </View>
-                      ) : (
-                        <Pressable
-                          onPress={() => {
-                            if (habit.completedToday) void uncompleteHabit(habit.id);
-                            else void completeHabit(habit.id);
-                          }}
-                          accessibilityLabel={habit.name}
-                          accessibilityState={{ selected: habit.completedToday }}
-                          className={`h-9 w-9 shrink-0 items-center justify-center rounded-full ${
-                            habit.completedToday
-                              ? 'bg-success-500'
-                              : 'border border-white/15 bg-white/10'
-                          }`}
-                        >
-                          <Check
-                            size={18}
-                            strokeWidth={3}
-                            color={habit.completedToday ? '#ffffff' : 'rgba(255,255,255,0.4)'}
-                          />
-                        </Pressable>
-                      )}
-                    </Pressable>
-                  );
-                })}
+              <View className="gap-2.5">
+                {todaysHabits.map((habit) => (
+                  <HabitItem
+                    key={habit.id}
+                    id={habit.id}
+                    name={habit.name}
+                    iconName={habit.iconName}
+                    xp={habit.xp}
+                    completedToday={habit.completedToday}
+                    lifeArea={habit.lifeArea}
+                    habitType={habit.habitType}
+                    unit={habit.unit}
+                    dailyGoal={habit.dailyGoal}
+                    todayValue={habit.todayValue}
+                    onComplete={handleComplete}
+                    onUncomplete={handleUncomplete}
+                    onLog={(id) => setLoggerHabitId(id)}
+                    onRelapse={handleRelapse}
+                    onOpenAnalytics={() => router.push(ROUTES.HABITS)}
+                  />
+                ))}
               </View>
             )}
           </View>
@@ -568,6 +592,21 @@ export function Dashboard() {
           }}
         />
       )}
+
+      {/* Measurable value / timer logger (shared flow with Rituales) */}
+      {loggerHabitId && (() => {
+        const h = habits.find((x) => x.id === loggerHabitId);
+        if (!h) return null;
+        return (
+          <MeasureLogger
+            habitName={h.name}
+            unit={h.unit || 'min'}
+            dailyGoal={h.dailyGoal}
+            onSave={handleLogValue}
+            onClose={() => setLoggerHabitId(null)}
+          />
+        );
+      })()}
 
       {/* Featured habit science card (from the Home carousel) */}
       {catalogEntry && (

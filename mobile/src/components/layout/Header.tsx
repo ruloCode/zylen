@@ -14,6 +14,7 @@ import { usePathname, useRouter } from 'expo-router';
 import { Coins, User as UserIcon } from 'lucide-react-native';
 import { useUser } from '@/store';
 import { useAnimatedNumber } from '@/hooks/useAnimatedNumber';
+import { useLocale } from '@/hooks/useLocale';
 import { LanguageSwitcher } from '@/features/settings/components/LanguageSwitcher';
 import { Logo } from '@/components/branding/Logo';
 import { cn } from '@/utils';
@@ -26,6 +27,7 @@ const GOLD_400 = '#F6A93B';
 
 export function Header() {
   const { user } = useUser();
+  const { t } = useLocale();
   const router = useRouter();
   const pathname = usePathname();
   const insets = useSafeAreaInsets();
@@ -53,9 +55,9 @@ export function Header() {
       <View className="h-16 flex-row items-center justify-between px-4">
         {/* Left: Logo */}
         <Pressable
-          onPress={() => router.push(ROUTES.DASHBOARD)}
+          onPress={() => router.navigate(ROUTES.DASHBOARD)}
           accessibilityRole="button"
-          accessibilityLabel="Go to dashboard"
+          accessibilityLabel={t('navigation.goToDashboard')}
           className="flex-row items-center gap-2 active:opacity-80"
         >
           <Logo size="sm" />
@@ -80,7 +82,7 @@ export function Header() {
           <Pressable
             onPress={() => router.push(ROUTES.PROFILE)}
             accessibilityRole="button"
-            accessibilityLabel="View profile"
+            accessibilityLabel={t('navigation.profile')}
             accessibilityState={{ selected: isProfile }}
             className={cn(
               'flex-row items-center gap-2 rounded-lg px-3 py-2',
@@ -100,7 +102,7 @@ export function Header() {
               <UserIcon size={18} color="#FFFFFF" />
             )}
             <Text className="hidden text-sm font-medium text-white sm:flex">
-              {user.name || 'Perfil'}
+              {user.name || t('navigation.profile')}
             </Text>
           </Pressable>
         </View>

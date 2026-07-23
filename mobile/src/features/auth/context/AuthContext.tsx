@@ -1,11 +1,13 @@
 /**
  * Authentication Context (React Native)
  *
- * Mirrors the web AuthContext API exactly (user/session/loading/error +
+ * Mirrors the web AuthContext API (user/session/loading/error +
  * signInWithOAuth/signInWithPassword/signUpWithPassword/signOut) so ported
- * screens keep working unchanged. OAuth swaps the browser redirect for the
- * native flow: expo-web-browser auth session + PKCE code exchange from the
- * zylen:// deep link.
+ * screens keep working unchanged, with two native deviations: OAuth swaps the
+ * browser redirect for an expo-web-browser auth session (PKCE code exchange
+ * from the zylen:// deep link) and returns {success, error} so screens can
+ * surface failures; and `loading` only reflects the initial session restore —
+ * submit flows own their local loading state.
  *
  * NOTE: `zylen://auth/callback` (and the exp:// dev-client variant) must be
  * registered in Supabase Dashboard > Auth > URL Configuration > Redirect URLs.
@@ -47,7 +49,10 @@ interface AuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
-  signInWithOAuth: (provider: 'google' | 'github') => Promise<void>;
+  /** Resolves with success=false (no error) when the user cancels the browser. */
+  signInWithOAuth: (
+    provider: 'google' | 'github'
+  ) => Promise<{ success: boolean; error?: string }>;
   signInWithPassword: (
     email: string,
     password: string
@@ -133,17 +138,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
     return () => subscription.unsubscribe();
   }, []);
 
-  const signInWithOAuth = async (provider: 'google' | 'github') => {
+  const signInWithOAuth = async (
+    provider: 'google' | 'github'
+  ): Promise<{ success: boolean; error?: string }> => {
     if (shouldSkipAuth) {
       setUser(devUser);
       setSession(null);
       setLoading(false);
-      return;
+      return { success: true };
     }
 
     try {
       setError(null);
-      setLoading(true);
 
       // zylen://auth/callback in production builds; exp://.../auth/callback in dev.
       const redirectTo = Linking.createURL('auth/callback');
@@ -165,12 +171,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const result = await WebBrowser.openAuthSessionAsync(data.url, redirectTo);
       if (result.type === 'success' && result.url) {
         await createSessionFromUrl(result.url);
+        return { success: true };
       }
+      // Cancelled / dismissed browser: not an error, just no session.
+      return { success: false };
     } catch (err) {
       console.error('OAuth sign in error:', err);
       setError(err as AuthError);
-    } finally {
-      setLoading(false);
+      return { success: false, error: (err as AuthError)?.message };
     }
   };
 
@@ -186,8 +194,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
 
     try {
+      // No global setLoading here: the screen owns its `submitting` state and a
+      // global loading flip would swap the whole form for the boot spinner.
       setError(null);
-      setLoading(true);
 
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
@@ -196,8 +205,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
       console.error('Email sign in error:', err);
       setError(err as AuthError);
       return { success: false, error: (err as AuthError)?.message };
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -213,8 +220,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
 
     try {
+      // No global setLoading here (see signInWithPassword).
       setError(null);
-      setLoading(true);
 
       // Email confirmation is disabled (mailer_autoconfirm), so signUp returns a
       // session immediately and onAuthStateChange establishes the user.
@@ -234,8 +241,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
       console.error('Email sign up error:', err);
       setError(err as AuthError);
       return { success: false, error: (err as AuthError)?.message };
-    } finally {
-      setLoading(false);
     }
   };
 

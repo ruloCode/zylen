@@ -40,6 +40,10 @@ pantalla.** El objetivo es paridad funcional 1:1 con la web.
   (`bg-background`, `text-foreground`, `text-teal-400`, `bg-charcoal-800`,
   `text-gold-400`, `border-border`, …) resuelven vía variables aplicadas por
   `ThemeProvider`. Copia las clases tal cual siempre que existan en RN.
+- **`className` solo aplica a componentes core de RN.** Un componente de
+  terceros (p.ej. `LinearGradient`) IGNORA `className` en silencio salvo que
+  esté registrado con `cssInterop` en `src/lib/interop.ts` (importado al tope
+  de `app/_layout.tsx`). Si un tercero no responde a clases, regístralo ahí.
 - **No existen en native**: `backdrop-blur`, `box-shadow` complejos, `hover:`,
   `animate-*` de keyframes CSS, `clip-path`, `fixed` (usa `absolute`),
   `env(safe-area-inset-*)` (usa `useSafeAreaInsets()`), `grid` (usa

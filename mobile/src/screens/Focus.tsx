@@ -217,10 +217,17 @@ export function Focus() {
               onPress={() =>
                 view === 'vault' || view === 'celebration' || view === 'broken'
                   ? setView('home')
-                  : router.push(ROUTES.DASHBOARD)
+                  : router.canGoBack()
+                    ? router.back()
+                    : router.replace(ROUTES.DASHBOARD)
               }
+              accessibilityRole="button"
               accessibilityLabel={t('actions.back')}
-              className={cn(glass, 'h-9 w-9 shrink-0 items-center justify-center rounded-full')}
+              hitSlop={8}
+              className={cn(
+                glass,
+                'h-9 w-9 shrink-0 items-center justify-center rounded-full active:opacity-80'
+              )}
             >
               <ArrowLeft size={18} color="#ffffff" />
             </Pressable>

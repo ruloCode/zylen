@@ -36,12 +36,12 @@ export function LanguageSwitcher({ variant = 'compact', className }: LanguageSwi
         accessibilityLabel={`Switch to ${language === 'es' ? 'English' : 'Spanish'}`}
         className={cn(
           'flex-row items-center gap-2 rounded-lg px-3 py-2',
-          'border border-gray-200 bg-white/80 active:bg-gray-50',
+          'border border-white/15 bg-white/10 active:bg-white/20',
           className
         )}
       >
-        <Languages size={18} color="#4B5563" />
-        <Text className="text-sm font-semibold uppercase text-gray-700">{language}</Text>
+        <Languages size={18} color="rgba(255,255,255,0.85)" />
+        <Text className="text-sm font-semibold uppercase text-white/85">{language}</Text>
       </Pressable>
     );
   }
@@ -56,11 +56,11 @@ export function LanguageSwitcher({ variant = 'compact', className }: LanguageSwi
         accessibilityState={{ selected: language === 'es' }}
         className={cn(
           'flex-1 items-center rounded-xl px-4 py-2.5',
-          language === 'es' ? 'bg-gold-500' : 'border border-gray-200 bg-white/80'
+          language === 'es' ? 'bg-teal-500' : 'border border-white/15 bg-white/10'
         )}
       >
         <Text
-          className={cn('text-sm font-semibold', language === 'es' ? 'text-white' : 'text-gray-600')}
+          className={cn('text-sm font-semibold', language === 'es' ? 'text-white' : 'text-white/70')}
         >
           🇪🇸 Español
         </Text>
@@ -72,11 +72,11 @@ export function LanguageSwitcher({ variant = 'compact', className }: LanguageSwi
         accessibilityState={{ selected: language === 'en' }}
         className={cn(
           'flex-1 items-center rounded-xl px-4 py-2.5',
-          language === 'en' ? 'bg-gold-500' : 'border border-gray-200 bg-white/80'
+          language === 'en' ? 'bg-teal-500' : 'border border-white/15 bg-white/10'
         )}
       >
         <Text
-          className={cn('text-sm font-semibold', language === 'en' ? 'text-white' : 'text-gray-600')}
+          className={cn('text-sm font-semibold', language === 'en' ? 'text-white' : 'text-white/70')}
         >
           🇺🇸 English
         </Text>

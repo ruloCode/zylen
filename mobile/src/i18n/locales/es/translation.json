@@ -530,6 +530,8 @@
     "emailPlaceholder": "Correo electrónico",
     "passwordPlaceholder": "Contraseña",
     "passwordTooShort": "La contraseña debe tener al menos 6 caracteres",
+    "showPassword": "Mostrar contraseña",
+    "hidePassword": "Ocultar contraseña",
     "signIn": "Iniciar sesión",
     "createAccount": "Crear cuenta",
     "accountCreated": "¡Cuenta creada! Tu viaje comienza.",

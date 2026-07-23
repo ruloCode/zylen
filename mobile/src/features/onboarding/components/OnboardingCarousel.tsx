@@ -29,7 +29,7 @@ import { useRouter } from 'expo-router';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import Svg, { Path } from 'react-native-svg';
-import { Mail, Lock, ArrowRight } from 'lucide-react-native';
+import { Mail, Lock, ArrowRight, Eye, EyeOff } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import toast from '@/lib/toast';
 import { useAuth } from '@/features/auth/context/AuthContext';
@@ -113,10 +113,15 @@ export function OnboardingCarousel() {
   const authIndex = slides.length;
 
   const listRef = useRef<FlatList<number>>(null);
+  const passwordRef = useRef<TextInput>(null);
   const [step, setStep] = useState(0);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [oauthLoading, setOauthLoading] = useState(false);
+
+  const busy = submitting || oauthLoading;
 
   const pages = Array.from({ length: totalSlides }, (_, i) => i);
 
@@ -137,10 +142,21 @@ export function OnboardingCarousel() {
   };
 
   const handleGoogle = async () => {
-    await signInWithOAuth('google');
+    if (oauthLoading) return;
+    setOauthLoading(true);
+    try {
+      const res = await signInWithOAuth('google');
+      // Cancelling the browser resolves success=false with no error — stay quiet.
+      if (!res.success && res.error) {
+        toast.error(res.error);
+      }
+    } finally {
+      setOauthLoading(false);
+    }
   };
 
   const handleEmailContinue = async () => {
+    if (busy) return; // keyboard "go" bypasses the button's disabled state
     const value = email.trim();
     if (!value || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
       toast.error(t('auth.enterEmail'));
@@ -151,19 +167,22 @@ export function OnboardingCarousel() {
       return;
     }
     setSubmitting(true);
-    // Try to create the account; if the email already exists, sign in instead,
-    // so the same form works for new and returning users. (The native
-    // AuthContext surfaces the raw Supabase message instead of the web's
-    // errorCode, so detect the "already registered" case from it.)
-    let res = await signUpWithPassword(value, password);
-    let returning = false;
-    if (!res.success && /already (registered|exists)|user_already_exists/i.test(res.error ?? '')) {
-      returning = true;
-      res = await signInWithPassword(value, password);
+    try {
+      // Try to create the account; if the email already exists, sign in instead,
+      // so the same form works for new and returning users. (The native
+      // AuthContext surfaces the raw Supabase message instead of the web's
+      // errorCode, so detect the "already registered" case from it.)
+      let res = await signUpWithPassword(value, password);
+      let returning = false;
+      if (!res.success && /already (registered|exists)|user_already_exists/i.test(res.error ?? '')) {
+        returning = true;
+        res = await signInWithPassword(value, password);
+      }
+      if (res.success) toast.success(returning ? t('auth.welcomeBack') : t('auth.accountCreated'));
+      else toast.error(res.error ?? t('errors.authenticationFailed'));
+    } finally {
+      setSubmitting(false);
     }
-    setSubmitting(false);
-    if (res.success) toast.success(returning ? t('auth.welcomeBack') : t('auth.accountCreated'));
-    else toast.error(res.error ?? t('errors.authenticationFailed'));
   };
 
   const renderSlide = (index: number) => {
@@ -211,14 +230,14 @@ export function OnboardingCarousel() {
               {/* Google */}
               <Pressable
                 onPress={() => void handleGoogle()}
-                disabled={submitting}
+                disabled={busy}
                 accessibilityRole="button"
                 className={cn(
                   'w-full flex-row items-center justify-center gap-3 rounded-2xl bg-white py-3.5 active:bg-white/95',
-                  submitting && 'opacity-60'
+                  busy && 'opacity-60'
                 )}
               >
-                <GoogleLogo />
+                {oauthLoading ? <ActivityIndicator size="small" color="#1a1a1a" /> : <GoogleLogo />}
                 <Text className="text-[15px] font-semibold text-[#1a1a1a]">
                   {t('auth.continueWithGoogle')}
                 </Text>
@@ -241,6 +260,9 @@ export function OnboardingCarousel() {
                     keyboardType="email-address"
                     autoCapitalize="none"
                     autoComplete="email"
+                    textContentType="emailAddress"
+                    returnKeyType="next"
+                    onSubmitEditing={() => passwordRef.current?.focus()}
                     value={email}
                     onChangeText={setEmail}
                     placeholder={t('auth.emailPlaceholder')}
@@ -253,23 +275,42 @@ export function OnboardingCarousel() {
                     <Lock size={18} color="#2dd4bf" />
                   </View>
                   <TextInput
-                    secureTextEntry
+                    ref={passwordRef}
+                    secureTextEntry={!showPassword}
                     autoCapitalize="none"
                     autoComplete="new-password"
+                    textContentType="newPassword"
+                    returnKeyType="go"
+                    onSubmitEditing={() => void handleEmailContinue()}
                     value={password}
                     onChangeText={setPassword}
                     placeholder={t('auth.passwordPlaceholder')}
                     placeholderTextColor="rgba(255,255,255,0.4)"
-                    className="w-full rounded-2xl border border-white/10 bg-white/[0.04] py-3.5 pl-11 pr-4 text-white"
+                    className="w-full rounded-2xl border border-white/10 bg-white/[0.04] py-3.5 pl-11 pr-12 text-white"
                   />
+                  <Pressable
+                    onPress={() => setShowPassword((v) => !v)}
+                    accessibilityRole="button"
+                    accessibilityLabel={
+                      showPassword ? t('auth.hidePassword') : t('auth.showPassword')
+                    }
+                    hitSlop={8}
+                    className="absolute right-0 z-10 h-full w-12 items-center justify-center active:opacity-70"
+                  >
+                    {showPassword ? (
+                      <EyeOff size={18} color="rgba(255,255,255,0.5)" />
+                    ) : (
+                      <Eye size={18} color="rgba(255,255,255,0.5)" />
+                    )}
+                  </Pressable>
                 </View>
                 <Pressable
                   onPress={() => void handleEmailContinue()}
-                  disabled={submitting}
+                  disabled={busy}
                   accessibilityRole="button"
                   className={cn(
                     'w-full overflow-hidden rounded-2xl active:opacity-90',
-                    submitting && 'opacity-60'
+                    busy && 'opacity-60'
                   )}
                 >
                   <LinearGradient
@@ -287,15 +328,19 @@ export function OnboardingCarousel() {
               </View>
 
               {/* Sign in */}
-              <Text className="mt-6 text-center text-sm text-white/65">
-                {t('welcome.haveAccount')}{' '}
-                <Text
-                  className="font-semibold text-[#4aa8ff]"
+              <View className="mt-4 flex-row items-center justify-center">
+                <Text className="text-sm text-white/65">{t('welcome.haveAccount')} </Text>
+                <Pressable
                   onPress={() => router.push(ROUTES.LOGIN)}
+                  accessibilityRole="button"
+                  hitSlop={8}
+                  className="px-1 py-2 active:opacity-70"
                 >
-                  {t('welcome.signIn')}
-                </Text>
-              </Text>
+                  <Text className="text-sm font-semibold text-[#4aa8ff]">
+                    {t('welcome.signIn')}
+                  </Text>
+                </Pressable>
+              </View>
             </KeyboardAvoidingView>
           ) : (
             <>

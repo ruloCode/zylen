@@ -1,4 +1,5 @@
 import '../global.css';
+import '@/lib/interop';
 
 import React, { useEffect, useState } from 'react';
 import { Stack } from 'expo-router';

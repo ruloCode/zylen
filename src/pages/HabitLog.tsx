@@ -103,6 +103,8 @@ export function HabitLog() {
     } catch (error) {
       console.error('Error completing habit:', error);
       toast.error(t('errors.habitCompleteFailed'));
+      // Re-throw so HabitItem's own catch suppresses the success burst.
+      throw error;
     }
   };
 

@@ -21,7 +21,7 @@ import { useRouter } from 'expo-router';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import Svg, { Path } from 'react-native-svg';
-import { Mail, Lock } from 'lucide-react-native';
+import { Mail, Lock, Eye, EyeOff } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import toast from '@/lib/toast';
 import { useAuth } from '@/features/auth/context/AuthContext';
@@ -64,11 +64,18 @@ export function Login() {
   const insets = useSafeAreaInsets();
   const { height } = useWindowDimensions();
   const emailRef = useRef<TextInput>(null);
+  const passwordRef = useRef<TextInput>(null);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [emailError, setEmailError] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
   const [submitting, setSubmitting] = useState(false);
+  const [oauthLoading, setOauthLoading] = useState(false);
+
+  const busy = submitting || oauthLoading;
 
   // Redirect to dashboard if already authenticated
   useEffect(() => {
@@ -78,31 +85,46 @@ export function Login() {
   }, [user, loading, router]);
 
   const handleGoogle = async () => {
-    await signInWithOAuth('google');
+    if (oauthLoading) return;
+    setOauthLoading(true);
+    try {
+      const res = await signInWithOAuth('google');
+      // Cancelling the browser resolves success=false with no error — stay quiet.
+      if (!res.success && res.error) {
+        toast.error(res.error);
+      }
+    } finally {
+      setOauthLoading(false);
+    }
   };
 
   const handleEmailSubmit = async () => {
+    if (busy) return; // keyboard "go" bypasses the button's disabled state
     const value = email.trim();
     if (!value || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-      toast.error(t('auth.enterEmail'));
+      setEmailError(t('auth.enterEmail'));
       emailRef.current?.focus();
       return;
     }
     if (password.length < 6) {
-      toast.error(t('auth.passwordTooShort'));
+      setPasswordError(t('auth.passwordTooShort'));
+      passwordRef.current?.focus();
       return;
     }
     setSubmitting(true);
-    const res =
-      mode === 'signup'
-        ? await signUpWithPassword(value, password)
-        : await signInWithPassword(value, password);
-    setSubmitting(false);
-    if (res.success) {
-      toast.success(mode === 'signup' ? t('auth.accountCreated') : t('auth.welcomeBack'));
-      // Navigation happens via the auth state effect once the session is set.
-    } else {
-      toast.error(res.error ?? t('errors.authenticationFailed'));
+    try {
+      const res =
+        mode === 'signup'
+          ? await signUpWithPassword(value, password)
+          : await signInWithPassword(value, password);
+      if (res.success) {
+        toast.success(mode === 'signup' ? t('auth.accountCreated') : t('auth.welcomeBack'));
+        // Navigation happens via the auth state effect once the session is set.
+      } else {
+        toast.error(res.error ?? t('errors.authenticationFailed'));
+      }
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -165,14 +187,14 @@ export function Login() {
             {/* Google */}
             <Pressable
               onPress={() => void handleGoogle()}
-              disabled={submitting}
+              disabled={busy}
               accessibilityRole="button"
               className={cn(
                 'w-full flex-row items-center justify-center gap-3 rounded-2xl bg-white py-3.5 active:bg-white/95',
-                submitting && 'opacity-60'
+                busy && 'opacity-60'
               )}
             >
-              <GoogleLogo />
+              {oauthLoading ? <ActivityIndicator size="small" color="#1a1a1a" /> : <GoogleLogo />}
               <Text className="text-[15px] font-semibold text-[#1a1a1a]">
                 {t('auth.continueWithGoogle')}
               </Text>
@@ -187,44 +209,90 @@ export function Login() {
 
             {/* Email + Password */}
             <View className="gap-3">
-              <View className="justify-center">
-                <View className="absolute left-4 z-10">
-                  <Mail size={18} color="#2dd4bf" />
+              <View>
+                <View className="justify-center">
+                  <View className="absolute left-4 z-10">
+                    <Mail size={18} color="#2dd4bf" />
+                  </View>
+                  <TextInput
+                    ref={emailRef}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    autoComplete="email"
+                    textContentType="emailAddress"
+                    returnKeyType="next"
+                    onSubmitEditing={() => passwordRef.current?.focus()}
+                    value={email}
+                    onChangeText={(v) => {
+                      setEmail(v);
+                      if (emailError) setEmailError(null);
+                    }}
+                    placeholder={t('auth.emailPlaceholder')}
+                    placeholderTextColor="rgba(255,255,255,0.4)"
+                    className={cn(
+                      'w-full rounded-2xl border bg-white/[0.04] py-3.5 pl-11 pr-4 text-white',
+                      emailError ? 'border-danger-500/70' : 'border-white/10'
+                    )}
+                  />
                 </View>
-                <TextInput
-                  ref={emailRef}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  autoComplete="email"
-                  value={email}
-                  onChangeText={setEmail}
-                  placeholder={t('auth.emailPlaceholder')}
-                  placeholderTextColor="rgba(255,255,255,0.4)"
-                  className="w-full rounded-2xl border border-white/10 bg-white/[0.04] py-3.5 pl-11 pr-4 text-white"
-                />
+                {emailError && (
+                  <Text accessibilityRole="alert" className="mt-1.5 pl-1 text-xs text-danger-500">
+                    {emailError}
+                  </Text>
+                )}
               </View>
-              <View className="justify-center">
-                <View className="absolute left-4 z-10">
-                  <Lock size={18} color="#2dd4bf" />
+              <View>
+                <View className="justify-center">
+                  <View className="absolute left-4 z-10">
+                    <Lock size={18} color="#2dd4bf" />
+                  </View>
+                  <TextInput
+                    ref={passwordRef}
+                    secureTextEntry={!showPassword}
+                    autoCapitalize="none"
+                    autoComplete={mode === 'signup' ? 'new-password' : 'current-password'}
+                    textContentType={mode === 'signup' ? 'newPassword' : 'password'}
+                    returnKeyType="go"
+                    onSubmitEditing={() => void handleEmailSubmit()}
+                    value={password}
+                    onChangeText={(v) => {
+                      setPassword(v);
+                      if (passwordError) setPasswordError(null);
+                    }}
+                    placeholder={t('auth.passwordPlaceholder')}
+                    placeholderTextColor="rgba(255,255,255,0.4)"
+                    className={cn(
+                      'w-full rounded-2xl border bg-white/[0.04] py-3.5 pl-11 pr-12 text-white',
+                      passwordError ? 'border-danger-500/70' : 'border-white/10'
+                    )}
+                  />
+                  <Pressable
+                    onPress={() => setShowPassword((v) => !v)}
+                    accessibilityRole="button"
+                    accessibilityLabel={showPassword ? t('auth.hidePassword') : t('auth.showPassword')}
+                    hitSlop={8}
+                    className="absolute right-0 z-10 h-full w-12 items-center justify-center active:opacity-70"
+                  >
+                    {showPassword ? (
+                      <EyeOff size={18} color="rgba(255,255,255,0.5)" />
+                    ) : (
+                      <Eye size={18} color="rgba(255,255,255,0.5)" />
+                    )}
+                  </Pressable>
                 </View>
-                <TextInput
-                  secureTextEntry
-                  autoCapitalize="none"
-                  autoComplete={mode === 'signup' ? 'new-password' : 'current-password'}
-                  value={password}
-                  onChangeText={setPassword}
-                  placeholder={t('auth.passwordPlaceholder')}
-                  placeholderTextColor="rgba(255,255,255,0.4)"
-                  className="w-full rounded-2xl border border-white/10 bg-white/[0.04] py-3.5 pl-11 pr-4 text-white"
-                />
+                {passwordError && (
+                  <Text accessibilityRole="alert" className="mt-1.5 pl-1 text-xs text-danger-500">
+                    {passwordError}
+                  </Text>
+                )}
               </View>
               <Pressable
                 onPress={() => void handleEmailSubmit()}
-                disabled={submitting}
+                disabled={busy}
                 accessibilityRole="button"
                 className={cn(
                   'w-full overflow-hidden rounded-2xl active:opacity-90',
-                  submitting && 'opacity-60'
+                  busy && 'opacity-60'
                 )}
               >
                 <LinearGradient
@@ -242,18 +310,24 @@ export function Login() {
             </View>
 
             {/* Toggle sign in / sign up */}
-            <Text className="mt-6 text-center text-sm text-white/65">
-              {mode === 'signup' ? t('auth.haveAccount') : t('auth.noAccount')}{' '}
-              <Text
-                className="font-semibold text-[#4aa8ff]"
+            <View className="mt-4 flex-row items-center justify-center">
+              <Text className="text-sm text-white/65">
+                {mode === 'signup' ? t('auth.haveAccount') : t('auth.noAccount')}{' '}
+              </Text>
+              <Pressable
                 onPress={() => {
                   setMode((m) => (m === 'signup' ? 'signin' : 'signup'));
                   emailRef.current?.focus();
                 }}
+                accessibilityRole="button"
+                hitSlop={8}
+                className="px-1 py-2 active:opacity-70"
               >
-                {mode === 'signup' ? t('auth.signIn') : t('auth.register')}
-              </Text>
-            </Text>
+                <Text className="text-sm font-semibold text-[#4aa8ff]">
+                  {mode === 'signup' ? t('auth.signIn') : t('auth.register')}
+                </Text>
+              </Pressable>
+            </View>
 
             {/* Terms */}
             <Text className="mt-5 text-center text-[11px] leading-relaxed text-white/40">

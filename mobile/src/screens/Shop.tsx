@@ -8,6 +8,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
+  Alert,
   Animated,
   Pressable,
   ScrollView,
@@ -83,6 +84,7 @@ export function Shop() {
   }, [shopItems, t]);
 
   const handlePurchase = async (id: string): Promise<void> => {
+    if (isPurchasing) return;
     const item = shopItems.find((i) => i.id === id);
     if (!item) return;
 
@@ -94,6 +96,17 @@ export function Shop() {
       toast.error(t('shop.toast.purchaseError', { needed }));
       return;
     }
+
+    // Spending essence is irreversible — confirm before purchasing.
+    Alert.alert(t('shop.confirmPurchase'), t('shop.buyAria', { name: displayName, cost: item.cost }), [
+      { text: t('actions.cancel'), style: 'cancel' },
+      { text: t('shop.buyNow'), onPress: () => void doPurchase(id, displayName) },
+    ]);
+  };
+
+  const doPurchase = async (id: string, displayName: string): Promise<void> => {
+    const item = shopItems.find((i) => i.id === id);
+    if (!item) return;
 
     try {
       // Trigger purchase animation

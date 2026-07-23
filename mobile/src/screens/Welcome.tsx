@@ -115,15 +115,17 @@ export function Welcome() {
         </Pressable>
 
         {/* Sign in */}
-        <Text className="mt-6 text-center text-sm text-white/65">
-          {t('welcome.haveAccount')}{' '}
-          <Text
-            className="font-semibold text-[#4aa8ff]"
+        <View className="mt-4 flex-row items-center justify-center">
+          <Text className="text-sm text-white/65">{t('welcome.haveAccount')} </Text>
+          <Pressable
             onPress={() => router.push(ROUTES.LOGIN)}
+            accessibilityRole="button"
+            hitSlop={8}
+            className="px-1 py-2 active:opacity-70"
           >
-            {t('welcome.signIn')}
-          </Text>
-        </Text>
+            <Text className="text-sm font-semibold text-[#4aa8ff]">{t('welcome.signIn')}</Text>
+          </Pressable>
+        </View>
       </View>
     </View>
   );
