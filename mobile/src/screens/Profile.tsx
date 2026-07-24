@@ -397,7 +397,10 @@ export function Profile() {
     { path: ROUTES.MOOD, icon: Smile, label: t('navigation.mood') },
     { path: ROUTES.SHOP, icon: ShoppingBag, label: t('navigation.shop') },
     { path: ROUTES.LEADERBOARD, icon: Trophy, label: t('navigation.leaderboard') },
-    { path: ROUTES.CHAT, icon: MessageCircle, label: t('navigation.chat') },
+    // Coach personal store-gated (FEATURES.enableChat)
+    ...(FEATURES.enableChat
+      ? [{ path: ROUTES.CHAT, icon: MessageCircle, label: t('navigation.chat') }]
+      : []),
     { path: ROUTES.ROOT_HABIT, icon: Flame, label: t('rootHabit.title') },
     { path: ROUTES.SOCIAL, icon: UserIcon, label: t('navigation.social') },
   ];

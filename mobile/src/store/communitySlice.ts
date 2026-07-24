@@ -9,9 +9,11 @@ import type {
   ActivityEvent,
   AllyStats,
   MissionCheckinResult,
+  PostReactionKind,
   SharedMission,
 } from '@/types/community';
 import * as CommunityService from '@/services/supabase/community.service';
+import * as PostsService from '@/services/supabase/posts.service';
 import type { AppStore } from './types';
 
 const ACTIVITY_PAGE_SIZE = 30;
@@ -37,6 +39,16 @@ export interface CommunitySlice {
   checkinMission: (missionId: string) => Promise<MissionCheckinResult>;
   loadAllyStats: () => Promise<void>;
   loadAlliesTab: () => Promise<void>;
+  // Fotos de progreso
+  publishProgressPost: (
+    photoUri: string,
+    caption: string,
+    habitId?: string
+  ) => Promise<PostsService.CreatePostResult>;
+  removeProgressPost: (postId: string) => Promise<void>;
+  togglePostReaction: (postId: string, reaction: PostReactionKind) => Promise<void>;
+  /** Verifica la evidencia de un aliado; devuelve el bonus del verificador. */
+  verifyPost: (postId: string) => Promise<PostsService.VerifyPostResult>;
 }
 
 export const createCommunitySlice: StateCreator<AppStore, [], [], CommunitySlice> = (
@@ -187,5 +199,95 @@ export const createCommunitySlice: StateCreator<AppStore, [], [], CommunitySlice
       get().loadSharedMissions(),
       get().loadAllyStats(),
     ]);
+  },
+
+  // Sube la foto, crea el post y refresca el feed. Con habitId el post es
+  // EVIDENCIA de un hábito completado hoy: el backend otorga el bonus y
+  // aquí se sincronizan los totales del perfil (patrón checkinMission).
+  publishProgressPost: async (photoUri: string, caption: string, habitId?: string) => {
+    const imagePath = await PostsService.uploadPostPhoto(photoUri);
+    const result = await PostsService.createProgressPost(imagePath, caption, habitId);
+    if (!result.ok) return result;
+
+    if (result.bonusXP > 0) {
+      const user = get().user;
+      if (user && result.newTotalXP !== undefined) {
+        set({
+          user: {
+            ...user,
+            points: result.newPoints ?? user.points,
+            totalXPEarned: result.newTotalXP,
+            level: result.newLevel ?? user.level,
+          },
+        });
+      }
+    }
+    await get().loadActivityFeed();
+    return result;
+  },
+
+  verifyPost: async (postId: string) => {
+    const result = await PostsService.verifyProgressPost(postId);
+    if (result.ok) {
+      const user = get().user;
+      const username = user?.username;
+      // La evidencia queda verificada en el feed sin refetch
+      set((state) => ({
+        activityFeed: state.activityFeed.map((event) =>
+          event.postId === postId
+            ? { ...event, verified: true, verifiedByUsername: username ?? undefined }
+            : event
+        ),
+      }));
+      // Bonus del verificador → sincroniza el perfil
+      if (user && result.newTotalXP !== undefined) {
+        set({
+          user: {
+            ...user,
+            points: result.newPoints ?? user.points,
+            totalXPEarned: result.newTotalXP,
+            level: result.newLevel ?? user.level,
+          },
+        });
+      }
+    }
+    return result;
+  },
+
+  removeProgressPost: async (postId: string) => {
+    const event = get().activityFeed.find((e) => e.postId === postId);
+    // Optimista: el post sale del feed ya
+    set((state) => ({
+      activityFeed: state.activityFeed.filter((e) => e.postId !== postId),
+    }));
+    try {
+      await PostsService.deleteProgressPost(postId, event?.imagePath);
+    } catch (error) {
+      console.error('Error deleting post:', error);
+      await get().loadActivityFeed();
+      throw error;
+    }
+  },
+
+  // Toggle optimista de reacción sobre el evento del feed; el backend
+  // resuelve added/changed/removed con la misma semántica.
+  togglePostReaction: async (postId: string, reaction: PostReactionKind) => {
+    const apply = (event: ActivityEvent): ActivityEvent => {
+      if (event.postId !== postId) return event;
+      const counts = { ...(event.reactions?.counts ?? {}) };
+      const mine = event.reactions?.mine;
+      if (mine) counts[mine] = Math.max(0, (counts[mine] ?? 1) - 1);
+      const nextMine = mine === reaction ? undefined : reaction;
+      if (nextMine) counts[nextMine] = (counts[nextMine] ?? 0) + 1;
+      return { ...event, reactions: { counts, mine: nextMine } };
+    };
+    const snapshot = get().activityFeed;
+    set({ activityFeed: snapshot.map(apply) });
+    try {
+      await PostsService.reactToPost(postId, reaction);
+    } catch (error) {
+      console.error('Error toggling reaction:', error);
+      set({ activityFeed: snapshot });
+    }
   },
 });

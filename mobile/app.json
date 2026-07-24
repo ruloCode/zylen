@@ -16,6 +16,7 @@
     },
     "android": {
       "package": "com.rulocode.zylen",
+      "googleServicesFile": "./google-services.json",
       "versionCode": 3,
       "adaptiveIcon": {
         "backgroundColor": "#0B1519",
@@ -47,7 +48,15 @@
       [
         "expo-notifications",
         {
-          "color": "#14b8a6"
+          "icon": "./assets/notification-icon.png",
+          "color": "#14b8a6",
+          "defaultChannel": "social"
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "Zylen usa la cámara para capturar tu evidencia de progreso."
         }
       ],
       "expo-asset"

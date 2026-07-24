@@ -37,6 +37,14 @@ export async function getFriendActivity(
       payload: event.payload || {},
       createdAt: new Date(event.created_at),
       isCurrentUser: event.is_current_user,
+      // progress_photo only (columnas aditivas del RPC)
+      postId: event.post_id ?? undefined,
+      imagePath: event.image_path ?? undefined,
+      reactions: event.reactions
+        ? { counts: event.reactions.counts ?? {}, mine: event.reactions.mine ?? undefined }
+        : undefined,
+      verified: event.verified ?? undefined,
+      verifiedByUsername: event.verified_by_username ?? undefined,
     }));
   } catch (error) {
     console.error('Error fetching friend activity:', error);

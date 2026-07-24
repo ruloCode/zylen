@@ -5,3 +5,6 @@ export { AllyCard } from './AllyCard';
 export { AlliesOverview } from './AlliesOverview';
 export { MissionCard } from './MissionCard';
 export { GuardianProfileSheet } from './GuardianProfileSheet';
+export { PhotoPostCard } from './PhotoPostCard';
+export { ProgressPostComposer } from './ProgressPostComposer';
+export { ReactionBar } from './ReactionBar';

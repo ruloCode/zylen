@@ -105,6 +105,9 @@ export function Arena() {
   const gameSrc = useMemo(() => {
     if (!user || view !== 'playing') return null;
     const params = new URLSearchParams({
+      // Skip the Higgsfield wrapper page: __raw=1 serves the bare game
+      // directly (saves the wrapper's framed-detect → location.replace hop).
+      __raw: '1',
       room: inviteRoom ?? myRoom,   // an invite link drops you into your ally's room
       name: user.name.slice(0, 16),
       origin: window.location.origin,

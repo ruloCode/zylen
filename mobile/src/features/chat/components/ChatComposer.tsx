@@ -20,6 +20,8 @@ interface ChatComposerProps {
   autoFocus?: boolean;
   /** Kept for web API parity (no DOM ids on native). */
   inputId?: string;
+  /** Optional control before the input (e.g. the ally chat's photo button). */
+  leftAccessory?: React.ReactNode;
 }
 
 const MAX_INPUT_HEIGHT = 160; // px — ~6-7 lines before it scrolls internally
@@ -46,12 +48,14 @@ export function ChatComposer({
   maxLength,
   sendLabel = 'Send',
   autoFocus,
+  leftAccessory,
 }: ChatComposerProps) {
   const colors = useAccent(accent);
   const blocked = disabled || isLoading;
 
   return (
     <View className="flex-row items-end gap-3 rounded-3xl border border-white/10 bg-[hsl(var(--glass-bg)/0.65)] p-3">
+      {leftAccessory}
       <TextInput
         value={value}
         onChangeText={onChange}

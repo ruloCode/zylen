@@ -245,10 +245,14 @@ export function Streaks() {
             colors={[bg0, bg]}
             style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 176 }}
           />
-          {/* Character (transparent PNG), upper-right */}
+          {/* Character (transparent PNG), upper-right. Custom AI avatars are
+              remote URLs (avatarBodyUrl), bundled heroes resolve via img(). */}
           {!heroFailed && (
             <Image
-              source={img(getHeroBodySrc(user?.avatarUrl))}
+              source={(() => {
+                const src = getHeroBodySrc(user?.avatarUrl, user?.avatarBodyUrl);
+                return img(src) ?? { uri: src };
+              })()}
               contentFit="contain"
               contentPosition="top"
               onError={() => setHeroFailed(true)}

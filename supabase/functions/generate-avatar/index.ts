@@ -117,21 +117,23 @@ const STYLE =
   'glossy 3D chibi collectible-figurine render, Pixar-like, oversized head, ' +
   'huge expressive warm eyes, soft studio lighting';
 
-// The style refs picture a specific character who wears glasses — without
-// the "different character / accessories only from the photo" firewall the
-// model copies those glasses onto every user.
+// The style refs picture a specific character with distinctive facial
+// features/accessories. Lesson learned twice: any trait NAMED in the prompt
+// leaks into the output even when negated ("no glasses" → glasses), so the
+// wording must never mention specific accessories — only "copy the photo,
+// add nothing the photo doesn't show".
 function bustPrompt(): string {
   return (
     `Create a 3D chibi character portrait (head and shoulders bust) of the ` +
     `person in the first photo. Use the second reference image ONLY for art ` +
     `style: ${STYLE}. The reference shows a DIFFERENT character — never copy ` +
-    `that character's face, hairstyle, skin tone, facial hair, glasses or ` +
-    `accessories. Faithfully preserve THIS person's real features from the ` +
-    `photo so they are clearly recognizable: skin tone, face shape, ` +
-    `hairstyle and hair color, and facial hair exactly as in the photo. ` +
-    `Accessories rule: add glasses, earrings or headwear ONLY if the person ` +
-    `is clearly wearing them in the photo; if they are not, the character ` +
-    `must have NO glasses and NO accessories at all. Friendly gentle smile, ` +
+    `that character's face, hairstyle, skin tone, facial hair or anything ` +
+    `worn on their face or head. Faithfully preserve THIS person's real ` +
+    `features from the photo so they are clearly recognizable: skin tone, ` +
+    `face shape, hairstyle and hair color, and facial hair exactly as in ` +
+    `the photo. The face and head must show ONLY what is actually visible ` +
+    `in the photo — add absolutely nothing to the face or head that the ` +
+    `photo does not show. Friendly gentle smile, ` +
     `looking at the camera. Head and shoulders centered, filling most of ` +
     `the square canvas. ${MAGENTA_PLATE}`
   );
@@ -140,8 +142,8 @@ function bustPrompt(): string {
 function bodyPrompt(): string {
   return (
     `Full body of the SAME character as the first image — identical face, ` +
-    `hair and skin tone. Keep glasses or accessories ONLY if the character ` +
-    `in the first image has them; do not add any new ones. Use the second ` +
+    `hair and skin tone, with the head showing EXACTLY what the first ` +
+    `image shows and nothing more. Use the second ` +
     `reference image ONLY for art style and outfit language: ${STYLE}, ` +
     `dressed in ancient-fantasy garb (rustic tunic, leather straps and ` +
     `belt, weathered cloth, wrapped sandals) with a small glowing blue ` +
@@ -156,7 +158,8 @@ function bodyPrompt(): string {
 function rigPrompt(): string {
   return (
     `Full body of the SAME character as the first image — identical face, ` +
-    `hair, skin tone and glasses. EXACTLY match the art style and outfit ` +
+    `hair, skin tone and everything worn on the head, exactly as the first ` +
+    `image shows it. EXACTLY match the art style and outfit ` +
     `language of the second reference image: ${STYLE}, dressed in ` +
     `ancient-fantasy garb (rustic tunic, leather straps and belt, weathered ` +
     `cloth, wrapped sandals) with a small glowing blue crystal amulet on ` +

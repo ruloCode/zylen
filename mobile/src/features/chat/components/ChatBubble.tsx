@@ -23,6 +23,20 @@ interface ChatBubbleProps {
   copyLabel?: string;
   /** Label shown briefly after copying (i18n). */
   copiedLabel?: string;
+  /**
+   * Human-to-human mode (ally chat): plain text on BOTH sides (markdown is a
+   * coach thing), no copy action, and the avatar shows for the other user.
+   */
+  plain?: boolean;
+  /** Signed URL of an attached photo (ally chat / photo messages). */
+  imageUrl?: string;
+  /** Stable cache key for the photo (its storage path — survives re-signing). */
+  imageCacheKey?: string;
+  onImagePress?: () => void;
+  /** Delivery status (ally chat): pending dims the bubble, failed marks it. */
+  status?: 'sent' | 'pending' | 'failed';
+  /** Label announced/shown for failed delivery (i18n). */
+  failedLabel?: string;
 }
 
 /**
@@ -42,6 +56,12 @@ export function ChatBubble({
   accent = 'gold',
   copyLabel = 'Copy',
   copiedLabel = 'Copied',
+  plain = false,
+  imageUrl,
+  imageCacheKey,
+  onImagePress,
+  status = 'sent',
+  failedLabel = 'Error',
 }: ChatBubbleProps) {
   const [copied, setCopied] = useState(false);
   const colors = useAccent(accent);
@@ -113,24 +133,48 @@ export function ChatBubble({
         style={{ maxWidth: isUser ? '80%' : '88%', flexShrink: 1 }}
       >
         <View
-          className={`max-w-full rounded-2xl border px-4 py-3 ${
+          className={`max-w-full rounded-2xl border ${imageUrl ? 'overflow-hidden p-1.5' : 'px-4 py-3'} ${
             isUser
               ? 'rounded-tr-md border-teal-600/30 bg-teal-500/90'
               : 'rounded-tl-md border-white/10 bg-charcoal-500'
           }`}
+          style={status === 'pending' ? { opacity: 0.6 } : undefined}
         >
-          {isUser ? (
-            <Text className="text-sm leading-relaxed text-white">{message}</Text>
-          ) : (
-            <MarkdownMessage content={message} accent={accent} />
+          {imageUrl && (
+            <Pressable
+              onPress={onImagePress}
+              disabled={!onImagePress}
+              accessibilityRole={onImagePress ? 'imagebutton' : 'image'}
+            >
+              <Image
+                source={{ uri: imageUrl, cacheKey: imageCacheKey }}
+                contentFit="cover"
+                transition={120}
+                style={{ width: 220, height: 220, borderRadius: 14 }}
+              />
+            </Pressable>
           )}
+          {message ? (
+            <View className={imageUrl ? 'px-2.5 pb-1.5 pt-2' : undefined}>
+              {isUser || plain ? (
+                <Text className="text-sm leading-relaxed text-white">{message}</Text>
+              ) : (
+                <MarkdownMessage content={message} accent={accent} />
+              )}
+            </View>
+          ) : null}
         </View>
 
         {/* Meta row — copy (assistant only) + timestamp */}
         <View
           className={`mt-1 flex-row items-center gap-2 px-1 ${isUser ? 'flex-row-reverse' : ''}`}
         >
-          {!isUser && (
+          {status === 'failed' && (
+            <Text className="text-xs font-semibold" style={{ color: '#F87171' }}>
+              {failedLabel}
+            </Text>
+          )}
+          {!isUser && !plain && (
             <Pressable
               onPress={handleCopy}
               accessibilityRole="button"

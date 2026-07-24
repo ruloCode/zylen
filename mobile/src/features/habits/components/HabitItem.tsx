@@ -8,11 +8,14 @@
 
 import React, { useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
+import { Image } from 'expo-image';
 import * as Haptics from 'expo-haptics';
 import { Check, X, Flame, Shield, Timer, Zap } from 'lucide-react-native';
 import { cn } from '@/utils';
 import { XPBurst } from '@/components/effects/XPBurst';
 import { HABIT_ICONS } from './IconSelector';
+import { findCatalogEntry } from '@/constants/habitCatalog';
+import { img } from '@/assets/registry';
 import { useLifeAreas } from '@/store';
 import { useLocale } from '@/hooks/useLocale';
 import type { HabitType } from '@/types';
@@ -118,6 +121,12 @@ export function HabitItem({
 
   const IconComponent = iconMap[iconName] || iconMap['Target'];
 
+  // Catalog illustration — same PNG the habit bank shows, so a habit added
+  // from the bank keeps its identity in "my rituals". Falls back to the
+  // lucide icon when the habit doesn't map to a catalog entry.
+  const catalogEntry = findCatalogEntry(name);
+  const illustration = catalogEntry ? img(`/catalog/${catalogEntry.slug}.png`) : undefined;
+
   const lifeAreaInfo = lifeAreas.find((area) => area.id === lifeArea);
   const lifeAreaName = lifeAreaInfo
     ? t(`lifeAreas.${String(lifeAreaInfo.area).toLowerCase()}`)
@@ -164,18 +173,29 @@ export function HabitItem({
       />
 
       <View className="relative z-10 flex-row items-center gap-3 pl-1">
-        {/* Icon — accent tile */}
+        {/* Icon — catalog illustration (matches the bank) or accent tile */}
         <View
           className={cn(
-            'h-12 w-12 items-center justify-center rounded-2xl border',
-            completedToday
+            'h-12 w-12 items-center justify-center overflow-hidden rounded-2xl border',
+            illustration
+              ? 'border-white/10 bg-white/10'
+              : completedToday
               ? isQuit
                 ? 'border-white/25 bg-cyan-500'
                 : 'border-white/25 bg-teal-500'
               : 'border-white/10 bg-white/10'
           )}
         >
-          <IconComponent size={22} color={completedToday ? WHITE : accentIconColor} />
+          {illustration ? (
+            <Image
+              source={illustration}
+              contentFit="contain"
+              style={{ width: 40, height: 40 }}
+              accessibilityElementsHidden
+            />
+          ) : (
+            <IconComponent size={22} color={completedToday ? WHITE : accentIconColor} />
+          )}
         </View>
 
         {/* Details (tap to open analytics) */}

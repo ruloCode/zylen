@@ -1,18 +1,20 @@
 /**
- * Local reminder notifications (expo-notifications, no push server).
+ * Notifications core (expo-notifications).
  *
- * RN port of the web Notification-API service. Reminders are presented
- * immediately (trigger: null) when the app runs the pending-reminders check —
- * on app open and on foreground return (see AppProvider); each habit is
- * notified at most once per day (kv-backed de-dupe). A foreground handler is
- * configured so reminders are visible while the app is open, mirroring the
- * web behavior.
+ * Capa base compartida por los dos sistemas de notificación de la app:
+ *   - Coach local: recordatorios de hábitos programados en el dispositivo
+ *     (ver coachReminders.service.ts) — funcionan con la app cerrada.
+ *   - Push remota: eventos sociales (aliados/arena) enviados por la Edge
+ *     Function send-push vía FCM (ver push.service.ts).
+ *
+ * Aquí viven: canales Android, permisos (con el canal creado ANTES del
+ * prompt — requisito de Android 13+), y `show()` para avisos inmediatos
+ * (p. ej. fin de sesión de enfoque).
  */
 
+import { Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
-import type { HabitWithCompletion } from '@/services/supabase/habits.service';
 import type { TimeOfDay } from '@/types';
-import { StorageService } from './storage';
 
 /** Local hour (0-23) at which each slot's reminder becomes due */
 export const REMINDER_HOURS: Record<TimeOfDay, number> = {
@@ -22,30 +24,75 @@ export const REMINDER_HOURS: Record<TimeOfDay, number> = {
   anytime: 12,
 };
 
-const NOTIFIED_KEY = 'everlight_reminders_notified';
+/** Android notification channels (deben coincidir con la Edge Function send-push) */
+export const CHANNELS = {
+  coach: 'coach',
+  social: 'social',
+  arena: 'arena',
+} as const;
 
 /** Mirrors the web Notification.permission values (+ 'unsupported'). */
 export type ReminderPermission = 'granted' | 'denied' | 'default' | 'unsupported';
 
-type NotifiedMap = Record<string, string>; // habitId -> YYYY-MM-DD last notified
+/**
+ * Conversación de aliados actualmente ABIERTA y enfocada: sus push de
+ * chat_message no muestran banner (el mensaje ya está en pantalla vía
+ * Realtime). La registra/limpia la pantalla AllyChat.
+ */
+let activeChatConversationId: string | null = null;
 
-function todayKey(): string {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(
-    d.getDate()
-  ).padStart(2, '0')}`;
+export function setActiveChatConversation(conversationId: string | null): void {
+  activeChatConversationId = conversationId;
 }
 
 // Show alerts even while the app is foregrounded (the web page always shows
 // its own notifications; without this, foreground notifications are silent).
 Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowBanner: true,
-    shouldShowList: true,
-    shouldPlaySound: false,
-    shouldSetBadge: false,
-  }),
+  handleNotification: async (notification) => {
+    const url = notification.request.content.data?.url;
+    const suppress =
+      typeof url === 'string' &&
+      activeChatConversationId !== null &&
+      url === `/messages/${activeChatConversationId}`;
+    return {
+      shouldShowBanner: !suppress,
+      shouldShowList: !suppress,
+      shouldPlaySound: false,
+      shouldSetBadge: false,
+    };
+  },
 });
+
+let channelsReady = false;
+
+/**
+ * Crea los canales Android una sola vez. En Android 13+ el prompt de
+ * POST_NOTIFICATIONS solo aparece si ya existe al menos un canal, así que
+ * SIEMPRE debe llamarse antes de requestPermission().
+ */
+export async function ensureNotificationChannels(): Promise<void> {
+  if (channelsReady || Platform.OS !== 'android') return;
+  try {
+    await Notifications.setNotificationChannelAsync(CHANNELS.coach, {
+      name: 'Coach de hábitos',
+      importance: Notifications.AndroidImportance.DEFAULT,
+      lightColor: '#14b8a6',
+    });
+    await Notifications.setNotificationChannelAsync(CHANNELS.social, {
+      name: 'Aliados',
+      importance: Notifications.AndroidImportance.HIGH,
+      lightColor: '#14b8a6',
+    });
+    await Notifications.setNotificationChannelAsync(CHANNELS.arena, {
+      name: 'Arena',
+      importance: Notifications.AndroidImportance.HIGH,
+      lightColor: '#f59e0b',
+    });
+    channelsReady = true;
+  } catch (error) {
+    console.warn('Failed to create notification channels:', error);
+  }
+}
 
 function mapPermission(status: Notifications.PermissionStatus): ReminderPermission {
   switch (status) {
@@ -98,6 +145,7 @@ export class NotificationsService {
 
   static async requestPermission(): Promise<ReminderPermission> {
     if (!this.isSupported()) return 'unsupported';
+    await ensureNotificationChannels();
     const current = await refreshPermission();
     if (current === 'granted') return 'granted';
     try {
@@ -118,6 +166,7 @@ export class NotificationsService {
     if ((await this.getPermissionAsync()) !== 'granted') return;
 
     try {
+      await ensureNotificationChannels();
       await Notifications.scheduleNotificationAsync({
         ...(tag ? { identifier: tag } : {}),
         content: { title, body },
@@ -126,40 +175,5 @@ export class NotificationsService {
     } catch (error) {
       console.warn('Failed to show notification:', error);
     }
-  }
-
-  /**
-   * Notify pending habits whose time-of-day slot already started today.
-   * Each habit is notified at most once per local day.
-   *
-   * @returns number of notifications shown
-   */
-  static async checkPendingReminders(
-    habits: HabitWithCompletion[],
-    title: string,
-    bodyTemplate: (habitName: string) => string
-  ): Promise<number> {
-    if ((await this.getPermissionAsync()) !== 'granted') return 0;
-
-    const hour = new Date().getHours();
-    const today = todayKey();
-    const notified = StorageService.get<NotifiedMap>(NOTIFIED_KEY) ?? {};
-    let shown = 0;
-
-    for (const habit of habits) {
-      if (!habit.reminderEnabled || habit.completedToday) continue;
-      const slot = (habit.timeOfDay ?? 'anytime') as TimeOfDay;
-      if (hour < REMINDER_HOURS[slot]) continue;
-      if (notified[habit.id] === today) continue;
-
-      await this.show(title, bodyTemplate(habit.name), `reminder-${habit.id}`);
-      notified[habit.id] = today;
-      shown++;
-    }
-
-    if (shown > 0) {
-      StorageService.set(NOTIFIED_KEY, notified);
-    }
-    return shown;
   }
 }

@@ -253,15 +253,16 @@ export const CHAT_CONFIG = {
 
 // Feature flags
 export const FEATURES = {
-  enableChat: true,
+  // Coach personal (chat Hermes) oculto en el release de tienda. Reactivar
+  // poniendo true: vuelven la card del Dashboard, el link de Perfil y /chat.
+  enableChat: false,
   enableShop: true,
   enableRootHabit: true,
   enableAchievements: true, // Real backend (achievements + user_achievements + RPCs)
   enableMultiplayer: false, // Future feature
-  // Arena oculta temporalmente en el primer release de Play Store (el juego
-  // necesita mejoras). Reactivar poniendo esto en true: la card del Dashboard,
-  // el teaser del GemVault y la ruta /arena vuelven solos.
-  enableArena: false,
+  // Arena activa: card del Dashboard, teaser del GemVault y ruta /arena.
+  // El juego corre en un WebView fullscreen inmersivo (sin barras de sistema).
+  enableArena: true,
   // Herramientas del Perfil (journal/goals/breathing) aún son "coming soon";
   // ocultas en tienda para no parecer funciones rotas.
   enableProfileTools: false,

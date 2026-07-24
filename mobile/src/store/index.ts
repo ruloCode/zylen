@@ -17,6 +17,7 @@ import { createArenaSlice } from './arenaSlice';
 import { createFocusSlice } from './focusSlice';
 import { createCommunitySlice } from './communitySlice';
 import { createForgeSlice } from './forgeSlice';
+import { createMessagesSlice } from './messagesSlice';
 import * as CommunityService from '@/services/supabase/community.service';
 import { AVATARS, LIFE_AREAS } from '@/constants';
 import type { LifeArea, Streak, User } from '@/types';
@@ -45,6 +46,7 @@ export const useAppStore = create<AppStore>()((...a) => ({
   ...createFocusSlice(...a),
   ...createCommunitySlice(...a),
   ...createForgeSlice(...a),
+  ...createMessagesSlice(...a),
 }));
 
 // Typed hooks for easier access
@@ -228,6 +230,10 @@ export function useCommunity() {
     checkinMission: state.checkinMission,
     loadAllyStats: state.loadAllyStats,
     loadAlliesTab: state.loadAlliesTab,
+    publishProgressPost: state.publishProgressPost,
+    removeProgressPost: state.removeProgressPost,
+    togglePostReaction: state.togglePostReaction,
+    verifyPost: state.verifyPost,
   }));
   return useAppStore(selector);
 }
@@ -324,6 +330,24 @@ export function useFocus() {
     breakFocusSession: state.breakFocusSession,
     setActiveFocusSession: state.setActiveFocusSession,
     updateFocusPause: state.updateFocusPause,
+  }));
+  return useAppStore(selector);
+}
+
+export function useMessages() {
+  const selector = useShallow((state: AppStore) => ({
+    conversations: state.conversations,
+    conversationsLoading: state.conversationsLoading,
+    unreadTotal: state.unreadTotal,
+    messagesByConversation: state.messagesByConversation,
+    messagesLoading: state.messagesLoading,
+    loadConversations: state.loadConversations,
+    openDm: state.openDm,
+    loadMessages: state.loadMessages,
+    refreshConversation: state.refreshConversation,
+    sendAllyMessage: state.sendAllyMessage,
+    receiveRealtimeMessage: state.receiveRealtimeMessage,
+    markConversationRead: state.markConversationRead,
   }));
   return useAppStore(selector);
 }

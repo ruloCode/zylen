@@ -21,7 +21,8 @@ import {
 import { IconSelector, HABIT_ICONS } from './IconSelector';
 import { SheetShell } from './SheetShell';
 import { Input } from '@/components/atoms';
-import { Select } from '@/components/atoms';
+import { getIcon } from '@/components/atoms/icons/iconMaps';
+import { getLifeAreaMeta } from '@/constants/lifeAreaCatalog';
 import { useLifeAreas } from '@/store';
 import { useLocale } from '@/hooks/useLocale';
 import type { Habit, HabitFormData, HabitType, TimeOfDay } from '@/types';
@@ -297,28 +298,60 @@ export function HabitForm({ habit, initialData, onSubmit, onCancel }: HabitFormP
           )}
         </View>
 
-        {/* Life Area Selection */}
+        {/* Category selection — visual chips (icon + accent color) so it's
+            obvious what each option is, instead of a plain dropdown. */}
         <View>
           <Text className="mb-2 text-sm font-semibold text-white">
             {t('habitForm.lifeArea')}
           </Text>
-          <Select
-            value={lifeArea}
-            onValueChange={(value) => {
-              setLifeArea(value);
-            }}
-            onBlur={() => handleBlur('lifeArea')}
-            placeholder={t('habitForm.selectLifeArea')}
-            options={lifeAreas.map((area) => ({
-              value: area.id,
-              label: `${t(`lifeAreas.${String(area.area).toLowerCase()}`)} - ${t('common.level')} ${area.level}`,
-            }))}
-            error={errors.lifeArea}
-            touched={!!touched.lifeArea}
-            aria-label={t('habitForm.lifeArea')}
-          />
+          <View className="flex-row flex-wrap gap-2">
+            {lifeAreas.map((area) => {
+              const meta = getLifeAreaMeta(area);
+              const AreaIcon = getIcon(meta.iconName);
+              const active = lifeArea === area.id;
+              const label = area.isCustom
+                ? String(area.area)
+                : t(`lifeAreas.${String(area.area).toLowerCase()}`);
+              return (
+                <Pressable
+                  key={area.id}
+                  onPress={() => {
+                    setLifeArea(area.id);
+                    handleBlur('lifeArea');
+                  }}
+                  className={cn(
+                    'flex-row items-center gap-2 rounded-full border px-3 py-2',
+                    active ? 'border-2' : 'border-white/10 bg-white/5'
+                  )}
+                  style={
+                    active
+                      ? { borderColor: meta.color, backgroundColor: `${meta.color}22` }
+                      : undefined
+                  }
+                  accessibilityRole="button"
+                  accessibilityState={{ selected: active }}
+                  accessibilityLabel={label}
+                >
+                  <View
+                    className="h-6 w-6 items-center justify-center rounded-full"
+                    style={{ backgroundColor: `${meta.color}33` }}
+                  >
+                    <AreaIcon size={14} color={meta.color} />
+                  </View>
+                  <Text
+                    className={cn(
+                      'text-sm font-semibold',
+                      active ? 'text-white' : 'text-white/70'
+                    )}
+                  >
+                    {label}
+                  </Text>
+                </Pressable>
+              );
+            })}
+          </View>
           {touched.lifeArea && errors.lifeArea && (
-            <Text className="mt-1 text-sm text-red-500" accessibilityRole="alert">
+            <Text className="mt-2 text-sm text-red-500" accessibilityRole="alert">
               {errors.lifeArea}
             </Text>
           )}

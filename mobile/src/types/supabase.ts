@@ -1268,6 +1268,22 @@ export type Database = {
         }[]
       }
       get_focus_stats: { Args: never; Returns: Json }
+      get_conversations: {
+        Args: never
+        Returns: {
+          conversation_id: string
+          kind: string
+          last_message_at: string | null
+          last_message_body: string | null
+          last_message_kind: string | null
+          last_message_sender_id: string | null
+          other_avatar_url: string | null
+          other_last_active_at: string | null
+          other_user_id: string | null
+          other_username: string | null
+          unread_count: number
+        }[]
+      }
       get_friend_activity: {
         Args: { p_before?: string; p_limit?: number }
         Returns: {
@@ -1275,12 +1291,29 @@ export type Database = {
           created_at: string
           event_type: string
           id: string
+          image_path: string | null
           is_current_user: boolean
           payload: Json
+          post_id: string | null
+          reactions: Json | null
           user_id: string
           username: string
+          verified: boolean | null
+          verified_by_username: string | null
         }[]
       }
+      get_messages: {
+        Args: { p_before?: string; p_conversation_id: string; p_limit?: number }
+        Returns: {
+          body: string
+          created_at: string
+          id: string
+          image_path: string | null
+          kind: string
+          sender_id: string
+        }[]
+      }
+      get_or_create_dm: { Args: { p_friend_id: string }; Returns: string }
       get_friend_list: {
         Args: { p_user_id?: string }
         Returns: {
@@ -1305,6 +1338,17 @@ export type Database = {
       get_mutual_friends_count: {
         Args: { p_friend_id: string; p_user_id: string }
         Returns: number
+      }
+      get_pending_arena_invites: {
+        Args: never
+        Returns: {
+          created_at: string
+          invite_id: string
+          inviter_avatar_url: string
+          inviter_id: string
+          inviter_level: number
+          inviter_username: string
+        }[]
       }
       get_pending_friend_requests: {
         Args: never
@@ -1386,6 +1430,25 @@ export type Database = {
         Args: { template_id: string }
         Returns: undefined
       }
+      invite_to_arena: { Args: { p_friend_id: string }; Returns: Json }
+      create_progress_post: {
+        Args: { p_caption?: string; p_habit_id?: string; p_image_path: string }
+        Returns: Json
+      }
+      verify_progress_post: { Args: { p_post_id: string }; Returns: Json }
+      delete_progress_post: { Args: { p_post_id: string }; Returns: Json }
+      mark_conversation_read: {
+        Args: { p_conversation_id: string }
+        Returns: undefined
+      }
+      react_to_post: {
+        Args: { p_post_id: string; p_reaction: string }
+        Returns: Json
+      }
+      send_message: {
+        Args: { p_body: string; p_conversation_id: string; p_image_path?: string }
+        Returns: Json
+      }
       is_username_available: { Args: { p_username: string }; Returns: boolean }
       join_shared_mission: { Args: { p_mission_id: string }; Returns: Json }
       purchase_arena_item: {
@@ -1398,7 +1461,15 @@ export type Database = {
         Args: { p_friendship_id: string }
         Returns: undefined
       }
+      register_push_token: {
+        Args: { p_locale?: string; p_platform?: string; p_token: string }
+        Returns: undefined
+      }
       remove_friend: { Args: { p_friendship_id: string }; Returns: undefined }
+      respond_arena_invite: {
+        Args: { p_accept: boolean; p_invite_id: string }
+        Returns: Json
+      }
       search_users_by_username: {
         Args: { p_limit?: number; p_search_term: string }
         Returns: {
@@ -1430,6 +1501,7 @@ export type Database = {
       }
       uncomplete_habit: { Args: { p_habit_id: string }; Returns: Json }
       unlock_focus_species: { Args: { p_species: string }; Returns: Json }
+      unregister_push_token: { Args: { p_token: string }; Returns: undefined }
       update_current_week_ranks: { Args: never; Returns: undefined }
       update_user_points: {
         Args: { p_delta: number; p_user_id: string }

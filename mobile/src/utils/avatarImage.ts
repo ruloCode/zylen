@@ -8,8 +8,7 @@
  */
 
 import { Image as RNImage } from 'react-native';
-import { Asset } from 'expo-asset';
-import * as FileSystem from 'expo-file-system/legacy';
+import { Image as ExpoImage } from 'expo-image';
 import { ImageManipulator, SaveFormat } from 'expo-image-manipulator';
 import { toByteArray } from 'base64-js';
 import { img } from '@/assets/registry';
@@ -85,13 +84,23 @@ async function assetBytes(src: string): Promise<Uint8Array> {
   }
   const module = img(src);
   if (module == null) throw new Error(`Unknown bundled asset: ${src}`);
-  const asset = Asset.fromModule(module);
-  await asset.downloadAsync();
-  const localUri = asset.localUri ?? asset.uri;
-  const base64 = await FileSystem.readAsStringAsync(localUri, {
-    encoding: FileSystem.EncodingType.Base64,
-  });
-  return toByteArray(base64);
+  // In a production Android build a bundled image resolves to a bare drawable
+  // resource name (no file:// scheme), which FileSystem cannot read. Load it
+  // through expo-image's native loader — the same path that renders these
+  // assets in the UI — and re-encode to PNG bytes via the manipulator.
+  const ref = await ExpoImage.loadAsync(module);
+  try {
+    const rendered = await ImageManipulator.manipulate(ref).renderAsync();
+    try {
+      const saved = await rendered.saveAsync({ format: SaveFormat.PNG, base64: true });
+      if (!saved.base64) throw new Error(`Asset re-encode produced no data: ${src}`);
+      return toByteArray(saved.base64);
+    } finally {
+      rendered.release();
+    }
+  } finally {
+    ref.release();
+  }
 }
 
 /**

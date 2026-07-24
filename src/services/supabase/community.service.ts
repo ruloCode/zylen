@@ -28,16 +28,27 @@ export async function getFriendActivity(
 
     if (error) throw error;
 
-    return (data || []).map((event: any) => ({
-      id: event.id,
-      userId: event.user_id,
-      username: event.username,
-      avatarUrl: event.avatar_url,
-      eventType: event.event_type,
-      payload: event.payload || {},
-      createdAt: new Date(event.created_at),
-      isCurrentUser: event.is_current_user,
-    }));
+    // Guard: el backend puede emitir tipos nuevos (p. ej. progress_photo,
+    // que hoy solo renderiza mobile) — la web ignora los que no conoce.
+    const known = new Set([
+      'habit_completed',
+      'level_up',
+      'streak_milestone',
+      'mission_completed',
+    ]);
+
+    return (data || [])
+      .filter((event: any) => known.has(event.event_type))
+      .map((event: any) => ({
+        id: event.id,
+        userId: event.user_id,
+        username: event.username,
+        avatarUrl: event.avatar_url,
+        eventType: event.event_type,
+        payload: event.payload || {},
+        createdAt: new Date(event.created_at),
+        isCurrentUser: event.is_current_user,
+      }));
   } catch (error) {
     console.error('Error fetching friend activity:', error);
     throw new Error('Failed to fetch friend activity');

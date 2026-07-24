@@ -48,7 +48,7 @@ export function CoachChat({ onClose }: CoachChatProps) {
   const { user } = useUser();
   const insets = useSafeAreaInsets();
   // Hermes "speaks" to you wearing the same hero the user picked on the Home.
-  const hermesAvatar = getHeroBodySrc(user?.avatarUrl);
+  const hermesAvatar = getHeroBodySrc(user?.avatarUrl, user?.avatarBodyUrl);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);

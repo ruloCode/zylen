@@ -27,8 +27,10 @@ const WHITE_80 = 'rgba(255,255,255,0.8)';
 interface HabitScienceSheetProps {
   entry: HabitCatalogEntry;
   onClose: () => void;
-  /** optional CTA shown at the bottom (e.g. create this habit from library) */
+  /** primary CTA: add this habit straight to "my rituals" (one tap) */
   onCreate?: () => void;
+  /** secondary CTA: open the prefilled form to tweak it before adding */
+  onCustomize?: () => void;
 }
 
 function BulletList({ items, tone }: { items: string[]; tone: string }) {
@@ -44,7 +46,7 @@ function BulletList({ items, tone }: { items: string[]; tone: string }) {
   );
 }
 
-export function HabitScienceSheet({ entry, onClose, onCreate }: HabitScienceSheetProps) {
+export function HabitScienceSheet({ entry, onClose, onCreate, onCustomize }: HabitScienceSheetProps) {
   const { t } = useLocale();
   // Catalog keys are dynamic (habitCatalog.<slug>.*), outside i18next's typed
   // key union — cast so TS accepts the template-string lookups.
@@ -164,16 +166,29 @@ export function HabitScienceSheet({ entry, onClose, onCreate }: HabitScienceShee
             <BulletList items={frustrations} tone="bg-orange-300" />
           </View>
 
-          {/* CTA */}
+          {/* CTAs: primary one-tap add + optional "customize before" */}
           {onCreate && (
-            <Pressable
-              onPress={onCreate}
-              className="w-full flex-row items-center justify-center gap-2 rounded-2xl bg-teal-500 px-6 py-3.5 active:bg-teal-600"
-              accessibilityRole="button"
-            >
-              <Plus size={18} color={WHITE} />
-              <Text className="font-bold text-white">{t('habitScience.createCta')}</Text>
-            </Pressable>
+            <View className="gap-2">
+              <Pressable
+                onPress={onCreate}
+                className="w-full flex-row items-center justify-center gap-2 rounded-2xl bg-teal-500 px-6 py-3.5 active:bg-teal-600"
+                accessibilityRole="button"
+              >
+                <Plus size={18} color={WHITE} />
+                <Text className="font-bold text-white">{t('habitScience.createCta')}</Text>
+              </Pressable>
+              {onCustomize && (
+                <Pressable
+                  onPress={onCustomize}
+                  className="w-full items-center justify-center rounded-2xl border border-white/15 px-6 py-3 active:bg-white/10"
+                  accessibilityRole="button"
+                >
+                  <Text className="font-semibold text-white/80">
+                    {t('habitScience.customizeCta')}
+                  </Text>
+                </Pressable>
+              )}
+            </View>
           )}
         </View>
       </ScrollView>

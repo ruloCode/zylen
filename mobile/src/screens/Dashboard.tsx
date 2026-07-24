@@ -82,7 +82,7 @@ export function Dashboard() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { user, isLoading: userLoading } = useUser();
-  const { habits, completeHabit, uncompleteHabit, recordRelapse } = useHabits();
+  const { habits, addHabit, completeHabit, uncompleteHabit, recordRelapse } = useHabits();
   const { streak, isLoading: streakLoading } = useStreaks();
   const { loadFocusData } = useFocus();
   const { t } = useLocale();
@@ -354,18 +354,20 @@ export function Dashboard() {
                   </CircularProgress>
                 </View>
 
-                {/* Quick action: personal coach (Hermes chat) */}
-                <Pressable
-                  onPress={() => setIsCoachOpen(true)}
-                  accessibilityRole="button"
-                  accessibilityLabel={t('home.personalJournal')}
-                  className={`${heroCard} items-center gap-1.5 p-2.5`}
-                >
-                  <NotebookPen size={18} color="#fcd34d" />
-                  <Text className="text-center text-[12px] font-semibold leading-tight text-white">
-                    {t('home.personalJournal')}
-                  </Text>
-                </Pressable>
+                {/* Quick action: personal coach (Hermes chat) — store-gated */}
+                {FEATURES.enableChat ? (
+                  <Pressable
+                    onPress={() => setIsCoachOpen(true)}
+                    accessibilityRole="button"
+                    accessibilityLabel={t('home.personalJournal')}
+                    className={`${heroCard} items-center gap-1.5 p-2.5`}
+                  >
+                    <NotebookPen size={18} color="#fcd34d" />
+                    <Text className="text-center text-[12px] font-semibold leading-tight text-white">
+                      {t('home.personalJournal')}
+                    </Text>
+                  </Pressable>
+                ) : null}
               </View>
             </View>
           </View>
@@ -577,16 +579,31 @@ export function Dashboard() {
         </View>
       </ScrollView>
 
-      {/* Coach Personal — Hermes-powered chat overlay */}
-      {isCoachOpen && <CoachChat onClose={() => setIsCoachOpen(false)} />}
+      {/* Coach Personal — Hermes-powered chat overlay (store-gated) */}
+      {FEATURES.enableChat && isCoachOpen && <CoachChat onClose={() => setIsCoachOpen(false)} />}
 
       {/* Habit catalog library (browse + learn + create) */}
       {isCatalogOpen && (
         <TemplateLibrary
           onClose={() => setIsCatalogOpen(false)}
+          onQuickAdd={async (data: Partial<HabitFormData>, _template: HabitTemplate) => {
+            // One-tap add with the auto-resolved category. If none resolved,
+            // send them to the Rituales page to finish setup.
+            setIsCatalogOpen(false);
+            if (!data.lifeArea) {
+              router.push(ROUTES.HABITS);
+              return;
+            }
+            try {
+              await addHabit(data);
+              toast.success(t('habits.habitCreated'));
+            } catch (error) {
+              console.error('Error adding habit from template:', error);
+              toast.error(t('errors.habitCreateFailed'));
+            }
+          }}
           onSelectTemplate={(_data: Partial<HabitFormData>, _template: HabitTemplate) => {
-            // Creating from a template requires picking a life area in the form,
-            // which lives on the Rituales page. Route there to finish setup.
+            // Customize path: the full prefilled form lives on the Rituales page.
             setIsCatalogOpen(false);
             router.push(ROUTES.HABITS);
           }}

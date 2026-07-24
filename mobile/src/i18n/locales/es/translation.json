@@ -322,8 +322,8 @@
     "editHabit": "Editar Hábito",
     "habitName": "Nombre del Hábito",
     "habitNamePlaceholder": "Ej: Meditar 10 minutos",
-    "lifeArea": "Área de Vida",
-    "selectLifeArea": "Selecciona un área de vida",
+    "lifeArea": "Categoría",
+    "selectLifeArea": "Elige una categoría",
     "icon": "Ícono",
     "selectedIcon": "Ícono seleccionado",
     "xpValue": "Luz que otorga",
@@ -332,7 +332,7 @@
       "nameRequired": "El nombre es obligatorio",
       "nameTooShort": "El nombre debe tener al menos 3 caracteres",
       "nameTooLong": "El nombre no puede tener más de 50 caracteres",
-      "lifeAreaRequired": "Elige un reino de la vida",
+      "lifeAreaRequired": "Elige una categoría",
       "iconRequired": "Debes seleccionar un ícono",
       "xpTooLow": "La Luz mínima es {{min}}",
       "xpTooHigh": "La Luz máxima es {{max}}"
@@ -941,7 +941,8 @@
       "acceptRequest": "Error al aceptar solicitud",
       "rejectRequest": "Error al rechazar solicitud",
       "removeFriend": "Error al quitar aliado",
-      "searchUsers": "Error al buscar Guardianes"
+      "searchUsers": "Error al buscar Guardianes",
+      "arenaInvite": "No se pudo enviar el reto"
     },
     "requests": "Solicitudes",
     "search": "Buscar",
@@ -971,7 +972,10 @@
       "missionWater": "Tomar agua · 7 días",
       "missionSleep": "Dormir antes de las 10 PM",
       "missionReading": "Leer 20 páginas diarias"
-    }
+    },
+    "arenaInviteAction": "Invitar a la Arena",
+    "arenaInviteSent": "⚔️ Reto enviado a @{{username}}",
+    "arenaInviteAlready": "Ya tiene un reto tuyo pendiente"
   },
   "community": {
     "stats": {
@@ -1002,7 +1006,8 @@
         "habitCompleted": "terminó {{habit}}",
         "levelUp": "consiguió Nivel {{level}}",
         "streakMilestone": "mantuvo su llama · Día {{days}}",
-        "missionCompleted": "completó {{mission}}"
+        "missionCompleted": "completó {{mission}}",
+        "progressPhoto": "compartió su progreso"
       }
     },
     "missions": {
@@ -1045,6 +1050,38 @@
       "currentFlame": "Llama actual",
       "bestFlame": "Mejor llama",
       "totalLight": "Luz total"
+    },
+    "posts": {
+      "shareCta": "Compartir progreso",
+      "composerTitle": "Comparte tu progreso",
+      "composerSubtitle": "Tus aliados verán la foto en el feed del círculo. Solo ellos pueden verla.",
+      "gallery": "Galería",
+      "camera": "Cámara",
+      "changePhoto": "Cambiar foto",
+      "captionPlaceholder": "Cuenta qué lograste hoy...",
+      "publish": "Publicar",
+      "published": "¡Progreso compartido!",
+      "publishedWithBonus": "¡Evidencia publicada! +{{xp}} de Luz",
+      "publishError": "No se pudo publicar",
+      "rateLimited": "Alcanzaste el límite de fotos por hoy",
+      "evidenceAlready": "Ya publicaste evidencia de ese hábito hoy",
+      "habitNotCompleted": "Ese hábito no está completado hoy",
+      "delete": "Eliminar",
+      "deleteTitle": "Eliminar publicación",
+      "deleteConfirm": "La foto desaparecerá del feed de tus aliados.",
+      "deleteError": "No se pudo eliminar",
+      "photoAlt": "Foto de progreso",
+      "reactWith": "Reaccionar con {{reaction}}",
+      "evidencePrompt": "¿Evidencia de un hábito de hoy?",
+      "evidenceHint": "Liga la foto a un hábito completado y gana +10 de Luz. Si un aliado la verifica, +15 más.",
+      "evidenceBonusHint": "Al publicar: +10 Luz y +5 esencia. Cuando un aliado verifique: +15 Luz y +10 esencia extra.",
+      "evidenceOf": "Evidencia: {{habit}}",
+      "verified": "Verificada",
+      "verifiedBy": "Verificada por @{{username}}",
+      "verifyCta": "Verificar evidencia (+15 Luz para tu aliado)",
+      "verifiedToast": "¡Evidencia verificada! +{{xp}} de Luz para ti",
+      "alreadyVerified": "Otro aliado ya la verificó",
+      "verifyError": "No se pudo verificar"
     }
   },
   "templates": {
@@ -1371,21 +1408,26 @@
     "deleted": "Hábito eliminado"
   },
   "reminders": {
-    "title": "Recordatorios",
+    "title": "Notificaciones",
     "enable": "Activar",
     "granted": "Recordatorios activados",
-    "denied": "Permiso denegado — actívalo desde los ajustes del navegador",
+    "denied": "Permiso denegado — actívalo en los ajustes del sistema",
     "statusGranted": "Recordatorios activos",
-    "statusDenied": "Permiso denegado en el navegador",
+    "statusDenied": "Permiso denegado en el sistema",
     "statusDefault": "Recordatorios desactivados",
-    "statusUnsupported": "Tu navegador no soporta notificaciones",
+    "statusUnsupported": "Este dispositivo no soporta notificaciones",
     "habitsWithReminder": "{{count}} hábito(s) con recordatorio activo",
-    "limitationsHint": "Los recordatorios funcionan al abrir la app o al volver a ella (mejor con la app instalada). En iPhone solo suenan con la app abierta.",
+    "limitationsHint": "El coach programa recordatorios en tu dispositivo: suenan aunque la app esté cerrada. Las alertas de aliados y de la Arena llegan como notificaciones push.",
     "notificationTitle": "Zylen — tu llama te espera 🔥",
     "notificationBody": "Aún no completas \"{{habit}}\" hoy. ¡No dejes que se apague!",
     "testBody": "Así se verán tus recordatorios de hábitos.",
     "habitsWithReminder_one": "{{count}} hábito con recordatorio activo",
-    "habitsWithReminder_other": "{{count}} hábitos con recordatorio activo"
+    "habitsWithReminder_other": "{{count}} hábitos con recordatorio activo",
+    "coachToggle": "Coach de hábitos",
+    "coachToggleHint": "El Mentor te recuerda cada ritual con el porqué detrás",
+    "pushToggle": "Aliados y Arena",
+    "pushToggleHint": "Solicitudes de alianza y retos en la Arena",
+    "preview": "Probar"
   },
   "habitScience": {
     "sheetTitle": "Conoce este hábito",
@@ -1394,7 +1436,8 @@
     "longTermTitle": "A largo plazo",
     "tipsTitle": "Cómo empezar bien",
     "frustrationsTitle": "Frustraciones típicas (y cómo superarlas)",
-    "createCta": "Crear este hábito",
+    "createCta": "Agregar a mis rituales",
+    "customizeCta": "Personalizar antes",
     "learnMore": "Saber más",
     "learnAboutHabit": "Aprende sobre este hábito"
   },
@@ -2016,7 +2059,13 @@
       }
     },
     "gemPowerActive": "Poder de gemas activo",
-    "gemPowerNone": "Cultiva gemas en Enfoque para ganar poderes"
+    "gemPowerNone": "Cultiva gemas en Enfoque para ganar poderes",
+    "inviteAccepted": "⚔️ ¡Reto aceptado! A la Arena.",
+    "guestRoom": "Entrarás a la sala de tu aliado. ¡A pelear juntos!",
+    "guestRoomLeave": "Mi sala",
+    "pendingInviteFrom": "@{{username}} te reta en la Arena",
+    "join": "Unirse",
+    "decline": "Rechazar"
   },
   "focus": {
     "title": "Enfoque del día",
@@ -2162,5 +2211,43 @@
       "switchToEnglish": "Cambiar a inglés",
       "switchToSpanish": "Cambiar a español"
     }
+  },
+  "coach": {
+    "notifications": {
+      "titles": [
+        "🧭 {{habit}} — el Mentor te llama",
+        "🔥 Es la hora de {{habit}}",
+        "✨ {{habit}} te espera, Guardián",
+        "🛡️ Tu ritual: {{habit}}"
+      ],
+      "whyScience": "La ciencia lo respalda: {{line}}",
+      "whyBenefit": "Lo que ganas hoy: {{line}}",
+      "whyTip": "Consejo del Mentor: {{line}}",
+      "generic": [
+        "Un pequeño paso hoy mantiene tu llama viva. Ve por él.",
+        "Los reinos se construyen con rituales diarios. Este es el tuyo.",
+        "Tu racha se forja ahora, no después. Complétalo y sigue brillando.",
+        "El Mentor cree en ti: dos minutos bastan para empezar."
+      ],
+      "others_one": "Y {{count}} ritual más espera por ti.",
+      "others_other": "Y {{count}} rituales más esperan por ti."
+    }
+  },
+  "messages": {
+    "title": "Mensajes",
+    "subtitle": "Conversaciones con tus aliados",
+    "chatAction": "Chatear",
+    "photo": "Foto",
+    "sayHi": "Saluda a tu aliado",
+    "openChatWith": "Abrir chat con @{{username}}",
+    "emptyTitle": "Aún no hay conversaciones",
+    "emptySubtitle": "Abre el perfil de un aliado y toca Chatear para empezar.",
+    "emptyConversation": "Este es el comienzo de tu conversación con @{{username}}. ¡Rompan el hielo!",
+    "typeMessage": "Escribe un mensaje...",
+    "attachPhoto": "Adjuntar foto",
+    "failed": "No se envió",
+    "sendError": "No se pudo enviar el mensaje",
+    "notAllies": "Ya no son aliados",
+    "openError": "No se pudo abrir el chat"
   }
 }

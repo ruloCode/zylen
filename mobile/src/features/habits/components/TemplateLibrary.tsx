@@ -11,7 +11,7 @@ import { TemplateCard } from './TemplateCard';
 import { TemplateFilters } from './TemplateFilters';
 import { HabitScienceSheet } from './HabitScienceSheet';
 import { SheetShell } from './SheetShell';
-import { useHabitTemplates } from '@/store';
+import { useHabitTemplates, useLifeAreas } from '@/store';
 import { useLocale } from '@/hooks/useLocale';
 import { findCatalogEntry } from '@/constants/habitCatalog';
 import type { HabitTemplate, HabitFormData } from '@/types';
@@ -23,7 +23,9 @@ const WHITE_40 = 'rgba(255,255,255,0.4)';
 const WHITE_60 = 'rgba(255,255,255,0.6)';
 
 interface TemplateLibraryProps {
-  /** Called when user selects a template to add */
+  /** One-tap add: create the habit straight away with the resolved category. */
+  onQuickAdd: (data: Partial<HabitFormData>, template: HabitTemplate) => void;
+  /** Open the prefilled form so the user can tweak the habit before adding. */
   onSelectTemplate: (data: Partial<HabitFormData>, template: HabitTemplate) => void;
   /** Called when modal is closed */
   onClose: () => void;
@@ -34,7 +36,12 @@ interface TemplateLibraryProps {
 /**
  * Modal component for browsing and selecting habit templates
  */
-export function TemplateLibrary({ onSelectTemplate, onClose, onCreateCustom }: TemplateLibraryProps) {
+export function TemplateLibrary({
+  onQuickAdd,
+  onSelectTemplate,
+  onClose,
+  onCreateCustom,
+}: TemplateLibraryProps) {
   const { t } = useLocale();
   const {
     filteredTemplates,
@@ -48,6 +55,7 @@ export function TemplateLibrary({ onSelectTemplate, onClose, onCreateCustom }: T
     clearFilters,
     incrementTemplatePopularity,
   } = useHabitTemplates();
+  const { lifeAreas } = useLifeAreas();
 
   // Science sheet target (template whose catalog entry is being read)
   const [scienceTemplate, setScienceTemplate] = useState<HabitTemplate | null>(null);
@@ -57,31 +65,45 @@ export function TemplateLibrary({ onSelectTemplate, onClose, onCreateCustom }: T
     loadTemplates();
   }, [loadTemplates]);
 
+  // Resolve the user's life area (category) id for a template's lifeAreaType.
+  // Case-insensitive so it works whether the DB stores 'health' or 'Health'.
+  const resolveCategoryId = (template: HabitTemplate): string | undefined => {
+    const wanted = String(template.lifeAreaType).toLowerCase();
+    return lifeAreas.find((a) => String(a.area).toLowerCase() === wanted)?.id;
+  };
+
+  // Build the habit data from a template: name + suggested XP + resolved
+  // category, preferring the catalog's icon so the tile matches the bank card.
+  const buildTemplateData = (template: HabitTemplate): Partial<HabitFormData> => {
+    const catalogEntry = findCatalogEntry(template.name);
+    return {
+      name: template.nameKey ? t(template.nameKey, template.name) : template.name,
+      iconName: catalogEntry?.iconName || template.iconName,
+      xp: template.suggestedXp,
+      lifeArea: resolveCategoryId(template),
+    };
+  };
+
   // Tapping a card opens the science detail first (when the template maps to
-  // the catalog); templates without a catalog entry are added directly.
+  // the catalog); templates without a catalog entry are added in one tap.
   const handleCardTap = (template: HabitTemplate) => {
     if (findCatalogEntry(template.name)) {
       setScienceTemplate(template);
     } else {
-      handleSelectTemplate(template);
+      quickAdd(template);
     }
   };
 
-  // Handle template selection
-  const handleSelectTemplate = (template: HabitTemplate) => {
-    // Increment popularity (non-blocking)
+  // One-tap add: create the habit immediately with its resolved category.
+  const quickAdd = (template: HabitTemplate) => {
     incrementTemplatePopularity(template.id);
+    onQuickAdd(buildTemplateData(template), template);
+  };
 
-    // Pass template data to parent
-    onSelectTemplate(
-      {
-        name: template.nameKey ? t(template.nameKey, template.name) : template.name,
-        iconName: template.iconName,
-        xp: template.suggestedXp,
-        // lifeArea will be selected by user in the form
-      },
-      template
-    );
+  // Customize: open the prefilled form so the user can tweak before adding.
+  const customize = (template: HabitTemplate) => {
+    incrementTemplatePopularity(template.id);
+    onSelectTemplate(buildTemplateData(template), template);
   };
 
   const scienceEntry = scienceTemplate ? findCatalogEntry(scienceTemplate.name) : null;
@@ -209,7 +231,8 @@ export function TemplateLibrary({ onSelectTemplate, onClose, onCreateCustom }: T
         <Text className="text-center text-sm text-white/50">{t('templates.footerHint')}</Text>
       </View>
 
-      {/* Science sheet: learn about the habit, then create it from here */}
+      {/* Science sheet: learn about the habit, then add it in one tap (or
+          open the prefilled form to customize it first). */}
       {scienceTemplate && scienceEntry && (
         <HabitScienceSheet
           entry={scienceEntry}
@@ -217,7 +240,12 @@ export function TemplateLibrary({ onSelectTemplate, onClose, onCreateCustom }: T
           onCreate={() => {
             const tpl = scienceTemplate;
             setScienceTemplate(null);
-            handleSelectTemplate(tpl);
+            quickAdd(tpl);
+          }}
+          onCustomize={() => {
+            const tpl = scienceTemplate;
+            setScienceTemplate(null);
+            customize(tpl);
           }}
         />
       )}

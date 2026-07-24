@@ -16,6 +16,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import { useLocalSearchParams } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import {
   Trophy, TrendingUp, Flame, Target, Users, Search,
@@ -91,10 +92,53 @@ function AvatarCircle({
   );
 }
 
+/**
+ * A single weekly-stat tile: icon chip + label on top, big value below, and
+ * an optional delta line. Tiles sit in a 2×2 grid so each metric breathes
+ * instead of being crammed into one narrow column.
+ */
+function StatTile({
+  icon,
+  iconBg,
+  label,
+  value,
+  valueClassName = 'text-white',
+  delta,
+}: {
+  icon: React.ReactNode;
+  iconBg: string;
+  label: string;
+  value: string | number;
+  valueClassName?: string;
+  delta?: React.ReactNode;
+}) {
+  return (
+    <View className="flex-1 rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+      <View className="mb-2 flex-row items-center gap-2">
+        <View
+          className="h-7 w-7 items-center justify-center rounded-full"
+          style={{ backgroundColor: iconBg }}
+        >
+          {icon}
+        </View>
+        <Text numberOfLines={1} className="flex-1 text-[11px] font-semibold text-white/55">
+          {label}
+        </Text>
+      </View>
+      <Text className={`text-[26px] font-extrabold leading-none ${valueClassName}`}>
+        {value}
+      </Text>
+      {delta ? <View className="mt-1.5">{delta}</View> : null}
+    </View>
+  );
+}
+
 export function Leaderboard() {
   const { t } = useLocale();
   const { user } = useUser();
   const streak = useAppStore((state) => state.streak);
+  // Deep link de push (p. ej. reacción a tu foto → /leaderboard?tab=social)
+  const { tab: tabParam } = useLocalSearchParams<{ tab?: string }>();
 
   // Leaderboard state
   const {
@@ -139,7 +183,9 @@ export function Leaderboard() {
   } = useAchievements();
 
   // Tab state
-  const [activeTab, setActiveTab] = useState<TabType>('rankings');
+  const [activeTab, setActiveTab] = useState<TabType>(
+    tabParam === 'social' || tabParam === 'streaks' ? tabParam : 'rankings'
+  );
   const [socialSubTab, setSocialSubTab] = useState<SocialSubTab>('friends');
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -463,55 +509,50 @@ export function Leaderboard() {
             {/* Rankings Tab */}
             {activeTab === 'rankings' && (
               <>
-                {/* User Stats Card */}
+                {/* User Stats Card — 2×2 grid of breathing-room tiles (the
+                    old flex-wrap + flex-1 crammed all four into one row). */}
                 {userWeeklyStats && (
-                  <GlassCard className="mb-6 overflow-hidden border-teal-500/20 p-6">
+                  <GlassCard className="mb-6 overflow-hidden border-teal-500/20 p-3">
                     <LinearGradient
                       colors={['rgba(20,184,166,0.10)', 'rgba(249,164,16,0.10)']}
                       start={{ x: 0, y: 0 }}
                       end={{ x: 1, y: 1 }}
                       style={StyleSheet.absoluteFill}
                     />
-                    <View className="flex-row flex-wrap gap-4">
-                      <View className="w-[45%] flex-1 items-center">
-                        <View className="mb-2 flex-row items-center justify-center gap-2">
-                          <Trophy size={20} color={COLORS.gold500} />
-                          <Text className="text-sm text-white">{t('leaderboard.yourRank')}</Text>
-                        </View>
-                        <Text className="text-2xl font-bold text-white">
-                          {userRank > 0 ? `#${userRank}` : '-'}
-                        </Text>
+                    <View className="gap-3">
+                      {/* Row 1: Tu Puesto · Luz Semanal */}
+                      <View className="flex-row gap-3">
+                        <StatTile
+                          icon={<Trophy size={15} color={COLORS.gold500} />}
+                          iconBg="rgba(249,164,16,0.15)"
+                          label={t('leaderboard.yourRank')}
+                          value={userRank > 0 ? `#${userRank}` : '—'}
+                        />
+                        <StatTile
+                          icon={<TrendingUp size={15} color={COLORS.teal400} />}
+                          iconBg="rgba(20,184,166,0.15)"
+                          label={t('leaderboard.weeklyXP')}
+                          value={userWeeklyStats.weeklyXPEarned}
+                          valueClassName="text-teal-300"
+                          delta={renderDelta(weeklyComparison?.xpChangePct ?? null)}
+                        />
                       </View>
-                      <View className="w-[45%] flex-1 items-center">
-                        <View className="mb-2 flex-row items-center justify-center gap-2">
-                          <TrendingUp size={20} color={COLORS.teal500} />
-                          <Text className="text-sm text-white">{t('leaderboard.weeklyXP')}</Text>
-                        </View>
-                        <Text className="text-2xl font-bold text-teal-600">
-                          {userWeeklyStats.weeklyXPEarned}
-                        </Text>
-                        {renderDelta(weeklyComparison?.xpChangePct ?? null)}
-                      </View>
-                      <View className="w-[45%] flex-1 items-center">
-                        <View className="mb-2 flex-row items-center justify-center gap-2">
-                          <Flame size={20} color={COLORS.gold500} />
-                          <Text className="text-sm text-white">{t('leaderboard.weeklyPoints')}</Text>
-                        </View>
-                        <Text className="text-2xl font-bold text-white">
-                          {userWeeklyStats.weeklyPointsEarned}
-                        </Text>
-                        {renderDelta(weeklyComparison?.pointsChangePct ?? null)}
-                      </View>
-                      <View className="w-[45%] flex-1 items-center">
-                        <View className="mb-2 flex-row items-center justify-center gap-2">
-                          <Target size={20} color={COLORS.success500} />
-                          <Text className="text-sm text-white">
-                            {t('leaderboard.habitsCompleted')}
-                          </Text>
-                        </View>
-                        <Text className="text-2xl font-bold text-success-600">
-                          {userWeeklyStats.habitsCompleted}
-                        </Text>
+                      {/* Row 2: Esencia Semanal · Hábitos */}
+                      <View className="flex-row gap-3">
+                        <StatTile
+                          icon={<Flame size={15} color={COLORS.gold500} />}
+                          iconBg="rgba(249,164,16,0.15)"
+                          label={t('leaderboard.weeklyPoints')}
+                          value={userWeeklyStats.weeklyPointsEarned}
+                          delta={renderDelta(weeklyComparison?.pointsChangePct ?? null)}
+                        />
+                        <StatTile
+                          icon={<Target size={15} color={COLORS.success500} />}
+                          iconBg="rgba(63,190,115,0.15)"
+                          label={t('leaderboard.habitsCompleted')}
+                          value={userWeeklyStats.habitsCompleted}
+                          valueClassName="text-success-400"
+                        />
                       </View>
                     </View>
                   </GlassCard>

@@ -323,3 +323,83 @@ export async function getMutualFriendsCount(
     return 0;
   }
 }
+
+// ============================================================================
+// Arena invites
+// ============================================================================
+
+export interface ArenaInviteResult {
+  success: boolean;
+  /** 'not_allies' | 'already_invited' cuando success=false */
+  error?: string;
+  inviteId?: string;
+}
+
+/**
+ * Invite an ally to the Arena. The DB trigger takes care of pushing the
+ * notification to the invitee's devices.
+ */
+export async function inviteToArena(friendId: string): Promise<ArenaInviteResult> {
+  try {
+    const { data, error } = await supabase.rpc('invite_to_arena', {
+      p_friend_id: friendId,
+    });
+
+    if (error) throw error;
+    const result = data as { success: boolean; error?: string; invite_id?: string };
+    return { success: result.success, error: result.error, inviteId: result.invite_id };
+  } catch (error) {
+    console.error('Error sending arena invite:', error);
+    throw new Error('Failed to send arena invite');
+  }
+}
+
+export interface PendingArenaInvite {
+  inviteId: string;
+  inviterId: string;
+  username: string;
+  avatarUrl?: string;
+  level: number;
+  createdAt: Date;
+}
+
+/**
+ * Retos pendientes (últimas 24h) — el banner de la armería los muestra por
+ * si la push se perdió o el usuario la descartó.
+ */
+export async function getPendingArenaInvites(): Promise<PendingArenaInvite[]> {
+  try {
+    const { data, error } = await supabase.rpc('get_pending_arena_invites');
+
+    if (error) throw error;
+    return (data || []).map((row: any) => ({
+      inviteId: row.invite_id,
+      inviterId: row.inviter_id,
+      username: row.inviter_username,
+      avatarUrl: row.inviter_avatar_url ?? undefined,
+      level: row.inviter_level ?? 1,
+      createdAt: new Date(row.created_at),
+    }));
+  } catch (error) {
+    console.error('Error fetching pending arena invites:', error);
+    return [];
+  }
+}
+
+/**
+ * Accept/decline an arena invite (called when the invitee opens the Arena
+ * from the push notification's deep link).
+ */
+export async function respondArenaInvite(inviteId: string, accept: boolean): Promise<void> {
+  try {
+    const { error } = await supabase.rpc('respond_arena_invite', {
+      p_invite_id: inviteId,
+      p_accept: accept,
+    });
+
+    if (error) throw error;
+  } catch (error) {
+    console.error('Error responding to arena invite:', error);
+    // Best-effort: responder a la invitación nunca debe bloquear entrar a la arena
+  }
+}

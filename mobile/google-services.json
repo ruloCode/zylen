@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "495604530384",
+    "project_id": "zylen-478320",
+    "storage_bucket": "zylen-478320.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:495604530384:android:b4f0c05d552fcdbc45b2d5",
+        "android_client_info": {
+          "package_name": "com.rulocode.zylen"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "495604530384-9pr2e2op40lbo7gtki7ov46v7gs3kp5v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLGIvAG3vqrELUBXeS1Qdq4tu2UB0iaVo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "495604530384-9pr2e2op40lbo7gtki7ov46v7gs3kp5v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

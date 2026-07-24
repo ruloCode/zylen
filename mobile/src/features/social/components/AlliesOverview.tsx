@@ -17,30 +17,37 @@
  * allies rail → horizontal ScrollView (the screen owns vertical scroll).
  */
 
-import React, { useMemo, useState } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Alert, Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useRouter } from 'expo-router';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import {
   Activity,
+  Camera,
   Flame,
+  MessageCircle,
   Sparkles,
   Target,
   UserMinus,
   UserPlus,
   Users,
+  X,
 } from 'lucide-react-native';
 import toast from '@/lib/toast';
 import { cn } from '@/utils';
 import { formatRelativeShort } from '@/utils/date';
 import { useLocale } from '@/hooks/useLocale';
-import { useCommunity } from '@/store';
+import { useSignedPhotos } from '@/hooks/useSignedPhotos';
+import { useCommunity, useMessages } from '@/store';
 import { GlassCard, SectionLabel } from '@/components/ui';
 import { img } from '@/assets/registry';
 import type { FriendProfile, LeaderboardEntry } from '@/types/social';
 import type { ActivityEvent } from '@/types/community';
 import { AllyCard } from './AllyCard';
 import { MissionCard } from './MissionCard';
+import { PhotoPostCard } from './PhotoPostCard';
+import { ProgressPostComposer } from './ProgressPostComposer';
 
 interface AlliesOverviewProps {
   friends: FriendProfile[];
@@ -100,8 +107,11 @@ export function AlliesOverview({
   onRemoveFriend,
 }: AlliesOverviewProps) {
   const { t, language } = useLocale();
+  const router = useRouter();
   const [showAll, setShowAll] = useState(false);
   const [showAllActivity, setShowAllActivity] = useState(false);
+  const [composerOpen, setComposerOpen] = useState(false);
+  const [viewerUrl, setViewerUrl] = useState<string | null>(null);
 
   const {
     activityFeed,
@@ -113,7 +123,56 @@ export function AlliesOverview({
     joinMission,
     checkinMission,
     loadMoreActivity,
+    togglePostReaction,
+    removeProgressPost,
+    verifyPost,
   } = useCommunity();
+
+  const { unreadTotal, loadConversations } = useMessages();
+
+  // Badge de mensajes del hub — refresco barato al montar la pestaña
+  useEffect(() => {
+    void loadConversations();
+  }, [loadConversations]);
+
+  // Signed URLs de las fotos del feed (bucket privado, lote único)
+  const photoUrls = useSignedPhotos(activityFeed.map((e) => e.imagePath));
+
+  const handleVerify = async (postId: string) => {
+    try {
+      const result = await verifyPost(postId);
+      if (result.ok) {
+        toast.success(
+          t('community.posts.verifiedToast', { xp: result.verifierBonusXP })
+        );
+      } else if (result.reason === 'already_verified') {
+        toast(t('community.posts.alreadyVerified'));
+      } else {
+        toast.error(t('community.posts.verifyError'));
+      }
+    } catch {
+      toast.error(t('community.posts.verifyError'));
+    }
+  };
+
+  const confirmDeletePost = (postId: string) => {
+    Alert.alert(
+      t('community.posts.deleteTitle'),
+      t('community.posts.deleteConfirm'),
+      [
+        { text: t('actions.cancel'), style: 'cancel' },
+        {
+          text: t('community.posts.delete'),
+          style: 'destructive',
+          onPress: () => {
+            removeProgressPost(postId).catch(() =>
+              toast.error(t('community.posts.deleteError'))
+            );
+          },
+        },
+      ]
+    );
+  };
 
   const weeklyByUserId = useMemo(() => {
     const map = new Map<string, LeaderboardEntry>();
@@ -189,6 +248,9 @@ export function AlliesOverview({
               })
             : event.payload.mission_title || '',
         });
+      case 'progress_photo':
+        // Renderizado por PhotoPostCard; texto solo como fallback defensivo
+        return t('community.activity.types.progressPhoto');
     }
   };
 
@@ -238,6 +300,48 @@ export function AlliesOverview({
 
   return (
     <View className="gap-5">
+      {/* ── Acciones sociales: compartir progreso + mensajes ── */}
+      <View className="flex-row items-center gap-2.5">
+        <Pressable
+          onPress={() => setComposerOpen(true)}
+          accessibilityRole="button"
+          className="flex-1 overflow-hidden rounded-2xl active:scale-[0.98]"
+        >
+          <LinearGradient
+            colors={['#2dd4bf', '#0d9488']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 8,
+              paddingVertical: 12,
+            }}
+          >
+            <Camera size={16} color="#FFFFFF" />
+            <Text className="text-sm font-bold text-white">
+              {t('community.posts.shareCta')}
+            </Text>
+          </LinearGradient>
+        </Pressable>
+        <Pressable
+          onPress={() => router.push('/messages')}
+          accessibilityRole="button"
+          accessibilityLabel={t('messages.title')}
+          className="h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.06] active:bg-white/[0.12]"
+        >
+          <MessageCircle size={18} color="#5eead4" />
+          {unreadTotal > 0 && (
+            <View className="absolute -right-1 -top-1 h-5 min-w-5 items-center justify-center rounded-full bg-teal-500 px-1">
+              <Text className="text-[10px] font-bold text-white">
+                {unreadTotal > 99 ? '99+' : unreadTotal}
+              </Text>
+            </View>
+          )}
+        </Pressable>
+      </View>
+
       {/* ── Alliance stats ── */}
       <GlassCard className="p-4">
         <View className="flex-row flex-wrap">
@@ -388,6 +492,22 @@ export function AlliesOverview({
           ) : (
             <View className="gap-1">
               {visibleActivity.map((event) => {
+                // Fotos de progreso: card propia con imagen + reacciones
+                if (event.eventType === 'progress_photo' && event.postId) {
+                  return (
+                    <View key={event.id} className="py-1.5">
+                      <PhotoPostCard
+                        event={event}
+                        imageUrl={event.imagePath ? photoUrls[event.imagePath] : undefined}
+                        ownAvatarUrl={ownAvatarUrl}
+                        onReact={(postId, kind) => void togglePostReaction(postId, kind)}
+                        onDelete={confirmDeletePost}
+                        onImagePress={setViewerUrl}
+                        onVerify={(postId) => void handleVerify(postId)}
+                      />
+                    </View>
+                  );
+                }
                 const luz = eventLuz(event);
                 const relative = formatRelativeShort(event.createdAt, language);
                 return (
@@ -457,6 +577,41 @@ export function AlliesOverview({
           )}
         </GlassCard>
       </View>
+
+      {/* ── Composer de foto de progreso ── */}
+      {composerOpen && <ProgressPostComposer onClose={() => setComposerOpen(false)} />}
+
+      {/* ── Visor de foto a pantalla completa ── */}
+      {viewerUrl && (
+        <Modal
+          transparent
+          animationType="fade"
+          visible
+          onRequestClose={() => setViewerUrl(null)}
+        >
+          <View className="flex-1 items-center justify-center bg-black/95">
+            <Pressable
+              onPress={() => setViewerUrl(null)}
+              style={StyleSheet.absoluteFill}
+              accessibilityLabel={t('actions.close')}
+            />
+            <Image
+              source={{ uri: viewerUrl }}
+              contentFit="contain"
+              style={{ width: '100%', height: '80%' }}
+            />
+            <Pressable
+              onPress={() => setViewerUrl(null)}
+              hitSlop={8}
+              accessibilityRole="button"
+              accessibilityLabel={t('actions.close')}
+              className="absolute right-5 top-14 h-9 w-9 items-center justify-center rounded-full bg-white/10"
+            >
+              <X size={18} color="#ffffff" />
+            </Pressable>
+          </View>
+        </Modal>
+      )}
     </View>
   );
 }

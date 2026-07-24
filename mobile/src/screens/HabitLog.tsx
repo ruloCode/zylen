@@ -217,7 +217,32 @@ export function HabitLog() {
   };
 
   /**
-   * Handle template selection from library
+   * One-tap add from the library: create the habit right away with its
+   * auto-resolved category. If no category could be resolved (edge case),
+   * fall back to the prefilled form so the user can pick one — never fail
+   * silently.
+   */
+  const handleQuickAdd = async (
+    data: Partial<HabitFormData>,
+    template: HabitTemplate
+  ): Promise<void> => {
+    if (!data.lifeArea) {
+      handleSelectTemplate(data, template);
+      return;
+    }
+    setIsTemplateLibraryOpen(false);
+    try {
+      await addHabit(data);
+      toast.success(t('habits.habitCreated'));
+    } catch (error) {
+      console.error('Error adding habit from template:', error);
+      toast.error(t('errors.habitCreateFailed'));
+    }
+  };
+
+  /**
+   * Customize path: open the prefilled form so the user can tweak the habit
+   * (category/icon/XP already filled in) before adding it.
    */
   const handleSelectTemplate = (data: Partial<HabitFormData>, _template: HabitTemplate): void => {
     setIsTemplateLibraryOpen(false);
@@ -407,51 +432,14 @@ export function HabitLog() {
                   >
                     <View className="items-center">
                       <Gem size={12} color="#8FB3FF" />
-                      <Text className="mt-0.5 text-[13px] font-extrabold leading-none text-white">
+                      <Text className="mt-0.5 text-[14px] font-extrabold leading-none text-white">
                         {levelProgress.current}
-                      </Text>
-                      <Text className="mt-0.5 text-[7px] font-medium text-white/55">
-                        /{levelProgress.max} {t('common.xp')}
                       </Text>
                     </View>
                   </CircularProgress>
                 </View>
               </View>
 
-              {/* Filter pills pinned to the bottom of the card */}
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                className="mt-auto pt-5"
-                contentContainerStyle={{ gap: 8, alignItems: 'center' }}
-                accessibilityLabel={t('routines.myRoutines')}
-              >
-                {filters.map(({ key, label, icon: Icon }) => {
-                  const isActive = activeFilter === key;
-                  return (
-                    <Pressable
-                      key={key}
-                      onPress={() => setActiveFilter(key)}
-                      className={cn(
-                        'flex-row items-center gap-1 rounded-full px-2.5 py-1.5',
-                        isActive ? 'bg-teal-500' : 'border border-white/10 bg-black/30'
-                      )}
-                      accessibilityRole="tab"
-                      accessibilityState={{ selected: isActive }}
-                    >
-                      <Icon size={13} color={isActive ? WHITE : 'rgba(255,255,255,0.8)'} />
-                      <Text
-                        className={cn(
-                          'text-[12px] font-semibold',
-                          isActive ? 'text-white' : 'text-white/80'
-                        )}
-                      >
-                        {label}
-                      </Text>
-                    </Pressable>
-                  );
-                })}
-              </ScrollView>
             </View>
           </View>
 
@@ -577,6 +565,44 @@ export function HabitLog() {
               </View>
             )}
 
+            {/* Time-of-day filters — live here, right above the list they
+                actually filter (moved out of the hero to declutter it). */}
+            {habits.length > 0 && (
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                className="-mx-4 mb-4"
+                contentContainerStyle={{ gap: 8, paddingHorizontal: 16 }}
+                accessibilityLabel={t('routines.myRoutines')}
+              >
+                {filters.map(({ key, label, icon: Icon }) => {
+                  const isActive = activeFilter === key;
+                  return (
+                    <Pressable
+                      key={key}
+                      onPress={() => setActiveFilter(key)}
+                      className={cn(
+                        'flex-row items-center gap-1 rounded-full px-3 py-1.5',
+                        isActive ? 'bg-teal-500' : 'border border-white/10 bg-white/5'
+                      )}
+                      accessibilityRole="tab"
+                      accessibilityState={{ selected: isActive }}
+                    >
+                      <Icon size={13} color={isActive ? WHITE : 'rgba(255,255,255,0.8)'} />
+                      <Text
+                        className={cn(
+                          'text-[12px] font-semibold',
+                          isActive ? 'text-white' : 'text-white/80'
+                        )}
+                      >
+                        {label}
+                      </Text>
+                    </Pressable>
+                  );
+                })}
+              </ScrollView>
+            )}
+
             {/* Loading state */}
             {isLoading && habits.length === 0 && (
               <View className="items-center justify-center py-12">
@@ -674,6 +700,7 @@ export function HabitLog() {
       {/* Template Library Modal */}
       {isTemplateLibraryOpen && (
         <TemplateLibrary
+          onQuickAdd={handleQuickAdd}
           onSelectTemplate={handleSelectTemplate}
           onClose={() => setIsTemplateLibraryOpen(false)}
           onCreateCustom={handleCreateCustomHabit}

@@ -15,6 +15,7 @@ import type { ArenaSlice } from './arenaSlice';
 import type { FocusSlice } from './focusSlice';
 import type { CommunitySlice } from './communitySlice';
 import type { ForgeSlice } from './forgeSlice';
+import type { MessagesSlice } from './messagesSlice';
 
 /**
  * Combined store type. Lives in its own module so individual slices can
@@ -37,4 +38,5 @@ export type AppStore = UserSlice &
   ArenaSlice &
   FocusSlice &
   CommunitySlice &
-  ForgeSlice;
+  ForgeSlice &
+  MessagesSlice;

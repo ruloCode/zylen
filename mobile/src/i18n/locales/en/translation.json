@@ -304,8 +304,8 @@
     "editHabit": "Edit Habit",
     "habitName": "Habit Name",
     "habitNamePlaceholder": "E.g., Meditate 10 minutes",
-    "lifeArea": "Life Area",
-    "selectLifeArea": "Select a life area",
+    "lifeArea": "Category",
+    "selectLifeArea": "Choose a category",
     "icon": "Icon",
     "selectedIcon": "Selected icon",
     "xpValue": "XP Value",
@@ -314,7 +314,7 @@
       "nameRequired": "Name is required",
       "nameTooShort": "Name must be at least 3 characters",
       "nameTooLong": "Name cannot be longer than 50 characters",
-      "lifeAreaRequired": "You must select a life area",
+      "lifeAreaRequired": "Choose a category",
       "iconRequired": "You must select an icon",
       "xpTooLow": "Minimum XP is {{min}}",
       "xpTooHigh": "Maximum XP is {{max}}"
@@ -918,7 +918,8 @@
       "acceptRequest": "Failed to accept request",
       "rejectRequest": "Failed to reject request",
       "removeFriend": "Failed to remove friend",
-      "searchUsers": "Failed to search users"
+      "searchUsers": "Failed to search users",
+      "arenaInvite": "Couldn't send the challenge"
     },
     "requests": "Requests",
     "search": "Search",
@@ -948,7 +949,10 @@
       "missionWater": "Drink water · 7 days",
       "missionSleep": "Sleep before 10 PM",
       "missionReading": "Read 20 pages a day"
-    }
+    },
+    "arenaInviteAction": "Invite to the Arena",
+    "arenaInviteSent": "⚔️ Challenge sent to @{{username}}",
+    "arenaInviteAlready": "They already have a pending challenge from you"
   },
   "community": {
     "stats": {
@@ -979,7 +983,8 @@
         "habitCompleted": "completed {{habit}}",
         "levelUp": "reached Level {{level}}",
         "streakMilestone": "kept the flame · Day {{days}}",
-        "missionCompleted": "completed {{mission}}"
+        "missionCompleted": "completed {{mission}}",
+        "progressPhoto": "shared their progress"
       }
     },
     "missions": {
@@ -1022,6 +1027,38 @@
       "currentFlame": "Current flame",
       "bestFlame": "Best flame",
       "totalLight": "Total Light"
+    },
+    "posts": {
+      "shareCta": "Share progress",
+      "composerTitle": "Share your progress",
+      "composerSubtitle": "Your allies will see the photo in the circle feed. Only they can see it.",
+      "gallery": "Gallery",
+      "camera": "Camera",
+      "changePhoto": "Change photo",
+      "captionPlaceholder": "Tell what you achieved today...",
+      "publish": "Publish",
+      "published": "Progress shared!",
+      "publishedWithBonus": "Evidence posted! +{{xp}} Light",
+      "publishError": "Couldn't publish",
+      "rateLimited": "You reached today's photo limit",
+      "evidenceAlready": "You already posted evidence for that habit today",
+      "habitNotCompleted": "That habit isn't completed today",
+      "delete": "Delete",
+      "deleteTitle": "Delete post",
+      "deleteConfirm": "The photo will disappear from your allies' feed.",
+      "deleteError": "Couldn't delete",
+      "photoAlt": "Progress photo",
+      "reactWith": "React with {{reaction}}",
+      "evidencePrompt": "Evidence of one of today's habits?",
+      "evidenceHint": "Link the photo to a completed habit and earn +10 Light. +15 more when an ally verifies it.",
+      "evidenceBonusHint": "On publish: +10 Light and +5 essence. When an ally verifies: +15 Light and +10 extra essence.",
+      "evidenceOf": "Evidence: {{habit}}",
+      "verified": "Verified",
+      "verifiedBy": "Verified by @{{username}}",
+      "verifyCta": "Verify evidence (+15 Light for your ally)",
+      "verifiedToast": "Evidence verified! +{{xp}} Light for you",
+      "alreadyVerified": "Another ally already verified it",
+      "verifyError": "Couldn't verify"
     }
   },
   "templates": {
@@ -1348,21 +1385,26 @@
     "deleted": "Habit deleted"
   },
   "reminders": {
-    "title": "Reminders",
+    "title": "Notifications",
     "enable": "Enable",
     "granted": "Reminders enabled",
-    "denied": "Permission denied — enable it in your browser settings",
+    "denied": "Permission denied — enable it in system settings",
     "statusGranted": "Reminders active",
-    "statusDenied": "Permission denied in the browser",
+    "statusDenied": "Permission denied by the system",
     "statusDefault": "Reminders off",
-    "statusUnsupported": "Your browser doesn't support notifications",
+    "statusUnsupported": "This device doesn't support notifications",
     "habitsWithReminder": "{{count}} habit(s) with reminder on",
-    "limitationsHint": "Reminders fire when you open or return to the app (best when installed as an app). On iPhone they only work with the app open.",
+    "limitationsHint": "The coach schedules reminders on your device: they fire even with the app closed. Ally and Arena alerts arrive as push notifications.",
     "notificationTitle": "Zylen — your flame awaits 🔥",
     "notificationBody": "You haven't completed \"{{habit}}\" today. Keep the flame alive!",
     "testBody": "This is how your habit reminders will look.",
     "habitsWithReminder_one": "{{count}} habit with reminder on",
-    "habitsWithReminder_other": "{{count}} habits with reminder on"
+    "habitsWithReminder_other": "{{count}} habits with reminder on",
+    "coachToggle": "Habit coach",
+    "coachToggleHint": "The Mentor reminds you of each ritual — and why it matters",
+    "pushToggle": "Allies & Arena",
+    "pushToggleHint": "Ally requests and Arena challenges",
+    "preview": "Try it"
   },
   "habitScience": {
     "sheetTitle": "Get to know this habit",
@@ -1371,7 +1413,8 @@
     "longTermTitle": "Long term",
     "tipsTitle": "How to start well",
     "frustrationsTitle": "Common frustrations (and how to beat them)",
-    "createCta": "Create this habit",
+    "createCta": "Add to my rituals",
+    "customizeCta": "Customize first",
     "learnMore": "Learn more",
     "learnAboutHabit": "Learn about this habit"
   },
@@ -1993,7 +2036,13 @@
       }
     },
     "gemPowerActive": "Gem power active",
-    "gemPowerNone": "Grow gems in Focus to earn powers"
+    "gemPowerNone": "Grow gems in Focus to earn powers",
+    "inviteAccepted": "⚔️ Challenge accepted! To the Arena.",
+    "guestRoom": "You'll join your ally's room. Fight together!",
+    "guestRoomLeave": "My room",
+    "pendingInviteFrom": "@{{username}} challenges you in the Arena",
+    "join": "Join",
+    "decline": "Decline"
   },
   "focus": {
     "title": "Focus of the day",
@@ -2139,5 +2188,43 @@
       "switchToEnglish": "Switch to English",
       "switchToSpanish": "Switch to Spanish"
     }
+  },
+  "coach": {
+    "notifications": {
+      "titles": [
+        "🧭 {{habit}} — the Mentor calls",
+        "🔥 Time for {{habit}}",
+        "✨ {{habit}} awaits, Guardian",
+        "🛡️ Your ritual: {{habit}}"
+      ],
+      "whyScience": "Science backs it: {{line}}",
+      "whyBenefit": "What you gain today: {{line}}",
+      "whyTip": "Mentor's tip: {{line}}",
+      "generic": [
+        "One small step today keeps your flame alive. Go get it.",
+        "Kingdoms are built on daily rituals. This one is yours.",
+        "Your streak is forged now, not later. Complete it and keep shining.",
+        "The Mentor believes in you: two minutes are enough to start."
+      ],
+      "others_one": "And {{count}} more ritual awaits you.",
+      "others_other": "And {{count}} more rituals await you."
+    }
+  },
+  "messages": {
+    "title": "Messages",
+    "subtitle": "Conversations with your allies",
+    "chatAction": "Chat",
+    "photo": "Photo",
+    "sayHi": "Say hi to your ally",
+    "openChatWith": "Open chat with @{{username}}",
+    "emptyTitle": "No conversations yet",
+    "emptySubtitle": "Open an ally's profile and tap Chat to get started.",
+    "emptyConversation": "This is the start of your conversation with @{{username}}. Break the ice!",
+    "typeMessage": "Type a message...",
+    "attachPhoto": "Attach photo",
+    "failed": "Not sent",
+    "sendError": "Couldn't send the message",
+    "notAllies": "You're no longer allies",
+    "openError": "Couldn't open the chat"
   }
 }

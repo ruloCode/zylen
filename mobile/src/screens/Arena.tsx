@@ -1,14 +1,17 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
+  BackHandler,
+  Platform,
   Pressable,
   ScrollView,
   Text,
   View,
 } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
+import { NavigationBar } from 'expo-navigation-bar';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { WebView, type WebViewMessageEvent } from 'react-native-webview';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -43,8 +46,19 @@ import {
   totalGems,
 } from '@/features/focus/utils/gemAssets';
 import { getIcon } from '@/components/atoms/icons/iconMaps';
+import {
+  getPendingArenaInvites,
+  respondArenaInvite,
+  type PendingArenaInvite,
+} from '@/services/supabase/social.service';
 
 const GAME_ORIGIN = new URL(GAME_CONFIG.url).origin;
+
+/** Sala multijugador por usuario — misma sanitización que la web y send-push. */
+const roomForUser = (id: string): string =>
+  `el-${id.replace(/[^a-z0-9]/gi, '').slice(0, 8).toLowerCase()}`;
+
+const ROOM_RE = /^el-[a-z0-9]{1,12}$/;
 
 /** glass-card recipe (PORTING.md) */
 const glass = 'rounded-2xl border border-white/10 bg-[hsl(var(--glass-bg)/0.65)]';
@@ -59,10 +73,18 @@ interface GameMessage {
 
 /**
  * The game posts results with `window.top.postMessage(payload, appOrigin)`
- * where appOrigin comes from its `?origin=` URL param. Inside a WebView the
- * game IS the top frame, so we pass the game's own origin: the message
- * self-delivers on its window, and this injected listener forwards it over
- * the react-native-webview bridge.
+ * where appOrigin comes from its `?origin=` URL param. In the WebView the
+ * top frame is Higgsfield's wrapper page (the game lives in its inner
+ * iframe), so we pass the wrapper's origin: the message lands on the top
+ * window and this injected listener forwards it over the RN bridge.
+ *
+ * The same injection also flips the wrapper into its own "embed" mode
+ * (`html.hf-embed` — its stylesheet hides the #hf-game-bar and stretches
+ * #hf-frame to 100%), so the game fills the screen with zero platform
+ * chrome. Inline-style fallbacks cover a future rename of that class.
+ * Loading `?__raw=1` directly is NOT an option here: the deployed game
+ * carries a platform snippet that bounces top-frame raw loads back to the
+ * wrapper, and the game itself won't postMessage when it is the top frame.
  */
 const BRIDGE_JS = `
 (function () {
@@ -74,6 +96,13 @@ const BRIDGE_JS = `
       }
     } catch (err) {}
   });
+  try {
+    document.documentElement.classList.add('hf-embed');
+    var bar = document.getElementById('hf-game-bar');
+    if (bar) bar.style.display = 'none';
+    var frame = document.getElementById('hf-frame');
+    if (frame) { frame.style.top = '0'; frame.style.height = '100%'; }
+  } catch (err) {}
 })();
 true;
 `;
@@ -96,7 +125,55 @@ export function Arena() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { t } = useLocale();
+  const { invite, room: roomParam } = useLocalSearchParams<{
+    invite?: string;
+    room?: string;
+  }>();
+
+  // Sala invitada: seteada por el deep link de la push (&room=) o al aceptar
+  // un reto pendiente desde la armería. Null → la sala propia.
+  const [guestRoom, setGuestRoom] = useState<string | null>(null);
+  const [pendingInvites, setPendingInvites] = useState<PendingArenaInvite[]>([]);
+
+  // Llegada desde la push "te retan en la Arena": marca la invitación como
+  // aceptada (best-effort) y saluda al retado.
+  useEffect(() => {
+    if (typeof invite === 'string' && invite.length > 0) {
+      void respondArenaInvite(invite, true);
+      toast.success(t('arena.inviteAccepted'));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [invite]);
   const { user, updateXP, updatePoints } = useUser();
+
+  // La push trae la sala del invitador; validada y distinta de la propia
+  // entra como sala invitada.
+  useEffect(() => {
+    if (typeof roomParam !== 'string' || !ROOM_RE.test(roomParam)) return;
+    if (user && roomParam === roomForUser(user.id)) return;
+    setGuestRoom(roomParam);
+  }, [roomParam, user]);
+
+  // Retos pendientes (por si la push se perdió). El aceptado vía deep link
+  // ya no debe aparecer.
+  useEffect(() => {
+    void getPendingArenaInvites().then((invites) =>
+      setPendingInvites(invites.filter((i) => i.inviteId !== invite))
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const joinInvite = (inv: PendingArenaInvite) => {
+    setPendingInvites((list) => list.filter((i) => i.inviteId !== inv.inviteId));
+    setGuestRoom(roomForUser(inv.inviterId));
+    void respondArenaInvite(inv.inviteId, true);
+    toast.success(t('arena.inviteAccepted'));
+  };
+
+  const declineInvite = (inv: PendingArenaInvite) => {
+    setPendingInvites((list) => list.filter((i) => i.inviteId !== inv.inviteId));
+    void respondArenaInvite(inv.inviteId, false);
+  };
   const {
     arenaProgress, arenaLoading, loadArenaProgress,
     purchaseArenaItem, equipArenaGear, completeArenaTier,
@@ -121,6 +198,18 @@ export function Arena() {
     };
   }, [view]);
 
+  // Android system back while playing → back to the armory (the game has no
+  // visible app chrome in immersive fullscreen, so this is the way out).
+  useEffect(() => {
+    if (view !== 'playing') return undefined;
+    const sub = BackHandler.addEventListener('hardwareBackPress', () => {
+      setView('armory');
+      setLoaded(false);
+      return true; // consumed — don't pop the router
+    });
+    return () => sub.remove();
+  }, [view]);
+
   // Focus gems grown per species -> in-game buffs (species:count entries share
   // the `gems` URL param with the armory gear names; the game tells them apart).
   const speciesCounts = focusStats?.speciesCounts ?? {};
@@ -137,7 +226,8 @@ export function Arena() {
 
   const gameSrc = useMemo(() => {
     if (!user || view !== 'playing') return null;
-    const room = `el-${user.id.replace(/[^a-z0-9]/gi, '').slice(0, 8).toLowerCase()}`;
+    // Sala invitada (reto de un aliado) o la propia
+    const room = guestRoom ?? roomForUser(user.id);
     const params = new URLSearchParams({
       room,
       name: user.name.slice(0, 16),
@@ -163,7 +253,7 @@ export function Arena() {
     }
     return `${GAME_CONFIG.url}?${params.toString()}`;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, view, tier, progress.weaponId, progress.gems.join(','), focusGemsParam]);
+  }, [user, view, tier, progress.weaponId, progress.gems.join(','), focusGemsParam, guestRoom]);
 
   const handleVictory = useCallback(async (wonTier: number) => {
     // persist the ladder first — unlock is independent from the daily reward cap
@@ -214,14 +304,17 @@ export function Arena() {
     void equipArenaGear(progress.weaponId, gems);
   };
 
-  // ---------- playing view: edge-to-edge fullscreen WebView ----------
-  // No header/safe-area padding: the game canvas bleeds to every edge and the
-  // status bar is hidden. A single floating button (offset by the notch inset)
-  // is the only chrome, so nothing eats into the landscape play area.
+  // ---------- playing view: immersive fullscreen WebView ----------
+  // True fullscreen so the game never reads as "embedded": status bar AND
+  // Android navigation bar hidden (immersive — an edge swipe peeks them
+  // transiently), zero app chrome over the canvas. Exit paths: Android system
+  // back (handled above), the game's own defeat-screen "armory" button, and
+  // on iOS — which has no system back — a single floating button.
   if (view === 'playing') {
     return (
       <View className="flex-1 bg-black">
         <StatusBar hidden />
+        <NavigationBar hidden />
         {gameSrc && (
           <WebView
             source={{ uri: gameSrc }}
@@ -245,15 +338,17 @@ export function Arena() {
             <Text className="text-sm font-medium text-white/70">{t('arena.loading')}</Text>
           </View>
         )}
-        <Pressable
-          onPress={() => { setView('armory'); setLoaded(false); }}
-          accessibilityLabel={t('arena.armory.back')}
-          hitSlop={12}
-          className={`absolute h-9 w-9 items-center justify-center rounded-full ${glass}`}
-          style={{ top: Math.max(insets.top, 8) + 4, left: Math.max(insets.left, 8) + 4 }}
-        >
-          <ArrowLeft size={18} color="#ffffff" />
-        </Pressable>
+        {Platform.OS === 'ios' && (
+          <Pressable
+            onPress={() => { setView('armory'); setLoaded(false); }}
+            accessibilityLabel={t('arena.armory.back')}
+            hitSlop={12}
+            className={`absolute h-9 w-9 items-center justify-center rounded-full ${glass}`}
+            style={{ top: Math.max(insets.top, 8) + 4, left: Math.max(insets.left, 8) + 4 }}
+          >
+            <ArrowLeft size={18} color="#ffffff" />
+          </Pressable>
+        )}
       </View>
     );
   }
@@ -286,6 +381,57 @@ export function Arena() {
           <Text className="text-sm font-bold text-gold-400">◆ {points}</Text>
         </View>
       </View>
+
+      {/* Sala invitada activa: "Entrar" te une a la sala del aliado */}
+      {guestRoom && (
+        <View className="mb-4 flex-row items-center gap-2.5 rounded-2xl border border-amber-400/40 bg-amber-500/10 px-3 py-2.5">
+          <Swords size={15} color="#fbbf24" />
+          <Text className="flex-1 text-[12px] font-semibold leading-snug text-amber-200">
+            {t('arena.guestRoom')}
+          </Text>
+          <Pressable
+            onPress={() => setGuestRoom(null)}
+            hitSlop={8}
+            accessibilityRole="button"
+            accessibilityLabel={t('arena.guestRoomLeave')}
+            className="rounded-lg bg-white/10 px-2.5 py-1.5 active:bg-white/20"
+          >
+            <Text className="text-[11px] font-bold text-white/80">
+              {t('arena.guestRoomLeave')}
+            </Text>
+          </Pressable>
+        </View>
+      )}
+
+      {/* Retos pendientes de aliados (fallback si la push no llegó) */}
+      {pendingInvites.map((inv) => (
+        <View
+          key={inv.inviteId}
+          className="mb-4 flex-row items-center gap-2.5 rounded-2xl border border-teal-400/40 bg-teal-500/10 px-3 py-2.5"
+        >
+          <Swords size={15} color="#5eead4" />
+          <Text className="flex-1 text-[12px] font-semibold leading-snug text-teal-100">
+            {t('arena.pendingInviteFrom', { username: inv.username })}
+          </Text>
+          <Pressable
+            onPress={() => joinInvite(inv)}
+            hitSlop={8}
+            accessibilityRole="button"
+            className="rounded-lg bg-teal-500/80 px-2.5 py-1.5 active:bg-teal-500"
+          >
+            <Text className="text-[11px] font-bold text-white">{t('arena.join')}</Text>
+          </Pressable>
+          <Pressable
+            onPress={() => declineInvite(inv)}
+            hitSlop={8}
+            accessibilityRole="button"
+            accessibilityLabel={t('arena.decline')}
+            className="rounded-lg bg-white/10 px-2.5 py-1.5 active:bg-white/20"
+          >
+            <Text className="text-[11px] font-bold text-white/70">✕</Text>
+          </Pressable>
+        </View>
+      ))}
 
       {/* Focus-gem powers (grown in "Enfoque del día") */}
       <View className={`${glass} mb-4 flex-row items-center gap-2.5 px-3 py-2.5`}>

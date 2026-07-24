@@ -5,6 +5,7 @@ export * from './streak';
 export * from './shop';
 export * from './user';
 export * from './chat';
+export * from './allyChat';
 export * from './onboarding';
 export * from './rootHabit';
 export * from './achievement';

@@ -11,7 +11,8 @@ export type ActivityEventType =
   | 'habit_completed'
   | 'level_up'
   | 'streak_milestone'
-  | 'mission_completed';
+  | 'mission_completed'
+  | 'progress_photo';
 
 export interface ActivityEventPayload {
   // habit_completed
@@ -27,6 +28,19 @@ export interface ActivityEventPayload {
   mission_code?: string;
   mission_title?: string;
   reward_xp?: number;
+  // progress_photo (habit_id/habit_name se reutilizan si es evidencia)
+  post_id?: string;
+  caption?: string;
+  image_path?: string;
+  bonus_xp?: number;
+}
+
+export type PostReactionKind = 'fire' | 'flex' | 'clap' | 'heart';
+
+/** Reacciones agregadas de un post del feed + la del caller. */
+export interface PostReactions {
+  counts: Partial<Record<PostReactionKind, number>>;
+  mine?: PostReactionKind;
 }
 
 export interface ActivityEvent {
@@ -38,6 +52,13 @@ export interface ActivityEvent {
   payload: ActivityEventPayload;
   createdAt: Date;
   isCurrentUser: boolean;
+  // progress_photo only
+  postId?: string;
+  imagePath?: string;
+  reactions?: PostReactions;
+  // evidencia (progress_photo con habit_id): verificación por un aliado
+  verified?: boolean;
+  verifiedByUsername?: string;
 }
 
 export interface MissionParticipantAvatar {

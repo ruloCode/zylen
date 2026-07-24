@@ -22,13 +22,16 @@ import {
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import {
   Check,
   Flame,
   Gem,
+  MessageCircle,
   Sparkles,
+  Swords,
   Trophy,
   UserCheck,
   UserPlus,
@@ -36,10 +39,11 @@ import {
   X,
 } from 'lucide-react-native';
 import toast from '@/lib/toast';
+import { FEATURES } from '@/constants/config';
 import { formatRelativeShort } from '@/utils/date';
 import { getLevelProgress } from '@/utils/xp';
 import { useLocale } from '@/hooks/useLocale';
-import { useSocial, useUser } from '@/store';
+import { useMessages, useSocial, useUser } from '@/store';
 import * as SocialService from '@/services/supabase/social.service';
 import { img } from '@/assets/registry';
 import type { PublicUserProfile } from '@/types/user';
@@ -65,7 +69,9 @@ const avatarSource = (url?: string) =>
 export function GuardianProfileSheet({ username, onClose }: GuardianProfileSheetProps) {
   const { t, language } = useLocale();
   const insets = useSafeAreaInsets();
+  const router = useRouter();
   const { user } = useUser();
+  const { openDm } = useMessages();
   const {
     friends,
     pendingRequests,
@@ -133,6 +139,41 @@ export function GuardianProfileSheet({ username, onClose }: GuardianProfileSheet
       toast.success(t('social.requestSent'));
     } catch {
       toast.error(t('social.errors.sendRequest'));
+    } finally {
+      setActionBusy(false);
+    }
+  };
+
+  const handleArenaInvite = async () => {
+    if (actionBusy || !profile) return;
+    setActionBusy(true);
+    try {
+      const result = await SocialService.inviteToArena(profile.id);
+      if (result.success) {
+        toast.success(t('social.arenaInviteSent', { username: profile.username }));
+      } else if (result.error === 'already_invited') {
+        toast(t('social.arenaInviteAlready'));
+      } else {
+        toast.error(t('social.errors.arenaInvite'));
+      }
+    } catch {
+      toast.error(t('social.errors.arenaInvite'));
+    } finally {
+      setActionBusy(false);
+    }
+  };
+
+  // Chatear: abre (o crea) el DM y navega. El sheet se cierra antes de
+  // navegar para que el back no lo re-muestre encima del chat.
+  const handleChat = async () => {
+    if (actionBusy || !profile) return;
+    setActionBusy(true);
+    try {
+      const conversationId = await openDm(profile.id);
+      onClose();
+      router.push(`/messages/${conversationId}`);
+    } catch {
+      toast.error(t('messages.openError'));
     } finally {
       setActionBusy(false);
     }
@@ -406,12 +447,63 @@ export function GuardianProfileSheet({ username, onClose }: GuardianProfileSheet
                     </Pressable>
                   )}
                   {state === 'friends' && (
-                    <View className="w-full flex-row items-center justify-center gap-2 rounded-2xl border border-emerald-400/30 bg-emerald-500/15 py-3">
-                      <UserCheck size={16} color="#6ee7b7" />
-                      <Text className="text-sm font-bold text-emerald-300">
-                        {t('social.friends')}
-                      </Text>
-                    </View>
+                    <>
+                      <View className="w-full flex-row items-center justify-center gap-2 rounded-2xl border border-emerald-400/30 bg-emerald-500/15 py-3">
+                        <UserCheck size={16} color="#6ee7b7" />
+                        <Text className="text-sm font-bold text-emerald-300">
+                          {t('social.friends')}
+                        </Text>
+                      </View>
+                      <Pressable
+                        disabled={actionBusy}
+                        onPress={() => void handleChat()}
+                        accessibilityRole="button"
+                        className={`mt-2 w-full overflow-hidden rounded-2xl active:scale-[0.98] ${
+                          actionBusy ? 'opacity-50' : ''
+                        }`}
+                      >
+                        <LinearGradient
+                          colors={TEAL_GRADIENT}
+                          start={{ x: 0, y: 0 }}
+                          end={{ x: 1, y: 1 }}
+                          style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: 8,
+                            paddingVertical: 12,
+                          }}
+                        >
+                          {actionBusy ? (
+                            <ActivityIndicator size="small" color="#FFFFFF" />
+                          ) : (
+                            <MessageCircle size={16} color="#FFFFFF" />
+                          )}
+                          <Text className="text-sm font-bold text-white">
+                            {t('messages.chatAction')}
+                          </Text>
+                        </LinearGradient>
+                      </Pressable>
+                      {FEATURES.enableArena && (
+                        <Pressable
+                          disabled={actionBusy}
+                          onPress={() => void handleArenaInvite()}
+                          accessibilityRole="button"
+                          className={`mt-2 w-full flex-row items-center justify-center gap-2 rounded-2xl border border-amber-400/40 bg-amber-500/10 py-3 active:bg-amber-500/20 ${
+                            actionBusy ? 'opacity-50' : ''
+                          }`}
+                        >
+                          {actionBusy ? (
+                            <ActivityIndicator size="small" color="#fbbf24" />
+                          ) : (
+                            <Swords size={16} color="#fbbf24" />
+                          )}
+                          <Text className="text-sm font-bold text-amber-300">
+                            {t('social.arenaInviteAction')}
+                          </Text>
+                        </Pressable>
+                      )}
+                    </>
                   )}
                 </View>
               )}
