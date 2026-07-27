@@ -9,17 +9,55 @@ import { AuthError } from '@/types/errors';
 import { getDayRangeInTimeZone, getProfileTimezone } from './timezone';
 
 /**
- * Get authenticated user ID
+ * Get authenticated user ID.
+ *
+ * Reads the id from the **stored session** (`getSession`), not from
+ * `getUser()`: the latter hits `GET /auth/v1/user` on every call, and the
+ * services call this helper before nearly every query — on a phone that
+ * turned a single screen load into a dozen extra round trips. `getSession`
+ * resolves from AsyncStorage and only touches the network when the token
+ * actually expired. RLS still validates the JWT server-side, so nothing is
+ * trusted that wasn't before.
+ *
  * @throws {AuthError} if user is not authenticated
  */
 export async function getAuthUserId(): Promise<string> {
-  const { data: { user }, error } = await supabase.auth.getUser();
+  const { data: { session }, error } = await supabase.auth.getSession();
 
-  if (error || !user) {
+  if (error || !session?.user) {
     throw new AuthError('User not authenticated');
   }
 
-  return user.id;
+  return session.user.id;
+}
+
+/**
+ * Reject with `AuthError`-style failure if a request outlives `ms`.
+ *
+ * Mobile radios drop requests without ever closing the socket, and
+ * supabase-js has no built-in deadline — the promise simply never settles
+ * and the screen spins forever. Racing gives the UI something to show (an
+ * error + retry) instead of an eternal spinner.
+ */
+export async function withTimeout<T>(
+  promise: Promise<T>,
+  ms: number = 15_000,
+  label = 'request'
+): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    return await Promise.race([
+      promise,
+      new Promise<never>((_, reject) => {
+        timer = setTimeout(
+          () => reject(new Error(`Timeout: ${label} took longer than ${ms}ms`)),
+          ms
+        );
+      }),
+    ]);
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
 }
 
 /**

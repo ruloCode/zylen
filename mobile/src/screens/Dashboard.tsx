@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useRouter } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   Bell,
@@ -42,14 +42,16 @@ import { CoachChat } from '@/features/chat/components/CoachChat';
 import { HABIT_ICONS } from '@/components/atoms/icons/iconMaps';
 import HeroCharacter from '@/components/hero/HeroCharacter';
 import type { HeroCharacterHandle } from '@/components/hero/HeroCharacter';
-import { useUser, useHabits, useStreaks, useFocus, useTheme } from '@/store';
+import { useUser, useHabits, useStreaks, useFocus, useTheme, useMessages } from '@/store';
 import {
   ROUTES,
   FEATURES,
   getHeroBodySrc,
+  getHeroBodyMetrics,
   getHeroVideoSources,
   LIFE_AREA_CATALOG,
 } from '@/constants';
+import type { HeroBodyMetrics } from '@/constants/config';
 import { useLocale } from '@/hooks/useLocale';
 import { calculateGlobalLevelUpReward, getLevelProgress } from '@/utils/xp';
 import { getGreetingKey } from '@/utils/greeting';
@@ -62,13 +64,34 @@ const HERO_BG_SRC = '/hero-bg.png';
 
 // ── Layout ratios (see the web Dashboard's ASSET ALIGNMENT note) ──
 // The hero container is locked to the BACKGROUND's exact aspect ratio
-// (941×1672) so the scene shows in full with NO crop at any width. The
-// character canvas is 820×1230 (2:3), feet baseline ~93% down the canvas;
-// bottom 24.4% + width 58% (centred → left 21%) lands the feet on the
-// platform rune at every width.
+// (941×1672) so the scene shows in full with NO crop at any width.
 const HERO_ASPECT = 941 / 1672;
 const HERO_OVERLAY_ASPECT = 941 / 1210; // down to the character's feet (72.4% of 1672)
-const CHARACTER_ASPECT = 820 / 1230;
+
+// Where the figure must land in the scene, as fractions of the hero container
+// (X of its width, Y/heights of its height). Derived once from the reference
+// placement of Rulo's PNG (bottom 24.4% + width 58% centred), hand-tuned
+// against the platform rune. Each body is then placed from ITS OWN canvas
+// metrics, so an AI-generated avatar — framed to a different convention than
+// the bundled artwork — still stands centred on the rune at the same size.
+const STAGE_CENTER_X = 0.4759; // rune centre
+const STAGE_FEET_Y = 0.7237; // rune surface
+const STAGE_FIGURE_H = 0.4439; // figure height
+
+const pct = (v: number): `${number}%` => `${v * 100}%` as `${number}%`;
+
+/** Absolute box that lands `m`'s figure on the stage anchors. */
+function heroCharacterBox(m: HeroBodyMetrics) {
+  const height = STAGE_FIGURE_H / m.height; // of hero height
+  const width = (height * m.aspect) / HERO_ASPECT; // of hero width
+  return {
+    position: 'absolute' as const,
+    left: pct(STAGE_CENTER_X - m.centerX * width),
+    width: pct(width),
+    bottom: pct(1 - (STAGE_FEET_Y + (1 - m.feetY) * height)),
+    aspectRatio: m.aspect,
+  };
+}
 
 // glass-card recipe (PORTING.md)
 const glass = 'rounded-2xl border border-white/10 bg-[hsl(var(--glass-bg)/0.65)]';
@@ -85,6 +108,7 @@ export function Dashboard() {
   const { habits, addHabit, completeHabit, uncompleteHabit, recordRelapse } = useHabits();
   const { streak, isLoading: streakLoading } = useStreaks();
   const { loadFocusData } = useFocus();
+  const { unreadTotal, loadConversations } = useMessages();
   const { t } = useLocale();
   const { theme } = useTheme();
   const [isCoachOpen, setIsCoachOpen] = useState(false);
@@ -103,19 +127,34 @@ export function Dashboard() {
     loadFocusData();
   }, [loadFocusData]);
 
+  // La campana abre la bandeja de aliados: su badge cuenta mensajes sin leer,
+  // así que hay que traer las conversaciones al volver a Home.
+  useFocusEffect(
+    useCallback(() => {
+      void loadConversations();
+    }, [loadConversations])
+  );
+
   const levelProgress = user
     ? getLevelProgress(user.totalXPEarned, user.level)
     : { current: 0, max: 0, percentage: 0 };
   const animatedXP = useAnimatedNumber(levelProgress.current);
 
-  const isLoading = userLoading || streakLoading;
+  // Solo la primera carga tapa la pantalla: `userLoading` también se enciende
+  // en escrituras de fondo (puntos/XP/perfil) y hacía parpadear un spinner
+  // sobre datos que ya estaban en memoria.
+  const isLoading = (userLoading && !user) || (streakLoading && !streak);
 
   // Theme background as a literal color for the JS-built gradient scrims.
   const bg = (alpha: number) => themeHsl(theme, '--background', alpha);
 
   const firstName = user?.name?.split(' ')[0] || '';
   const todaysHabits = habits.slice(0, 3);
-  const pendingCount = habits.filter((h) => !h.completedToday).length;
+
+  // Hero artwork + how its figure is framed inside that canvas (bundled
+  // presets and AI-generated bodies use different margins).
+  const heroBodySrc = getHeroBodySrc(user?.avatarUrl, user?.avatarBodyUrl);
+  const heroBodyMetrics = getHeroBodyMetrics(heroBodySrc);
 
   // ── Habit actions — same handlers as the Rituales tab so the shared
   // HabitItem card behaves identically here (toasts, level-up, XP burst). ──
@@ -229,21 +268,13 @@ export function Dashboard() {
             colors={[bg(0), bg(1)]}
             style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: '14%' }}
           />
-          {/* Layer 1 — character. Box at the artwork's canvas ratio so the PNG
-              fits exactly and the feet land on the platform rune. */}
-          <View
-            pointerEvents="none"
-            style={{
-              position: 'absolute',
-              bottom: '24.4%',
-              left: '21%',
-              width: '58%',
-              aspectRatio: CHARACTER_ASPECT,
-            }}
-          >
+          {/* Layer 1 — character. Box sized/placed from the artwork's own
+              canvas metrics so the PNG fits exactly and the feet land on the
+              platform rune, bundled hero or custom AI avatar alike. */}
+          <View pointerEvents="none" style={heroCharacterBox(heroBodyMetrics)}>
             <HeroCharacter
               ref={heroRef}
-              imgSrc={getHeroBodySrc(user?.avatarUrl, user?.avatarBodyUrl)}
+              imgSrc={heroBodySrc}
               videoSources={getHeroVideoSources(user?.avatarUrl, user?.avatarBodyUrl)}
             />
           </View>
@@ -276,16 +307,20 @@ export function Dashboard() {
                   {t('home.subtitle')}
                 </Text>
               </View>
+              {/* Campana = bandeja de mensajes ("Mensajes del reino"), no un
+                  atajo a Rituales: el badge cuenta mensajes sin leer. */}
               <Pressable
-                onPress={() => router.push(ROUTES.HABITS)}
+                onPress={() => router.push(ROUTES.MESSAGES)}
                 accessibilityRole="button"
                 accessibilityLabel={t('home.notifications')}
                 className={`relative h-11 w-11 shrink-0 items-center justify-center rounded-full active:opacity-80 ${glass}`}
               >
                 <Bell size={20} color="#ffffff" />
-                {pendingCount > 0 && (
+                {unreadTotal > 0 && (
                   <View className="absolute -right-0.5 -top-0.5 h-[18px] min-w-[18px] items-center justify-center rounded-full border border-background bg-danger-500 px-1">
-                    <Text className="text-[10px] font-bold text-white">{pendingCount}</Text>
+                    <Text className="text-[10px] font-bold text-white">
+                      {unreadTotal > 99 ? '99+' : unreadTotal}
+                    </Text>
                   </View>
                 )}
               </Pressable>

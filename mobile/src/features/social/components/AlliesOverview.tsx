@@ -58,6 +58,8 @@ interface AlliesOverviewProps {
   ownAvatarUrl?: string;
   onAddAlly: () => void;
   onRemoveFriend: (friendshipId: string, username: string) => void;
+  /** Abre el detalle del aliado (GuardianProfileSheet), que vive en la pantalla. */
+  onOpenProfile?: (username: string) => void;
 }
 
 const ACTIVITY_PREVIEW = 5;
@@ -105,6 +107,7 @@ export function AlliesOverview({
   ownAvatarUrl,
   onAddAlly,
   onRemoveFriend,
+  onOpenProfile,
 }: AlliesOverviewProps) {
   const { t, language } = useLocale();
   const router = useRouter();
@@ -415,7 +418,15 @@ export function AlliesOverview({
                 key={friend.userId}
                 className="flex-row items-center justify-between rounded-xl border border-white/10 bg-white/[0.04] p-3"
               >
-                <View className="min-w-0 flex-1 flex-row items-center gap-3">
+                {/* Tocar la fila abre el detalle; el botón de quitar mantiene
+                    su propia área táctil a la derecha. */}
+                <Pressable
+                  onPress={onOpenProfile ? () => onOpenProfile(friend.username) : undefined}
+                  disabled={!onOpenProfile}
+                  accessibilityRole={onOpenProfile ? 'button' : undefined}
+                  accessibilityLabel={friend.username}
+                  className="min-w-0 flex-1 flex-row items-center gap-3 active:opacity-80"
+                >
                   <FeedAvatar url={friend.avatarUrl} username={friend.username} size={40} />
                   <View className="min-w-0 flex-1">
                     <Text numberOfLines={1} className="font-semibold text-white">
@@ -426,7 +437,7 @@ export function AlliesOverview({
                       {t('social.streakDays', { count: friend.currentStreak })}
                     </Text>
                   </View>
-                </View>
+                </Pressable>
                 <Pressable
                   onPress={() =>
                     friend.friendshipId &&
@@ -449,7 +460,7 @@ export function AlliesOverview({
             contentContainerStyle={{ gap: 12, paddingBottom: 4 }}
           >
             {friends.slice(0, 8).map((friend) => (
-              <AllyCard key={friend.userId} ally={friend} />
+              <AllyCard key={friend.userId} ally={friend} onPress={onOpenProfile} />
             ))}
           </ScrollView>
         )}

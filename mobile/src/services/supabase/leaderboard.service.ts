@@ -7,39 +7,72 @@ import { supabase } from '@/lib/supabase';
 import type { LeaderboardEntry, WeeklyLeaderboard } from '@/types/social';
 import type { WeeklyComparison } from '@/types/community';
 
+type WeekRange = { weekStart: Date; weekEnd: Date };
+
 /**
- * Get the current week's date range
+ * In-flight/settled cache for the week range, keyed by the local calendar
+ * day. The three leaderboard loaders each needed this value and were each
+ * paying a round trip for an answer that only changes once a week; sharing
+ * the promise collapses them into one request (and none at all on revisits).
  */
-export async function getCurrentWeekRange(): Promise<{
-  weekStart: Date;
-  weekEnd: Date;
-}> {
-  try {
-    const { data, error } = await supabase.rpc('get_current_week_range');
+let weekRangeCache: { dayKey: string; promise: Promise<WeekRange> } | null = null;
 
-    if (error) throw error;
+function localDayKey(): string {
+  const now = new Date();
+  return `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
+}
 
-    const result = data[0];
-    return {
-      weekStart: new Date(result.week_start),
-      weekEnd: new Date(result.week_end),
-    };
-  } catch (error) {
-    console.error('Error getting current week range:', error);
-    // Fallback to client-side calculation
-    const now = new Date();
-    const dayOfWeek = now.getDay();
-    const diff = dayOfWeek === 0 ? 6 : dayOfWeek - 1; // Monday is 0
-    const weekStart = new Date(now);
-    weekStart.setDate(now.getDate() - diff);
-    weekStart.setHours(0, 0, 0, 0);
+/** Monday-based week range computed on the device (RPC fallback). */
+function localWeekRange(): WeekRange {
+  const now = new Date();
+  const dayOfWeek = now.getDay();
+  const diff = dayOfWeek === 0 ? 6 : dayOfWeek - 1; // Monday is 0
+  const weekStart = new Date(now);
+  weekStart.setDate(now.getDate() - diff);
+  weekStart.setHours(0, 0, 0, 0);
 
-    const weekEnd = new Date(weekStart);
-    weekEnd.setDate(weekStart.getDate() + 6);
-    weekEnd.setHours(23, 59, 59, 999);
+  const weekEnd = new Date(weekStart);
+  weekEnd.setDate(weekStart.getDate() + 6);
+  weekEnd.setHours(23, 59, 59, 999);
 
-    return { weekStart, weekEnd };
-  }
+  return { weekStart, weekEnd };
+}
+
+/**
+ * Get the current week's date range (cached for the current local day).
+ */
+export async function getCurrentWeekRange(): Promise<WeekRange> {
+  const dayKey = localDayKey();
+  if (weekRangeCache?.dayKey === dayKey) return weekRangeCache.promise;
+
+  let usedFallback = false;
+  const promise = (async (): Promise<WeekRange> => {
+    try {
+      const { data, error } = await supabase.rpc('get_current_week_range');
+
+      if (error) throw error;
+
+      const result = data[0];
+      return {
+        weekStart: new Date(result.week_start),
+        weekEnd: new Date(result.week_end),
+      };
+    } catch (error) {
+      console.error('Error getting current week range:', error);
+      // Fallback to client-side calculation
+      usedFallback = true;
+      return localWeekRange();
+    }
+  })();
+
+  weekRangeCache = { dayKey, promise };
+  // Concurrent callers share the fallback, but it isn't the answer for the
+  // rest of the day: drop it so the next load retries the server's range.
+  void promise.then(() => {
+    if (usedFallback && weekRangeCache?.promise === promise) weekRangeCache = null;
+  });
+
+  return promise;
 }
 
 /**
@@ -73,13 +106,30 @@ export async function getWeeklyLeaderboard(
   weekStartDate?: Date
 ): Promise<WeeklyLeaderboard> {
   try {
-    const { data, error } = await supabase.rpc('get_weekly_leaderboard', {
-      p_user_id: userId,
-      p_limit: limit,
-      p_week_start: weekStartDate ? weekStartDate.toISOString().split('T')[0] : undefined,
-    });
+    // The ranking rows, the week range and the participant count are
+    // independent: chaining them made the list wait on two round trips it
+    // never needed. Fired together, the screen paints as soon as the
+    // slowest single request lands instead of the sum of all three.
+    const [{ data, error }, range, { count: totalParticipants }] = await Promise.all([
+      supabase.rpc('get_weekly_leaderboard', {
+        p_user_id: userId,
+        p_limit: limit,
+        p_week_start: weekStartDate ? weekStartDate.toISOString().split('T')[0] : undefined,
+      }),
+      getCurrentWeekRange(),
+      (async () => {
+        const { weekStart } = await getCurrentWeekRange();
+        return supabase
+          .from('weekly_leaderboard')
+          .select('*', { count: 'exact', head: true })
+          .eq('week_start_date', weekStart.toISOString().split('T')[0])
+          .gt('habits_completed', 0);
+      })(),
+    ]);
 
     if (error) throw error;
+
+    const { weekStart, weekEnd } = range;
 
     const entries: LeaderboardEntry[] = (data || []).map((entry: any) => ({
       rank: entry.rank,
@@ -97,16 +147,6 @@ export async function getWeeklyLeaderboard(
     // Get current user's entry
     const userEntry = entries.find((e) => e.isCurrentUser);
     const userRank = userEntry?.rank || 0;
-
-    // Get week range
-    const { weekStart, weekEnd } = await getCurrentWeekRange();
-
-    // Count total participants (users with at least 1 habit completed this week)
-    const { count: totalParticipants } = await supabase
-      .from('weekly_leaderboard')
-      .select('*', { count: 'exact', head: true })
-      .eq('week_start_date', weekStart.toISOString().split('T')[0])
-      .gt('habits_completed', 0);
 
     return {
       weekStartDate: weekStart,

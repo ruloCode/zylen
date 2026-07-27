@@ -12,6 +12,7 @@ export const ROUTES = {
   SHOP: '/shop',
   CHAT: '/chat',
   SOCIAL: '/social',
+  MESSAGES: '/messages',
   LEADERBOARD: '/leaderboard',
   ARENA: '/arena',
   REALMS: '/realms',

@@ -8,7 +8,7 @@
  */
 
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Flame } from 'lucide-react-native';
@@ -23,6 +23,8 @@ import { ProgressRing } from './ProgressRing';
 interface AllyCardProps {
   ally: FriendProfile;
   className?: string;
+  /** Abre el detalle del aliado (GuardianProfileSheet) al tocar la card. */
+  onPress?: (username: string) => void;
 }
 
 const ACTIVE_NOW_MS = 10 * 60 * 1000;
@@ -33,7 +35,7 @@ const AVATAR_GRADIENT = ['rgba(20,184,166,0.2)', 'rgba(15,118,110,0.1)'] as cons
 const avatarSource = (url?: string) =>
   url ? (url.startsWith('/') ? img(url) : { uri: url }) : undefined;
 
-export function AllyCard({ ally, className }: AllyCardProps) {
+export function AllyCard({ ally, className, onPress }: AllyCardProps) {
   const { t, language } = useLocale();
   const progress = getLevelProgress(ally.totalXPEarned, ally.level);
   const flameAlive = ally.currentStreak > 0;
@@ -41,9 +43,14 @@ export function AllyCard({ ally, className }: AllyCardProps) {
     !!ally.lastActiveAt && Date.now() - ally.lastActiveAt.getTime() < ACTIVE_NOW_MS;
 
   return (
-    <View
+    <Pressable
+      onPress={onPress ? () => onPress(ally.username) : undefined}
+      disabled={!onPress}
+      accessibilityRole={onPress ? 'button' : undefined}
+      accessibilityLabel={ally.username}
       className={cn(
         'w-[132px] items-center rounded-2xl border border-white/10 bg-white/[0.04] p-3',
+        onPress && 'active:scale-[0.98] active:bg-white/[0.08]',
         className
       )}
     >
@@ -132,7 +139,7 @@ export function AllyCard({ ally, className }: AllyCardProps) {
           {flameAlive ? t('social.hub.flameAlive') : t('social.hub.flameOut')}
         </Text>
       )}
-    </View>
+    </Pressable>
   );
 }
 

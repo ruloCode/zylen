@@ -7,7 +7,7 @@
  * clears the tab bar.
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Pressable,
@@ -18,7 +18,7 @@ import {
 } from 'react-native';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useRouter } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 import {
   Flame,
   Clock,
@@ -87,7 +87,7 @@ function FocusAreaGem({
 
 export function Streaks() {
   const { user, isLoading: userLoading } = useUser();
-  const { streak, isLoading: streakLoading } = useStreaks();
+  const { streak, isLoading: streakLoading, refreshStreak } = useStreaks();
   const { habits } = useHabits();
   const { lifeAreas } = useLifeAreas();
   const { theme } = useTheme();
@@ -95,24 +95,47 @@ export function Streaks() {
   const router = useRouter();
   const { width } = useWindowDimensions();
 
-  const isLoading = userLoading || streakLoading;
+  // Solo la primera carga tapa la pantalla. `userLoading`/`streakLoading` se
+  // encienden también en escrituras de fondo (sumar puntos/XP, sincronizar
+  // perfil): usarlas a secas hacía que la página se fuera a un spinner con
+  // los datos ya en memoria.
+  const isLoading = (userLoading && !user) || (streakLoading && !streak);
 
   // Real daily activity (XP per local day) from habit_completions.
   const [activity, setActivity] = useState<DailyActivity[]>([]);
   // Raw completion timestamps (last 30 days) for the time-of-day chart.
   const [completionTimes, setCompletionTimes] = useState<Date[]>([]);
-  useEffect(() => {
-    let alive = true;
-    StatsService.getDailyActivity(7).then((rows) => {
-      if (alive) setActivity(rows);
-    });
-    StatsService.getCompletionTimestamps(30).then((times) => {
-      if (alive) setCompletionTimes(times);
-    });
-    return () => {
-      alive = false;
-    };
+  const [chartsLoading, setChartsLoading] = useState(true);
+  const aliveRef = useRef(true);
+
+  const loadCharts = useCallback(async () => {
+    setChartsLoading(true);
+    try {
+      const [rows, times] = await Promise.all([
+        StatsService.getDailyActivity(7),
+        StatsService.getCompletionTimestamps(30),
+      ]);
+      if (!aliveRef.current) return;
+      setActivity(rows);
+      setCompletionTimes(times);
+    } finally {
+      if (aliveRef.current) setChartsLoading(false);
+    }
   }, []);
+
+  // La pantalla es una pestaña: se monta una vez y se queda montada, así que
+  // sin esto los gráficos y la racha se quedaban con los datos del arranque
+  // (completar un hábito no se reflejaba hasta reiniciar la app).
+  useFocusEffect(
+    useCallback(() => {
+      aliveRef.current = true;
+      void loadCharts();
+      void refreshStreak();
+      return () => {
+        aliveRef.current = false;
+      };
+    }, [loadCharts, refreshStreak])
+  );
 
   const [heroFailed, setHeroFailed] = useState(false);
 
@@ -410,9 +433,16 @@ export function Streaks() {
                 <Text className="text-xs font-semibold text-white/80">{t('progress.xp')}</Text>
               </View>
             </View>
-            {(() => {
-              const values =
-                activity.length === 7 ? activity.map((a) => a.xp) : Array(7).fill(0);
+            {chartsLoading && activity.length === 0 ? (
+              /* Sin esto, un fetch lento o fallido pintaba siete barras en
+                 cero como si el usuario no hubiera hecho nada. */
+              <View className="h-36 items-center justify-center">
+                <ActivityIndicator color={themeHsl(theme, '--accent-500')} />
+              </View>
+            ) : (() => {
+              const xp = activity.map((a) => a.xp).slice(-7);
+              const values: number[] =
+                xp.length === 7 ? xp : [...Array(Math.max(0, 7 - xp.length)).fill(0), ...xp];
               const max = Math.max(...values, 1);
               return (
                 <View className="h-36 flex-row items-end justify-between gap-2">

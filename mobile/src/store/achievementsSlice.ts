@@ -76,18 +76,19 @@ export const createAchievementsSlice: StateCreator<AchievementsSlice> = (set) =>
     try {
       set({ achievementsLoading: true, achievementsError: null });
 
-      const [achievementsWithProgress, unlockedCount, availableCount, claimedCount] = await Promise.all([
-        AchievementsService.getAchievementsWithProgress(),
-        AchievementsService.getUnlockedCount(),
-        AchievementsService.getAvailableCount(),
-        AchievementsService.getClaimedCount(),
-      ]);
+      // The three counts are just tallies of the list we already fetched;
+      // asking the backend for them separately cost three extra queries
+      // (plus an auth round trip each) for numbers we can add up here.
+      const achievementsWithProgress =
+        await AchievementsService.getAchievementsWithProgress();
 
       set({
         achievementsWithProgress,
-        unlockedCount,
-        availableCount,
-        claimedCount,
+        unlockedCount: achievementsWithProgress.filter((a) => a.unlocked).length,
+        availableCount: achievementsWithProgress.filter(
+          (a) => a.unlocked && !a.claimedAt
+        ).length,
+        claimedCount: achievementsWithProgress.filter((a) => a.claimedAt).length,
         achievementsLoading: false,
       });
     } catch (error) {

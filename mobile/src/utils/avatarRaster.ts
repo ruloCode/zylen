@@ -44,6 +44,9 @@ const BODY_CANVAS_H = 1152;
 // resolution — keep it at the full size (it's a rarer, opt-in flow).
 const RIG_CANVAS_W = 1024;
 const RIG_CANVAS_H = 1536;
+// The Home hero places the body by these numbers (constants/config.ts →
+// CUSTOM_HERO_METRICS: centred, feetY 0.93, height 0.86). Change one, change
+// the other, or custom avatars drift off the platform rune.
 const BODY_FEET_AT = 0.93; // feet anchor (fraction of canvas height)
 const BODY_MAX_HEIGHT = 0.86; // subject height budget above the feet line
 const BUST_FILL = 0.94; // bust subject fills 94% of the square

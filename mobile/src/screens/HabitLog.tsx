@@ -379,17 +379,19 @@ export function HabitLog() {
               colors={['transparent', 'rgba(0,0,0,0.55)']}
               style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 96 }}
             />
-            {/* Character bust on the right: head at the top, lower body clipped by the card */}
+            {/* Character bust anchored to the right edge: head at the top,
+                lower body clipped by the card. Sits beside the left-hand copy
+                + level card column. */}
             {heroBodySource && (
               <Image
                 source={heroBodySource}
                 contentFit="contain"
-                contentPosition="top"
+                contentPosition="top right"
                 style={{
                   position: 'absolute',
                   top: 8,
-                  left: '33.5%', // web: left 57% − half of the 47% width
-                  width: '47%',
+                  right: 0,
+                  width: '48%',
                   maxWidth: 190,
                   height: 204,
                 }}
@@ -397,21 +399,22 @@ export function HabitLog() {
               />
             )}
 
-            {/* Card content */}
+            {/* Card content — copy + level card stacked on the left; the
+                character bust (absolutely positioned above) sits on the right.
+                The column is width-capped so nothing runs under the avatar. */}
             <View className="relative z-10 min-h-[212px] p-4">
-              <View className="flex-row items-start justify-between gap-2">
-                <View className="min-w-0 shrink">
-                  <Text className="text-[30px] font-extrabold leading-tight tracking-tight text-white">
-                    {t('routines.title')}
-                  </Text>
-                  <Text className="mt-1.5 max-w-[144px] text-[14px] font-medium leading-snug text-white/75">
-                    {t('routines.subtitle')}
-                  </Text>
-                </View>
+              <View style={{ maxWidth: '54%' }}>
+                <Text className="text-[30px] font-extrabold leading-tight tracking-tight text-white">
+                  {t('routines.title')}
+                </Text>
+                <Text className="mt-1.5 text-[14px] font-medium leading-snug text-white/75">
+                  {t('routines.subtitle')}
+                </Text>
 
-                {/* Level badge — eyebrow + level beside a compact ring so nothing
-                    crowds the circle; dark backdrop keeps it legible over the character */}
-                <View className="flex-row items-center gap-2 rounded-2xl border border-white/10 bg-black/35 py-1.5 pl-2.5 pr-1.5">
+                {/* Level card — just below the copy. self-start keeps it hugging
+                    its content instead of stretching to the column width; the
+                    eyebrow + level sit beside a compact XP ring. */}
+                <View className="mt-3 flex-row items-center gap-2 self-start rounded-2xl border border-white/10 bg-black/35 py-1.5 pl-2.5 pr-1.5">
                   <View className="items-end">
                     <Text
                       className="text-[9px] font-bold uppercase text-[#8Fb3ff]"
@@ -439,7 +442,6 @@ export function HabitLog() {
                   </CircularProgress>
                 </View>
               </View>
-
             </View>
           </View>
 

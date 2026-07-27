@@ -5,11 +5,12 @@
  * (paddingBottom: 130).
  */
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
   Pressable,
+  RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
@@ -20,7 +21,7 @@ import { useLocalSearchParams } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import {
   Trophy, TrendingUp, Flame, Target, Users, Search,
-  UserPlus, UserCheck, X, Check,
+  UserPlus, UserCheck, X, Check, WifiOff,
 } from 'lucide-react-native';
 import { useLocale } from '@/hooks/useLocale';
 import {
@@ -148,7 +149,9 @@ export function Leaderboard() {
     weeklyComparison,
     allTimeLeaderboard,
     allTimeLoading,
+    allTimeError,
     isLoading: leaderboardLoading,
+    error: leaderboardError,
     loadWeeklyLeaderboard,
     loadUserWeeklyStats,
     loadWeeklyComparison,
@@ -210,14 +213,46 @@ export function Leaderboard() {
     setTimeout(() => setSelectedAchievement(null), 300); // Wait for animation
   };
 
-  // Load leaderboard data
-  useEffect(() => {
-    if (user?.id) {
-      loadWeeklyLeaderboard(user.id);
-      loadUserWeeklyStats(user.id);
-      loadWeeklyComparison(user.id);
-    }
+  // ── Carga por pestaña ──────────────────────────────────────────────
+  // Montar el hub disparaba de golpe todo lo de las tres pestañas (>20
+  // peticiones): el ranking terminaba esperando detrás del feed de aliados y
+  // de los logros, que ni siquiera estaban en pantalla. Ahora lo pesado (feed
+  // + misiones + stats de aliados, y los logros) se pide la primera vez que
+  // se abre su pestaña.
+  //
+  // Las listas de amistad SÍ se cargan al montar: el badge de solicitudes se
+  // ve desde cualquier pestaña y GuardianProfileSheet deriva de ellas el
+  // estado de amistad al abrir un guardián desde el ranking.
+  const loadedTabs = useRef<Set<TabType>>(new Set(['rankings']));
+
+  const loadRankings = useCallback(async () => {
+    if (!user?.id) return;
+    await Promise.all([
+      loadWeeklyLeaderboard(user.id),
+      loadUserWeeklyStats(user.id),
+      loadWeeklyComparison(user.id),
+    ]);
   }, [user?.id, loadWeeklyLeaderboard, loadUserWeeklyStats, loadWeeklyComparison]);
+
+  const loadFriendships = useCallback(async () => {
+    await Promise.all([loadFriends(), loadPendingRequests(), loadSentRequests()]);
+  }, [loadFriends, loadPendingRequests, loadSentRequests]);
+
+  useEffect(() => {
+    void loadRankings();
+  }, [loadRankings]);
+
+  useEffect(() => {
+    if (!user?.id) return;
+    void loadFriendships();
+  }, [user?.id, loadFriendships]);
+
+  useEffect(() => {
+    if (loadedTabs.current.has(activeTab)) return;
+    loadedTabs.current.add(activeTab);
+    if (activeTab === 'social') void loadAlliesTab();
+    if (activeTab === 'streaks') void loadAchievementsWithProgress();
+  }, [activeTab, loadAlliesTab, loadAchievementsWithProgress]);
 
   // Load the all-time ranking the first time "Histórico" is selected
   useEffect(() => {
@@ -227,25 +262,34 @@ export function Leaderboard() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rankingPeriod, user?.id]);
 
-  // Load real community data (feed + missions + ally stats) on the Aliados tab
-  useEffect(() => {
-    if (activeTab === 'social') {
-      loadAlliesTab();
+  // Reintento manual del ranking (error) y pull-to-refresh de la pestaña
+  const retryRanking = useCallback(async () => {
+    if (!user?.id) return;
+    if (rankingPeriod === 'alltime') await loadAllTimeLeaderboard(user.id);
+    else await loadRankings();
+  }, [user?.id, rankingPeriod, loadAllTimeLeaderboard, loadRankings]);
+
+  const [refreshing, setRefreshing] = useState(false);
+  const handleRefresh = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      if (activeTab === 'rankings') {
+        await retryRanking();
+      } else if (activeTab === 'social') {
+        await Promise.all([loadAlliesTab(), loadFriendships()]);
+      } else {
+        await loadAchievementsWithProgress();
+      }
+    } finally {
+      setRefreshing(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeTab]);
-
-  // Load social data
-  useEffect(() => {
-    loadFriends();
-    loadPendingRequests();
-    loadSentRequests();
-  }, [loadFriends, loadPendingRequests, loadSentRequests]);
-
-  // Load achievements data
-  useEffect(() => {
-    loadAchievementsWithProgress();
-  }, [loadAchievementsWithProgress]);
+  }, [
+    activeTab,
+    retryRanking,
+    loadAlliesTab,
+    loadFriendships,
+    loadAchievementsWithProgress,
+  ]);
 
   // Get medal emoji for top 3
   const getMedal = (rank: number) => {
@@ -282,6 +326,7 @@ export function Leaderboard() {
     rankingPeriod === 'weekly' ? weeklyLeaderboard?.entries ?? [] : allTimeLeaderboard;
   const isRankingLoading =
     rankingPeriod === 'weekly' ? leaderboardLoading : allTimeLoading;
+  const rankingError = rankingPeriod === 'weekly' ? leaderboardError : allTimeError;
   const rankingCollapsed = !rankingExpanded && activeEntries.length > RANKING_TOP_N;
   const topEntries = rankingCollapsed
     ? activeEntries.slice(0, RANKING_TOP_N)
@@ -457,6 +502,14 @@ export function Leaderboard() {
       <ScrollView
         className="flex-1"
         keyboardShouldPersistTaps="handled"
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => void handleRefresh()}
+            tintColor={COLORS.teal400}
+            colors={[COLORS.teal500]}
+          />
+        }
         contentContainerStyle={{
           paddingHorizontal: 8,
           paddingTop: 16,
@@ -605,6 +658,24 @@ export function Leaderboard() {
                       <ActivityIndicator size="large" color={COLORS.teal500} />
                       <Text className="mt-4 text-white">{t('common.loading')}</Text>
                     </View>
+                  ) : rankingError && activeEntries.length === 0 ? (
+                    /* Antes, un fallo o un request colgado dejaba la card
+                       girando para siempre; ahora se puede reintentar. */
+                    <View className="items-center p-12">
+                      <WifiOff size={48} color={COLORS.white30} />
+                      <Text className="mt-4 text-center text-white/70">
+                        {t('errors.network')}
+                      </Text>
+                      <Pressable
+                        onPress={() => void retryRanking()}
+                        accessibilityRole="button"
+                        className="mt-4 rounded-xl border border-teal-400/40 bg-teal-500/20 px-5 py-2.5 active:opacity-80"
+                      >
+                        <Text className="text-sm font-bold text-teal-200">
+                          {t('actions.retry')}
+                        </Text>
+                      </Pressable>
+                    </View>
                   ) : activeEntries.length > 0 ? (
                     <View>
                       {topEntries.map((entry, index) =>
@@ -700,6 +771,7 @@ export function Leaderboard() {
                       ownAvatarUrl={user?.avatarUrl}
                       onAddAlly={() => setSocialSubTab('search')}
                       onRemoveFriend={handleRemoveFriend}
+                      onOpenProfile={setProfileUsername}
                     />
                   )}
 

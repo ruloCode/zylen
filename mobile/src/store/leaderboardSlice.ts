@@ -7,6 +7,10 @@ import type { StateCreator } from 'zustand';
 import type { LeaderboardEntry, WeeklyLeaderboard } from '@/types/social';
 import type { WeeklyComparison } from '@/types/community';
 import * as LeaderboardService from '@/services/supabase/leaderboard.service';
+import { withTimeout } from '@/services/supabase/utils';
+
+/** A ranking request that outlives this shows an error + retry, not a spinner. */
+const LEADERBOARD_TIMEOUT_MS = 15_000;
 
 export interface LeaderboardSlice {
   // State
@@ -20,6 +24,7 @@ export interface LeaderboardSlice {
   weeklyComparison: WeeklyComparison | null;
   allTimeLeaderboard: LeaderboardEntry[];
   allTimeLoading: boolean;
+  allTimeError: string | null;
   leaderboardLoading: boolean;
   leaderboardError: string | null;
 
@@ -40,6 +45,7 @@ export const createLeaderboardSlice: StateCreator<LeaderboardSlice> = (set, get)
   weeklyComparison: null,
   allTimeLeaderboard: [],
   allTimeLoading: false,
+  allTimeError: null,
   leaderboardLoading: false,
   leaderboardError: null,
 
@@ -51,10 +57,10 @@ export const createLeaderboardSlice: StateCreator<LeaderboardSlice> = (set, get)
   ) => {
     set({ leaderboardLoading: true, leaderboardError: null });
     try {
-      const leaderboard = await LeaderboardService.getWeeklyLeaderboard(
-        userId,
-        limit,
-        weekStartDate
+      const leaderboard = await withTimeout(
+        LeaderboardService.getWeeklyLeaderboard(userId, limit, weekStartDate),
+        LEADERBOARD_TIMEOUT_MS,
+        'weekly leaderboard'
       );
 
       set({
@@ -105,13 +111,20 @@ export const createLeaderboardSlice: StateCreator<LeaderboardSlice> = (set, get)
 
   // Load the all-time ranking ("Histórico")
   loadAllTimeLeaderboard: async (userId: string, limit: number = 50) => {
-    set({ allTimeLoading: true });
+    set({ allTimeLoading: true, allTimeError: null });
     try {
-      const entries = await LeaderboardService.getAllTimeLeaderboard(userId, limit);
+      const entries = await withTimeout(
+        LeaderboardService.getAllTimeLeaderboard(userId, limit),
+        LEADERBOARD_TIMEOUT_MS,
+        'all-time leaderboard'
+      );
       set({ allTimeLeaderboard: entries, allTimeLoading: false });
     } catch (error: any) {
       console.error('Error loading all-time leaderboard:', error);
-      set({ allTimeLoading: false });
+      set({
+        allTimeError: error.message || 'Failed to load all-time leaderboard',
+        allTimeLoading: false,
+      });
     }
   },
 
@@ -127,6 +140,6 @@ export const createLeaderboardSlice: StateCreator<LeaderboardSlice> = (set, get)
 
   // Clear error
   clearError: () => {
-    set({ leaderboardError: null });
+    set({ leaderboardError: null, allTimeError: null });
   },
 });

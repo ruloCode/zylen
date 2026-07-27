@@ -85,7 +85,29 @@ interface GameMessage {
  * Loading `?__raw=1` directly is NOT an option here: the deployed game
  * carries a platform snippet that bounces top-frame raw loads back to the
  * wrapper, and the game itself won't postMessage when it is the top frame.
+ *
+ * jul-2026: el wrapper de Higgsfield ahora BORRA la clase hf-embed en su
+ * script de arranque (document.documentElement.className=''), reapareciendo
+ * la barra con el botón al marketplace ("icono" que dentro del WebView no
+ * lleva a nada). Defensa en tres capas: CSS con !important inyectado ANTES
+ * del contenido (PRELOAD_JS), re-aplicación con reintentos en BRIDGE_JS, y
+ * bloqueo de navegaciones fuera del origin del juego en el WebView.
  */
+const HIDE_CHROME_CSS =
+  '#hf-game-bar{display:none!important}' +
+  '#hf-frame{top:0!important;height:100%!important}';
+
+const PRELOAD_JS = `
+(function () {
+  try {
+    var style = document.createElement('style');
+    style.textContent = ${JSON.stringify(HIDE_CHROME_CSS)};
+    (document.head || document.documentElement).appendChild(style);
+  } catch (err) {}
+})();
+true;
+`;
+
 const BRIDGE_JS = `
 (function () {
   window.addEventListener('message', function (e) {
@@ -96,13 +118,25 @@ const BRIDGE_JS = `
       }
     } catch (err) {}
   });
+  var enforce = function () {
+    try {
+      document.documentElement.classList.add('hf-embed');
+      var bar = document.getElementById('hf-game-bar');
+      if (bar) bar.style.display = 'none';
+      var frame = document.getElementById('hf-frame');
+      if (frame) { frame.style.top = '0'; frame.style.height = '100%'; }
+    } catch (err) {}
+  };
   try {
-    document.documentElement.classList.add('hf-embed');
-    var bar = document.getElementById('hf-game-bar');
-    if (bar) bar.style.display = 'none';
-    var frame = document.getElementById('hf-frame');
-    if (frame) { frame.style.top = '0'; frame.style.height = '100%'; }
+    var style = document.createElement('style');
+    style.textContent = ${JSON.stringify(HIDE_CHROME_CSS)};
+    (document.head || document.documentElement).appendChild(style);
   } catch (err) {}
+  enforce();
+  // el wrapper limpia la clase en su arranque — reafirmar unos segundos
+  setTimeout(enforce, 250);
+  setTimeout(enforce, 1000);
+  setTimeout(enforce, 3000);
 })();
 true;
 `;
@@ -318,7 +352,20 @@ export function Arena() {
         {gameSrc && (
           <WebView
             source={{ uri: gameSrc }}
+            injectedJavaScriptBeforeContentLoaded={PRELOAD_JS}
             injectedJavaScript={BRIDGE_JS}
+            // El botón del wrapper apunta al marketplace de Higgsfield: dentro
+            // del WebView eso es un callejón sin salida. Solo el juego navega.
+            onShouldStartLoadWithRequest={(request) => {
+              try {
+                return (
+                  new URL(request.url).origin === GAME_ORIGIN ||
+                  request.url.startsWith('about:')
+                );
+              } catch {
+                return false;
+              }
+            }}
             onMessage={onGameMessage}
             onLoadEnd={() => setLoaded(true)}
             allowsInlineMediaPlayback
@@ -432,6 +479,46 @@ export function Arena() {
           </Pressable>
         </View>
       ))}
+
+      {/* CTA principal: entrar a la arena SIN scroll — la tienda es secundaria */}
+      <Pressable
+        onPress={() => setView('playing')}
+        accessibilityRole="button"
+        className="mb-2 active:scale-[0.98]"
+      >
+        <LinearGradient
+          colors={['#9333ea', '#0d9488']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={{
+            borderRadius: 18,
+            paddingVertical: 18,
+            paddingHorizontal: 16,
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 12,
+          }}
+        >
+          <View className="h-11 w-11 items-center justify-center rounded-2xl bg-white/15">
+            <Swords size={22} color="#ffffff" />
+          </View>
+          <View className="min-w-0 flex-1">
+            <Text className="text-base font-extrabold leading-tight text-white">
+              {t('arena.armory.enter', { tier })}
+            </Text>
+            <Text className="mt-0.5 text-[11px] font-medium text-white/75">
+              {t('arena.armory.tierHint', {
+                xp: Math.round(GAME_CONFIG.victoryXP * tierRewardMultiplier(tier)),
+                points: Math.round(GAME_CONFIG.victoryPoints * tierRewardMultiplier(tier)),
+              })}
+            </Text>
+          </View>
+          <ChevronRight size={20} color="#ffffff" />
+        </LinearGradient>
+      </Pressable>
+      <Text className="mb-4 text-center text-[11px] text-white/40">
+        {t('arena.armory.shopHint')}
+      </Text>
 
       {/* Focus-gem powers (grown in "Enfoque del día") */}
       <View className={`${glass} mb-4 flex-row items-center gap-2.5 px-3 py-2.5`}>
