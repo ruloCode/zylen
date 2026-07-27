@@ -147,6 +147,47 @@ export function getHeroBodySrc(
   return DEFAULT_HERO_BODY;
 }
 
+/**
+ * Where the figure actually sits inside its own full-body PNG, as fractions
+ * of that canvas. The bundled artworks and the AI-composed bodies do NOT
+ * share a framing: each preset was drawn with its own margins, while
+ * `composeBody` (utils/avatarRaster) centres the cutout on a 2:3 canvas with
+ * the feet at 93% and a height budget of 86%. Placing every body with the
+ * numbers tuned for Rulo is what made custom avatars render off-centre and
+ * floating above the platform rune on the Home, so the hero scene positions
+ * each source by its own metrics instead.
+ *
+ * Measured from the assets' alpha bounds (alpha > 40).
+ */
+export interface HeroBodyMetrics {
+  /** canvas width / height */
+  aspect: number;
+  /** horizontal centre of the figure (fraction of canvas width) */
+  centerX: number;
+  /** feet baseline (fraction of canvas height, top-down) */
+  feetY: number;
+  /** figure height (fraction of canvas height) */
+  height: number;
+}
+
+const HERO_BODY_METRICS: Record<string, HeroBodyMetrics> = {
+  '/hero-character.png': { aspect: 2 / 3, centerX: 0.4585, feetY: 0.9341, height: 0.9065 },
+  '/avatars/dani-full.png': { aspect: 2 / 3, centerX: 0.4771, feetY: 0.946, height: 0.9219 },
+};
+
+/** Canvas convention produced by composeBody() for AI-generated avatars. */
+export const CUSTOM_HERO_METRICS: HeroBodyMetrics = {
+  aspect: 2 / 3,
+  centerX: 0.5,
+  feetY: 0.93,
+  height: 0.86,
+};
+
+/** Metrics for whatever getHeroBodySrc() resolved to. */
+export function getHeroBodyMetrics(bodySrc: string): HeroBodyMetrics {
+  return HERO_BODY_METRICS[bodySrc] ?? CUSTOM_HERO_METRICS;
+}
+
 /** Ordered <source> list for the hero idle-loop video. */
 export interface HeroVideoSource {
   src: string;
@@ -176,7 +217,7 @@ export function getHeroVideoSources(
 }
 
 // Identity & personalization options collected during onboarding.
-// `labelKey` resolves through i18n (onboarding.identity.* / onboarding.aboutYou.*).
+// `labelKey` resolves through i18n (onboarding.identity.* / onboarding.motivation.* / onboarding.timeOfDay.*).
 
 // Player identity → drives gendered language across the app.
 export const GENDER_OPTIONS = [
@@ -186,26 +227,20 @@ export const GENDER_OPTIONS = [
 ] as const;
 
 export const MOTIVATION_OPTIONS = [
-  { value: 'health', labelKey: 'onboarding.aboutYou.motivations.health', emoji: '🌱' },
-  { value: 'discipline', labelKey: 'onboarding.aboutYou.motivations.discipline', emoji: '🔥' },
-  { value: 'focus', labelKey: 'onboarding.aboutYou.motivations.focus', emoji: '🎯' },
-  { value: 'wellbeing', labelKey: 'onboarding.aboutYou.motivations.wellbeing', emoji: '🧘' },
-  { value: 'productivity', labelKey: 'onboarding.aboutYou.motivations.productivity', emoji: '⚡' },
+  { value: 'health', labelKey: 'onboarding.motivation.options.health', emoji: '🌱' },
+  { value: 'discipline', labelKey: 'onboarding.motivation.options.discipline', emoji: '🔥' },
+  { value: 'focus', labelKey: 'onboarding.motivation.options.focus', emoji: '🎯' },
+  { value: 'wellbeing', labelKey: 'onboarding.motivation.options.wellbeing', emoji: '🧘' },
+  { value: 'productivity', labelKey: 'onboarding.motivation.options.productivity', emoji: '⚡' },
 ] as const;
 
-export const EXPERIENCE_OPTIONS = [
-  { value: 'beginner', labelKey: 'onboarding.aboutYou.experience.beginner' },
-  { value: 'intermediate', labelKey: 'onboarding.aboutYou.experience.intermediate' },
-  { value: 'advanced', labelKey: 'onboarding.aboutYou.experience.advanced' },
-] as const;
-
-export const AGE_RANGE_OPTIONS = [
-  { value: '13-17', labelKey: 'onboarding.aboutYou.ageRanges.teen' },
-  { value: '18-24', labelKey: 'onboarding.aboutYou.ageRanges.youngAdult' },
-  { value: '25-34', labelKey: 'onboarding.aboutYou.ageRanges.adult' },
-  { value: '35-44', labelKey: 'onboarding.aboutYou.ageRanges.midAdult' },
-  { value: '45-54', labelKey: 'onboarding.aboutYou.ageRanges.mature' },
-  { value: '55+', labelKey: 'onboarding.aboutYou.ageRanges.senior' },
+// When the user wants to work on themselves — sets the first habit's
+// timeOfDay and contextualizes the coach reminders.
+export const TIME_OF_DAY_OPTIONS = [
+  { value: 'morning', labelKey: 'onboarding.timeOfDay.options.morning', emoji: '🌅' },
+  { value: 'afternoon', labelKey: 'onboarding.timeOfDay.options.afternoon', emoji: '☀️' },
+  { value: 'evening', labelKey: 'onboarding.timeOfDay.options.evening', emoji: '🌙' },
+  { value: 'anytime', labelKey: 'onboarding.timeOfDay.options.anytime', emoji: '✨' },
 ] as const;
 
 // Arena (embedded co-op game) configuration

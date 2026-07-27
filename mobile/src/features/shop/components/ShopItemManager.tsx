@@ -14,6 +14,7 @@ import { useLocale } from '@/hooks/useLocale';
 import { useToast } from '@/hooks/useToast';
 import { HABIT_ICONS } from '@/features/habits/components/IconSelector';
 import type { ShopItem } from '@/types';
+import { uuid } from '@/utils/uuid';
 
 const ACCENT_GREEN = 'rgb(155,215,50)';
 
@@ -81,7 +82,7 @@ export function ShopItemManager() {
     } else {
       // Create new item
       addShopItem({
-        id: crypto.randomUUID(),
+        id: uuid(),
         ...data,
       });
       toast.success(t('shop.toast.itemAdded', { name: displayName }));

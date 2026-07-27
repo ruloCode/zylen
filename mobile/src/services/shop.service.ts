@@ -1,6 +1,7 @@
 import { ShopItem, Purchase, PurchaseHistory } from '@/types';
 import { STORAGE_KEYS } from '@/constants';
 import { StorageService } from './storage';
+import { uuid } from '@/utils/uuid';
 
 /**
  * Shop data service
@@ -23,7 +24,7 @@ export class ShopService {
     const history = this.getPurchaseHistory();
 
     const purchase: Purchase = {
-      id: crypto.randomUUID(),
+      id: uuid(),
       itemId: item.id,
       itemName: item.name,
       cost: item.cost,

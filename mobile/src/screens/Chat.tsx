@@ -17,6 +17,7 @@ import {
 } from '@/features/chat/components';
 import { useSmartAutoScroll } from '@/features/chat/hooks/useSmartAutoScroll';
 import { Header } from '@/components/layout';
+import { uuid } from '@/utils/uuid';
 import { useAppStore } from '@/store';
 import { useLocale } from '@/hooks/useLocale';
 import { CHAT_CONFIG } from '@/constants';
@@ -78,7 +79,7 @@ export function Chat() {
 
       const history: Message[] = messages.concat([
         {
-          id: crypto.randomUUID(),
+          id: uuid(),
           role: 'user',
           content: userMessage,
           timestamp: new Date(),

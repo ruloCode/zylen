@@ -2,6 +2,7 @@ import { fetch as expoFetch } from 'expo/fetch';
 import type { Message } from '@/types';
 import { ENV } from '@/lib/env';
 import { kv } from '@/lib/kvStorage';
+import { uuid } from '@/utils/uuid';
 
 /**
  * Hermes Service
@@ -46,13 +47,13 @@ function getSessionId(): string {
   try {
     const existing = kv.getItem(SESSION_STORAGE_KEY);
     if (existing) return existing;
-    const created = crypto.randomUUID();
+    const created = uuid();
     kv.setItem(SESSION_STORAGE_KEY, created);
     return created;
   } catch {
     // Storage may be unavailable — fall back to a volatile id so chat still
     // works for the current app lifetime.
-    return crypto.randomUUID();
+    return uuid();
   }
 }
 

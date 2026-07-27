@@ -124,7 +124,9 @@ export const createUserSlice: StateCreator<UserSlice> = (set, get) => ({
   completeOnboarding: async () => {
     try {
       const currentUser = get().user;
-      if (!currentUser) return;
+      // No store user means the profile row never loaded — failing loud here
+      // prevents a false success toast + AuthGate bounce-loop back to /onboarding.
+      if (!currentUser) throw new Error('User profile not loaded');
 
       set({ userLoading: true, userError: null });
 
@@ -142,13 +144,16 @@ export const createUserSlice: StateCreator<UserSlice> = (set, get) => ({
         userError: error instanceof Error ? error.message : 'Failed to complete onboarding',
         userLoading: false,
       });
+      // Propagate: swallowing this leaves the caller showing a success toast
+      // while AuthGate bounces the user back to /onboarding in a loop.
+      throw error;
     }
   },
 
   updateUserProfile: async (name, avatarUrl, extra) => {
     try {
       const currentUser = get().user;
-      if (!currentUser) return;
+      if (!currentUser) throw new Error('User profile not loaded');
 
       set({ userLoading: true, userError: null });
 
@@ -166,6 +171,7 @@ export const createUserSlice: StateCreator<UserSlice> = (set, get) => ({
         userError: error instanceof Error ? error.message : 'Failed to update profile',
         userLoading: false,
       });
+      throw error;
     }
   },
 

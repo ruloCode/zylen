@@ -14,13 +14,40 @@
  */
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import type { User, Session, AuthError } from '@supabase/supabase-js';
+import type { User, Session, AuthError, AuthApiError } from '@supabase/supabase-js';
 import * as WebBrowser from 'expo-web-browser';
 import * as Linking from 'expo-linking';
 import { supabase } from '@/lib/supabase';
 import { ENV } from '@/lib/env';
 
 WebBrowser.maybeCompleteAuthSession();
+
+/**
+ * Maps Supabase auth error codes to translation keys so the UI never shows
+ * raw (English-only) provider messages. Unmapped codes fall back to the
+ * generic errors.authenticationFailed key. (Ported from the web AuthContext.)
+ */
+const AUTH_ERROR_KEYS: Record<string, string> = {
+  invalid_credentials: 'errors.auth.invalidCredentials',
+  user_already_exists: 'errors.auth.userAlreadyExists',
+  weak_password: 'errors.auth.weakPassword',
+  over_request_rate_limit: 'errors.auth.rateLimited',
+  over_email_send_rate_limit: 'errors.auth.emailRateLimited',
+  signup_disabled: 'errors.auth.signupDisabled',
+};
+
+function authErrorKey(err: unknown): string {
+  const code = (err as AuthApiError)?.code;
+  return (code && AUTH_ERROR_KEYS[code]) || 'errors.authenticationFailed';
+}
+
+export interface AuthResult {
+  success: boolean;
+  /** Translation key describing the failure (never a raw provider message). */
+  errorKey?: string;
+  /** Supabase auth error code, for callers that need to branch on it. */
+  errorCode?: string;
+}
 
 const shouldSkipAuth = ENV.SKIP_AUTH;
 
@@ -49,18 +76,10 @@ interface AuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
-  /** Resolves with success=false (no error) when the user cancels the browser. */
-  signInWithOAuth: (
-    provider: 'google' | 'github'
-  ) => Promise<{ success: boolean; error?: string }>;
-  signInWithPassword: (
-    email: string,
-    password: string
-  ) => Promise<{ success: boolean; error?: string }>;
-  signUpWithPassword: (
-    email: string,
-    password: string
-  ) => Promise<{ success: boolean; error?: string }>;
+  /** Resolves with success=false (no errorKey) when the user cancels the browser. */
+  signInWithOAuth: (provider: 'google' | 'github') => Promise<AuthResult>;
+  signInWithPassword: (email: string, password: string) => Promise<AuthResult>;
+  signUpWithPassword: (email: string, password: string) => Promise<AuthResult>;
   signOut: () => Promise<void>;
   error: AuthError | null;
 }
@@ -138,9 +157,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     return () => subscription.unsubscribe();
   }, []);
 
-  const signInWithOAuth = async (
-    provider: 'google' | 'github'
-  ): Promise<{ success: boolean; error?: string }> => {
+  const signInWithOAuth = async (provider: 'google' | 'github'): Promise<AuthResult> => {
     if (shouldSkipAuth) {
       setUser(devUser);
       setSession(null);
@@ -178,14 +195,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
     } catch (err) {
       console.error('OAuth sign in error:', err);
       setError(err as AuthError);
-      return { success: false, error: (err as AuthError)?.message };
+      return {
+        success: false,
+        errorKey: authErrorKey(err),
+        errorCode: (err as AuthApiError)?.code,
+      };
     }
   };
 
-  const signInWithPassword = async (
-    email: string,
-    password: string
-  ): Promise<{ success: boolean; error?: string }> => {
+  const signInWithPassword = async (email: string, password: string): Promise<AuthResult> => {
     if (shouldSkipAuth) {
       setUser(devUser);
       setSession(null);
@@ -204,14 +222,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
     } catch (err) {
       console.error('Email sign in error:', err);
       setError(err as AuthError);
-      return { success: false, error: (err as AuthError)?.message };
+      return {
+        success: false,
+        errorKey: authErrorKey(err),
+        errorCode: (err as AuthApiError)?.code,
+      };
     }
   };
 
-  const signUpWithPassword = async (
-    email: string,
-    password: string
-  ): Promise<{ success: boolean; error?: string }> => {
+  const signUpWithPassword = async (email: string, password: string): Promise<AuthResult> => {
     if (shouldSkipAuth) {
       setUser(devUser);
       setSession(null);
@@ -231,16 +250,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
       // Defensive: if the project still requires confirmation, no session is
       // returned. Surface that instead of silently appearing to succeed.
       if (!data.session) {
-        return {
-          success: false,
-          error: 'Account created but no active session. Email confirmation may be enabled.',
-        };
+        return { success: false, errorKey: 'errors.auth.confirmEmail' };
       }
       return { success: true };
     } catch (err) {
       console.error('Email sign up error:', err);
       setError(err as AuthError);
-      return { success: false, error: (err as AuthError)?.message };
+      return {
+        success: false,
+        errorKey: authErrorKey(err),
+        errorCode: (err as AuthApiError)?.code,
+      };
     }
   };
 

@@ -113,10 +113,13 @@ export function OnboardingCarousel() {
   const authIndex = slides.length;
 
   const listRef = useRef<FlatList<number>>(null);
+  const emailRef = useRef<TextInput>(null);
   const passwordRef = useRef<TextInput>(null);
   const [step, setStep] = useState(0);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [emailError, setEmailError] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [oauthLoading, setOauthLoading] = useState(false);
@@ -146,9 +149,9 @@ export function OnboardingCarousel() {
     setOauthLoading(true);
     try {
       const res = await signInWithOAuth('google');
-      // Cancelling the browser resolves success=false with no error — stay quiet.
-      if (!res.success && res.error) {
-        toast.error(res.error);
+      // Cancelling the browser resolves success=false with no errorKey — stay quiet.
+      if (!res.success && res.errorKey) {
+        toast.error(t(res.errorKey));
       }
     } finally {
       setOauthLoading(false);
@@ -159,27 +162,28 @@ export function OnboardingCarousel() {
     if (busy) return; // keyboard "go" bypasses the button's disabled state
     const value = email.trim();
     if (!value || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-      toast.error(t('auth.enterEmail'));
+      setEmailError(t('auth.enterEmail'));
+      emailRef.current?.focus();
       return;
     }
     if (password.length < 6) {
-      toast.error(t('auth.passwordTooShort'));
+      setPasswordError(t('auth.passwordTooShort'));
+      passwordRef.current?.focus();
       return;
     }
     setSubmitting(true);
     try {
       // Try to create the account; if the email already exists, sign in instead,
-      // so the same form works for new and returning users. (The native
-      // AuthContext surfaces the raw Supabase message instead of the web's
-      // errorCode, so detect the "already registered" case from it.)
+      // so the same form works for new and returning users (detected by the
+      // Supabase error code — never by parsing the provider message).
       let res = await signUpWithPassword(value, password);
       let returning = false;
-      if (!res.success && /already (registered|exists)|user_already_exists/i.test(res.error ?? '')) {
+      if (!res.success && res.errorCode === 'user_already_exists') {
         returning = true;
         res = await signInWithPassword(value, password);
       }
       if (res.success) toast.success(returning ? t('auth.welcomeBack') : t('auth.accountCreated'));
-      else toast.error(res.error ?? t('errors.authenticationFailed'));
+      else toast.error(t(res.errorKey ?? 'errors.authenticationFailed'));
     } finally {
       setSubmitting(false);
     }
@@ -257,6 +261,7 @@ export function OnboardingCarousel() {
                     <Mail size={18} color="#2dd4bf" />
                   </View>
                   <TextInput
+                    ref={emailRef}
                     keyboardType="email-address"
                     autoCapitalize="none"
                     autoComplete="email"
@@ -264,12 +269,23 @@ export function OnboardingCarousel() {
                     returnKeyType="next"
                     onSubmitEditing={() => passwordRef.current?.focus()}
                     value={email}
-                    onChangeText={setEmail}
+                    onChangeText={(text) => {
+                      setEmail(text);
+                      setEmailError(null);
+                    }}
                     placeholder={t('auth.emailPlaceholder')}
                     placeholderTextColor="rgba(255,255,255,0.4)"
-                    className="w-full rounded-2xl border border-white/10 bg-white/[0.04] py-3.5 pl-11 pr-4 text-white"
+                    className={cn(
+                      'w-full rounded-2xl border bg-white/[0.04] py-3.5 pl-11 pr-4 text-white',
+                      emailError ? 'border-red-500' : 'border-white/10'
+                    )}
                   />
                 </View>
+                {emailError ? (
+                  <Text className="-mt-1 text-sm text-red-400" accessibilityRole="alert">
+                    {emailError}
+                  </Text>
+                ) : null}
                 <View className="justify-center">
                   <View className="absolute left-4 z-10">
                     <Lock size={18} color="#2dd4bf" />
@@ -283,10 +299,16 @@ export function OnboardingCarousel() {
                     returnKeyType="go"
                     onSubmitEditing={() => void handleEmailContinue()}
                     value={password}
-                    onChangeText={setPassword}
+                    onChangeText={(text) => {
+                      setPassword(text);
+                      setPasswordError(null);
+                    }}
                     placeholder={t('auth.passwordPlaceholder')}
                     placeholderTextColor="rgba(255,255,255,0.4)"
-                    className="w-full rounded-2xl border border-white/10 bg-white/[0.04] py-3.5 pl-11 pr-12 text-white"
+                    className={cn(
+                      'w-full rounded-2xl border bg-white/[0.04] py-3.5 pl-11 pr-12 text-white',
+                      passwordError ? 'border-red-500' : 'border-white/10'
+                    )}
                   />
                   <Pressable
                     onPress={() => setShowPassword((v) => !v)}
@@ -304,6 +326,11 @@ export function OnboardingCarousel() {
                     )}
                   </Pressable>
                 </View>
+                {passwordError ? (
+                  <Text className="-mt-1 text-sm text-red-400" accessibilityRole="alert">
+                    {passwordError}
+                  </Text>
+                ) : null}
                 <Pressable
                   onPress={() => void handleEmailContinue()}
                   disabled={busy}

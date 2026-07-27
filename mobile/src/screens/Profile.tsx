@@ -212,21 +212,29 @@ export function Profile() {
       : { uri: user.avatarUrl }
     : undefined;
 
+  // updateUserProfile now rejects on failure — surface it instead of crashing
+  // the fire-and-forget call sites with an unhandled rejection.
+  const saveProfile = (name: string, avatarUrl?: string) => {
+    updateUserProfile(name, avatarUrl).catch(() => {
+      toast.error(t('errors.general'));
+    });
+  };
+
   const handleSaveName = () => {
     if (newName.trim().length >= 2) {
-      void updateUserProfile(newName.trim(), user.avatarUrl);
+      saveProfile(newName.trim(), user.avatarUrl);
       setIsEditingName(false);
     }
   };
 
   const handleSaveAvatar = () => {
-    void updateUserProfile(user.name, selectedAvatar);
+    saveProfile(user.name, selectedAvatar);
     setIsEditingAvatar(false);
   };
 
   // Avatar picker used by the showcase identity hero (pencil on the avatar).
   const handleSavePickerAvatar = () => {
-    void updateUserProfile(user.name, pickerAvatar);
+    saveProfile(user.name, pickerAvatar);
     setIsAvatarPickerOpen(false);
     setSelectedAvatar(pickerAvatar);
     toast.success(t('profile.avatars.saved'));

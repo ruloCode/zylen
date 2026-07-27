@@ -158,6 +158,7 @@ export function useOnboarding() {
     completedSteps: state.completedSteps,
     isOnboardingComplete: state.isOnboardingComplete,
     temporaryData: state.temporaryData,
+    userId: state.userId,
     nextStep: state.nextStep,
     prevStep: state.prevStep,
     goToStep: state.goToStep,
@@ -165,6 +166,7 @@ export function useOnboarding() {
     completeStep: state.completeStep,
     resetOnboarding: state.resetOnboarding,
     finalizeOnboarding: state.finalizeOnboarding,
+    hydrateForUser: state.hydrateForUser,
   }));
   return useAppStore(selector);
 }
@@ -199,6 +201,7 @@ export function useLeaderboard() {
     weeklyComparison: state.weeklyComparison,
     allTimeLeaderboard: state.allTimeLeaderboard,
     allTimeLoading: state.allTimeLoading,
+    allTimeError: state.allTimeError,
     isLoading: state.leaderboardLoading,
     error: state.leaderboardError,
     loadWeeklyLeaderboard: state.loadWeeklyLeaderboard,

@@ -1,38 +1,57 @@
 import React, { useEffect, useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import toast from '@/lib/toast';
 import { useAuth } from '@/features/auth/context/AuthContext';
-import { useOnboarding, useUser, useHabits } from '@/store';
+import { useOnboarding, useUser } from '@/store';
 import { ROUTES } from '@/constants/routes';
 import { ONBOARDING_STEPS } from '@/types';
+import type { OnboardingData } from '@/types';
 import {
   OnboardingCarousel,
-  OnboardingProgress,
   OnboardingStep1,
-  OnboardingStepAboutYou,
-  OnboardingStep2,
-  OnboardingStep3,
-  OnboardingStep4,
+  OnboardingStepMotivation,
+  OnboardingStepTimeOfDay,
+  OnboardingStepFirstHabit,
+  OnboardingStepPayoff,
+  OnboardingStepNotifications,
 } from '@/features/onboarding/components';
 import { useLocale } from '@/hooks/useLocale';
 
 /**
- * Onboarding Page — React Native port.
+ * Onboarding Page — React Native port, retention-first flow.
  *
- * Multi-step onboarding flow for new users
- * Steps:
- * 1. Welcome + Name + Avatar
- * 2. Choose Username
- * 3. Life Areas Selection
- * 4. Create First Habits
- * 5. Tutorial / Mechanics Overview
+ * Steps (see ONBOARDING_STEPS):
+ *   HERO → MOTIVATION → TIME_OF_DAY → FIRST_HABIT → PAYOFF → NOTIFICATIONS
+ *
+ * The payoff step creates AND completes the chosen habit through the real
+ * complete_habit RPC, so the player reaches Home with their first Luz already
+ * earned. The in-progress state is persisted locally and rehydrated, so a
+ * killed app resumes at the first step whose prerequisites are met.
  *
  * Like the web's OnboardingEntry: unauthenticated visitors (arriving from the
  * Welcome splash) see the pre-auth marketing carousel instead; once they sign
  * up/in, this same route renders the multi-step flow.
  */
+
+/** Earliest step whose prerequisites are missing (guards rehydrated state). */
+function firstIncompleteStep(step: number, data: OnboardingData): number {
+  if (step > ONBOARDING_STEPS.HERO && (!data.userName || !data.gender)) {
+    return ONBOARDING_STEPS.HERO;
+  }
+  if (step > ONBOARDING_STEPS.MOTIVATION && !data.motivation) {
+    return ONBOARDING_STEPS.MOTIVATION;
+  }
+  if (step > ONBOARDING_STEPS.TIME_OF_DAY && !data.preferredTimeOfDay) {
+    return ONBOARDING_STEPS.TIME_OF_DAY;
+  }
+  if (step > ONBOARDING_STEPS.FIRST_HABIT && !data.firstHabit) {
+    return ONBOARDING_STEPS.FIRST_HABIT;
+  }
+  return step;
+}
+
 export function Onboarding() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
@@ -42,14 +61,23 @@ export function Onboarding() {
 
   const {
     currentStep,
-    completedSteps,
     temporaryData,
+    userId: boundUserId,
     nextStep,
     prevStep,
+    goToStep,
     finalizeOnboarding,
+    hydrateForUser,
   } = useOnboarding();
-  const { user, updateUserProfile, completeOnboarding, updateSelectedLifeAreas } = useUser();
-  const { addHabit } = useHabits();
+  const { user, completeOnboarding } = useUser();
+
+  // Bind the persisted in-progress flow to this account (resets it if another
+  // account left one behind on this device).
+  useEffect(() => {
+    if (authUser?.id) {
+      hydrateForUser(authUser.id);
+    }
+  }, [authUser?.id, hydrateForUser]);
 
   // If user has already completed onboarding, redirect to dashboard
   useEffect(() => {
@@ -58,60 +86,33 @@ export function Onboarding() {
     }
   }, [user?.hasCompletedOnboarding, router]);
 
+  // Never sit on a rehydrated step whose data is missing.
+  useEffect(() => {
+    const target = firstIncompleteStep(currentStep, temporaryData);
+    if (target < currentStep) {
+      goToStep(target);
+    }
+  }, [currentStep, temporaryData, goToStep]);
+
   const handleFinishOnboarding = async () => {
+    if (isSubmitting) return;
     try {
       setIsSubmitting(true);
 
-      // 1. Update user profile with name, avatar and identity/personalization data
-      if (temporaryData.userName) {
-        await updateUserProfile(temporaryData.userName, temporaryData.avatarUrl, {
-          gender: temporaryData.gender,
-          ageRange: temporaryData.ageRange,
-          experienceLevel: temporaryData.experienceLevel,
-          motivation: temporaryData.motivation,
-        });
-      }
-
-      // 2. Enable/disable selected life areas
-      if (temporaryData.selectedLifeAreaIds) {
-        await updateSelectedLifeAreas(temporaryData.selectedLifeAreaIds);
-      }
-
-      // 3. Create habits - use Promise.all to wait for all habits to be created
-      if (temporaryData.createdHabits && temporaryData.createdHabits.length > 0) {
-        await Promise.all(
-          temporaryData.createdHabits.map((habitData) =>
-            addHabit({
-              id: crypto.randomUUID(),
-              name: habitData.name,
-              iconName: habitData.iconName,
-              xp: habitData.xp,
-              points: habitData.xp * 0.5,
-              completed: false,
-              lifeArea: habitData.lifeArea,
-              createdAt: new Date(),
-            })
-          )
-        );
-      }
-
-      // 4. Mark onboarding as complete
+      // Profile/habit writes already happened at the payoff step — here we
+      // only flip the completion flag (completeOnboarding now throws on
+      // failure, so a broken UPDATE can't silently bounce-loop the user).
       await completeOnboarding();
       finalizeOnboarding();
 
-      // 5. Show success message. Pass the just-selected gender explicitly: the
-      // component's `t` still holds the pre-onboarding gender context (no re-render
-      // happened between saving the profile and this call), so without this the
-      // toast would fall back to the neutral copy.
+      // Pass the just-selected gender explicitly: the component's `t` still
+      // holds the pre-onboarding gender context.
       const genderCtx =
         temporaryData.gender === 'female' || temporaryData.gender === 'male'
           ? temporaryData.gender
           : undefined;
-      toast.success(
-        t('onboarding.completedSuccess', { context: genderCtx }) || '¡Onboarding completado!'
-      );
+      toast.success(t('onboarding.completedSuccess', { context: genderCtx }));
 
-      // 6. Navigate to dashboard
       router.replace(ROUTES.DASHBOARD);
     } catch (error) {
       console.error('Error completing onboarding:', error);
@@ -126,56 +127,51 @@ export function Onboarding() {
     return <OnboardingCarousel />;
   }
 
+  // Don't paint step 0 for a frame while hydrateForUser restores a resumed flow.
+  if (boundUserId !== authUser.id) {
+    return <View className="flex-1 bg-background" />;
+  }
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       className="flex-1 bg-background"
     >
-      <ScrollView
-        contentContainerStyle={{
-          flexGrow: 1,
-          justifyContent: 'center',
+      <View
+        className="flex-1"
+        style={{
+          paddingTop: insets.top + 12,
+          paddingBottom: insets.bottom + 16,
           paddingHorizontal: 16,
-          paddingTop: insets.top + 16,
-          paddingBottom: insets.bottom + 24,
         }}
-        keyboardShouldPersistTaps="handled"
-        showsVerticalScrollIndicator={false}
       >
-        <View className="mx-auto w-full max-w-4xl">
-          {/* Progress Indicator */}
-          <View className="mb-12">
-            <OnboardingProgress currentStep={currentStep} completedSteps={completedSteps} />
-          </View>
+        <View className="mx-auto w-full max-w-md flex-1">
+          {currentStep === ONBOARDING_STEPS.HERO && <OnboardingStep1 onNext={nextStep} />}
 
-          {/* Step Content */}
-          <View>
-            {currentStep === ONBOARDING_STEPS.WELCOME && (
-              <OnboardingStep1 onNext={nextStep} />
-            )}
+          {currentStep === ONBOARDING_STEPS.MOTIVATION && (
+            <OnboardingStepMotivation onNext={nextStep} onPrev={prevStep} />
+          )}
 
-            {currentStep === ONBOARDING_STEPS.ABOUT_YOU && (
-              <OnboardingStepAboutYou onNext={nextStep} onPrev={prevStep} />
-            )}
+          {currentStep === ONBOARDING_STEPS.TIME_OF_DAY && (
+            <OnboardingStepTimeOfDay onNext={nextStep} onPrev={prevStep} />
+          )}
 
-            {currentStep === ONBOARDING_STEPS.LIFE_AREAS && (
-              <OnboardingStep2 onNext={nextStep} onPrev={prevStep} />
-            )}
+          {currentStep === ONBOARDING_STEPS.FIRST_HABIT && (
+            <OnboardingStepFirstHabit onNext={nextStep} onPrev={prevStep} />
+          )}
 
-            {currentStep === ONBOARDING_STEPS.HABITS && (
-              <OnboardingStep3 onNext={nextStep} onPrev={prevStep} />
-            )}
+          {currentStep === ONBOARDING_STEPS.PAYOFF && (
+            <OnboardingStepPayoff onNext={nextStep} onPrev={prevStep} />
+          )}
 
-            {currentStep === ONBOARDING_STEPS.TUTORIAL && (
-              <OnboardingStep4
-                onFinish={handleFinishOnboarding}
-                onPrev={prevStep}
-                isSubmitting={isSubmitting}
-              />
-            )}
-          </View>
+          {currentStep === ONBOARDING_STEPS.NOTIFICATIONS && (
+            <OnboardingStepNotifications
+              onFinish={handleFinishOnboarding}
+              isSubmitting={isSubmitting}
+            />
+          )}
         </View>
-      </ScrollView>
+      </View>
     </KeyboardAvoidingView>
   );
 }

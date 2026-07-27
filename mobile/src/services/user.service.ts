@@ -1,6 +1,7 @@
 import { User, UserStats } from '@/types';
 import { STORAGE_KEYS } from '@/constants';
 import { StorageService } from './storage';
+import { uuid } from '@/utils/uuid';
 
 /**
  * User data service
@@ -32,7 +33,7 @@ export class UserService {
 
   static initializeUser(): User {
     const defaultUser: User = {
-      id: crypto.randomUUID(),
+      id: uuid(),
       name: '', // Empty, will be set during onboarding
       points: 0,
       totalXPEarned: 0,

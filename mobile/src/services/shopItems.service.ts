@@ -1,6 +1,7 @@
 import { ShopItem } from '@/types';
 import { STORAGE_KEYS } from '@/constants';
 import { StorageService } from './storage';
+import { uuid } from '@/utils/uuid';
 
 /**
  * Shop Items data service
@@ -92,7 +93,7 @@ export class ShopItemsService {
 
     // Ensure item has a unique ID
     if (!item.id) {
-      item.id = crypto.randomUUID();
+      item.id = uuid();
     }
 
     // Check for duplicate ID

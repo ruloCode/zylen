@@ -79,24 +79,6 @@ export function Welcome() {
           </Text>
         </View>
 
-        {/* Decorative carousel dots */}
-        <View
-          className="mb-6 flex-row items-center justify-center gap-2"
-          accessibilityElementsHidden
-          importantForAccessibility="no-hide-descendants"
-        >
-          {Array.from({ length: 5 }).map((_, i) => (
-            <View
-              key={i}
-              className={
-                i === 0
-                  ? 'h-2 w-5 rounded-full bg-[#4aa8ff]'
-                  : 'h-2 w-2 rounded-full bg-white/25'
-              }
-            />
-          ))}
-        </View>
-
         {/* Primary CTA */}
         <Pressable
           onPress={() => router.push(ROUTES.ONBOARDING)}

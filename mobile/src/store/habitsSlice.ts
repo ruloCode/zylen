@@ -43,7 +43,7 @@ export interface HabitsSlice {
 
   // Actions
   loadHabits: () => Promise<void>;
-  addHabit: (habit: Partial<Habit>) => Promise<void>;
+  addHabit: (habit: Partial<Habit>) => Promise<Habit>;
   updateHabit: (id: string, updates: Partial<Habit>) => Promise<void>;
   deleteHabit: (id: string) => Promise<void>;
   completeHabit: (id: string, value?: number) => Promise<HabitToggleResult>;
@@ -96,6 +96,8 @@ export const createHabitsSlice: StateCreator<AppStore, [], [], HabitsSlice> = (
       const habits = await HabitsService.getHabitsWithCompletions();
 
       set({ habits, habitsLoading: false });
+
+      return newHabit;
     } catch (error) {
       console.error('Error adding habit:', error);
       set({

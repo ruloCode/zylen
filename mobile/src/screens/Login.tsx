@@ -89,9 +89,9 @@ export function Login() {
     setOauthLoading(true);
     try {
       const res = await signInWithOAuth('google');
-      // Cancelling the browser resolves success=false with no error — stay quiet.
-      if (!res.success && res.error) {
-        toast.error(res.error);
+      // Cancelling the browser resolves success=false with no errorKey — stay quiet.
+      if (!res.success && res.errorKey) {
+        toast.error(t(res.errorKey));
       }
     } finally {
       setOauthLoading(false);
@@ -121,7 +121,7 @@ export function Login() {
         toast.success(mode === 'signup' ? t('auth.accountCreated') : t('auth.welcomeBack'));
         // Navigation happens via the auth state effect once the session is set.
       } else {
-        toast.error(res.error ?? t('errors.authenticationFailed'));
+        toast.error(t(res.errorKey ?? 'errors.authenticationFailed'));
       }
     } finally {
       setSubmitting(false);
@@ -329,12 +329,11 @@ export function Login() {
               </Pressable>
             </View>
 
-            {/* Terms */}
+            {/* Terms — plain text (no link styling) until real legal pages
+                exist; then add LEGAL_URLS to constants/config + Linking.openURL. */}
             <Text className="mt-5 text-center text-[11px] leading-relaxed text-white/40">
-              {t('auth.termsPrefix')}{' '}
-              <Text className="text-[#4aa8ff]/80">{t('auth.termsOfService')}</Text>{' '}
-              {t('auth.and')}{' '}
-              <Text className="text-[#4aa8ff]/80">{t('auth.privacyPolicy')}</Text>.
+              {t('auth.termsPrefix')} {t('auth.termsOfService')} {t('auth.and')}{' '}
+              {t('auth.privacyPolicy')}.
             </Text>
           </View>
         </ScrollView>

@@ -22,6 +22,7 @@ import { HermesService } from '@/services/hermes.service';
 import { useLocale } from '@/hooks/useLocale';
 import { useUser } from '@/store';
 import { CHAT_CONFIG, getHeroBodySrc } from '@/constants';
+import { uuid } from '@/utils/uuid';
 import { img } from '@/assets/registry';
 import type { Message } from '@/types';
 
@@ -67,7 +68,7 @@ export function CoachChat({ onClose }: CoachChatProps) {
     setError(null);
 
     const userMsg: Message = {
-      id: crypto.randomUUID(),
+      id: uuid(),
       role: 'user',
       content: userMessage,
       timestamp: new Date(),
@@ -76,7 +77,7 @@ export function CoachChat({ onClose }: CoachChatProps) {
     setMessages(history);
     setIsLoading(true);
 
-    const assistantId = crypto.randomUUID();
+    const assistantId = uuid();
     let accumulated = '';
     let inserted = false;
 

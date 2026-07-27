@@ -579,7 +579,6 @@
   "onboarding": {
     "prevButton": "Previous",
     "nextButton": "Next",
-    "finishButton": "Get Started",
     "completedSuccess": "Your journey has begun, Guardian!",
     "identity": {
       "label": "How would you like to be addressed?",
@@ -588,33 +587,6 @@
       "male": "Guardian (he)",
       "neutral": "Prefer neutral",
       "error": "Pick an option to personalize how we address you"
-    },
-    "aboutYou": {
-      "title": "Tell us about you",
-      "description": "This helps us guide you better on your journey.",
-      "motivationLabel": "What brings you to the realm?",
-      "experienceLabel": "Your experience with habits?",
-      "ageLabel": "Your age range?",
-      "motivations": {
-        "health": "Health",
-        "discipline": "Discipline",
-        "focus": "Focus",
-        "wellbeing": "Wellbeing",
-        "productivity": "Productivity"
-      },
-      "experience": {
-        "beginner": "Beginner",
-        "intermediate": "Intermediate",
-        "advanced": "Advanced"
-      },
-      "ageRanges": {
-        "teen": "13-17",
-        "youngAdult": "18-24",
-        "adult": "25-34",
-        "midAdult": "35-44",
-        "mature": "45-54",
-        "senior": "55+"
-      }
     },
     "step1": {
       "title": "Welcome to Everlight!",
@@ -628,41 +600,66 @@
       "avatarMale": "Male",
       "avatarFemale": "Female"
     },
-    "step2": {
-      "title": "Choose your life areas",
-      "description": "Select the areas you want to focus on",
-      "areasSelected": "areas selected"
-    },
-    "step3": {
-      "title": "Create your first habits",
-      "description": "Add at least one habit to start your journey",
-      "noHabits": "You haven't added any habits yet",
-      "habitNamePlaceholder": "Habit name (e.g., Meditate 10 min)",
-      "lifeAreaLabel": "Life Area",
-      "addButton": "Add",
-      "addHabitButton": "+ Add Habit",
-      "suggestionsTitle": "Common habits"
-    },
-    "step4": {
-      "title": "How Everlight works",
-      "description": "Learn about the game mechanics",
-      "xpTitle": "Earn XP",
-      "xpDescription": "Complete habits daily to earn experience points",
-      "pointsTitle": "Accumulate Points",
-      "pointsDescription": "Convert your XP into points to spend on rewards",
-      "levelsTitle": "Level Up",
-      "levelsDescription": "Your global and area levels increase with every achievement",
-      "shopTitle": "Redeem Rewards",
-      "shopDescription": "Use your points to treat yourself in a controlled way",
-      "streaksTitle": "Maintain Streaks",
-      "streaksDescription": "Consistency gives you XP multipliers",
-      "readyTitle": "All set!",
-      "readyDescription": "It's time to start your transformation"
-    },
     "progress": {
       "ariaLabel": "Onboarding progress",
       "step": "Step {{number}}",
       "stepOf": "Step {{current}} of {{total}}"
+    },
+    "completedSuccess_male": "Your journey has begun, Guardian!",
+    "completedSuccess_female": "Your journey has begun, Guardian!",
+    "motivation": {
+      "title": "What brings you to Everlight?",
+      "subtitle": "Your answer shapes your first ritual",
+      "options": {
+        "health": "Health",
+        "discipline": "Discipline",
+        "focus": "Focus",
+        "wellbeing": "Wellbeing",
+        "productivity": "Productivity"
+      }
+    },
+    "timeOfDay": {
+      "title": "When do you want to work on yourself?",
+      "subtitle": "Your Mentor will show up at that moment",
+      "options": {
+        "morning": "In the morning",
+        "afternoon": "In the afternoon",
+        "evening": "In the evening",
+        "anytime": "Flexible"
+      }
+    },
+    "firstHabit": {
+      "title": "Choose your first ritual",
+      "subtitle": "Start small: a single habit lights up the kingdom",
+      "customCta": "Create my own",
+      "customPlaceholder": "E.g. Stretch for 5 minutes",
+      "hint": "You can add more habits anytime"
+    },
+    "payoff": {
+      "title": "Your kingdom is ready, {{name}}",
+      "subtitle": "Here's how your adventure works:",
+      "lawXp": "Every completed habit earns XP and pushes back the darkness",
+      "lawPoints": "Your XP becomes points for mindful rewards",
+      "lawStreak": "Consistency fuels your streak and multiplies your XP",
+      "completeCta": "Light your first flame (+{{xp}} XP)",
+      "completing": "Lighting…",
+      "skip": "I'll do it later",
+      "retryCta": "Try again",
+      "error": "We couldn't complete your habit. Check your connection and try again.",
+      "celebrationTitle": "First light lit!",
+      "celebrationTitle_male": "First light lit, Guardian!",
+      "celebrationTitle_female": "First light lit, Guardian!",
+      "celebrationBody": "You completed “{{habit}}”. Your streak starts today: day 1.",
+      "continueCta": "Continue"
+    },
+    "notifications": {
+      "title": "Keep the flame alive",
+      "subtitle": "A well-timed reminder is the difference between a living streak and a dead one",
+      "bullet1": "Your Mentor will nudge you at your moment: {{slot}}",
+      "bullet2": "Every nudge includes the science behind your habit",
+      "bullet3": "Protect your streak with a tap at the right time",
+      "allowCta": "Enable reminders",
+      "laterCta": "Not now"
     }
   },
   "profile": {
@@ -1991,7 +1988,8 @@
       "purchased": "Purchased! Your habits' power takes shape.",
       "purchaseError": "Purchase could not be completed.",
       "enter": "Enter Arena {{tier}}",
-      "back": "Armory"
+      "back": "Armory",
+      "shopHint": "Below: pick your arena and forge your gear with your points."
     },
     "gear": {
       "staff_novice": {

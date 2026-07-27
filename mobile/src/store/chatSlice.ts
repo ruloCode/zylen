@@ -1,5 +1,6 @@
 import { StateCreator } from 'zustand';
 import { Message } from '@/types';
+import { uuid } from '@/utils/uuid';
 
 export interface ChatSlice {
   messages: Message[];
@@ -25,7 +26,7 @@ export const createChatSlice: StateCreator<ChatSlice> = (set) => ({
       messages: [
         ...state.messages,
         {
-          id: crypto.randomUUID(),
+          id: uuid(),
           content,
           role,
           timestamp: new Date(),
@@ -35,7 +36,7 @@ export const createChatSlice: StateCreator<ChatSlice> = (set) => ({
   },
 
   startStreamingMessage: () => {
-    const id = crypto.randomUUID();
+    const id = uuid();
     set((state) => ({
       messages: [
         ...state.messages,

@@ -592,7 +592,6 @@
   "onboarding": {
     "prevButton": "Anterior",
     "nextButton": "Siguiente",
-    "finishButton": "Comienza tu viaje",
     "completedSuccess": "¡Tu viaje ha comenzado, Guardián!",
     "completedSuccess_male": "¡Tu viaje ha comenzado, Guardián!",
     "completedSuccess_female": "¡Tu viaje ha comenzado, Guardiana!",
@@ -603,33 +602,6 @@
       "male": "Guardián",
       "neutral": "Prefiero neutro",
       "error": "Elige una opción para personalizar tu trato"
-    },
-    "aboutYou": {
-      "title": "Cuéntanos sobre ti",
-      "description": "Esto nos ayuda a acompañarte mejor en tu viaje.",
-      "motivationLabel": "¿Qué te trae al reino?",
-      "experienceLabel": "¿Tu experiencia con los hábitos?",
-      "ageLabel": "¿Tu rango de edad?",
-      "motivations": {
-        "health": "Salud",
-        "discipline": "Disciplina",
-        "focus": "Enfoque",
-        "wellbeing": "Bienestar",
-        "productivity": "Productividad"
-      },
-      "experience": {
-        "beginner": "Principiante",
-        "intermediate": "Intermedio",
-        "advanced": "Avanzado"
-      },
-      "ageRanges": {
-        "teen": "13-17",
-        "youngAdult": "18-24",
-        "adult": "25-34",
-        "midAdult": "35-44",
-        "mature": "45-54",
-        "senior": "55+"
-      }
     },
     "step1": {
       "title": "Te damos la bienvenida a Everlight, Guardián",
@@ -645,43 +617,64 @@
       "avatarMale": "Hombre",
       "avatarFemale": "Mujer"
     },
-    "step2": {
-      "title": "Elige tus reinos de la vida",
-      "description": "Selecciona los reinos que quieres iluminar primero",
-      "areasSelected": "reinos seleccionados"
-    },
-    "step3": {
-      "title": "Siembra tus primeros hábitos",
-      "description": "Siembra al menos un hábito para iniciar tu viaje",
-      "noHabits": "Aún no has sembrado ningún hábito",
-      "habitNamePlaceholder": "Nombre del hábito (ej: Meditar 10 min)",
-      "lifeAreaLabel": "Reino de la Vida",
-      "addButton": "Agregar",
-      "addHabitButton": "+ Sembrar Hábito",
-      "suggestionsTitle": "Hábitos comunes"
-    },
-    "step4": {
-      "title": "¿Cómo funciona Everlight?",
-      "description": "Conoce las leyes del reino",
-      "xpTitle": "Acumula Luz",
-      "xpDescription": "Completa hábitos cada día para acumular Luz y hacer retroceder la oscuridad",
-      "pointsTitle": "Reúne Esencia",
-      "pointsDescription": "Tu Luz se transforma en Esencia para honrar tu esfuerzo",
-      "levelsTitle": "Evoluciona",
-      "levelsDescription": "Tu nivel global y el de cada reino crecen con cada paso",
-      "shopTitle": "Honra tu esfuerzo",
-      "shopDescription": "Usa tu Esencia para recompensas conscientes",
-      "streaksTitle": "Mantén la llama",
-      "streaksDescription": "La constancia multiplica tu Luz",
-      "readyTitle": "¡Todo a punto, Guardián!",
-      "readyTitle_male": "¡Ya estás listo, Guardián!",
-      "readyTitle_female": "¡Ya estás lista, Guardiana!",
-      "readyDescription": "El reino te esperaba. Tu viaje comienza aquí."
-    },
     "progress": {
       "ariaLabel": "Progreso de la configuración",
       "step": "Paso {{number}}",
       "stepOf": "Paso {{current}} de {{total}}"
+    },
+    "motivation": {
+      "title": "¿Qué te trae a Everlight?",
+      "subtitle": "Tu respuesta define tu primer ritual",
+      "options": {
+        "health": "Salud",
+        "discipline": "Disciplina",
+        "focus": "Enfoque",
+        "wellbeing": "Bienestar",
+        "productivity": "Productividad"
+      }
+    },
+    "timeOfDay": {
+      "title": "¿Cuándo quieres trabajar en ti?",
+      "subtitle": "Tu Mentor te acompañará en ese momento",
+      "options": {
+        "morning": "Por la mañana",
+        "afternoon": "Por la tarde",
+        "evening": "Por la noche",
+        "anytime": "Flexible"
+      }
+    },
+    "firstHabit": {
+      "title": "Elige tu primer ritual",
+      "subtitle": "Empieza pequeño: un solo hábito enciende el reino",
+      "customCta": "Crear el mío",
+      "customPlaceholder": "Ej: Estirar 5 minutos",
+      "hint": "Podrás añadir más hábitos cuando quieras"
+    },
+    "payoff": {
+      "title": "Tu reino está listo, {{name}}",
+      "subtitle": "Así funciona tu aventura:",
+      "lawXp": "Cada hábito completado suma Luz y hace retroceder la oscuridad",
+      "lawPoints": "Tu Luz se convierte en Esencia para recompensas conscientes",
+      "lawStreak": "La constancia enciende tu racha y multiplica tu Luz",
+      "completeCta": "Enciende tu primera Luz (+{{xp}})",
+      "completing": "Encendiendo…",
+      "skip": "Lo haré después",
+      "retryCta": "Reintentar",
+      "error": "No pudimos encender tu Luz. Revisa tu conexión e intenta de nuevo.",
+      "celebrationTitle": "¡Primera Luz encendida!",
+      "celebrationTitle_male": "¡Primera Luz encendida, Guardián!",
+      "celebrationTitle_female": "¡Primera Luz encendida, Guardiana!",
+      "celebrationBody": "Completaste “{{habit}}”. Tu racha comienza hoy: día 1.",
+      "continueCta": "Continuar"
+    },
+    "notifications": {
+      "title": "No dejes que la llama se apague",
+      "subtitle": "Un recordatorio a tiempo es la diferencia entre una racha viva y una apagada",
+      "bullet1": "Tu Mentor te avisará en tu momento: {{slot}}",
+      "bullet2": "Cada aviso incluye la ciencia detrás de tu hábito",
+      "bullet3": "Protege tu racha con un toque a tiempo",
+      "allowCta": "Activar recordatorios",
+      "laterCta": "Ahora no"
     }
   },
   "profile": {
@@ -2014,7 +2007,8 @@
       "purchased": "¡Comprado! El poder de tus hábitos toma forma.",
       "purchaseError": "No se pudo completar la compra.",
       "enter": "Entrar a la Arena {{tier}}",
-      "back": "Armería"
+      "back": "Armería",
+      "shopHint": "Debajo: elige arena y forja tu equipo con tus puntos."
     },
     "gear": {
       "staff_novice": {

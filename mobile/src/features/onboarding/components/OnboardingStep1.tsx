@@ -1,45 +1,56 @@
 import React, { useState, useEffect } from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
-import { Sparkles, ArrowRight } from 'lucide-react-native';
-import { useOnboarding, useTheme } from '@/store';
+import { ArrowRight, Sparkles } from 'lucide-react-native';
+import { useOnboarding, useTheme, useUser } from '@/store';
 import { useLocale } from '@/hooks/useLocale';
 import { Logo } from '@/components/branding/Logo';
 import { cn } from '@/utils';
 import { DEFAULT_AVATAR, GENDER_OPTIONS } from '@/constants';
-import { AvatarPicker } from '@/features/profile/components';
+import { AvatarPicker, AvatarCreator } from '@/features/profile/components';
 import { themeHsl } from '@/theme/themeVars';
+import { ONBOARDING_STEPS } from '@/types';
 import type { Gender } from '@/types/user';
+import { OnboardingScreen } from './OnboardingScreen';
 
 interface OnboardingStep1Props {
   onNext: () => void;
 }
 
 /**
- * Onboarding Step 1: Welcome + Name Input
+ * Onboarding HERO step: name + avatar (preset or AI-generated) + identity.
+ * On continue the profile is persisted early (best-effort): the rest of the
+ * flow then speaks with the right name/gender, and the payoff step retries
+ * if this save failed offline.
  */
 export function OnboardingStep1({ onNext }: OnboardingStep1Props) {
   const { temporaryData, saveStepData, completeStep } = useOnboarding();
   const { theme } = useTheme();
+  const { applyCustomAvatar, updateUserProfile } = useUser();
   const { t } = useLocale();
   const [name, setName] = useState(temporaryData.userName || '');
   const [selectedAvatar, setSelectedAvatar] = useState(temporaryData.avatarUrl || DEFAULT_AVATAR);
   const [gender, setGender] = useState<Gender | undefined>(temporaryData.gender);
   const [error, setError] = useState('');
+  const [isCreatorOpen, setIsCreatorOpen] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   const primaryColor = themeHsl(theme, '--primary');
   const primaryForeground = themeHsl(theme, '--primary-foreground');
 
   useEffect(() => {
-    // Load saved name and avatar if exists
+    // Sync from rehydrated state (hydrateForUser lands after first render)
     if (temporaryData.userName) {
       setName(temporaryData.userName);
     }
     if (temporaryData.avatarUrl) {
       setSelectedAvatar(temporaryData.avatarUrl);
     }
-  }, [temporaryData.userName, temporaryData.avatarUrl]);
+    if (temporaryData.gender) {
+      setGender(temporaryData.gender);
+    }
+  }, [temporaryData.userName, temporaryData.avatarUrl, temporaryData.gender]);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const trimmedName = name.trim();
 
     if (trimmedName.length < 2) {
@@ -52,35 +63,54 @@ export function OnboardingStep1({ onNext }: OnboardingStep1Props) {
       return;
     }
 
-    // Save name, avatar and identity to temporary data
     saveStepData({ userName: trimmedName, avatarUrl: selectedAvatar, gender });
-    completeStep(0);
+    completeStep(ONBOARDING_STEPS.HERO);
+
+    // Early best-effort save: offline is fine — the payoff step retries.
+    setSaving(true);
+    try {
+      await updateUserProfile(trimmedName, selectedAvatar, { gender });
+      saveStepData({ profileSaved: true });
+    } catch {
+      saveStepData({ profileSaved: false });
+    } finally {
+      setSaving(false);
+    }
+
     onNext();
   };
 
   const isDisabled = name.trim().length < 2 || !gender;
 
   return (
-    <View className="mx-auto w-full max-w-md">
+    <OnboardingScreen
+      step={ONBOARDING_STEPS.HERO}
+      cta={{
+        label: t('onboarding.step1.nextButton'),
+        onPress: handleSubmit,
+        disabled: isDisabled,
+        loading: saving,
+        icon: <ArrowRight size={20} color={primaryForeground} />,
+      }}
+    >
       {/* Logo */}
-      <View className="mb-8 items-center">
+      <View className="mb-6 items-center">
         <Logo size="lg" />
       </View>
 
       {/* Welcome Message */}
-      <View className="mb-8 items-center">
-        <View className="mb-3 flex-row items-center justify-center gap-2">
-          <Sparkles color={primaryColor} size={32} />
+      <View className="mb-6 items-center">
+        <View className="mb-2 flex-row items-center justify-center gap-2">
+          <Sparkles color={primaryColor} size={28} />
           <Text className="text-center text-2xl font-extrabold tracking-tight text-white">
             {t('onboarding.step1.title')}
           </Text>
         </View>
-        <Text className="text-center text-lg font-semibold text-white/85">
+        <Text className="text-center text-base font-medium text-white/70">
           {t('onboarding.step1.description')}
         </Text>
       </View>
 
-      {/* Name Input Form */}
       <View className="gap-6">
         <View>
           <Text className="mb-2 text-sm font-semibold text-white/90">
@@ -100,7 +130,6 @@ export function OnboardingStep1({ onNext }: OnboardingStep1Props) {
               'font-medium text-white',
               error ? 'border-red-500' : 'border-white/20'
             )}
-            autoFocus
             maxLength={30}
             accessibilityLabel={t('onboarding.step1.nameLabel')}
           />
@@ -111,12 +140,16 @@ export function OnboardingStep1({ onNext }: OnboardingStep1Props) {
           ) : null}
         </View>
 
-        {/* Avatar Selection */}
+        {/* Avatar Selection — presets + "create one from your photo" (AI) */}
         <View>
           <Text className="mb-3 text-sm font-semibold text-white/90">
             {t('onboarding.step1.avatarLabel')}
           </Text>
-          <AvatarPicker value={selectedAvatar} onChange={setSelectedAvatar} />
+          <AvatarPicker
+            value={selectedAvatar}
+            onChange={setSelectedAvatar}
+            onCreateCustom={() => setIsCreatorOpen(true)}
+          />
         </View>
 
         {/* Identity Selection — drives gendered language across the app */}
@@ -162,32 +195,28 @@ export function OnboardingStep1({ onNext }: OnboardingStep1Props) {
           </View>
           <Text className="mt-2 text-xs text-white/45">{t('onboarding.identity.hint')}</Text>
         </View>
-
-        {/* Next Button */}
-        <Pressable
-          onPress={handleSubmit}
-          disabled={isDisabled}
-          accessibilityRole="button"
-          accessibilityState={{ disabled: isDisabled }}
-          className={cn(
-            'w-full flex-row items-center justify-center gap-2 rounded-xl px-6 py-3',
-            isDisabled ? 'bg-gray-700' : 'bg-primary active:opacity-90'
-          )}
-        >
-          <Text
-            className={cn('font-semibold', isDisabled ? 'text-gray-400' : 'text-primary-foreground')}
-          >
-            {t('onboarding.step1.nextButton')}
-          </Text>
-          <ArrowRight size={20} color={isDisabled ? '#9CA3AF' : primaryForeground} />
-        </Pressable>
       </View>
 
       {/* Helper Text */}
       <Text className="mt-6 text-center text-sm text-gray-400">
         {t('onboarding.step1.helperText')}
       </Text>
-    </View>
+
+      {/* AI avatar creator — AvatarService.save already persists both URLs in
+          the profile; here we also select the bust for the onboarding flow and
+          mirror the pair into the store so the Home hero is right on arrival. */}
+      {isCreatorOpen && (
+        <AvatarCreator
+          gender={gender}
+          onClose={() => setIsCreatorOpen(false)}
+          onSaved={(avatarUrl, avatarBodyUrl) => {
+            applyCustomAvatar(avatarUrl, avatarBodyUrl);
+            setSelectedAvatar(avatarUrl);
+            setIsCreatorOpen(false);
+          }}
+        />
+      )}
+    </OnboardingScreen>
   );
 }
 

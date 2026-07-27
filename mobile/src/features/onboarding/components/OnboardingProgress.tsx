@@ -1,89 +1,59 @@
-import React from 'react';
-import { Text, View } from 'react-native';
-import { Check } from 'lucide-react-native';
-import { cn } from '@/utils';
+import React, { useEffect, useRef } from 'react';
+import { Animated, Easing, View } from 'react-native';
+import { useTheme } from '@/store';
 import { useLocale } from '@/hooks/useLocale';
+import { themeHsl } from '@/theme/themeVars';
 import { TOTAL_ONBOARDING_STEPS } from '@/types';
 
 interface OnboardingProgressProps {
   currentStep: number;
-  completedSteps: number[];
+  /** kept for API compatibility; the linear bar only needs the current step */
+  completedSteps?: number[];
 }
 
 /**
- * OnboardingProgress Component
- *
- * Shows a visual progress indicator for the onboarding flow
+ * OnboardingProgress — thin animated linear bar (Duolingo-style). Numbered
+ * circles stopped scaling once the flow grew to 6 steps.
  */
-export function OnboardingProgress({ currentStep, completedSteps }: OnboardingProgressProps) {
+export function OnboardingProgress({ currentStep }: OnboardingProgressProps) {
   const { t } = useLocale();
-  const steps = Array.from({ length: TOTAL_ONBOARDING_STEPS }, (_, i) => i);
+  const { theme } = useTheme();
+  const pct = ((currentStep + 1) / TOTAL_ONBOARDING_STEPS) * 100;
+  const anim = useRef(new Animated.Value(pct)).current;
+
+  useEffect(() => {
+    Animated.timing(anim, {
+      toValue: pct,
+      duration: 350,
+      easing: Easing.out(Easing.cubic),
+      useNativeDriver: false, // animates width
+    }).start();
+  }, [pct, anim]);
 
   return (
     <View
+      accessibilityRole="progressbar"
       accessibilityLabel={t('onboarding.progress.ariaLabel')}
-      className="mx-auto w-full max-w-md"
+      accessibilityLiveRegion="polite"
+      accessibilityValue={{
+        text: t('onboarding.progress.stepOf', {
+          current: currentStep + 1,
+          total: TOTAL_ONBOARDING_STEPS,
+        }),
+      }}
+      className="h-2 w-full overflow-hidden rounded-full bg-white/10"
     >
-      <View className="flex-row items-center justify-between">
-        {steps.map((step, index) => {
-          const isCompleted = completedSteps.includes(step);
-          const isCurrent = step === currentStep;
-          const isLast = index === steps.length - 1;
-
-          return (
-            <React.Fragment key={step}>
-              {/* Step Circle */}
-              <View className="items-center gap-2">
-                <View
-                  className={cn(
-                    'h-11 w-11 items-center justify-center rounded-full border-2',
-                    isCompleted
-                      ? 'border-primary/70 bg-primary/70'
-                      : isCurrent
-                      ? 'scale-110 border-primary bg-primary'
-                      : 'border-white/10 bg-white/5'
-                  )}
-                  accessibilityState={{ selected: isCurrent }}
-                >
-                  {isCompleted ? (
-                    <Check size={20} color="#FFFFFF" />
-                  ) : (
-                    <Text
-                      className={cn(
-                        'text-sm font-bold',
-                        isCurrent ? 'text-white' : 'text-gray-400'
-                      )}
-                    >
-                      {step + 1}
-                    </Text>
-                  )}
-                </View>
-                {/* Step labels are hidden on mobile (web hides them below `sm`) */}
-              </View>
-
-              {/* Connector Line */}
-              {!isLast && (
-                <View
-                  className={cn(
-                    'mx-2 h-0.5 flex-1',
-                    isCompleted ? 'bg-primary/70' : 'bg-charcoal-600'
-                  )}
-                />
-              )}
-            </React.Fragment>
-          );
-        })}
-      </View>
-
-      {/* Progress Text */}
-      <View className="mt-4 items-center">
-        <Text className="text-sm text-gray-400" accessibilityLiveRegion="polite">
-          {t('onboarding.progress.stepOf', {
-            current: currentStep + 1,
-            total: TOTAL_ONBOARDING_STEPS,
-          })}
-        </Text>
-      </View>
+      <Animated.View
+        style={{
+          height: '100%',
+          borderRadius: 999,
+          backgroundColor: themeHsl(theme, '--primary'),
+          width: anim.interpolate({
+            inputRange: [0, 100],
+            outputRange: ['0%', '100%'],
+          }),
+        }}
+      />
     </View>
   );
 }
