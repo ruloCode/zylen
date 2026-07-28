@@ -1466,6 +1466,27 @@ export type Database = {
         Returns: undefined
       }
       remove_friend: { Args: { p_friendship_id: string }; Returns: undefined }
+      block_user: { Args: { p_blocked_id: string }; Returns: undefined }
+      unblock_user: { Args: { p_blocked_id: string }; Returns: undefined }
+      get_blocked_users: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          blocked_id: string
+          username: string
+          avatar_url: string | null
+          blocked_at: string
+        }[]
+      }
+      report_content: {
+        Args: {
+          p_reported_user_id: string
+          p_content_type: string
+          p_content_id?: string
+          p_reason?: string
+          p_details?: string
+        }
+        Returns: string
+      }
       respond_arena_invite: {
         Args: { p_accept: boolean; p_invite_id: string }
         Returns: Json

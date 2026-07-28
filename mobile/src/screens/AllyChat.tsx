@@ -40,8 +40,9 @@ import {
   ScrollToBottomButton,
 } from '@/features/chat/components';
 import { useSmartAutoScroll } from '@/features/chat/hooks/useSmartAutoScroll';
-import { GuardianProfileSheet } from '@/features/social/components';
+import { GuardianProfileSheet, ReportSheet } from '@/features/social/components';
 import { subscribeToConversation } from '@/services/supabase/chat.service';
+import * as ModerationService from '@/services/supabase/moderation.service';
 import { setActiveChatConversation } from '@/services/notifications.service';
 import { img } from '@/assets/registry';
 
@@ -76,6 +77,8 @@ export function AllyChat() {
   const [sending, setSending] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [viewerUrl, setViewerUrl] = useState<string | null>(null);
+  /** Mensaje ajeno en proceso de denuncia (long-press sobre la burbuja). */
+  const [reportMessageId, setReportMessageId] = useState<string | null>(null);
 
   const conversation = conversations.find((c) => c.conversationId === conversationId);
   const messages = useMemo(
@@ -266,6 +269,12 @@ export function AllyChat() {
                       imageUrl={imageUrl}
                       imageCacheKey={message.imagePath}
                       onImagePress={imageUrl ? () => setViewerUrl(imageUrl) : undefined}
+                      // Mensajes ajenos: long-press → denunciar (compliance UGC)
+                      onLongPress={
+                        !isUser && conversation?.otherUserId
+                          ? () => setReportMessageId(message.id)
+                          : undefined
+                      }
                       status={message.status}
                       failedLabel={t('messages.failed')}
                       timestamp={message.createdAt.toLocaleTimeString(language, {
@@ -360,7 +369,29 @@ export function AllyChat() {
 
       {/* Perfil del aliado */}
       {profileOpen && username && (
-        <GuardianProfileSheet username={username} onClose={() => setProfileOpen(false)} />
+        <GuardianProfileSheet
+          username={username}
+          onClose={() => setProfileOpen(false)}
+          // Tras bloquear no tiene sentido quedarse dentro del DM del bloqueado
+          onBlocked={() => router.replace('/messages')}
+        />
+      )}
+
+      {/* Denuncia de un mensaje ajeno */}
+      {reportMessageId && conversation?.otherUserId && (
+        <ReportSheet
+          title={t('moderation.reportMessage')}
+          onClose={() => setReportMessageId(null)}
+          onSubmit={(reason, details) =>
+            ModerationService.reportContent({
+              reportedUserId: conversation.otherUserId!,
+              contentType: 'message',
+              contentId: reportMessageId,
+              reason,
+              details,
+            }).then(() => undefined)
+          }
+        />
       )}
     </View>
   );

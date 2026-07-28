@@ -6,16 +6,18 @@
  * rotación de firmas), caption y la barra de reacciones.
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
-import { ShieldCheck, Target, Trash2 } from 'lucide-react-native';
+import { Flag, ShieldCheck, Target, Trash2 } from 'lucide-react-native';
 import { useLocale } from '@/hooks/useLocale';
 import { formatRelativeShort } from '@/utils/date';
 import { img } from '@/assets/registry';
+import * as ModerationService from '@/services/supabase/moderation.service';
 import type { ActivityEvent, PostReactionKind } from '@/types/community';
 import { ReactionBar } from './ReactionBar';
+import { ReportSheet } from './ReportSheet';
 
 const AVATAR_GRADIENT = ['rgba(20,184,166,0.2)', 'rgba(15,118,110,0.1)'] as const;
 
@@ -45,6 +47,7 @@ export function PhotoPostCard({
   onVerify,
 }: PhotoPostCardProps) {
   const { t, language } = useLocale();
+  const [reportOpen, setReportOpen] = useState(false);
   const postId = event.postId;
   if (!postId) return null;
 
@@ -95,7 +98,7 @@ export function PhotoPostCard({
             {relative || t('community.activity.justNow')}
           </Text>
         </View>
-        {event.isCurrentUser && (
+        {event.isCurrentUser ? (
           <Pressable
             onPress={() => onDelete(postId)}
             hitSlop={10}
@@ -104,6 +107,16 @@ export function PhotoPostCard({
             className="rounded-lg p-1.5 active:bg-red-500/10"
           >
             <Trash2 size={15} color="rgba(248,113,113,0.75)" />
+          </Pressable>
+        ) : (
+          <Pressable
+            onPress={() => setReportOpen(true)}
+            hitSlop={10}
+            accessibilityRole="button"
+            accessibilityLabel={t('moderation.reportPost')}
+            className="rounded-lg p-1.5 active:bg-white/10"
+          >
+            <Flag size={14} color="rgba(255,255,255,0.35)" />
           </Pressable>
         )}
       </View>
@@ -177,6 +190,22 @@ export function PhotoPostCard({
             {t('community.posts.verifyCta')}
           </Text>
         </Pressable>
+      )}
+
+      {reportOpen && (
+        <ReportSheet
+          title={t('moderation.reportPost')}
+          onClose={() => setReportOpen(false)}
+          onSubmit={(reason, details) =>
+            ModerationService.reportContent({
+              reportedUserId: event.userId,
+              contentType: 'post',
+              contentId: postId,
+              reason,
+              details,
+            }).then(() => undefined)
+          }
+        />
       )}
     </View>
   );

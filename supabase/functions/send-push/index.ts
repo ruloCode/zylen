@@ -31,6 +31,7 @@ type PushType =
   | 'chat_message'
   | 'post_reaction'
   | 'post_verified'
+  | 'content_report'
   | 'test';
 
 interface PushRequest {
@@ -144,6 +145,20 @@ function buildMessage(
           ? `@${username} verificó tu evidencia. +${xp} de Luz para tu leyenda.`
           : `@${username} verified your evidence. +${xp} Light for your legend.`,
         url: '/leaderboard?tab=social',
+        channelId: 'social',
+      };
+    }
+    case 'content_report': {
+      // Solo lo recibe el admin (vault moderation_admin_user_id) — aviso de
+      // moderación, no una notificación de producto.
+      const reason = String(payload.reason ?? 'other');
+      const contentType = String(payload.content_type ?? 'profile');
+      return {
+        title: es ? '🚩 Nueva denuncia de contenido' : '🚩 New content report',
+        body: es
+          ? `@${username} denunció un ${contentType} (${reason}). Revísalo en content_reports.`
+          : `@${username} reported a ${contentType} (${reason}). Review it in content_reports.`,
+        url: '/',
         channelId: 'social',
       };
     }

@@ -2224,5 +2224,36 @@
     "sendError": "Couldn't send the message",
     "notAllies": "You're no longer allies",
     "openError": "Couldn't open the chat"
+  },
+  "moderation": {
+    "reportUser": "Report",
+    "reportUserTitle": "Report @{{username}}",
+    "reportPost": "Report post",
+    "reportMessage": "Report message",
+    "reportMessageHint": "Long-press to report this message",
+    "reportHint": "Tell us what's wrong. We review every report and act on content that violates the Community Guidelines.",
+    "reasons": {
+      "spam": "Spam or scam",
+      "harassment": "Harassment or threats",
+      "inappropriate": "Inappropriate content",
+      "other": "Other reason"
+    },
+    "detailsPlaceholder": "Additional details (optional)",
+    "submitReport": "Submit report",
+    "reviewNote": "We normally review reports within 72 hours.",
+    "reportSent": "Report sent. Thanks for keeping the community safe.",
+    "reportError": "Couldn't send the report. Please try again.",
+    "blockUser": "Block",
+    "blockConfirmTitle": "Block @{{username}}?",
+    "blockConfirmBody": "The alliance will be removed and they won't be able to message you, see your photos or send you ally requests again.",
+    "blocked": "You blocked @{{username}}.",
+    "blockError": "Couldn't block. Please try again.",
+    "blockedUsers": "Blocked users",
+    "blockedNote": "Blocked users can't message you, see your photos or send you ally requests. Unblocking does not restore the alliance.",
+    "noBlockedUsers": "You haven't blocked anyone.",
+    "unblock": "Unblock",
+    "unblocked": "You unblocked @{{username}}.",
+    "rateLimited": "You've reached today's report limit. Try again tomorrow.",
+    "alreadyReported": "You already reported this content. We will review it soon."
   }
 }

@@ -33,6 +33,13 @@ interface ChatBubbleProps {
   /** Stable cache key for the photo (its storage path — survives re-signing). */
   imageCacheKey?: string;
   onImagePress?: () => void;
+  /**
+   * Long-press sobre la burbuja (ally chat: denunciar mensaje). Se cuelga
+   * tanto del contenedor como del Pressable de la foto — si solo estuviera en
+   * un wrapper externo, el Pressable interno de la imagen ganaría el responder
+   * y el gesto nunca dispararía sobre fotos.
+   */
+  onLongPress?: () => void;
   /** Delivery status (ally chat): pending dims the bubble, failed marks it. */
   status?: 'sent' | 'pending' | 'failed';
   /** Label announced/shown for failed delivery (i18n). */
@@ -60,6 +67,7 @@ export function ChatBubble({
   imageUrl,
   imageCacheKey,
   onImagePress,
+  onLongPress,
   status = 'sent',
   failedLabel = 'Error',
 }: ChatBubbleProps) {
@@ -132,7 +140,10 @@ export function ChatBubble({
         className={`flex-col ${isUser ? 'items-end' : 'items-start'}`}
         style={{ maxWidth: isUser ? '80%' : '88%', flexShrink: 1 }}
       >
-        <View
+        <Pressable
+          onLongPress={onLongPress}
+          disabled={!onLongPress}
+          accessible={false}
           className={`max-w-full rounded-2xl border ${imageUrl ? 'overflow-hidden p-1.5' : 'px-4 py-3'} ${
             isUser
               ? 'rounded-tr-md border-teal-600/30 bg-teal-500/90'
@@ -143,7 +154,8 @@ export function ChatBubble({
           {imageUrl && (
             <Pressable
               onPress={onImagePress}
-              disabled={!onImagePress}
+              onLongPress={onLongPress}
+              disabled={!onImagePress && !onLongPress}
               accessibilityRole={onImagePress ? 'imagebutton' : 'image'}
             >
               <Image
@@ -163,7 +175,7 @@ export function ChatBubble({
               )}
             </View>
           ) : null}
-        </View>
+        </Pressable>
 
         {/* Meta row — copy (assistant only) + timestamp */}
         <View

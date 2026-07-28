@@ -21,13 +21,14 @@ import { useRouter } from 'expo-router';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import Svg, { Path } from 'react-native-svg';
+import * as Linking from 'expo-linking';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import toast from '@/lib/toast';
 import { useAuth } from '@/features/auth/context/AuthContext';
 import { useLocale } from '@/hooks/useLocale';
 import { LanguageSwitcher } from '@/features/settings/components/LanguageSwitcher';
-import { ROUTES } from '@/constants';
+import { ROUTES, LEGAL_URLS } from '@/constants';
 import { img } from '@/assets/registry';
 import { cn } from '@/utils';
 
@@ -329,11 +330,25 @@ export function Login() {
               </Pressable>
             </View>
 
-            {/* Terms — plain text (no link styling) until real legal pages
-                exist; then add LEGAL_URLS to constants/config + Linking.openURL. */}
+            {/* Terms */}
             <Text className="mt-5 text-center text-[11px] leading-relaxed text-white/40">
-              {t('auth.termsPrefix')} {t('auth.termsOfService')} {t('auth.and')}{' '}
-              {t('auth.privacyPolicy')}.
+              {t('auth.termsPrefix')}{' '}
+              <Text
+                className="text-[#4aa8ff]/80"
+                onPress={() => Linking.openURL(LEGAL_URLS.terms).catch(() => undefined)}
+                accessibilityRole="link"
+              >
+                {t('auth.termsOfService')}
+              </Text>{' '}
+              {t('auth.and')}{' '}
+              <Text
+                className="text-[#4aa8ff]/80"
+                onPress={() => Linking.openURL(LEGAL_URLS.privacy).catch(() => undefined)}
+                accessibilityRole="link"
+              >
+                {t('auth.privacyPolicy')}
+              </Text>
+              .
             </Text>
           </View>
         </ScrollView>

@@ -173,9 +173,9 @@ export function Login() {
         {/* Terms */}
         <p className="text-center text-[11px] leading-relaxed text-white/40 mt-5">
           {t('auth.termsPrefix')}{' '}
-          <a href="#" className="text-[#4aa8ff]/80 hover:underline">{t('auth.termsOfService')}</a>{' '}
+          <a href="/terms.html" target="_blank" rel="noreferrer" className="text-[#4aa8ff]/80 hover:underline">{t('auth.termsOfService')}</a>{' '}
           {t('auth.and')}{' '}
-          <a href="#" className="text-[#4aa8ff]/80 hover:underline">{t('auth.privacyPolicy')}</a>.
+          <a href="/privacy.html" target="_blank" rel="noreferrer" className="text-[#4aa8ff]/80 hover:underline">{t('auth.privacyPolicy')}</a>.
         </p>
       </div>
     </div>

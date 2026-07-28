@@ -14,6 +14,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
+  Alert,
   Modal,
   Pressable,
   ScrollView,
@@ -26,7 +27,9 @@ import { useRouter } from 'expo-router';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import {
+  Ban,
   Check,
+  Flag,
   Flame,
   Gem,
   MessageCircle,
@@ -45,13 +48,17 @@ import { getLevelProgress } from '@/utils/xp';
 import { useLocale } from '@/hooks/useLocale';
 import { useMessages, useSocial, useUser } from '@/store';
 import * as SocialService from '@/services/supabase/social.service';
+import * as ModerationService from '@/services/supabase/moderation.service';
 import { img } from '@/assets/registry';
 import type { PublicUserProfile } from '@/types/user';
 import { ProgressRing } from './ProgressRing';
+import { ReportSheet } from './ReportSheet';
 
 interface GuardianProfileSheetProps {
   username: string;
   onClose: () => void;
+  /** Tras bloquear (p.ej. AllyChat navega fuera del DM del bloqueado). */
+  onBlocked?: () => void;
 }
 
 const ACTIVE_NOW_MS = 10 * 60 * 1000;
@@ -66,7 +73,7 @@ const GOLD_GRADIENT = ['hsl(40, 95%, 58%)', 'hsl(34, 92%, 46%)'] as const; // fr
 const avatarSource = (url?: string) =>
   url ? (url.startsWith('/') ? img(url) : { uri: url }) : undefined;
 
-export function GuardianProfileSheet({ username, onClose }: GuardianProfileSheetProps) {
+export function GuardianProfileSheet({ username, onClose, onBlocked }: GuardianProfileSheetProps) {
   const { t, language } = useLocale();
   const insets = useSafeAreaInsets();
   const router = useRouter();
@@ -78,12 +85,16 @@ export function GuardianProfileSheet({ username, onClose }: GuardianProfileSheet
     sentRequests,
     sendFriendRequest,
     acceptFriendRequest,
+    loadFriends,
+    loadPendingRequests,
+    loadSentRequests,
   } = useSocial();
 
   const [profile, setProfile] = useState<PublicUserProfile | null>(null);
   const [mutualCount, setMutualCount] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [actionBusy, setActionBusy] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -190,6 +201,41 @@ export function GuardianProfileSheet({ username, onClose }: GuardianProfileSheet
     } finally {
       setActionBusy(false);
     }
+  };
+
+  // Bloquear: confirmación nativa → RPC (rompe la alianza en el servidor) →
+  // refrescar aliados/solicitudes y cerrar el sheet. Feedback de error por
+  // Alert (nativo, se ve sobre el Modal); el de éxito por toast tras cerrar.
+  const handleBlock = () => {
+    if (!profile) return;
+    Alert.alert(
+      t('moderation.blockConfirmTitle', { username: profile.username }),
+      t('moderation.blockConfirmBody'),
+      [
+        { text: t('actions.cancel'), style: 'cancel' },
+        {
+          text: t('moderation.blockUser'),
+          style: 'destructive',
+          onPress: () => {
+            void (async () => {
+              try {
+                await ModerationService.blockUser(profile.id);
+                await Promise.all([
+                  loadFriends(),
+                  loadPendingRequests(),
+                  loadSentRequests(),
+                ]).catch(() => undefined);
+                onClose();
+                toast.success(t('moderation.blocked', { username: profile.username }));
+                onBlocked?.();
+              } catch {
+                Alert.alert(t('moderation.blockError'));
+              }
+            })();
+          },
+        },
+      ]
+    );
   };
 
   const progress = profile ? getLevelProgress(profile.totalXPEarned, profile.level) : null;
@@ -507,10 +553,54 @@ export function GuardianProfileSheet({ username, onClose }: GuardianProfileSheet
                   )}
                 </View>
               )}
+
+              {/* Moderación: denunciar / bloquear (cualquier perfil ajeno) */}
+              {state !== 'self' && (
+                <View className="mt-4 flex-row justify-center gap-6 border-t border-white/10 pt-3">
+                  <Pressable
+                    onPress={() => setReportOpen(true)}
+                    accessibilityRole="button"
+                    hitSlop={8}
+                    className="min-h-[44px] flex-row items-center gap-1.5 px-2 active:opacity-70"
+                  >
+                    <Flag size={13} color="rgba(255,255,255,0.45)" />
+                    <Text className="text-xs font-semibold text-white/45">
+                      {t('moderation.reportUser')}
+                    </Text>
+                  </Pressable>
+                  <Pressable
+                    onPress={handleBlock}
+                    accessibilityRole="button"
+                    hitSlop={8}
+                    className="min-h-[44px] flex-row items-center gap-1.5 px-2 active:opacity-70"
+                  >
+                    <Ban size={13} color="rgba(248,113,113,0.6)" />
+                    <Text className="text-xs font-semibold text-red-400/70">
+                      {t('moderation.blockUser')}
+                    </Text>
+                  </Pressable>
+                </View>
+              )}
             </ScrollView>
           )}
         </View>
       </View>
+
+      {/* Sheet de denuncia (encima del perfil) */}
+      {reportOpen && profile && (
+        <ReportSheet
+          title={t('moderation.reportUserTitle', { username: profile.username })}
+          onClose={() => setReportOpen(false)}
+          onSubmit={(reason, details) =>
+            ModerationService.reportContent({
+              reportedUserId: profile.id,
+              contentType: 'profile',
+              reason,
+              details,
+            }).then(() => undefined)
+          }
+        />
+      )}
     </Modal>
   );
 }

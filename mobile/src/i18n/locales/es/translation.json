@@ -2243,5 +2243,36 @@
     "sendError": "No se pudo enviar el mensaje",
     "notAllies": "Ya no son aliados",
     "openError": "No se pudo abrir el chat"
+  },
+  "moderation": {
+    "reportUser": "Reportar",
+    "reportUserTitle": "Reportar a @{{username}}",
+    "reportPost": "Reportar publicación",
+    "reportMessage": "Reportar mensaje",
+    "reportMessageHint": "Mantén pulsado para reportar este mensaje",
+    "reportHint": "Cuéntanos qué ocurre. Revisamos todas las denuncias y actuamos sobre el contenido que incumple las Normas de la Comunidad.",
+    "reasons": {
+      "spam": "Spam o estafa",
+      "harassment": "Acoso o amenazas",
+      "inappropriate": "Contenido inapropiado",
+      "other": "Otro motivo"
+    },
+    "detailsPlaceholder": "Detalles adicionales (opcional)",
+    "submitReport": "Enviar denuncia",
+    "reviewNote": "Revisamos las denuncias normalmente en menos de 72 horas.",
+    "reportSent": "Denuncia enviada. Gracias por cuidar la comunidad.",
+    "reportError": "No se pudo enviar la denuncia. Intenta de nuevo.",
+    "blockUser": "Bloquear",
+    "blockConfirmTitle": "¿Bloquear a @{{username}}?",
+    "blockConfirmBody": "Se eliminará la alianza y no podrá enviarte mensajes, ver tus fotos ni volver a solicitarte alianza.",
+    "blocked": "Has bloqueado a @{{username}}.",
+    "blockError": "No se pudo bloquear. Intenta de nuevo.",
+    "blockedUsers": "Usuarios bloqueados",
+    "blockedNote": "Los usuarios bloqueados no pueden enviarte mensajes, ver tus fotos ni solicitarte alianza. Desbloquear no restaura la alianza.",
+    "noBlockedUsers": "No has bloqueado a nadie.",
+    "unblock": "Desbloquear",
+    "unblocked": "Has desbloqueado a @{{username}}.",
+    "rateLimited": "Has alcanzado el límite de denuncias por hoy. Intenta mañana.",
+    "alreadyReported": "Ya habías denunciado este contenido. Lo revisaremos pronto."
   }
 }

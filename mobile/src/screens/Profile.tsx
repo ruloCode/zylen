@@ -39,6 +39,7 @@ import {
   Trophy,
   MessageCircle,
   Flame,
+  Ban,
   ChevronRight,
   Compass,
   Gem,
@@ -71,6 +72,7 @@ import {
 } from '@/features/profile/components';
 import { HabitForm } from '@/features/habits/components';
 import { ThemeSelector, ReminderSettings } from '@/features/settings/components';
+import { BlockedUsersSheet } from '@/features/social/components';
 import { Header } from '@/components/layout';
 import { ProgressBar } from '@/components/ui';
 import { getIcon } from '@/components/atoms/icons/iconMaps';
@@ -147,6 +149,7 @@ export function Profile() {
   const { t } = useLocale();
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isBlockedOpen, setIsBlockedOpen] = useState(false);
   const [isEditingName, setIsEditingName] = useState(false);
   const [newName, setNewName] = useState(user?.name || '');
   const [isEditingAvatar, setIsEditingAvatar] = useState(false);
@@ -1280,6 +1283,23 @@ export function Profile() {
                     </Text>
                   </View>
 
+                  {/* Blocked users (moderación UGC) */}
+                  <View className="border-t border-white/10 pt-3">
+                    <Pressable
+                      onPress={() => setIsBlockedOpen(true)}
+                      accessibilityRole="button"
+                      className="w-full flex-row items-center justify-between rounded-lg px-1 py-2 active:bg-white/5"
+                    >
+                      <View className="flex-row items-center gap-2">
+                        <Ban size={16} color="rgba(255,255,255,0.7)" />
+                        <Text className="text-sm font-semibold text-white/90">
+                          {t('moderation.blockedUsers')}
+                        </Text>
+                      </View>
+                      <ChevronRight size={16} color="rgba(255,255,255,0.4)" />
+                    </Pressable>
+                  </View>
+
                   {/* Sign Out Button */}
                   <View className="border-t border-white/20 pt-4">
                     <Pressable
@@ -1301,6 +1321,11 @@ export function Profile() {
               <DangerZone />
             </View>
           </ScrollView>
+
+          {/* Usuarios bloqueados — anidado DENTRO del RNModal (en iOS un
+              segundo Modal hermano no se presenta si este sigue abierto;
+              mismo patrón que el confirm de DangerZone). */}
+          {isBlockedOpen && <BlockedUsersSheet onClose={() => setIsBlockedOpen(false)} />}
         </View>
       </RNModal>
 

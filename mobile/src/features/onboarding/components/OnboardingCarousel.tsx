@@ -29,12 +29,13 @@ import { useRouter } from 'expo-router';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import Svg, { Path } from 'react-native-svg';
+import * as Linking from 'expo-linking';
 import { Mail, Lock, ArrowRight, Eye, EyeOff } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import toast from '@/lib/toast';
 import { useAuth } from '@/features/auth/context/AuthContext';
 import { useLocale } from '@/hooks/useLocale';
-import { ROUTES } from '@/constants';
+import { ROUTES, LEGAL_URLS } from '@/constants';
 import { img } from '@/assets/registry';
 import { cn } from '@/utils';
 
@@ -368,6 +369,27 @@ export function OnboardingCarousel() {
                   </Text>
                 </Pressable>
               </View>
+
+              {/* Terms acceptance — the account is created on THIS slide */}
+              <Text className="mt-2 text-center text-[11px] leading-relaxed text-white/40">
+                {t('auth.termsPrefix')}{' '}
+                <Text
+                  className="text-[#4aa8ff]/80"
+                  onPress={() => Linking.openURL(LEGAL_URLS.terms).catch(() => undefined)}
+                  accessibilityRole="link"
+                >
+                  {t('auth.termsOfService')}
+                </Text>{' '}
+                {t('auth.and')}{' '}
+                <Text
+                  className="text-[#4aa8ff]/80"
+                  onPress={() => Linking.openURL(LEGAL_URLS.privacy).catch(() => undefined)}
+                  accessibilityRole="link"
+                >
+                  {t('auth.privacyPolicy')}
+                </Text>
+                .
+              </Text>
             </KeyboardAvoidingView>
           ) : (
             <>

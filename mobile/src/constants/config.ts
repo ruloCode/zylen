@@ -243,6 +243,13 @@ export const TIME_OF_DAY_OPTIONS = [
   { value: 'anytime', labelKey: 'onboarding.timeOfDay.options.anytime', emoji: '✨' },
 ] as const;
 
+// Legal pages (static, served by the web deployment)
+export const LEGAL_URLS = {
+  terms: 'https://zylen-beta.vercel.app/terms.html',
+  privacy: 'https://zylen-beta.vercel.app/privacy.html',
+  deleteAccount: 'https://zylen-beta.vercel.app/delete-account.html',
+} as const;
+
 // Arena (embedded co-op game) configuration
 export const GAME_CONFIG = {
   url: 'https://noble-shore-296.higgsfield.gg/',

@@ -8,3 +8,5 @@ export { GuardianProfileSheet } from './GuardianProfileSheet';
 export { PhotoPostCard } from './PhotoPostCard';
 export { ProgressPostComposer } from './ProgressPostComposer';
 export { ReactionBar } from './ReactionBar';
+export { ReportSheet } from './ReportSheet';
+export { BlockedUsersSheet } from './BlockedUsersSheet';
