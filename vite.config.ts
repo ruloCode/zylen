@@ -49,6 +49,9 @@ export default defineConfig({
       workbox: {
         globPatterns: ["**/*.{js,css,html,ico,svg}"],
         navigateFallback: "/index.html",
+        // Páginas estáticas fuera de la SPA (feedback, privacy, terms,
+        // delete-account): sin esto el SW responde index.html y nunca se ven.
+        navigateFallbackDenylist: [/^\/feedback/, /\.html$/],
         maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
         runtimeCaching: [
           {
