@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0e1a1c" />
+  <meta name="robots" content="noindex" />
+  <title>Zylen — Feedback de la Beta</title>
+  <meta name="description" content="Reporta errores, ideas y sugerencias de la beta de Zylen. Sube tus pantallazos y sigue el estado de cada reporte." />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: 192 28% 8%;
+      --surface: 190 22% 13%;
+      --elevated: 190 20% 17%;
+      --border: 190 16% 24%;
+      --text: 180 12% 96%;
+      --text-2: 185 12% 80%;
+      --text-3: 188 10% 62%;
+      --teal: 172 66% 50%;
+      --teal-hover: 172 66% 57%;
+      --gold: 42 100% 62%;
+      --danger: 352 80% 64%;
+      --success: 150 55% 45%;
+      --info: 220 90% 68%;
+      --purple: 285 70% 65%;
+      --radius: 0.875rem;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      background-color: hsl(var(--bg));
+      color: hsl(var(--text));
+      min-height: 100dvh;
+      line-height: 1.55;
+      overflow-x: hidden;
+    }
+    /* ── Atmósfera ───────────────────────────────── */
+    .atmosphere {
+      position: fixed; inset: 0; z-index: -1; pointer-events: none;
+      background:
+        radial-gradient(60rem 34rem at 50% -12rem, hsl(var(--teal) / 0.14), transparent 60%),
+        radial-gradient(38rem 26rem at 108% 34rem, hsl(var(--gold) / 0.05), transparent 65%),
+        radial-gradient(40rem 30rem at -14% 70rem, hsl(var(--teal) / 0.06), transparent 65%);
+    }
+    .atmosphere::after {
+      content: ''; position: absolute; inset: 0; opacity: 0.35;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+    .wrap { max-width: 30rem; margin: 0 auto; padding: 0 1rem calc(3rem + env(safe-area-inset-bottom)); }
+
+    /* ── Header ──────────────────────────────────── */
+    header { text-align: center; padding: 2.4rem 0 1.6rem; }
+    .wordmark {
+      font-family: 'Bebas Neue', 'Manrope', sans-serif;
+      font-size: 2.1rem; letter-spacing: 0.32em; text-indent: 0.32em;
+      color: hsl(var(--text));
+      text-shadow: 0 0 24px hsl(var(--teal) / 0.55);
+      user-select: none;
+    }
+    .beta-badge {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      margin-top: 0.35rem; padding: 0.2rem 0.7rem;
+      font-size: 0.68rem; font-weight: 800; letter-spacing: 0.22em; text-indent: 0.22em;
+      color: hsl(var(--gold));
+      border: 1px solid hsl(var(--gold) / 0.35); border-radius: 999px;
+      background: hsl(var(--gold) / 0.08);
+    }
+    h1 {
+      font-size: 1.55rem; font-weight: 800; letter-spacing: -0.02em;
+      margin-top: 1.3rem; line-height: 1.2;
+    }
+    h1 em { font-style: normal; color: hsl(var(--teal)); }
+    .subtitle { color: hsl(var(--text-2)); font-size: 0.95rem; margin-top: 0.5rem; }
+
+    /* ── Cards ───────────────────────────────────── */
+    .glass {
+      background: hsl(var(--surface) / 0.82);
+      border: 1px solid hsl(var(--border) / 0.9);
+      border-radius: calc(var(--radius) + 0.25rem);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 18px 48px hsl(0 0% 0% / 0.35);
+    }
+    .form-card { padding: 1.35rem 1.15rem 1.25rem; margin-top: 0.4rem; }
+    .field { margin-bottom: 1.15rem; }
+    .field-label {
+      display: block; font-size: 0.78rem; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: hsl(var(--text-3)); margin-bottom: 0.5rem;
+    }
+    input[type="text"], textarea {
+      width: 100%; font: inherit; color: hsl(var(--text));
+      background: hsl(var(--bg) / 0.6);
+      border: 1px solid hsl(var(--border)); border-radius: var(--radius);
+      padding: 0.75rem 0.9rem; outline: none;
+      transition: border-color 0.18s, box-shadow 0.18s;
+    }
+    input[type="text"]:focus, textarea:focus {
+      border-color: hsl(var(--teal) / 0.7);
+      box-shadow: 0 0 0 3px hsl(var(--teal) / 0.15);
+    }
+    textarea { min-height: 7.5rem; resize: vertical; }
+    ::placeholder { color: hsl(var(--text-3) / 0.75); }
+    .counter { text-align: right; font-size: 0.72rem; color: hsl(var(--text-3)); margin-top: 0.3rem; }
+
+    /* Chips de categoría */
+    .chips { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; }
+    .chip {
+      display: flex; flex-direction: column; align-items: center; gap: 0.15rem;
+      padding: 0.6rem 0.25rem; cursor: pointer; user-select: none;
+      font-size: 0.78rem; font-weight: 700; color: hsl(var(--text-2));
+      background: hsl(var(--bg) / 0.5);
+      border: 1px solid hsl(var(--border)); border-radius: var(--radius);
+      transition: transform 0.12s, border-color 0.18s, background 0.18s, color 0.18s;
+    }
+    .chip .emoji { font-size: 1.25rem; }
+    .chip:active { transform: scale(0.94); }
+    .chip[aria-pressed="true"] {
+      color: hsl(var(--bg)); background: hsl(var(--teal));
+      border-color: hsl(var(--teal));
+      box-shadow: 0 6px 20px hsl(var(--teal) / 0.35);
+    }
+
+    /* Zona de fotos */
+    .dropzone {
+      display: flex; flex-direction: column; align-items: center; gap: 0.3rem;
+      padding: 1.15rem 0.75rem; cursor: pointer; text-align: center;
+      color: hsl(var(--text-2)); font-size: 0.88rem; font-weight: 600;
+      border: 1.5px dashed hsl(var(--border)); border-radius: var(--radius);
+      background: hsl(var(--bg) / 0.4);
+      transition: border-color 0.18s, background 0.18s;
+    }
+    .dropzone:hover, .dropzone.dragover {
+      border-color: hsl(var(--teal) / 0.7); background: hsl(var(--teal) / 0.07);
+    }
+    .dropzone .cam { font-size: 1.6rem; }
+    .dropzone small { color: hsl(var(--text-3)); font-weight: 500; }
+    .previews { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-top: 0.6rem; }
+    .preview { position: relative; aspect-ratio: 1; border-radius: 0.6rem; overflow: hidden; border: 1px solid hsl(var(--border)); }
+    .preview img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .preview button {
+      position: absolute; top: 0.25rem; right: 0.25rem;
+      width: 1.5rem; height: 1.5rem; border-radius: 999px; border: none; cursor: pointer;
+      background: hsl(0 0% 0% / 0.65); color: #fff; font-size: 0.85rem; line-height: 1;
+      display: grid; place-items: center;
+    }
+
+    /* Botón principal */
+    .submit-btn {
+      width: 100%; padding: 0.95rem; margin-top: 0.35rem;
+      font: inherit; font-size: 1rem; font-weight: 800; letter-spacing: 0.01em;
+      color: hsl(190 30% 10%); cursor: pointer;
+      background: linear-gradient(180deg, hsl(var(--teal-hover)), hsl(var(--teal)));
+      border: none; border-radius: var(--radius);
+      box-shadow: 0 8px 26px hsl(var(--teal) / 0.4);
+      transition: transform 0.12s, filter 0.18s, opacity 0.18s;
+    }
+    .submit-btn:hover { filter: brightness(1.06); }
+    .submit-btn:active { transform: scale(0.98); }
+    .submit-btn:disabled { opacity: 0.55; cursor: wait; }
+
+    /* ── Tablero ─────────────────────────────────── */
+    .board { margin-top: 2.4rem; }
+    .board-head { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.9rem; }
+    .board-head h2 {
+      font-family: 'Bebas Neue', sans-serif; font-size: 1.35rem;
+      letter-spacing: 0.14em; font-weight: 400; color: hsl(var(--text-2));
+    }
+    .filters { display: flex; gap: 0.4rem; }
+    .filter {
+      font: inherit; font-size: 0.75rem; font-weight: 700; cursor: pointer;
+      padding: 0.32rem 0.7rem; border-radius: 999px;
+      color: hsl(var(--text-2)); background: transparent;
+      border: 1px solid hsl(var(--border));
+      transition: all 0.15s;
+    }
+    .filter[aria-pressed="true"] { color: hsl(var(--bg)); background: hsl(var(--teal)); border-color: hsl(var(--teal)); }
+
+    .report {
+      position: relative; padding: 0.95rem 1rem 0.9rem 1.15rem; margin-bottom: 0.7rem;
+      overflow: hidden;
+    }
+    .report::before {
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+      background: var(--stripe, hsl(var(--gold)));
+    }
+    .report.done { opacity: 0.72; }
+    .report-top { display: flex; align-items: center; gap: 0.55rem; flex-wrap: wrap; }
+    .cat-badge {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      font-size: 0.72rem; font-weight: 800; padding: 0.18rem 0.55rem; border-radius: 999px;
+      background: var(--cat-bg); color: var(--cat-fg); border: 1px solid var(--cat-fg);
+    }
+    .who { font-size: 0.8rem; font-weight: 700; color: hsl(var(--text-2)); }
+    .when { font-size: 0.72rem; color: hsl(var(--text-3)); margin-left: auto; }
+    .report-msg { font-size: 0.92rem; color: hsl(var(--text)); margin-top: 0.5rem; white-space: pre-wrap; word-break: break-word; }
+    .report-photos { display: flex; gap: 0.45rem; margin-top: 0.6rem; flex-wrap: wrap; }
+    .report-photos img {
+      width: 4.2rem; height: 4.2rem; object-fit: cover; cursor: zoom-in;
+      border-radius: 0.55rem; border: 1px solid hsl(var(--border));
+    }
+    .report-foot { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.65rem; flex-wrap: wrap; }
+    .status {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      font-size: 0.74rem; font-weight: 800; padding: 0.2rem 0.6rem; border-radius: 999px;
+    }
+    .status.nuevo       { color: hsl(var(--gold));    background: hsl(var(--gold) / 0.12); }
+    .status.en_progreso { color: hsl(var(--info));    background: hsl(var(--info) / 0.12); }
+    .status.resuelto    { color: hsl(var(--success)); background: hsl(var(--success) / 0.14); }
+    .status.descartado  { color: hsl(var(--text-3));  background: hsl(var(--text-3) / 0.12); }
+    .admin-actions { display: flex; gap: 0.35rem; margin-left: auto; }
+    .admin-actions button {
+      font: inherit; font-size: 0.7rem; font-weight: 700; cursor: pointer;
+      padding: 0.28rem 0.55rem; border-radius: 0.5rem;
+      background: hsl(var(--elevated)); color: hsl(var(--text-2));
+      border: 1px solid hsl(var(--border));
+    }
+    .admin-actions button:hover { border-color: hsl(var(--teal)); color: hsl(var(--teal)); }
+    .empty, .loading { text-align: center; color: hsl(var(--text-3)); font-size: 0.9rem; padding: 2.2rem 1rem; }
+
+    /* ── Overlay de éxito ────────────────────────── */
+    .success-overlay {
+      position: fixed; inset: 0; z-index: 50; display: none;
+      align-items: center; justify-content: center; flex-direction: column; gap: 1rem;
+      background: hsl(var(--bg) / 0.82); backdrop-filter: blur(10px);
+      text-align: center; padding: 2rem;
+    }
+    .success-overlay.show { display: flex; }
+    .seal {
+      width: 6.2rem; height: 6.2rem; border-radius: 999px;
+      display: grid; place-items: center; font-size: 2.8rem;
+      background: radial-gradient(circle at 35% 30%, hsl(var(--gold)), hsl(36 98% 49%));
+      box-shadow: 0 0 60px hsl(var(--gold) / 0.55), 0 0 120px hsl(var(--gold) / 0.25);
+      animation: seal-pop 0.55s cubic-bezier(0.2, 1.6, 0.4, 1);
+    }
+    @keyframes seal-pop {
+      0% { transform: scale(0) rotate(-30deg); }
+      70% { transform: scale(1.12) rotate(4deg); }
+      100% { transform: scale(1) rotate(0); }
+    }
+    .xp-pop {
+      font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 0.12em;
+      color: hsl(var(--gold)); text-shadow: 0 0 18px hsl(var(--gold) / 0.6);
+      animation: rise 0.7s 0.2s both ease-out;
+    }
+    @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+    .success-overlay h3 { font-size: 1.3rem; font-weight: 800; }
+    .success-overlay p { color: hsl(var(--text-2)); font-size: 0.92rem; max-width: 22rem; }
+    .success-overlay button {
+      font: inherit; font-weight: 800; cursor: pointer; margin-top: 0.4rem;
+      padding: 0.7rem 1.6rem; border-radius: var(--radius);
+      background: hsl(var(--teal)); color: hsl(190 30% 10%); border: none;
+    }
+
+    /* ── Lightbox / toast / footer ───────────────── */
+    dialog.lightbox {
+      border: none; background: transparent; padding: 0; max-width: 94vw; max-height: 92dvh;
+    }
+    dialog.lightbox::backdrop { background: hsl(0 0% 0% / 0.85); }
+    dialog.lightbox img { max-width: 94vw; max-height: 88dvh; border-radius: 0.6rem; display: block; }
+    .toast {
+      position: fixed; left: 50%; bottom: 1.4rem; transform: translateX(-50%) translateY(150%);
+      z-index: 60; padding: 0.7rem 1.1rem; border-radius: var(--radius);
+      background: hsl(var(--elevated)); border: 1px solid hsl(var(--danger) / 0.5);
+      color: hsl(var(--text)); font-size: 0.85rem; font-weight: 600;
+      max-width: min(92vw, 26rem); transition: transform 0.3s ease;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+    footer { text-align: center; margin-top: 3rem; font-size: 0.78rem; color: hsl(var(--text-3)); }
+    footer .admin-link { color: hsl(var(--text-3) / 0.6); text-decoration: none; cursor: pointer; }
+    .admin-on { color: hsl(var(--teal)); font-weight: 700; }
+
+    /* ── Entrada escalonada ──────────────────────── */
+    .page-in { animation: page-in 0.5s both ease-out; }
+    .d1 { animation-delay: 0.05s; } .d2 { animation-delay: 0.12s; } .d3 { animation-delay: 0.2s; }
+    @keyframes page-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="atmosphere"></div>
+
+  <div class="wrap">
+    <header class="page-in">
+      <div class="wordmark">ZYLEN</div>
+      <div class="beta-badge">⚔️ BETA</div>
+      <h1>Tu misión: <em>romper Zylen</em></h1>
+      <p class="subtitle">Cuéntanos qué encontraste y sube tus pantallazos.<br />Cada reporte nos hace más fuertes. 💪</p>
+    </header>
+
+    <form class="glass form-card page-in d1" id="feedback-form" novalidate>
+      <div class="field">
+        <label class="field-label" for="name">¿Quién eres?</label>
+        <input type="text" id="name" maxlength="60" placeholder="Tu nombre (p. ej. Dani)" autocomplete="name" required />
+      </div>
+
+      <div class="field">
+        <span class="field-label" id="cat-label">Tipo de reporte</span>
+        <div class="chips" role="radiogroup" aria-labelledby="cat-label" id="chips">
+          <button type="button" class="chip" data-cat="bug" aria-pressed="true"><span class="emoji">🐞</span>Error</button>
+          <button type="button" class="chip" data-cat="idea" aria-pressed="false"><span class="emoji">💡</span>Idea</button>
+          <button type="button" class="chip" data-cat="diseno" aria-pressed="false"><span class="emoji">🎨</span>Diseño</button>
+          <button type="button" class="chip" data-cat="otro" aria-pressed="false"><span class="emoji">💬</span>Otro</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="message">¿Qué pasó?</label>
+        <textarea id="message" maxlength="2000" placeholder="Ej.: Al marcar un hábito desde la Home, el contador de racha no se actualiza hasta recargar…" required></textarea>
+        <div class="counter"><span id="count">0</span>/2000</div>
+      </div>
+
+      <div class="field">
+        <span class="field-label">Pantallazos (opcional)</span>
+        <div class="dropzone" id="dropzone" role="button" tabindex="0" aria-label="Añadir pantallazos">
+          <span class="cam">📷</span>
+          Toca para añadir fotos
+          <small>Hasta 6 imágenes · también puedes arrastrarlas aquí</small>
+        </div>
+        <input type="file" id="file-input" accept="image/*" multiple hidden />
+        <div class="previews" id="previews"></div>
+      </div>
+
+      <button type="submit" class="submit-btn" id="submit-btn">Enviar reporte ⚡</button>
+    </form>
+
+    <section class="board page-in d2" id="board">
+      <div class="board-head">
+        <h2>Tablero</h2>
+        <div class="filters" id="filters">
+          <button class="filter" data-f="all" aria-pressed="true">Todos</button>
+          <button class="filter" data-f="open" aria-pressed="false">Pendientes</button>
+          <button class="filter" data-f="done" aria-pressed="false">Resueltos</button>
+        </div>
+      </div>
+      <div id="report-list"><div class="loading">Cargando reportes…</div></div>
+    </section>
+
+    <footer class="page-in d3">
+      Zylen Beta — gracias por forjar la app con nosotros 💛<br />
+      <span class="admin-link" id="admin-link">admin</span>
+    </footer>
+  </div>
+
+  <div class="success-overlay" id="success" role="alertdialog" aria-labelledby="success-title">
+    <div class="seal">✓</div>
+    <div class="xp-pop">+50 XP</div>
+    <h3 id="success-title">¡Reporte recibido!</h3>
+    <p>Gracias por ayudar a forjar Zylen. Podrás ver aquí abajo cuando le demos el check. ✅</p>
+    <button id="success-close">Seguir explorando</button>
+  </div>
+
+  <dialog class="lightbox" id="lightbox"><img id="lightbox-img" alt="Pantallazo ampliado" /></dialog>
+  <div class="toast" id="toast"></div>
+
+  <script>
+    'use strict';
+    const SUPABASE_URL = 'https://jtyvfkksoncduqmryssw.supabase.co';
+    const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp0eXZma2tzb25jZHVxbXJ5c3N3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MjQ2NTAsImV4cCI6MjA5NzMwMDY1MH0.cKFpXBHxalmBZrBd8nl5Umf7OkrD6dsxa9HzwkMaCic';
+    const ADMIN_EMAIL = 'rulocode7@gmail.com';
+    const MAX_PHOTOS = 6;
+
+    const CATS = {
+      bug:    { emoji: '🐞', label: 'Error',  fg: 'hsl(352 80% 64%)', bg: 'hsl(352 80% 64% / 0.12)' },
+      idea:   { emoji: '💡', label: 'Idea',   fg: 'hsl(42 100% 62%)', bg: 'hsl(42 100% 62% / 0.12)' },
+      diseno: { emoji: '🎨', label: 'Diseño', fg: 'hsl(285 70% 65%)', bg: 'hsl(285 70% 65% / 0.12)' },
+      otro:   { emoji: '💬', label: 'Otro',   fg: 'hsl(220 90% 68%)', bg: 'hsl(220 90% 68% / 0.12)' },
+    };
+    const STATUS = {
+      nuevo:       { label: '● Nuevo' },
+      en_progreso: { label: '◐ En progreso' },
+      resuelto:    { label: '✓ Resuelto' },
+      descartado:  { label: '✕ Descartado' },
+    };
+    const STRIPE = {
+      nuevo: 'hsl(42 100% 62%)', en_progreso: 'hsl(220 90% 68%)',
+      resuelto: 'hsl(150 55% 45%)', descartado: 'hsl(188 10% 40%)',
+    };
+
+    const $ = (id) => document.getElementById(id);
+    let category = 'bug';
+    let pendingFiles = [];
+    let reports = [];
+    let filter = 'all';
+    let adminToken = sessionStorage.getItem('zy_fb_token') || null;
+    let isAdmin = false;
+
+    // ── Helpers de red ─────────────────────────────
+    function sbHeaders(extra = {}) {
+      return {
+        apikey: ANON_KEY,
+        Authorization: `Bearer ${adminToken || ANON_KEY}`,
+        ...extra,
+      };
+    }
+    function showToast(msg) {
+      const t = $('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(() => t.classList.remove('show'), 4200);
+    }
+    function esc(s) {
+      return String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+    function relTime(iso) {
+      const diff = (Date.now() - new Date(iso).getTime()) / 1000;
+      if (diff < 60) return 'ahora mismo';
+      if (diff < 3600) return `hace ${Math.floor(diff / 60)} min`;
+      if (diff < 86400) return `hace ${Math.floor(diff / 3600)} h`;
+      if (diff < 86400 * 7) return `hace ${Math.floor(diff / 86400)} d`;
+      return new Date(iso).toLocaleDateString('es', { day: 'numeric', month: 'short' });
+    }
+
+    // ── Formulario ─────────────────────────────────
+    $('name').value = localStorage.getItem('zy_fb_name') || '';
+    $('name').addEventListener('input', (e) => localStorage.setItem('zy_fb_name', e.target.value));
+
+    $('chips').addEventListener('click', (e) => {
+      const chip = e.target.closest('.chip');
+      if (!chip) return;
+      category = chip.dataset.cat;
+      document.querySelectorAll('.chip').forEach((c) => c.setAttribute('aria-pressed', String(c === chip)));
+    });
+
+    $('message').addEventListener('input', (e) => { $('count').textContent = e.target.value.length; });
+
+    // Fotos: selección, drag & drop y previews
+    const dropzone = $('dropzone');
+    dropzone.addEventListener('click', () => $('file-input').click());
+    dropzone.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') $('file-input').click(); });
+    ['dragover', 'dragleave', 'drop'].forEach((ev) =>
+      dropzone.addEventListener(ev, (e) => {
+        e.preventDefault();
+        dropzone.classList.toggle('dragover', ev === 'dragover');
+        if (ev === 'drop') addFiles(e.dataTransfer.files);
+      })
+    );
+    $('file-input').addEventListener('change', (e) => { addFiles(e.target.files); e.target.value = ''; });
+
+    function addFiles(list) {
+      for (const f of list) {
+        if (!f.type.startsWith('image/')) continue;
+        if (pendingFiles.length >= MAX_PHOTOS) { showToast(`Máximo ${MAX_PHOTOS} fotos por reporte`); break; }
+        pendingFiles.push(f);
+      }
+      renderPreviews();
+    }
+    function renderPreviews() {
+      const box = $('previews');
+      box.innerHTML = '';
+      pendingFiles.forEach((f, i) => {
+        const div = document.createElement('div');
+        div.className = 'preview';
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(f);
+        img.alt = f.name;
+        img.onload = () => URL.revokeObjectURL(img.src);
+        const rm = document.createElement('button');
+        rm.type = 'button';
+        rm.textContent = '×';
+        rm.setAttribute('aria-label', 'Quitar foto');
+        rm.onclick = () => { pendingFiles.splice(i, 1); renderPreviews(); };
+        div.append(img, rm);
+        box.append(div);
+      });
+    }
+
+    // Comprime a JPEG máx. 1600px para subir rápido desde el móvil
+    async function compressImage(file) {
+      if (file.type === 'image/gif') return { blob: file, ext: 'gif', mime: file.type };
+      try {
+        const bmp = await createImageBitmap(file);
+        const scale = Math.min(1, 1600 / Math.max(bmp.width, bmp.height));
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.round(bmp.width * scale);
+        canvas.height = Math.round(bmp.height * scale);
+        canvas.getContext('2d').drawImage(bmp, 0, 0, canvas.width, canvas.height);
+        bmp.close();
+        const blob = await new Promise((res) => canvas.toBlob(res, 'image/jpeg', 0.88));
+        if (blob && blob.size < file.size) return { blob, ext: 'jpg', mime: 'image/jpeg' };
+      } catch { /* formatos no decodificables: subir original */ }
+      const ext = (file.name.split('.').pop() || 'png').toLowerCase().slice(0, 4);
+      return { blob: file, ext, mime: file.type || 'image/png' };
+    }
+
+    $('feedback-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = $('name').value.trim();
+      const message = $('message').value.trim();
+      if (!name) return showToast('Dinos tu nombre para saber a quién agradecer 🙂');
+      if (message.length < 3) return showToast('Cuéntanos un poco más en la descripción');
+
+      const btn = $('submit-btn');
+      btn.disabled = true;
+      btn.textContent = 'Enviando…';
+      try {
+        const reportId = crypto.randomUUID();
+        const photoUrls = [];
+        for (let i = 0; i < pendingFiles.length; i++) {
+          btn.textContent = `Subiendo foto ${i + 1}/${pendingFiles.length}…`;
+          const { blob, ext, mime } = await compressImage(pendingFiles[i]);
+          const path = `${reportId}/${i + 1}.${ext}`;
+          const up = await fetch(`${SUPABASE_URL}/storage/v1/object/feedback/${path}`, {
+            method: 'POST',
+            headers: { apikey: ANON_KEY, Authorization: `Bearer ${ANON_KEY}`, 'Content-Type': mime },
+            body: blob,
+          });
+          if (!up.ok) throw new Error(`No se pudo subir la foto ${i + 1}`);
+          photoUrls.push(`${SUPABASE_URL}/storage/v1/object/public/feedback/${path}`);
+        }
+        btn.textContent = 'Guardando…';
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/feedback_reports`, {
+          method: 'POST',
+          headers: {
+            apikey: ANON_KEY, Authorization: `Bearer ${ANON_KEY}`,
+            'Content-Type': 'application/json', Prefer: 'return=representation',
+          },
+          body: JSON.stringify({
+            id: reportId,
+            reporter_name: name,
+            category,
+            message,
+            photos: photoUrls,
+            device: navigator.userAgent.slice(0, 280),
+          }),
+        });
+        if (!res.ok) throw new Error('No se pudo guardar el reporte');
+        const [row] = await res.json();
+        reports.unshift(row);
+        renderBoard();
+        $('message').value = '';
+        $('count').textContent = '0';
+        pendingFiles = [];
+        renderPreviews();
+        $('success').classList.add('show');
+      } catch (err) {
+        showToast(`${err.message}. Revisa tu conexión e inténtalo de nuevo.`);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Enviar reporte ⚡';
+      }
+    });
+    $('success-close').addEventListener('click', () => $('success').classList.remove('show'));
+
+    // ── Tablero ────────────────────────────────────
+    async function loadReports() {
+      try {
+        const res = await fetch(
+          `${SUPABASE_URL}/rest/v1/feedback_reports?select=*&order=created_at.desc&limit=300`,
+          { headers: { apikey: ANON_KEY, Authorization: `Bearer ${ANON_KEY}` } }
+        );
+        if (!res.ok) throw new Error();
+        reports = await res.json();
+      } catch {
+        $('report-list').innerHTML = '<div class="empty">No se pudo cargar el tablero. Recarga la página.</div>';
+        return;
+      }
+      renderBoard();
+    }
+
+    function renderBoard() {
+      const list = $('report-list');
+      const visible = reports.filter((r) => {
+        if (filter === 'open') return r.status === 'nuevo' || r.status === 'en_progreso';
+        if (filter === 'done') return r.status === 'resuelto' || r.status === 'descartado';
+        return true;
+      });
+      if (!visible.length) {
+        list.innerHTML = '<div class="empty">Aún no hay reportes aquí. ¡Sé quien encuentre el primero! 🗡️</div>';
+        return;
+      }
+      list.innerHTML = '';
+      for (const r of visible) {
+        const cat = CATS[r.category] || CATS.otro;
+        const st = STATUS[r.status] || STATUS.nuevo;
+        const card = document.createElement('article');
+        card.className = `report glass${r.status === 'resuelto' || r.status === 'descartado' ? ' done' : ''}`;
+        card.style.setProperty('--stripe', STRIPE[r.status] || STRIPE.nuevo);
+        const photos = (r.photos || [])
+          .map((u) => `<img src="${esc(u)}" loading="lazy" alt="Pantallazo" data-full="${esc(u)}" />`)
+          .join('');
+        card.innerHTML = `
+          <div class="report-top">
+            <span class="cat-badge" style="--cat-fg:${cat.fg};--cat-bg:${cat.bg};color:${cat.fg};background:${cat.bg};border-color:${cat.fg}40">${cat.emoji} ${cat.label}</span>
+            <span class="who">${esc(r.reporter_name)}</span>
+            <span class="when">${relTime(r.created_at)}</span>
+          </div>
+          <p class="report-msg">${esc(r.message)}</p>
+          ${photos ? `<div class="report-photos">${photos}</div>` : ''}
+          <div class="report-foot">
+            <span class="status ${esc(r.status)}">${st.label}</span>
+            ${isAdmin ? adminButtons(r) : ''}
+          </div>`;
+        card.querySelectorAll('.report-photos img').forEach((img) =>
+          img.addEventListener('click', () => {
+            $('lightbox-img').src = img.dataset.full;
+            $('lightbox').showModal();
+          })
+        );
+        if (isAdmin) {
+          card.querySelectorAll('.admin-actions button').forEach((b) =>
+            b.addEventListener('click', () => setStatus(r.id, b.dataset.s))
+          );
+        }
+        list.append(card);
+      }
+    }
+
+    function adminButtons(r) {
+      const open = r.status === 'nuevo' || r.status === 'en_progreso';
+      const btns = open
+        ? `${r.status === 'nuevo' ? '<button data-s="en_progreso">◐ En curso</button>' : ''}
+           <button data-s="resuelto">✓ Resolver</button>
+           <button data-s="descartado">✕ Descartar</button>`
+        : '<button data-s="nuevo">↩ Reabrir</button>';
+      return `<div class="admin-actions">${btns}</div>`;
+    }
+
+    async function setStatus(id, status) {
+      try {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/feedback_reports?id=eq.${id}`, {
+          method: 'PATCH',
+          headers: sbHeaders({ 'Content-Type': 'application/json', Prefer: 'return=representation' }),
+          body: JSON.stringify({ status }),
+        });
+        const rows = res.ok ? await res.json() : [];
+        if (!rows.length) throw new Error('Sin permiso o sesión caducada — vuelve a entrar como admin');
+        const i = reports.findIndex((r) => r.id === id);
+        if (i >= 0) reports[i] = rows[0];
+        renderBoard();
+      } catch (err) {
+        showToast(err.message);
+      }
+    }
+
+    $('filters').addEventListener('click', (e) => {
+      const f = e.target.closest('.filter');
+      if (!f) return;
+      filter = f.dataset.f;
+      document.querySelectorAll('.filter').forEach((x) => x.setAttribute('aria-pressed', String(x === f)));
+      renderBoard();
+    });
+
+    $('lightbox').addEventListener('click', () => $('lightbox').close());
+
+    // ── Modo admin (Google OAuth implícito de Supabase) ──
+    $('admin-link').addEventListener('click', () => {
+      if (isAdmin) return;
+      const redirect = encodeURIComponent(location.origin + location.pathname);
+      location.href = `${SUPABASE_URL}/auth/v1/authorize?provider=google&redirect_to=${redirect}`;
+    });
+
+    async function initAdmin() {
+      const hash = new URLSearchParams(location.hash.slice(1));
+      if (hash.get('access_token')) {
+        adminToken = hash.get('access_token');
+        sessionStorage.setItem('zy_fb_token', adminToken);
+        history.replaceState(null, '', location.pathname);
+      }
+      if (!adminToken) return;
+      try {
+        const res = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+          headers: { apikey: ANON_KEY, Authorization: `Bearer ${adminToken}` },
+        });
+        if (!res.ok) throw new Error();
+        const user = await res.json();
+        isAdmin = user.email === ADMIN_EMAIL;
+        if (isAdmin) {
+          const link = $('admin-link');
+          link.textContent = '⚙ modo admin activo';
+          link.classList.add('admin-on');
+          renderBoard();
+        }
+      } catch {
+        adminToken = null;
+        sessionStorage.removeItem('zy_fb_token');
+      }
+    }
+
+    loadReports().then(initAdmin);
+  </script>
+</body>
+</html>
