@@ -630,10 +630,19 @@
     },
     "firstHabit": {
       "title": "Choose your first ritual",
-      "subtitle": "Start small: a single habit lights up the kingdom",
+      "subtitle": "Pick one or several: the first lights up your kingdom",
       "customCta": "Create my own",
       "customPlaceholder": "E.g. Stretch for 5 minutes",
-      "hint": "You can add more habits anytime"
+      "hint": "You can add more habits anytime",
+      "suggestedLabel": "Suggested for you",
+      "bankLabel": "Habit bank",
+      "searchPlaceholder": "Search the bank…",
+      "allCategories": "All",
+      "customAdd": "Add",
+      "primaryBadge": "First Luz",
+      "noResults": "No matches in the bank",
+      "selectedCount_one": "{{count}} selected · you can add more anytime",
+      "selectedCount_other": "{{count}} selected · you can add more anytime"
     },
     "payoff": {
       "title": "Your kingdom is ready, {{name}}",
@@ -650,7 +659,9 @@
       "celebrationTitle_male": "First light lit, Guardian!",
       "celebrationTitle_female": "First light lit, Guardian!",
       "celebrationBody": "You completed “{{habit}}”. Your streak starts today: day 1.",
-      "continueCta": "Continue"
+      "continueCta": "Continue",
+      "extraHabits_one": "+{{count}} more",
+      "extraHabits_other": "+{{count}} more"
     },
     "notifications": {
       "title": "Keep the flame alive",

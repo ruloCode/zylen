@@ -27,6 +27,11 @@ function fingerprint(habit: FirstHabitSelection): string {
   return `${habit.name}|${habit.lifeArea}|${habit.xp}|${habit.iconName}`;
 }
 
+/** Fingerprint of the whole extras list — a changed list forces a re-run. */
+function extrasFingerprint(habits: FirstHabitSelection[]): string {
+  return habits.map(fingerprint).join('§');
+}
+
 /**
  * Onboarding payoff — the aha moment. Phase A shows a personalized summary
  * ("your kingdom is ready") with the kingdom laws condensed to three lines;
@@ -59,6 +64,7 @@ export function OnboardingStepPayoff({ onNext, onPrev }: OnboardingStepPayoffPro
   const primaryForeground = themeHsl(theme, '--primary-foreground');
 
   const firstHabit = temporaryData.firstHabit;
+  const extraHabitsCount = temporaryData.extraHabits?.length ?? 0;
   const userName = temporaryData.userName ?? user?.name ?? '';
   const genderCtx =
     temporaryData.gender === 'female' || temporaryData.gender === 'male'
@@ -141,7 +147,75 @@ export function OnboardingStepPayoff({ onNext, onPrev }: OnboardingStepPayoffPro
       habitId = createdId;
       await loadHabits();
     }
+
+    await ensureExtraHabits();
     return habitId;
+  };
+
+  /** The other habits picked from the bank: created next to the primary one,
+   *  never completed (only the first Luz is lit here). Best effort on purpose —
+   *  a failed extra insert must not block the aha moment, and the marker is
+   *  persisted only once every insert went through, so a later attempt retries. */
+  const ensureExtraHabits = async (): Promise<void> => {
+    const extras = temporaryData.extraHabits ?? [];
+    const source = extrasFingerprint(extras);
+    const data = freshData();
+    if (data.extraHabitsSource === source) return;
+
+    try {
+      // The player went back and changed the list — drop the extras that are
+      // no longer part of it (same "replace" semantics as the primary habit).
+      if (data.extraHabitIds?.length) {
+        const stored = useAppStore.getState().habits;
+        for (const id of data.extraHabitIds) {
+          const habit = stored.find((h) => h.id === id);
+          const stillWanted =
+            !habit ||
+            extras.some((e) => e.name === habit.name && e.lifeArea === habit.lifeArea);
+          if (stillWanted) continue;
+          try {
+            await deleteHabit(id);
+          } catch {
+            // Stale/already-gone id: nothing to drop.
+          }
+        }
+      }
+
+      if (extras.length === 0) {
+        saveStepData({ extraHabitIds: [], extraHabitsSource: source });
+        return;
+      }
+
+      // Resume path: adopt whatever a previous attempt already inserted
+      // instead of duplicating it (selection is deduped by name upstream).
+      await loadHabits();
+      const existing = useAppStore.getState().habits;
+      const ids: string[] = [];
+
+      for (const habit of extras) {
+        const already = existing.find(
+          (h) => h.name === habit.name && h.lifeArea === habit.lifeArea
+        );
+        if (already) {
+          ids.push(already.id);
+          continue;
+        }
+        const created = await HabitsService.addHabit({
+          name: habit.name,
+          iconName: habit.iconName,
+          xp: habit.xp,
+          lifeArea: habit.lifeArea,
+          timeOfDay: temporaryData.preferredTimeOfDay ?? 'anytime',
+          reminderEnabled: true,
+        });
+        ids.push(created.id);
+      }
+
+      saveStepData({ extraHabitIds: ids, extraHabitsSource: source });
+      await loadHabits();
+    } catch (error) {
+      console.error('Error creating extra onboarding habits:', error);
+    }
   };
 
   const handleLightFirstLuz = async () => {
@@ -317,6 +391,13 @@ export function OnboardingStepPayoff({ onNext, onPrev }: OnboardingStepPayoffPro
             <View className="flex-row items-center gap-1.5 rounded-full border border-teal-400/40 bg-teal-500/15 px-3 py-1.5">
               <Check size={13} strokeWidth={3} color="#5eead4" />
               <Text className="text-xs font-semibold text-teal-200">{firstHabit.name}</Text>
+            </View>
+          )}
+          {extraHabitsCount > 0 && (
+            <View className="flex-row items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.05] px-3 py-1.5">
+              <Text className="text-xs font-semibold text-white/80">
+                {t('onboarding.payoff.extraHabits', { count: extraHabitsCount })}
+              </Text>
             </View>
           )}
         </View>

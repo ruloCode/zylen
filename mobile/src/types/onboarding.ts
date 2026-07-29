@@ -25,7 +25,10 @@ export interface OnboardingData {
   gender?: Gender; // Player identity, drives gendered language
   motivation?: string; // Primary reason for using the app
   preferredTimeOfDay?: TimeOfDay; // When the user wants to work on themselves
+  /** The habit the payoff step creates AND completes (the aha moment). */
   firstHabit?: FirstHabitSelection;
+  /** Extra habits picked from the bank — created, but not completed. */
+  extraHabits?: FirstHabitSelection[];
 
   // ── Idempotency markers ──
   // Persisted so the payoff sequence can resume after a kill/retry without
@@ -36,6 +39,8 @@ export interface OnboardingData {
   firstHabitCompleted?: boolean;
   firstHabitXp?: number; // Real XP awarded by the complete_habit RPC
   firstHabitPoints?: number;
+  extraHabitIds?: string[]; // DB ids of the extra habits once created
+  extraHabitsSource?: string; // Fingerprint of the list extraHabitIds came from
 }
 
 export interface OnboardingStep {
@@ -49,8 +54,12 @@ export interface OnboardingStep {
  * Mobile flow (diverges from the web on purpose). Retention-first shape:
  * one tap-question per screen, the first habit is chosen AND completed inside
  * the onboarding (first Luz earned before reaching Home), and the notification
- * permission is asked last with context. There is NO life-areas step: every
- * area ships enabled by default.
+ * permission is asked last with context.
+ *
+ * There is NO life-areas step: every area ships enabled, enforced by the
+ * handle_new_user() trigger (migration 20260729140000). Before that migration
+ * the trigger created them disabled, which left FIRST_HABIT with no selectable
+ * habit and no way forward — that step now also falls back to disabled areas.
  */
 export const ONBOARDING_STEPS = {
   HERO: 0, // Name + avatar (preset or AI-generated) + identity (gender)

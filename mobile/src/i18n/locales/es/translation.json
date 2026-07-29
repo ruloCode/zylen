@@ -645,10 +645,19 @@
     },
     "firstHabit": {
       "title": "Elige tu primer ritual",
-      "subtitle": "Empieza pequeño: un solo hábito enciende el reino",
+      "subtitle": "Elige uno o varios: el primero encenderá tu reino",
       "customCta": "Crear el mío",
       "customPlaceholder": "Ej: Estirar 5 minutos",
-      "hint": "Podrás añadir más hábitos cuando quieras"
+      "hint": "Podrás añadir más hábitos cuando quieras",
+      "suggestedLabel": "Sugeridos para ti",
+      "bankLabel": "Banco de hábitos",
+      "searchPlaceholder": "Buscar en el banco…",
+      "allCategories": "Todos",
+      "customAdd": "Añadir",
+      "primaryBadge": "Primera Luz",
+      "noResults": "Sin resultados en el banco",
+      "selectedCount_one": "{{count}} seleccionado · podrás añadir más cuando quieras",
+      "selectedCount_other": "{{count}} seleccionados · podrás añadir más cuando quieras"
     },
     "payoff": {
       "title": "Tu reino está listo, {{name}}",
@@ -665,7 +674,9 @@
       "celebrationTitle_male": "¡Primera Luz encendida, Guardián!",
       "celebrationTitle_female": "¡Primera Luz encendida, Guardiana!",
       "celebrationBody": "Completaste “{{habit}}”. Tu racha comienza hoy: día 1.",
-      "continueCta": "Continuar"
+      "continueCta": "Continuar",
+      "extraHabits_one": "+{{count}} más",
+      "extraHabits_other": "+{{count}} más"
     },
     "notifications": {
       "title": "No dejes que la llama se apague",
